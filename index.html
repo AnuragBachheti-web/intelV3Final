@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Realify Ai | Marketplace Intelligence</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.plot.ly/plotly-3.1.1.min.js"></script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      (function() {
+        var theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.body.style.backgroundColor = '#0c101a';
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.body.style.backgroundColor = '#dde4ee';
+        }
+      })();
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
