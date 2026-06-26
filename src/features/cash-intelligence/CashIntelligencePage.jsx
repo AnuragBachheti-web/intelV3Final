@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import StatCard from '../../components/common/StatCard';
@@ -17,13 +17,13 @@ import { revenueTrendData } from '../sales-intelligence/salesData';
 
 // import ActionAlert from '../../components/common/ActionAlert';
 import SettlementsTable from './components/SettlementsTable';
-import SettlementDispositionChart from './components/SettlementDispositionChart';
-import AccountWatchlist from './components/AccountWatchlist';
-import CashFlowTrendSection from './components/CashFlowTrendSection';
-import CashDistributionSection from './components/CashDistributionSection';
-import PaymentMetricsSection from './components/PaymentMetricsSection';
-import { FeesBreakdownContent, WorkingCapitalContent } from './components/CashInsightsGrid';
-import { WatchlistCard, deepDiveWatchlistItems } from '../../components/common/WatchlistSection';
+const SettlementDispositionChart = lazy(() => import('./components/SettlementDispositionChart'));
+const CashFlowTrendSection       = lazy(() => import('./components/CashFlowTrendSection'));
+const CashDistributionSection    = lazy(() => import('./components/CashDistributionSection'));
+const PaymentMetricsSection      = lazy(() => import('./components/PaymentMetricsSection'));
+const FeesBreakdownContent       = lazy(() => import('./components/CashInsightsGrid').then(m => ({ default: m.FeesBreakdownContent })));
+const WorkingCapitalContent      = lazy(() => import('./components/CashInsightsGrid').then(m => ({ default: m.WorkingCapitalContent })));
+import { WatchlistCard } from '../../components/common/WatchlistSection';
 import { salesWatchlistItems } from '../sales-intelligence/salesData';
 
 import AnalyticsModal from '../../components/common/AnalyticsModal';

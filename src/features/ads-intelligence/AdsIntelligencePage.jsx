@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import DeepDiveTabBar from '../../components/common/DeepDiveTabBar';
@@ -13,13 +13,13 @@ import KPIDetailModal from '../../components/common/KPIDetailModal';
 import { useFilterStore } from '../../store/useFilterStore';
 // import ActionAlert from '../../components/common/ActionAlert';
 
-import AdSpendTrendChart from './components/AdSpendTrendChart';
-import PlatformPerformanceSection from './components/PlatformPerformanceSection';
-import CampaignComparisonSection from './components/CampaignComparisonSection';
-import PlatformDistributionChart from './components/PlatformDistributionChart';
+const AdSpendTrendChart         = lazy(() => import('./components/AdSpendTrendChart'));
+const PlatformPerformanceSection = lazy(() => import('./components/PlatformPerformanceSection'));
+const CampaignComparisonSection  = lazy(() => import('./components/CampaignComparisonSection'));
+const PlatformDistributionChart  = lazy(() => import('./components/PlatformDistributionChart'));
 
 import CampaignPerformanceTable from './components/CampaignPerformanceTable';
-import { WatchlistCard, deepDiveWatchlistItems } from '../../components/common/WatchlistSection';
+import { WatchlistCard } from '../../components/common/WatchlistSection';
 import { salesWatchlistItems } from '../sales-intelligence/salesData';
 
 import {

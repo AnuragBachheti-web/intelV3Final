@@ -317,7 +317,6 @@ const GlobalAppHeader = ({
   const {
     searchQuery, setSearchQuery,
     dateRange, setDateRange,
-    country, setCountry,
     category, setCategory,
     channel, setChannel,
   } = useFilterStore();

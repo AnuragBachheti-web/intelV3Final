@@ -11,11 +11,11 @@ import { ROUTES } from "../constants/routes";
 const useRoleAccess = () => {
   const role = localStorage.getItem("userRole") || "admin";
   const allowedRoutes = rolePermissions[role] || [];
-  const landingRoute = roleLandingRoutes[role] || ROUTES.INTEL_V2_FULL;
+  const landingRoute = roleLandingRoutes[role] || ROUTES.INTEL_FULL;
 
   /**
    * Returns true if the current role is allowed to access the given path.
-   * Supports prefix matching: /intel-v2 grants access to /intel-v2/sales, etc.
+   * Supports prefix matching: /intel grants access to /intel/sales, etc.
    */
   const canAccess = (path) => {
     if (!path) return false;

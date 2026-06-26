@@ -1,16 +1,16 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DeepDiveTabBar from '../../../components/common/DeepDiveTabBar';
 import ClickToExpand from '../../../components/common/ClickToExpand';
 import ActionsPanel from '../../../components/common/ActionsPanel';
 import BaseAreaChart from '../../../components/common/charts/BaseAreaChart';
-import DOCDistributionChart from './DOCDistributionChart';
-import ForecastActualChart from './ForecastActualChart';
-import InventoryTrendChart from './InventoryTrendChart';
-import StockStatusChart from './StockStatusChart';
-import CategoryPerformanceSection from './CategoryPerformanceSection';
+const DOCDistributionChart      = lazy(() => import('./DOCDistributionChart'));
+const ForecastActualChart       = lazy(() => import('./ForecastActualChart'));
+const InventoryTrendChart       = lazy(() => import('./InventoryTrendChart'));
+const StockStatusChart          = lazy(() => import('./StockStatusChart'));
+const CategoryPerformanceSection = lazy(() => import('./CategoryPerformanceSection'));
 import { inventoryRecommendations, inventoryAnomalies } from '../inventoryData';
-import { WatchlistCard, deepDiveWatchlistItems } from '../../../components/common/WatchlistSection';
+import { WatchlistCard } from '../../../components/common/WatchlistSection';
 import { salesWatchlistItems } from '../../sales-intelligence/salesData';
 
 const kpiDetails = {

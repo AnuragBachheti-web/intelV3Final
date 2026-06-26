@@ -3,7 +3,7 @@ export const ROUTES = {
   LOGIN:                "/login",
   UNAUTHORIZED:         "/unauthorized",
   INTEL_V2:             "/sales",
-  INTEL_V2_FULL:        "/intel-v2",
+  INTEL_FULL:           "/intel",
   SALES:                "/sales",
   MARGIN:               "/margin",
   INVENTORY:            "/inventory",

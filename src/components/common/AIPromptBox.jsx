@@ -4,7 +4,7 @@ import { useAIStore } from "../../store/useAIStore";
 import { motion, AnimatePresence } from "framer-motion";
 import ModelSelector from "./ModelSelector";
 
-const AIPromptBox = ({ placeholder = "Ask Realify...", sidebarActive = true, fullWidth = false }) => {
+const AIPromptBox = ({ placeholder = "Ask Realify...", sidebarActive = true, fullWidth: _fullWidth = false }) => {
   const { isSidebarCollapsed } = useUIStore();
   const {
     aiPromptValue, setAiPromptValue,

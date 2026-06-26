@@ -13,7 +13,7 @@ const NewAnalysisPage = () => {
   const [prompt, setPrompt] = useState('');
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [activeSuggestion, setActiveSuggestion] = useState(null);
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
 
   const { user } = useAuthStore();
   const hour = new Date().getHours();
@@ -24,7 +24,7 @@ const NewAnalysisPage = () => {
     setActiveDropdown(activeDropdown === id ? null : id);
   };
 
-  const recentHistory = [
+  const _recentHistory = [
     {
       day: 'Today', items: [
         { type: 'message', text: 'Q3 Market Analysis for Tech Sector and recent trends' },

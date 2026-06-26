@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import BaseModal from './BaseModal';
 
 /* ── Period labels ─────────────────────────────────────────────── */
@@ -538,7 +538,7 @@ const ProductCell = ({ name, sku, cat }) => (
   </div>
 );
 
-const CampaignCell = ({ name, sku, type }) => (
+const CampaignCell = ({ name, sku, type: _type }) => (
   <div className="min-w-0">
     <p className="text-xs font-semibold text-gray-800 dark:text-slate-200 truncate leading-tight">{name}</p>
     <p className="text-[10px] text-gray-400 dark:text-slate-500 leading-tight">{sku}</p>
@@ -623,7 +623,7 @@ const renderTotalCell = (col, totals) => {
 };
 
 /* ── Main Modal ────────────────────────────────────────────────── */
-const KPIDetailModal = ({ isOpen, onClose, stat, filterContext = {}, tab = 'sales' }) => {
+const KPIDetailModal = ({ isOpen, onClose, stat, filterContext = {}, tab: _tab = 'sales' }) => {
   if (!isOpen || !stat) return null;
 
   const periodLabel = PERIOD_LABELS[filterContext?.dateRange] || 'All Time';

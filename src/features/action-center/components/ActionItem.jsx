@@ -1,15 +1,16 @@
 ﻿import React from 'react';
 
-const ActionItem = ({ action, isSelected, onClick, onSimulate }) => {
-  const getPriorityConfig = (priority) => {
-    switch (priority) {
-      case 'CRITICAL': return { bg: 'bg-red-600', iconBg: 'bg-red-100', icon: 'text-red-600' };
-      case 'HIGH': return { bg: 'bg-orange-600', iconBg: 'bg-orange-100', icon: 'text-orange-600' };
-      case 'MEDIUM': return { bg: 'bg-yellow-600', iconBg: 'bg-yellow-100', icon: 'text-yellow-600' };
-      default: return { bg: 'bg-blue-600', iconBg: 'bg-blue-100', icon: 'text-blue-600' };
-    }
-  };
+// Pure lookup — no props/state dependency, safe at module level
+const getPriorityConfig = (priority) => {
+  switch (priority) {
+    case 'CRITICAL': return { bg: 'bg-red-600', iconBg: 'bg-red-100', icon: 'text-red-600' };
+    case 'HIGH': return { bg: 'bg-orange-600', iconBg: 'bg-orange-100', icon: 'text-orange-600' };
+    case 'MEDIUM': return { bg: 'bg-yellow-600', iconBg: 'bg-yellow-100', icon: 'text-yellow-600' };
+    default: return { bg: 'bg-blue-600', iconBg: 'bg-blue-100', icon: 'text-blue-600' };
+  }
+};
 
+const ActionItem = React.memo(({ action, isSelected, onClick, onSimulate }) => {
   const config = getPriorityConfig(action.priority);
 
   return (
@@ -57,6 +58,6 @@ const ActionItem = ({ action, isSelected, onClick, onSimulate }) => {
       </div>
     </div>
   );
-};
+});
 
 export default ActionItem;

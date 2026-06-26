@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import BaseModal from './BaseModal';
 
 const DeepDiveModal = ({ modal, onClose }) => (
@@ -21,7 +21,13 @@ const DeepDiveModal = ({ modal, onClose }) => (
         </button>
       </div>
       <div className="flex-1 overflow-auto p-6">
-        {modal?.component}
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-full">
+            <div className="w-8 h-8 border-4 border-brand border-t-transparent rounded-full animate-spin" />
+          </div>
+        }>
+          {modal?.component}
+        </Suspense>
       </div>
     </div>
   </BaseModal>

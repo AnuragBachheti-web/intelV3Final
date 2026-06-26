@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { salesWatchlistItems } from '../sales-intelligence/salesData';
-import { ITEM_SKU_DATA } from '../intel-v2/intelV2Data';
+import { ITEM_SKU_DATA } from '../intel/intelData';
 
 const PERF_STATS = [
   { key: 'revenue',    label: 'Revenue',         icon: 'fa-arrow-trend-up',  value: '$14,250', change: '+12.4%', isPositive: true,  sub: 'vs previous 7 days', color: '#6366f1' },
@@ -495,7 +495,7 @@ const ProductViewPage = () => {
       time: '2 min ago',
       steps: allSteps,
     };
-    navigate('/intel-v2/insight/sales/0', {
+    navigate('/intel/insight/sales/0', {
       state: {
         insights: [insight],
         currentIndex: 0,

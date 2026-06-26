@@ -1,9 +1,9 @@
 import { ROUTES } from "../constants/routes";
 
 export const roleLandingRoutes = {
-  admin: ROUTES.INTEL_V2_FULL,
+  admin: ROUTES.INTEL_FULL,
 
-  analyst: ROUTES.INTEL_V2_FULL,
+  analyst: ROUTES.INTEL_FULL,
 
   viewer: ROUTES.HISTORY,
 

@@ -1,21 +1,18 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DeepDiveTabBar from '../../../components/common/DeepDiveTabBar';
 import ClickToExpand from '../../../components/common/ClickToExpand';
 import ActionsPanel from '../../../components/common/ActionsPanel';
 import BaseAreaChart from '../../../components/common/charts/BaseAreaChart';
-import BleedingMarginTable from './BleedingMarginTable';
-import MarginTrendChart from './MarginTrendChart';
-import MarginWaterfallChart from './MarginWaterfallChart';
-import FeeForensics from './FeeForensics';
-import MarginDistributionChart from './MarginDistributionChart';
-import { formatCurrency } from '../../../utils/formatters';
+const MarginTrendChart       = lazy(() => import('./MarginTrendChart'));
+const MarginWaterfallChart   = lazy(() => import('./MarginWaterfallChart'));
+const FeeForensics           = lazy(() => import('./FeeForensics'));
+const MarginDistributionChart = lazy(() => import('./MarginDistributionChart'));
 import {
   marginRecommendations,
   marginAnomalies,
-  bleedingMarginData,
 } from '../marginData';
-import { WatchlistCard, deepDiveWatchlistItems } from '../../../components/common/WatchlistSection';
+import { WatchlistCard } from '../../../components/common/WatchlistSection';
 import { salesWatchlistItems } from '../../sales-intelligence/salesData';
 
 const kpiDetails = {
@@ -246,13 +243,14 @@ const kpiDetails = {
   }
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const marginPanelWatchlistItems = [
   { title: 'Yoga Mat Pro', sku: 'YM-STR-42', impact: '-$142.00', positive: false, action: 'Reprice' },
   { title: 'LED Desk Lamp', sku: 'LED-DK-7', impact: '-$98.00', positive: false, action: 'Investigate' },
   { title: 'Phone Case Ultra', sku: 'PH-CASE-X', impact: '-$84.00', positive: false, action: 'Reprice' },
   { title: 'Water Bottle', sku: 'SS-BTL-V2', impact: '+$12.00', positive: true, action: 'Reprice' },
 ];
-const marginWatchlistItems = marginPanelWatchlistItems;
+const _marginWatchlistItems = marginPanelWatchlistItems;
 
 const deepDiveTabList = [
   { label: 'Details', key: 'revenue' },

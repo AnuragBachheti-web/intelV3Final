@@ -290,7 +290,7 @@ const LaunchContent = ({ step, insight, onClose }) => {
 };
 
 /* ── Inventory scenario ──────────────────────────────────────────────────────── */
-const InventoryContent = ({ step, insight, onClose }) => {
+const InventoryContent = ({ step, insight: _insight, onClose }) => {
   const [qty, setQty] = useState(500);
   const currentStock = 120;
   const velocity = 30;
@@ -354,7 +354,7 @@ const InventoryContent = ({ step, insight, onClose }) => {
 };
 
 /* ── Default / Ads / Bundle scenario ─────────────────────────────────────────── */
-const DefaultContent = ({ step, insight, onClose }) => {
+const DefaultContent = ({ step, insight: _insight, onClose }) => {
   const isAds = getScenario(step?.title || '') === 'ads';
   const isBundle = getScenario(step?.title || '') === 'bundle';
   const [adjustment, setAdjustment] = useState(50);
@@ -437,7 +437,7 @@ const FooterButtons = ({ onClose }) => (
 );
 
 /* ── Main modal ──────────────────────────────────────────────────────────────── */
-const IntelV2SimulationModal = ({ isOpen, onClose, insight, step }) => {
+const IntelSimulationModal = ({ isOpen, onClose, insight, step }) => {
   const scenario = getScenario(step?.title || '');
 
   return (
@@ -477,4 +477,4 @@ const IntelV2SimulationModal = ({ isOpen, onClose, insight, step }) => {
   );
 };
 
-export default IntelV2SimulationModal;
+export default IntelSimulationModal;

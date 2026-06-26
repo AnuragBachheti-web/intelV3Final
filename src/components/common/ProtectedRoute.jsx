@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to={ROUTES.ONBOARDING} state={{ from: location }} replace />;
   }
 
-  // Use startsWith so sub-routes like /intel-v2/sales match the base /intel-v2 permission.
+  // Use startsWith so sub-routes like /intel/sales match the base /intel permission.
   const hasAccess = userAllowedRoutes.some(
     (allowed) =>
       location.pathname === allowed ||

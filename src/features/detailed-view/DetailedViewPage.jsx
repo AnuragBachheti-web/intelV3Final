@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useRef, useMemo } from 'react';
+import useClickOutside from '../../hooks/useClickOutside';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useFilterStore } from '../../store/useFilterStore';
 import { Treemap, ResponsiveContainer } from 'recharts';
@@ -12,25 +13,25 @@ import BaseLineChart from '../../components/common/charts/BaseLineChart';
 import { SEMANTIC_COLORS } from '../../utils/chartColors';
 import { revenueTrendData } from '../sales-intelligence/salesData';
 
-// Margin charts
-import MarginWaterfallChart from '../margin-intelligence/components/MarginWaterfallChart';
-import MarginTrendChart from '../margin-intelligence/components/MarginTrendChart';
-import FeeForensics from '../margin-intelligence/components/FeeForensics';
-import MarginDistributionChart from '../margin-intelligence/components/MarginDistributionChart';
+// Margin charts — lazy: only loaded when intelType === 'margin'
+const MarginWaterfallChart    = lazy(() => import('../margin-intelligence/components/MarginWaterfallChart'));
+const MarginTrendChart        = lazy(() => import('../margin-intelligence/components/MarginTrendChart'));
+const FeeForensics            = lazy(() => import('../margin-intelligence/components/FeeForensics'));
+const MarginDistributionChart = lazy(() => import('../margin-intelligence/components/MarginDistributionChart'));
 
-// Inventory charts
-import InventoryTrendChart from '../inventory-intelligence/components/InventoryTrendChart';
-import StockStatusChart from '../inventory-intelligence/components/StockStatusChart';
-import DOCDistributionChart from '../inventory-intelligence/components/DOCDistributionChart';
-import ForecastActualChart from '../inventory-intelligence/components/ForecastActualChart';
+// Inventory charts — lazy: only loaded when intelType === 'inventory'
+const InventoryTrendChart     = lazy(() => import('../inventory-intelligence/components/InventoryTrendChart'));
+const StockStatusChart        = lazy(() => import('../inventory-intelligence/components/StockStatusChart'));
+const DOCDistributionChart    = lazy(() => import('../inventory-intelligence/components/DOCDistributionChart'));
+const ForecastActualChart     = lazy(() => import('../inventory-intelligence/components/ForecastActualChart'));
 
-// Ads charts
-import AdSpendTrendChart from '../ads-intelligence/components/AdSpendTrendChart';
-import PlatformDistributionChart from '../ads-intelligence/components/PlatformDistributionChart';
+// Ads charts — lazy: only loaded when intelType === 'ads'
+const AdSpendTrendChart         = lazy(() => import('../ads-intelligence/components/AdSpendTrendChart'));
+const PlatformDistributionChart = lazy(() => import('../ads-intelligence/components/PlatformDistributionChart'));
 
-// Cash charts
-import CashFlowTrendSection from '../cash-intelligence/components/CashFlowTrendSection';
-import CashDistributionSection from '../cash-intelligence/components/CashDistributionSection';
+// Cash charts — lazy: only loaded when intelType === 'cash'
+const CashFlowTrendSection   = lazy(() => import('../cash-intelligence/components/CashFlowTrendSection'));
+const CashDistributionSection = lazy(() => import('../cash-intelligence/components/CashDistributionSection'));
 
 // Sales tables
 import PerformanceSection from '../sales-intelligence/components/PerformanceSection';
@@ -157,7 +158,7 @@ const ProductHeatmap = ({ intelType }) => {
   const [hovered, setHovered] = useState(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [expanded, setExpanded] = useState(false);
-  const [heatMode, setHeatMode] = useState('sku');
+  const [_heatMode, _setHeatMode] = useState('sku');
   const containerRef = useRef(null);
   const metric = INTEL_METRIC[intelType] || INTEL_METRIC.sales;
 
@@ -205,6 +206,7 @@ const ProductHeatmap = ({ intelType }) => {
     );
   };
 
+  // eslint-disable-next-line react-hooks/refs
   const tooltipRight = mousePos.x > (containerRef.current?.offsetWidth ?? 600) / 2;
   const LEGEND_STOPS = ['#f9fafb','#f3f4f6','#e5e7eb','#d1d5db','#9ca3af','#4b5563','#374151','#1f2937','#111827','#000000'];
 
@@ -345,6 +347,7 @@ const ChannelMixWidget = () => {
             <circle cx="56" cy="56" r="44" fill="none" stroke="currentColor" strokeWidth="18" className="text-gray-100 dark:text-slate-800" />
             {CHANNEL_MIX_DATA.map((ch) => {
               const offset = cumulative;
+              // eslint-disable-next-line react-hooks/immutability
               cumulative += ch.pct;
               return (
                 <circle
@@ -1049,6 +1052,37 @@ const DETAIL_VIEW_TABS = [
   { key: 'cash',      label: 'Cash',      icon: 'fa-money-bill-wave'},
 ];
 
+// ─── Filter option arrays — never change, defined once at module level ────────
+
+const V2_DATE_OPTS  = [['last-7-days','Last 7 Days'],['last-30-days','Last 30 Days'],['last-90-days','Last 90 Days'],['ytd','Year to Date']];
+const V2_CAT_OPTS   = [['all','All Categories'],['electronics','Electronics'],['home-garden','Home & Garden'],['apparel','Apparel'],['pet-suppliers','Pet Suppliers']];
+const V2_CAT_RECENT = [['electronics','Electronics'],['apparel','Apparel'],['home-garden','Home & Garden']];
+const V2_CAT_GRID   = [['electronics','Electronics'],['apparel','Apparel'],['home-garden','Home & Garden'],['pet-suppliers','Pet Suppliers'],['all','All Categories']];
+const CAL_MONTHS    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// Pure utility functions — no state/props deps, safe at module level
+const isSameDay = (a, b) => !!(a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate());
+const isInRange = (date, start, end) => {
+  if (!start || !end) return false;
+  const d = date.getTime(), s = Math.min(start.getTime(), end.getTime()), e = Math.max(start.getTime(), end.getTime());
+  return d > s && d < e;
+};
+const formatCalDate = (d) => !d ? '' : `${d.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]} ${d.getFullYear()}`;
+const _getDurLabel  = (key) => ({ 'last-7-days': '7 days', 'last-30-days': '30 days', 'last-90-days': '90 days', 'ytd': 'YTD' }[key] || '30 days');
+const quickToRange  = (key) => {
+  const end = new Date(); end.setHours(23, 59, 59, 999);
+  const start = new Date(end);
+  if (key === 'last-7-days') start.setDate(start.getDate() - 6);
+  else if (key === 'last-30-days') start.setDate(start.getDate() - 29);
+  else if (key === 'last-90-days') start.setDate(start.getDate() - 89);
+  else if (key === 'ytd') { start.setMonth(0); start.setDate(1); }
+  else start.setDate(start.getDate() - 29);
+  start.setHours(0, 0, 0, 0);
+  return { start, end };
+};
+const v2DateLabel = (v) => V2_DATE_OPTS.find(([k]) => k === v)?.[1] || v;
+const v2CatLabel  = (v) => V2_CAT_OPTS.find(([k]) => k === v)?.[1] || v;
+
 // ─── Main page ─────────────────────────────────────────────────────────────────
 
 const DetailedViewPage = () => {
@@ -1089,7 +1123,7 @@ const DetailedViewPage = () => {
   const [kpiDetailModal, setKpiDetailModal] = useState(null);
   const statsData = intelType === 'cash' ? cashStats : (STATS_DATA[intelType] || STATS_DATA.sales);
   const pageTitle = PAGE_TITLES[intelType] || 'Sales';
-  const backRoute = location.state?.from || BACK_ROUTES[intelType] || '/intel-v2';
+  const backRoute = location.state?.from || BACK_ROUTES[intelType] || '/intel';
 
   const ChartsComponent = CHARTS_MAP[intelType] || SalesCharts;
   const TablesComponent = TABLES_MAP[intelType] || SalesTables;
@@ -1105,6 +1139,7 @@ const DetailedViewPage = () => {
 
   // Close compact filter when scrolling back to top
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!isScrolled) setCompactFilterOpen(false);
   }, [isScrolled]);
 
@@ -1121,45 +1156,11 @@ const DetailedViewPage = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Close compact filter on outside click
-  useEffect(() => {
-    if (!compactFilterOpen) return;
-    const handler = (e) => {
-      if (compactFilterRef.current && !compactFilterRef.current.contains(e.target)) setCompactFilterOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [compactFilterOpen]);
-
-  // Close V2 filter on outside click
-  useEffect(() => {
-    if (!v2FilterOpen) return;
-    const handler = (e) => {
-      if (v2FilterRef.current && !v2FilterRef.current.contains(e.target)) setV2FilterOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [v2FilterOpen]);
-
-  // Close channel dropdown on outside click
-  useEffect(() => {
-    if (!chanDropOpen) return;
-    const handler = (e) => {
-      if (chanDropRef.current && !chanDropRef.current.contains(e.target)) setChanDropOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [chanDropOpen]);
-
-  // Close duration dropdown on outside click
-  useEffect(() => {
-    if (!durOpen) return;
-    const handler = (e) => {
-      if (durRef.current && !durRef.current.contains(e.target)) setDurOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [durOpen]);
+  // Single document listener per dropdown — hook attaches only while open, cleans up on close
+  useClickOutside(compactFilterRef, compactFilterOpen, () => setCompactFilterOpen(false));
+  useClickOutside(v2FilterRef, v2FilterOpen, () => setV2FilterOpen(false));
+  useClickOutside(chanDropRef, chanDropOpen, () => setChanDropOpen(false));
+  useClickOutside(durRef, durOpen, () => setDurOpen(false));
 
   // Restore persisted date filter to store on mount
   useEffect(() => {
@@ -1167,46 +1168,25 @@ const DetailedViewPage = () => {
     if (saved) setDateRange(saved);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* ── Filter helpers ── */
-  const activePlatforms = JSON.parse(localStorage.getItem('active_platforms') || '["shopify","amazon","tiktok"]');
-  const channelOptions = [
+  /* ── Filter helpers — dynamic values only (static arrays/pure fns are module-level) ── */
+  // localStorage read once per mount — value doesn't change during component lifetime
+  const activePlatforms = useMemo(
+    () => JSON.parse(localStorage.getItem('active_platforms') || '["shopify","amazon","tiktok"]'),
+    []
+  );
+  const channelOptions = useMemo(() => [
     ['all', 'All Channels'],
     ...(activePlatforms.includes('amazon') ? [['amazon', 'Amazon']] : []),
     ...(activePlatforms.includes('shopify') ? [['shopify', 'Shopify']] : []),
     ...(activePlatforms.includes('tiktok') ? [['tiktok-shop', 'TikTok Shop']] : []),
-  ];
+  ], [activePlatforms]);
 
-  const V2_DATE_OPTS = [['last-7-days','Last 7 Days'],['last-30-days','Last 30 Days'],['last-90-days','Last 90 Days'],['ytd','Year to Date']];
-  const V2_CAT_OPTS  = [['all','All Categories'],['electronics','Electronics'],['home-garden','Home & Garden'],['apparel','Apparel'],['pet-suppliers','Pet Suppliers']];
-  const V2_CAT_RECENT = [['electronics','Electronics'],['apparel','Apparel'],['home-garden','Home & Garden']];
-  const V2_CAT_GRID   = [['electronics','Electronics'],['apparel','Apparel'],['home-garden','Home & Garden'],['pet-suppliers','Pet Suppliers'],['all','All Categories']];
-  const v2ChanList    = channelOptions.filter(([v]) => v !== 'all');
-  const v2ChanRecent  = v2ChanList.slice(0, 2);
-  const v2ChanGrid    = [...v2ChanList, ['all-chans', 'All Channels']];
-  const v2DateLabel = (v) => V2_DATE_OPTS.find(([k]) => k === v)?.[1] || v;
-  const v2CatLabel  = (v) => V2_CAT_OPTS.find(([k]) => k === v)?.[1] || v;
-  const v2ChanLabel = (v) => channelOptions.find(([k]) => k === v)?.[1] || v;
-
-  const CAL_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const isSameDay = (a, b) => !!(a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate());
-  const isInRange = (date, start, end) => {
-    if (!start || !end) return false;
-    const d = date.getTime(), s = Math.min(start.getTime(), end.getTime()), e = Math.max(start.getTime(), end.getTime());
-    return d > s && d < e;
-  };
-  const formatCalDate = (d) => !d ? '' : `${d.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]} ${d.getFullYear()}`;
-  const getDurLabel = (key) => ({ 'last-7-days': '7 days', 'last-30-days': '30 days', 'last-90-days': '90 days', 'ytd': 'YTD' }[key] || '30 days');
-  const quickToRange = (key) => {
-    const end = new Date(); end.setHours(23, 59, 59, 999);
-    const start = new Date(end);
-    if (key === 'last-7-days') start.setDate(start.getDate() - 6);
-    else if (key === 'last-30-days') start.setDate(start.getDate() - 29);
-    else if (key === 'last-90-days') start.setDate(start.getDate() - 89);
-    else if (key === 'ytd') { start.setMonth(0); start.setDate(1); }
-    else start.setDate(start.getDate() - 29);
-    start.setHours(0, 0, 0, 0);
-    return { start, end };
-  };
+  // V2_DATE_OPTS, V2_CAT_OPTS, V2_CAT_RECENT, V2_CAT_GRID, CAL_MONTHS → module-level constants above
+  // isSameDay, isInRange, formatCalDate, getDurLabel, quickToRange, v2DateLabel, v2CatLabel → module-level pure functions above
+  const v2ChanList   = useMemo(() => channelOptions.filter(([v]) => v !== 'all'), [channelOptions]);
+  const v2ChanRecent = useMemo(() => v2ChanList.slice(0, 2), [v2ChanList]);
+  const v2ChanGrid   = useMemo(() => [...v2ChanList, ['all-chans', 'All Channels']], [v2ChanList]);
+  const v2ChanLabel  = (v) => channelOptions.find(([k]) => k === v)?.[1] || v;
   const prevCalMonth = () => {
     if (calViewMonth === 0) { setCalViewMonth(11); setCalViewYear(y => y - 1); }
     else setCalViewMonth(m => m - 1);
@@ -1721,7 +1701,11 @@ const DetailedViewPage = () => {
                 </div>
               </ChartCard>
             )}
-            {intelType !== 'sales' && <ChartsComponent />}
+            {intelType !== 'sales' && (
+              <Suspense fallback={<div className="h-40 rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse" />}>
+                <ChartsComponent />
+              </Suspense>
+            )}
           </div>
           <div>
             <ChannelMixWidget />

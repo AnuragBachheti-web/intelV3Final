@@ -3,7 +3,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { stockStatusData } from '../inventoryData';
 import { SEMANTIC_COLORS } from '../../../utils/chartColors';
 
-const StockStatusChart = ({ darkMode }) => {
+const StockStatusChart = ({ darkMode: _darkMode }) => {
   const total = stockStatusData.reduce((acc, curr) => acc + curr.value, 0);
 
   return (

@@ -25,12 +25,12 @@ const DashboardLayout = ({
   noPadding = false,
   activeTabPath,
   tabsOnly = false,
-  showSearch = false,
+  showSearch: _showSearch = false,
   aiPromptFullWidth = false,
   searchCollapsed = false,
   headerCenterElement = null,
 }) => {
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
   const location = useLocation();
   const { connectedStores } = useMarketplaceStore();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);

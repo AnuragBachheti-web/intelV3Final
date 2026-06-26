@@ -146,8 +146,15 @@ const ProductEditView = ({ items, onBack }) => {
 
 const ProductsListPage = () => {
   const navigate = useNavigate();
-  const activePlatforms = JSON.parse(localStorage.getItem('active_platforms') || '["shopify"]');
-  const visibleChannelTabs = CHANNEL_TABS.filter(tab => activePlatforms.includes(tab.toLowerCase()));
+  // Parsed once per mount — localStorage doesn't change during component lifetime
+  const activePlatforms = useMemo(
+    () => JSON.parse(localStorage.getItem('active_platforms') || '["shopify"]'),
+    []
+  );
+  const visibleChannelTabs = useMemo(
+    () => CHANNEL_TABS.filter(tab => activePlatforms.includes(tab.toLowerCase())),
+    [activePlatforms]
+  );
   const [activeTab, setActiveTab]           = useState(visibleChannelTabs[0] || 'Amazon');
   const [search, setSearch]                 = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
@@ -395,7 +402,7 @@ const ProductsListPage = () => {
         {/* Channel tabs with back button */}
         <div className="flex items-center gap-0.5 border-b border-gray-200 dark:border-slate-800 -mt-1">
           <button
-            onClick={() => navigate('/intel-v2', { state: { restoreInsightTab: 'Item' } })}
+            onClick={() => navigate('/intel', { state: { restoreInsightTab: 'Item' } })}
             className="flex items-center justify-center text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-200 transition-colors flex-shrink-0 mr-2 pb-px"
           >
             <i className="fa-solid fa-arrow-left text-sm" />

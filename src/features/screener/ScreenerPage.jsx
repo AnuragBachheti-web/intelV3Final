@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { useLocation } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
-import MarketShareTab from './tabs/MarketShareTab';
-import PriceBuyBoxTab from './tabs/PriceBuyBoxTab';
-import AssortmentGapsTab from './tabs/AssortmentGapsTab';
-import BSRDemandTab from './tabs/BSRDemandTab';
-import OpportunityResearchTab from './tabs/OpportunityResearchTab';
+
+const MarketShareTab         = lazy(() => import('./tabs/MarketShareTab'));
+const PriceBuyBoxTab         = lazy(() => import('./tabs/PriceBuyBoxTab'));
+const AssortmentGapsTab      = lazy(() => import('./tabs/AssortmentGapsTab'));
+const BSRDemandTab           = lazy(() => import('./tabs/BSRDemandTab'));
+const OpportunityResearchTab = lazy(() => import('./tabs/OpportunityResearchTab'));
 
 const screenerTabs = [
   { path: '/research', label: 'Market Share', icon: 'fa-chart-pie' },
@@ -41,7 +42,13 @@ const ScreenerPage = () => {
       showSearch={true}
       aiPromptFullWidth={true}
     >
-      {renderTab()}
+      <Suspense fallback={
+        <div className="flex items-center justify-center h-64">
+          <div className="w-8 h-8 border-4 border-brand border-t-transparent rounded-full animate-spin" />
+        </div>
+      }>
+        {renderTab()}
+      </Suspense>
     </DashboardLayout>
   );
 };

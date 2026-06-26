@@ -30,7 +30,7 @@ const INTEL_TYPE_META = {
   'ALERT':       { icon: 'fa-solid fa-bell',                 bg: 'bg-orange-100 dark:bg-orange-900/30', color: 'text-orange-600 dark:text-orange-400' },
 };
 
-const IntelItem = ({ type, title, description, time, impactValue, impactLabel, severityColor, details, tags }) => {
+const IntelItem = ({ type, title, description, time, impactValue, impactLabel, severityColor: _severityColor, details, tags: _tags }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -147,7 +147,7 @@ const IntelItem = ({ type, title, description, time, impactValue, impactLabel, s
 };
 
 const IntelSection = ({ items, title }) => {
-  const [viewMode, setViewMode] = useState('text');
+  const [viewMode, _setViewMode] = useState('text');
   const [activeTab, setActiveTab] = useState('All');
 
   const displayItems = items || [];
@@ -156,7 +156,7 @@ const IntelSection = ({ items, title }) => {
     ? displayItems
     : displayItems.filter(item => INTEL_TAB_MATCHER[activeTab]?.(item) ?? false);
 
-  const btnClass = (mode) =>
+  const _btnClass = (mode) =>
     `px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
       viewMode === mode
         ? 'bg-brand text-white shadow-sm dark:bg-gray-600'

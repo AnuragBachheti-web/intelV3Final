@@ -8,7 +8,7 @@ import {
   INVENTORY_INSIGHTS_DATA,
   ADS_INSIGHTS_DATA,
   CASH_INSIGHTS_DATA,
-} from './intelV2Data';
+} from './intelData';
 
 const INSIGHTS_BY_INTEL_TAB = {
   sales:     INSIGHTS_DATA,
@@ -162,7 +162,7 @@ const getGuardrails = (step) => {
   return 'Proceed carefully and monitor for unintended side effects. Stop or pause if key metrics deviate beyond acceptable thresholds. Maintain rollback capability throughout execution.';
 };
 
-const IntelV2InsightDetailPage = () => {
+const IntelInsightDetailPage = () => {
   const { intelTab, idx } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -195,23 +195,23 @@ const IntelV2InsightDetailPage = () => {
     );
   }
 
-  const isFirst = currentIndex === 0;
-  const isLast = currentIndex === stateInsights.length - 1;
+  const _isFirst = currentIndex === 0;
+  const _isLast = currentIndex === stateInsights.length - 1;
   const allSteps = insight.steps || [];
-  const filteredSteps = stepFilter === 'All' ? allSteps : allSteps.filter(s => getStepPriority(s.type) === stepFilter);
+  const _filteredSteps = stepFilter === 'All' ? allSteps : allSteps.filter(s => getStepPriority(s.type) === stepFilter);
   const selectedStep = selectedStepId !== null ? allSteps.find(s => s.id === selectedStepId) : null;
   const insightMeta = INSIGHT_TYPE_META[insight.type] || INSIGHT_TYPE_META.INSIGHT;
   const recId = `REC-${8000 + currentIndex * 100 + 71}`;
-  const label = INTEL_LABELS[stateIntelTab] || 'Sales';
+  const _label = INTEL_LABELS[stateIntelTab] || 'Sales';
 
-  const navigateToIndex = (newIndex) => {
-    navigate(`/intel-v2/insight/${stateIntelTab}/${newIndex}`, {
+  const _navigateToIndex = (newIndex) => {
+    navigate(`/intel/insight/${stateIntelTab}/${newIndex}`, {
       state: { ...stateData, currentIndex: newIndex },
     });
   };
 
   const handleBack = () => {
-    const route = stateData?.sourceRoute || TAB_TO_ROUTE[stateIntelTab] || '/intel-v2';
+    const route = stateData?.sourceRoute || TAB_TO_ROUTE[stateIntelTab] || '/intel';
     if (route === '/product-view' && stateData?.productViewState) {
       navigate(route, { state: stateData.productViewState });
     } else {
@@ -374,7 +374,7 @@ const IntelV2InsightDetailPage = () => {
               <i className="fa-solid fa-bolt text-[11px]" /> Execute
             </button>
             <button
-              onClick={() => navigate('/intel-v2/simulate', {
+              onClick={() => navigate('/intel/simulate', {
                 state: {
                   insight,
                   step: selectedStep,
@@ -402,7 +402,7 @@ const IntelV2InsightDetailPage = () => {
                   .map(({ ins, i }, listIdx) => (
                     <button
                       key={i}
-                      onClick={() => navigate(`/intel-v2/insight/${stateIntelTab}/${i}`, { state: { ...stateData, currentIndex: i } })}
+                      onClick={() => navigate(`/intel/insight/${stateIntelTab}/${i}`, { state: { ...stateData, currentIndex: i } })}
                       className="text-left w-full px-2 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/60 transition-colors group flex items-start gap-2"
                     >
                       <span className="flex-shrink-0 text-[10px] font-semibold text-gray-400 dark:text-slate-500 mt-0.5 w-3.5">{listIdx + 1}.</span>
@@ -422,4 +422,4 @@ const IntelV2InsightDetailPage = () => {
   );
 };
 
-export default IntelV2InsightDetailPage;
+export default IntelInsightDetailPage;

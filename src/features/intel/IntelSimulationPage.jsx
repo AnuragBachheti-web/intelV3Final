@@ -137,7 +137,7 @@ const SIM_STEPS = [
 ];
 
 /* ── Page ─────────────────────────────────────────────────────────────────── */
-const IntelV2SimulationPage = () => {
+const IntelSimulationPage = () => {
   const { state } = useLocation();
   const navigate  = useNavigate();
 
@@ -157,9 +157,7 @@ const IntelV2SimulationPage = () => {
     else navigate(-1);
   };
 
-  if (!insight && !step) { navigate(-1); return null; }
-
-  /* ── Simulation input state ── */
+  /* ── Simulation input state — hooks must appear before any conditional return ── */
   const [currentPrice,   setCurrentPrice]   = useState(cfg.val1Default);
   const [simulatedPrice, setSimulatedPrice] = useState(cfg.val2Default);
   const [channels,       setChannels]       = useState(['Amazon', 'Shopify', 'Walmart Marketplace']);
@@ -185,12 +183,21 @@ const IntelV2SimulationPage = () => {
 
   /* ── Edit / Execute state ── */
   const [isEditing,       setIsEditing]       = useState(false);
-  const [hasSimulated,    setHasSimulated]    = useState(false);
+  const [_hasSimulated,   setHasSimulated]    = useState(false);
   const [showSimProgress, setShowSimProgress] = useState(false);
   const [simProgress,     setSimProgress]     = useState(0);
 
   /* ── Simulation store (global header loader) ── */
   const { startSimulation, setProgress: setGlobalProgress, endSimulation } = useSimulationStore();
+
+  /* ── Computed results — useMemo must also be before the guard ── */
+  const r = useMemo(() => compute(intelTab, committed.currentPrice, committed.simulatedPrice, committed.channels), [intelTab, committed]);
+  const previewR = useMemo(() => {
+    if (!previewMode || !aiPreviewPrice) return null;
+    return compute(intelTab, committed.currentPrice, aiPreviewPrice, committed.channels);
+  }, [intelTab, previewMode, aiPreviewPrice, committed]);
+
+  if (!insight && !step) { navigate(-1); return null; }
 
   /* ── Derived slider values (always from real simulatedPrice) ── */
   const pricePct = Math.round((simulatedPrice - currentPrice) / currentPrice * 100);
@@ -263,7 +270,7 @@ const IntelV2SimulationPage = () => {
     setPreviewMode(false);
   };
 
-  const handleExecute = () => {
+  const _handleExecute = () => {
     setShowSimProgress(true);
     setSimProgress(0);
     startSimulation();
@@ -283,14 +290,6 @@ const IntelV2SimulationPage = () => {
     simulatedPrice !== committed.simulatedPrice ||
     channels.join(',') !== committed.channels.join(',');
 
-  /* ── Computed results (always from committed, never from live inputs) ── */
-  const r = useMemo(() => compute(intelTab, committed.currentPrice, committed.simulatedPrice, committed.channels), [intelTab, committed]);
-
-  const previewR = useMemo(() => {
-    if (!previewMode || !aiPreviewPrice) return null;
-    return compute(intelTab, committed.currentPrice, aiPreviewPrice, committed.channels);
-  }, [intelTab, previewMode, aiPreviewPrice, committed]);
-
   const displayR        = previewR || r;
   const displaySimPrice = (previewMode && aiPreviewPrice) ? aiPreviewPrice : committed.simulatedPrice;
 
@@ -309,7 +308,7 @@ const IntelV2SimulationPage = () => {
   const col   = (n) => pos(n) ? green : red;
   const arr   = (n) => pos(n) ? '↑' : '↓';
 
-  const filterBar = null;
+  const _filterBar = null;
 
   const summaryCards = intelTab === 'inventory' ? [
     { icon: 'fa-shield-halved',  label: 'Revenue Protected', main: `$${displayR.projRevenue.toLocaleString()}`, sub: `${displayR.projRevenue > 0 ? '−' : '+'}${Math.abs(pct(displayR.projRevenue, Math.max(1, displayR.revenue)))}%`, unit: 'at-risk revenue saved', positive: displayR.projRevenue <= displayR.revenue },
@@ -841,4 +840,4 @@ const IntelV2SimulationPage = () => {
   );
 };
 
-export default IntelV2SimulationPage;
+export default IntelSimulationPage;

@@ -8,8 +8,6 @@ import logo_dark from '../../assets/logo_dark.png';
 import logo_white from '../../assets/logo_white.png';
 import LOGO1 from '../../assets/LOGO1.png';
 import LOGO2 from '../../assets/LOGO2.png';
-import fullLogo_Lightv2 from '../../assets/fullLogo_Lightv2.png';
-import fulllogo_Dark from '../../assets/fulllogo_Dark.png';
 import white_latest from '../../assets/white_latest.png';
 import dark_latest from '../../assets/dark_latest.png';
 import { historyItems } from '../../features/history/historyData';
@@ -19,7 +17,7 @@ const EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
 const DUR = '200ms';
 const t = (props) => props.map(p => `${p} ${DUR} ${EASE}`).join(', ');
 
-const INTEL_V2_FULL_PATHS = ['/intel-v2', '/intel-v2/sales', '/intel-v2/margin', '/intel-v2/inventory', '/intel-v2/ads', '/intel-v2/cash'];
+const INTEL_FULL_PATHS = ['/intel', '/intel/sales', '/intel/margin', '/intel/inventory', '/intel/ads', '/intel/cash'];
 
 const RECENT_HISTORY = [
   ...historyItems.today.map(h => ({ id: h.id, label: h.title })),
@@ -291,12 +289,12 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false }) => {
   const isScreenerActive = location.pathname.startsWith(ROUTES.SCREENER);
   const isNewAnalysisActive = location.pathname === ROUTES.NEW_ANALYSIS;
   const isSettingsActive = location.pathname === ROUTES.SETTINGS;
-  const isIntelV2FullActive = INTEL_V2_FULL_PATHS.includes(location.pathname) || location.pathname.startsWith('/intel-v2/insight/') || location.pathname.startsWith('/intel-v2/simulate');
+  const isIntelFullActive = INTEL_FULL_PATHS.includes(location.pathname) || location.pathname.startsWith('/intel/insight/') || location.pathname.startsWith('/intel/simulate');
 
   const navItems = [
     { name: 'New', icon: 'fa-plus', href: ROUTES.NEW_ANALYSIS, active: isNewAnalysisActive },
     { name: 'History', icon: 'fa-clock-rotate-left', href: ROUTES.HISTORY, active: isHistoryActive },
-    { name: 'Intel', icon: 'fa-chart-line', href: ROUTES.INTEL_V2_FULL, active: isIntelV2FullActive },
+    { name: 'Intel', icon: 'fa-chart-line', href: ROUTES.INTEL_FULL, active: isIntelFullActive },
     { name: 'Research', icon: 'fa-chart-column', href: ROUTES.SCREENER, active: isScreenerActive },
   ];
   const role = localStorage.getItem("userRole") || "admin";
@@ -306,8 +304,8 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false }) => {
   const isActionLogActive = location.pathname === '/action-log';
   const showProducts = allowedRoutes.includes("/products");
   const showActionLog = allowedRoutes.includes("/action-log");
-  const productsItem = { name: 'Products', icon: 'fa-box', href: '/products', active: isProductsActive };
-  const actionLogItem = { name: 'Action Log', icon: 'fa-clock-rotate-left', href: '/action-log', active: isActionLogActive };
+  const _productsItem = { name: 'Products', icon: 'fa-box', href: '/products', active: isProductsActive };
+  const _actionLogItem = { name: 'Action Log', icon: 'fa-clock-rotate-left', href: '/action-log', active: isActionLogActive };
   const settingsItem = { name: 'Settings', icon: 'fa-gear', href: ROUTES.SETTINGS, active: isSettingsActive };
 
   /* ── Inline variant (used inside DashboardLayout) ── */
