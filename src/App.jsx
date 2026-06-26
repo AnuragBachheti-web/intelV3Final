@@ -20,6 +20,7 @@ const ProductViewPage        = lazy(() => import("./features/product-view/Produc
 const IntelV2Page            = lazy(() => import("./features/intel-v2"));
 const IntelV2InsightDetailPage = lazy(() => import("./features/intel-v2/IntelV2InsightDetailPage"));
 const IntelV2SimulationPage  = lazy(() => import("./features/intel-v2/IntelV2SimulationPage"));
+const IntelV2RollbackPage    = lazy(() => import("./features/intel-v2/IntelV2RollbackPage"));
 const ProductsListPage       = lazy(() => import("./features/products/ProductsListPage"));
 const NotificationsPage      = lazy(() => import("./features/notifications/NotificationsPage"));
 const ActionLogPage          = lazy(() => import("./features/action-log/ActionLogPage"));
@@ -55,7 +56,8 @@ function App() {
             <Route path="/intel-v2/ads"       element={<IntelV2Page defaultTab="ads"       fullWidthInsights={true} />} />
             <Route path="/intel-v2/cash"      element={<IntelV2Page defaultTab="cash"      fullWidthInsights={true} />} />
             <Route path="/intel-v2/insight/:intelTab/:idx" element={<IntelV2InsightDetailPage />} />
-            <Route path="/intel-v2/simulate"  element={<IntelV2SimulationPage />} />
+            <Route path="/intel-v2/simulate"   element={<IntelV2SimulationPage />} />
+            <Route path="/intel-v2/rollback"  element={<IntelV2RollbackPage />} />
 
             {/* Intel tab aliases */}
             <Route path={ROUTES.SALES}     element={<IntelV2Page defaultTab="sales"     />} />

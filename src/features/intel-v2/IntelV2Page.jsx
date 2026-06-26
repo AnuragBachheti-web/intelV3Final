@@ -6,6 +6,7 @@ import KPISelectorModal from '../../components/common/KPISelectorModal';
 import KPIDetailModal from '../../components/common/KPIDetailModal';
 import { salesWatchlistItems } from '../sales-intelligence/salesData';
 import { useFilterStore } from '../../store/useFilterStore';
+import { useActionStore } from '../../store/useActionStore';
 import apiClient from '../../api/client';
 import {
   INTEL_TABS,
@@ -643,6 +644,8 @@ const InsightsPanel = ({
   const [selectedStepId, setSelectedStepId] = useState(null);
   const [expandedIdx, setExpandedIdx] = useState(null);
   const [itemSubTab, setItemSubTab] = useState('revenue');
+  const [insightViewFilter, setInsightViewFilter] = useState('recent');
+  const { executedMap } = useActionStore();
   const navigate = useNavigate();
   const containerRef = useRef(null);
   const cardRefs = useRef([]);
@@ -720,7 +723,7 @@ const InsightsPanel = ({
     <div ref={containerRef} className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-[#030712]">
 
       {/* Header */}
-      <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-800">
+      <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-800 bg-[#eeeff0]" >
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-gray-900 dark:text-slate-100">
@@ -755,20 +758,65 @@ const InsightsPanel = ({
         </div>
       </div>
 
+      {/* View filter tabs */}
+      {!isEmpty && (
+        <div className="px-4 pt-3 pb-2.5 flex items-center gap-1 border-b border-gray-100 dark:border-slate-800 bg-[#eeeff0]">
+          {[
+            { key: 'recent',   label: 'Most Recent' },
+            { key: 'month',    label: 'This Month'  },
+            { key: 'executed', label: 'Executed', count: insightBlocks.filter((_, i) => executedMap[`${intelTab}-item-${i}`]).length },
+          ].map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setInsightViewFilter(tab.key)}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
+                insightViewFilter === tab.key
+                  ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900'
+                  : 'text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              {tab.label}
+              {tab.count > 0 && (
+                <span className="w-4 h-4 rounded-full bg-green-500 text-white text-[9px] flex items-center justify-center flex-shrink-0">{tab.count}</span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Content */}
-      <div className="p-3">
-        {!isEmpty && (
+      <div className="p-3 bg-[#eeeff0]">
+        {!isEmpty && (() => {
+          const allWithIdx = insightBlocks.map((b, i) => ({ ...b, originalIdx: i }));
+          const displayBlocks = insightViewFilter === 'recent'
+            ? allWithIdx.slice(0, 7)
+            : insightViewFilter === 'executed'
+            ? allWithIdx.filter(b => executedMap[`${intelTab}-item-${b.originalIdx}`])
+            : allWithIdx;
+          return (
           <div className={itemViewMode === 'grid' ? 'grid grid-cols-2 gap-4' : 'flex flex-col gap-3'}>
-            {insightBlocks.map((block, idx) => (
+            {displayBlocks.length === 0 && insightViewFilter === 'executed' && (
+              <p className="text-xs text-gray-400 dark:text-slate-500 py-4 text-center">No executed insights yet.</p>
+            )}
+            {displayBlocks.map((block, displayIdx) => {
+              const idx = block.originalIdx;
+              const isExec = !!executedMap[`${intelTab}-item-${idx}`];
+              const execAt = executedMap[`${intelTab}-item-${idx}`];
+              return (
               <div
                 key={idx}
                 ref={(el) => { cardRefs.current[idx] = el; }}
-                onClick={() => navigate(`/intel-v2/insight/${intelTab}/${idx}`, { state: { insights: insightBlocks, currentIndex: idx, intelTab, insightTab: 'Item', sourceRoute: sourceRoute || '/intel-v2' } })}
+                onClick={() => navigate(`/intel-v2/insight/${intelTab}/${idx}`, { state: { insights: insightBlocks, currentIndex: idx, intelTab, insightTab: 'Item', sourceRoute: sourceRoute || '/intel-v2', executed: isExec, executedAt: execAt || null } })}
                 className="cursor-pointer rounded-xl border transition-all p-3 border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:bg-gray-50 dark:hover:bg-slate-800/40"
               >
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className={`px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-md ${INSIGHT_BADGE_COLORS[block.type] || 'bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-300'}`}>{block.type}</span>
+                    {isExec && (
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 text-[9px] font-bold">
+                        <i className="fa-solid fa-circle-check text-[8px]" /> EXECUTED
+                      </span>
+                    )}
                     <span className="text-[10px] text-gray-400">•</span>
                     <span className="text-[10px] text-gray-500 dark:text-slate-400">{block.time}</span>
                   </div>
@@ -780,7 +828,7 @@ const InsightsPanel = ({
                   )}
                 </div>
                 <h4 className="text-[13px] font-medium leading-snug text-gray-900 dark:text-slate-100 hover:text-brand dark:hover:text-gray-200 transition-colors flex items-center gap-2 mb-2">
-                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-50 dark:bg-amber-900/20 text-[9px] font-bold text-amber-600 dark:text-amber-400 flex-shrink-0">{idx + 1}</span>
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-50 dark:bg-amber-900/20 text-[9px] font-bold text-amber-600 dark:text-amber-400 flex-shrink-0">{displayIdx + 1}</span>
                   <span className="truncate">{block.heading}</span>
                 </h4>
                 <p
@@ -796,9 +844,11 @@ const InsightsPanel = ({
                   {expandedIdx === idx ? 'View Less.' : 'View More.'}
                 </button>
               </div>
-            ))}
+              );
+            })}
           </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );
@@ -1665,19 +1715,38 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                 </div>
 
                 {/* Footer */}
-                <div className="px-4 pb-4 pt-3 flex justify-end gap-2 border-t border-gray-100 dark:border-slate-800">
+                <div className="px-4 pb-4 pt-3 flex items-center justify-between gap-2 border-t border-gray-100 dark:border-slate-800">
                   <button
-                    onClick={() => setV2FilterOpen(false)}
-                    className="px-5 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
+                    onClick={() => {
+                      setPendingDate('last-7-days');
+                      setPendingCats([]);
+                      setPendingChans([]);
+                      setAppliedDate(null);
+                      setAppliedCats([]);
+                      setAppliedChans([]);
+                      setDateRange(null);
+                      setCategory('all');
+                      setChannel('all');
+                      setV2FilterOpen(false);
+                    }}
+                    className="px-5 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-red-500 dark:hover:text-red-400 transition"
                   >
-                    Cancel
+                    Clear Filters
                   </button>
-                  <button
-                    onClick={handleApplyV2Filter}
-                    className="px-5 py-2 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition"
-                  >
-                    Update
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setV2FilterOpen(false)}
+                      className="px-5 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleApplyV2Filter}
+                      className="px-5 py-2 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition"
+                    >
+                      Update
+                    </button>
+                  </div>
                 </div>
 
               </div>

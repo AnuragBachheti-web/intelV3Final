@@ -641,20 +641,20 @@ const KPIDetailModal = ({ isOpen, onClose, stat, filterContext = {}, tab = 'sale
         onClick={e => e.stopPropagation()}
       >
         {/* ── Header ── */}
-        <div className="flex items-start justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex-shrink-0">
+        <div className="flex items-start justify-between px-7 py-6 border-b border-gray-100 dark:border-slate-800 flex-shrink-0">
           <div className="min-w-0 flex-1 mr-4">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <h3 className="text-base font-bold text-gray-900 dark:text-slate-100">{stat.title}</h3>
-              <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${stat.isPositive !== false ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-500 dark:text-red-400'}`}>
+            <div className="flex items-center gap-2.5 flex-wrap mb-2">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">{stat.title}</h3>
+              <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${stat.isPositive !== false ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-500 dark:text-red-400'}`}>
                 {stat.change}&nbsp;
                 <i className={`fa-solid ${stat.isPositive !== false ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'} text-[9px]`} />
               </span>
             </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-2xl font-bold text-gray-900 dark:text-slate-100 leading-none">{stat.value}</span>
-              <span className="text-[11px] text-gray-500 dark:text-slate-400 bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">{periodLabel}</span>
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="text-3xl font-bold text-gray-900 dark:text-slate-100 leading-none">{stat.value}</span>
+              <span className="text-xs text-gray-500 dark:text-slate-400 bg-gray-100 dark:bg-slate-800 px-2.5 py-1 rounded-md">{periodLabel}</span>
               {activeFilters.map((f, i) => (
-                <span key={i} className="text-[11px] text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/60 px-2 py-0.5 rounded-md">{f}</span>
+                <span key={i} className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/60 px-2.5 py-1 rounded-md">{f}</span>
               ))}
             </div>
           </div>
@@ -666,9 +666,9 @@ const KPIDetailModal = ({ isOpen, onClose, stat, filterContext = {}, tab = 'sale
         {/* ── Summary stats ── */}
         <div className="flex gap-0 border-b border-gray-100 dark:border-slate-800 flex-shrink-0">
           {summary.map((s, i) => (
-            <div key={i} className={`flex-1 px-5 py-3 ${i < summary.length - 1 ? 'border-r border-gray-100 dark:border-slate-800' : ''}`}>
-              <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">{s.label}</p>
-              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{s.value}</p>
+            <div key={i} className={`flex-1 px-7 py-5 ${i < summary.length - 1 ? 'border-r border-gray-100 dark:border-slate-800' : ''}`}>
+              <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">{s.label}</p>
+              <p className="text-base font-bold text-gray-900 dark:text-slate-100">{s.value}</p>
             </div>
           ))}
         </div>
@@ -681,7 +681,7 @@ const KPIDetailModal = ({ isOpen, onClose, stat, filterContext = {}, tab = 'sale
                 {cols.map((col, i) => (
                   <th
                     key={i}
-                    className={`px-4 py-2.5 text-[10px] font-bold text-gray-500 dark:text-slate-400 uppercase tracking-widest whitespace-nowrap border-b border-gray-100 dark:border-slate-700 ${col.cls}`}
+                    className={`px-5 py-3.5 text-[10px] font-bold text-gray-500 dark:text-slate-400 uppercase tracking-widest whitespace-nowrap border-b border-gray-100 dark:border-slate-700 ${col.cls}`}
                     style={col.minW ? { minWidth: col.minW } : undefined}
                   >
                     {col.label}
@@ -689,11 +689,11 @@ const KPIDetailModal = ({ isOpen, onClose, stat, filterContext = {}, tab = 'sale
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
+            <tbody className="divide-y divide-gray-100 dark:divide-slate-700/60">
               {rows.map((row, ri) => (
-                <tr key={ri} className="hover:bg-gray-50/60 dark:hover:bg-slate-800/40 transition-colors group">
+                <tr key={ri} className="hover:bg-gray-50/80 dark:hover:bg-slate-800/40 transition-colors group">
                   {cols.map((col, ci) => (
-                    <td key={ci} className={`px-4 py-2.5 text-xs ${col.cls}`}>
+                    <td key={ci} className={`px-5 py-3.5 text-xs ${col.cls}`}>
                       {col.render(row)}
                     </td>
                   ))}
@@ -704,7 +704,7 @@ const KPIDetailModal = ({ isOpen, onClose, stat, filterContext = {}, tab = 'sale
               <tfoot>
                 <tr className="bg-gray-50 dark:bg-slate-800/60 border-t-2 border-gray-200 dark:border-slate-700">
                   {cols.map((col, i) => (
-                    <td key={i} className={`px-4 py-2.5 text-xs ${col.cls}`}>
+                    <td key={i} className={`px-5 py-3.5 text-xs ${col.cls}`}>
                       {renderTotalCell(col, totals)}
                     </td>
                   ))}

@@ -18,10 +18,10 @@ const HistoryRightSidebar = ({
   return (
     <aside
       id="right-sidebar"
-      className="hidden xl:flex flex-col w-72 bg-[#f8f9fc] dark:bg-slate-900 border-l border-gray-200 dark:border-slate-800 self-stretch shrink-0 z-10 transition-colors duration-300"
+      className="hidden xl:flex flex-col w-72 bg-transparent self-stretch shrink-0 z-10"
     >
       {/* Quick Filters */}
-      <div className="p-4 border-b border-gray-200 dark:border-slate-800">
+      <div className="pl-6 pr-4 pt-4 pb-4 border-b border-gray-200 dark:border-slate-800">
         <h2 className="font-medium text-gray-900 dark:text-slate-100 mb-3">Quick Filters</h2>
         <div className="space-y-2">
           {quickFilters.map((filter) => {
@@ -53,7 +53,7 @@ const HistoryRightSidebar = ({
       </div>
 
       {/* Modules */}
-      <div className="p-4 border-b border-gray-200 dark:border-slate-800">
+      <div className="pl-6 pr-4 pt-4 pb-4 border-b border-gray-200 dark:border-slate-800">
         <h2 className="font-medium text-gray-900 dark:text-slate-100 mb-3">Modules</h2>
         <div className="space-y-4">
           {(modules || []).map((mod) => {
@@ -109,7 +109,7 @@ const HistoryRightSidebar = ({
       </div>
 
       {/* Most Used Searches */}
-      <div className="flex-1 overflow-y-auto p-4 hide-scroll">
+      <div className="flex-1 overflow-y-auto pl-6 pr-4 py-4 hide-scroll">
         <h2 className="font-medium text-gray-900 dark:text-slate-100 mb-3">Most Used Searches</h2>
         <div className="space-y-2">
           {mostUsedSearches.map((search, idx) => (
@@ -124,7 +124,7 @@ const HistoryRightSidebar = ({
       </div>
 
       {/* Export */}
-      <div className="p-4 border-t border-gray-200 dark:border-slate-800 bg-[#f8f9fc] dark:bg-slate-900">
+      <div className="pl-6 pr-4 py-4 border-t border-gray-200 dark:border-slate-800">
         <button className="w-full flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-600 rounded-lg p-2.5 text-sm font-medium transition-colors shadow-sm text-gray-700 dark:text-slate-300">
           <i className="fa-solid fa-download"></i>
           <span>Export History</span>

@@ -250,10 +250,24 @@ const IntelV2InsightDetailPage = () => {
               <span className={`px-2.5 py-1 text-[10px] rounded-lg font-bold uppercase tracking-wider ${insightMeta.bg} ${insightMeta.color}`}>
                 {insight.type === 'HIGH' ? 'HIGH IMPACT' : insight.type}
               </span>
+              {stateData?.executed && (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400">
+                  <i className="fa-solid fa-circle-check text-[9px]" /> EXECUTED
+                </span>
+              )}
               <span className="text-xs text-gray-400 dark:text-slate-500 font-mono">#{recId}</span>
               <span className="text-gray-300 dark:text-slate-700">·</span>
               <span className="text-xs text-gray-500 dark:text-slate-400">{insight.time}</span>
             </div>
+            {stateData?.executed && stateData?.executedAt && (
+              <div className="mb-4 flex items-center gap-2 px-3 py-2.5 rounded-xl bg-green-50 dark:bg-green-900/15 border border-green-200 dark:border-green-800/40">
+                <i className="fa-solid fa-circle-check text-green-500 text-sm flex-shrink-0" />
+                <div>
+                  <p className="text-xs font-semibold text-green-700 dark:text-green-400">Action Executed</p>
+                  <p className="text-[11px] text-green-600/80 dark:text-green-500/80 mt-0.5">Completed on {stateData.executedAt}</p>
+                </div>
+              </div>
+            )}
 
             {/* Heading */}
             <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100 leading-snug mb-4">
@@ -370,23 +384,50 @@ const IntelV2InsightDetailPage = () => {
         <aside className="hidden lg:flex flex-col w-64 shrink-0 mt-12 sticky top-6 gap-3">
           {/* Primary CTA card */}
           <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm p-4 flex flex-col gap-3">
-            <button className="w-full py-3 bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 rounded-xl font-bold text-sm hover:opacity-90 transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow">
-              <i className="fa-solid fa-bolt text-[11px]" /> Execute
-            </button>
-            <button
-              onClick={() => navigate('/intel-v2/simulate', {
-                state: {
-                  insight,
-                  step: selectedStep,
-                  intelTab: stateIntelTab,
-                  backTo: location.pathname,
-                  backState: location.state,
-                },
-              })}
-              className="w-full py-3 bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-slate-200 rounded-xl font-bold text-sm border border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
-            >
-              <i className="fa-solid fa-flask-vial text-[11px]" /> Simulate
-            </button>
+            {stateData?.executed ? (
+              <>
+                <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/40">
+                  <i className="fa-solid fa-circle-check text-green-500 text-sm" />
+                  <div>
+                    <p className="text-xs font-bold text-green-700 dark:text-green-400">Executed</p>
+                    {stateData?.executedAt && <p className="text-[10px] text-green-600/70 dark:text-green-500/70">{stateData.executedAt}</p>}
+                  </div>
+                </div>
+                <button
+                  onClick={() => navigate('/intel-v2/rollback', {
+                    state: {
+                      insight,
+                      intelTab: stateIntelTab,
+                      executedAt: stateData?.executedAt,
+                      backState: location.state,
+                    },
+                  })}
+                  className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow"
+                >
+                  <i className="fa-solid fa-rotate-left text-[11px]" /> Roll Back
+                </button>
+              </>
+            ) : (
+              <>
+                <button className="w-full py-3 bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 rounded-xl font-bold text-sm hover:opacity-90 transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow">
+                  <i className="fa-solid fa-bolt text-[11px]" /> Execute
+                </button>
+                <button
+                  onClick={() => navigate('/intel-v2/simulate', {
+                    state: {
+                      insight,
+                      step: selectedStep,
+                      intelTab: stateIntelTab,
+                      backTo: location.pathname,
+                      backState: location.state,
+                    },
+                  })}
+                  className="w-full py-3 bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-slate-200 rounded-xl font-bold text-sm border border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                >
+                  <i className="fa-solid fa-flask-vial text-[11px]" /> Simulate
+                </button>
+              </>
+            )}
           </div>
 
           {/* Other insights quick-access list */}
@@ -406,7 +447,7 @@ const IntelV2InsightDetailPage = () => {
                       className="text-left w-full px-2 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/60 transition-colors group flex items-start gap-2"
                     >
                       <span className="flex-shrink-0 text-[10px] font-semibold text-gray-400 dark:text-slate-500 mt-0.5 w-3.5">{listIdx + 1}.</span>
-                      <span className="text-[13px] font-medium text-gray-700 dark:text-slate-300 leading-snug group-hover:text-gray-900 dark:group-hover:text-slate-100 line-clamp-2">
+                      <span className="text-[13px] font-medium text-gray-700 dark:text-slate-300 leading-snug group-hover:text-gray-900 dark:group-hover:text-slate-100 truncate">
                         {ins.heading}
                       </span>
                     </button>
