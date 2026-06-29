@@ -4,7 +4,6 @@ import DashboardLayout from '../../components/layout/DashboardLayout';
 import HistoryItem from './components/HistoryItem';
 import HistoryRightSidebar from './components/HistoryRightSidebar';
 import ChatDetailView from './components/ChatDetailView';
-import RecentHistorySidebar from './components/RecentHistorySidebar';
 import ModelSelector from '../../components/common/ModelSelector';
 import { historyItems, quickFilters, modules, mostUsedSearches, MODULE_ITEM_IDS } from './historyData';
 
@@ -98,12 +97,14 @@ const HistoryPage = () => {
 
             {/* Scrollable chat messages */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 min-h-0">
-              <ChatDetailView chat={selectedChat} onBack={() => setSelectedChat(null)} />
+              <div className="max-w-3xl mx-auto">
+                <ChatDetailView chat={selectedChat} onBack={() => setSelectedChat(null)} />
+              </div>
             </div>
 
             {/* Pinned prompt — lives outside the scroll container, never moves */}
-            <div className="shrink-0 px-4 sm:px-6 pb-5 pt-3 bg-gradient-to-t from-white dark:from-[#030712] via-white/90 dark:via-[#030712]/90 to-transparent">
-              <div className="max-w-5xl ml-[26px] mr-auto">
+            <div className="shrink-0 px-4 sm:px-6 pb-5 pt-3">
+              <div className="max-w-3xl mx-auto">
                 <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
                   <div className="flex items-center gap-3 px-4 py-3.5">
                     <button className="w-7 h-7 flex items-center justify-center bg-slate-600 hover:bg-slate-700 text-white rounded-full transition-colors flex-shrink-0">
@@ -148,12 +149,6 @@ const HistoryPage = () => {
             </div>
           </div>
 
-          {/* Right: sidebar with its own independent scroll */}
-          <RecentHistorySidebar
-            currentChatId={selectedChat.id}
-            onChatSelect={(chat) => chat ? setSelectedChat(chat) : setSelectedChat(null)}
-            moduleFilter={moduleFilter}
-          />
         </div>
       ) : (
         /* List view */

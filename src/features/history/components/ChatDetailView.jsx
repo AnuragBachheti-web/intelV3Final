@@ -36,9 +36,10 @@ const ChatDetailView = ({ chat, onBack }) => {
       <div>
         <button
           onClick={onBack}
-          className="w-8 h-8 flex items-center justify-center rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 hover:opacity-80 transition-all active:scale-95"
+          className="flex items-center gap-2 text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200 transition-colors"
         >
-          <i className="fa-solid fa-arrow-left text-xs" />
+          <i className="fa-solid fa-arrow-left text-sm" />
+          <span className="text-sm font-medium">Back</span>
         </button>
       </div>
 
@@ -67,7 +68,7 @@ const ChatDetailView = ({ chat, onBack }) => {
       </div>
 
       {/* AI response */}
-      <div className="flex flex-col gap-2 max-w-4xl ml-16">
+      <div className="flex flex-col gap-2">
 
         <div className="flex items-center gap-1.5 text-[11px] text-gray-400 dark:text-slate-500">
           <i className="fa-regular fa-eye text-[9px]"></i>

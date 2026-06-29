@@ -1,4 +1,5 @@
 ﻿import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { motion, AnimatePresence } from 'framer-motion';
 import { analysisCategories } from './analysisData';
@@ -7,6 +8,43 @@ import { useAuthStore } from '../../store/useAuthStore';
 import logoDark from '../../assets/logo_dark.png';
 import logoLight from '../../assets/logo_white.png';
 import { useNavigate } from 'react-router-dom';
+
+const CategoryTab = ({ cat, idx, activeSuggestion, setActiveSuggestion }) => {
+  const [tooltip, setTooltip] = useState(null);
+  return (
+    <div className="relative flex-shrink-0">
+      <button
+        onClick={() => setActiveSuggestion(activeSuggestion === idx ? null : idx)}
+        onMouseEnter={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          setTooltip({ top: r.bottom + 8, left: r.left });
+        }}
+        onMouseLeave={() => setTooltip(null)}
+        className={`flex items-center gap-2 whitespace-nowrap px-4 py-2 border rounded-xl text-sm font-semibold transition-all hover:shadow-sm ${
+          activeSuggestion === idx
+            ? 'bg-brand text-white border-brand dark:bg-gray-600 dark:border-gray-600'
+            : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-600 text-gray-600 dark:text-slate-300'
+        }`}
+      >
+        <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 ${activeSuggestion === idx ? 'bg-white/20' : cat.color}`}>
+          <i className={`fa-solid ${cat.icon} text-[10px] text-black dark:text-white`}></i>
+        </div>
+        {cat.title}
+      </button>
+
+      {tooltip && ReactDOM.createPortal(
+        <div
+          style={{ position: 'fixed', top: tooltip.top, left: tooltip.left, zIndex: 99999 }}
+          className="w-56 bg-slate-900 text-white text-[11px] leading-relaxed rounded-lg px-3 py-2 pointer-events-none shadow-xl"
+        >
+          {cat.desc}
+          <div className="absolute -top-1 left-5 w-2 h-2 bg-slate-900 rotate-45" />
+        </div>,
+        document.body
+      )}
+    </div>
+  );
+};
 
 const NewAnalysisPage = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -127,26 +165,13 @@ const NewAnalysisPage = () => {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 flex-wrap">
                 {analysisCategories.map((cat, idx) => (
-                  <div key={idx} className="relative group/tab flex-shrink-0">
-                    <button
-                      onClick={() => setActiveSuggestion(activeSuggestion === idx ? null : idx)}
-                      className={`flex items-center gap-2 whitespace-nowrap px-4 py-2 border rounded-xl text-sm font-semibold transition-all hover:shadow-sm ${
-                        activeSuggestion === idx
-                          ? 'bg-brand text-white border-brand dark:bg-gray-600 dark:border-gray-600'
-                          : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-600 text-gray-600 dark:text-slate-300'
-                      }`}
-                    >
-                      <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 ${activeSuggestion === idx ? 'bg-white/20' : cat.color}`}>
-                        <i className={`fa-solid ${cat.icon} text-[10px] text-black dark:text-white`}></i>
-                      </div>
-                      {cat.title}
-                    </button>
-                    {/* Per-tab tooltip below */}
-                    <div className="absolute top-full left-0 mt-2 w-56 bg-slate-900 text-white text-[11px] leading-relaxed rounded-lg px-3 py-2 opacity-0 group-hover/tab:opacity-100 transition-opacity duration-150 pointer-events-none z-30 shadow-xl">
-                      {cat.desc}
-                      <div className="absolute -top-1 left-5 w-2 h-2 bg-slate-900 rotate-45" />
-                    </div>
-                  </div>
+                  <CategoryTab
+                    key={idx}
+                    cat={cat}
+                    idx={idx}
+                    activeSuggestion={activeSuggestion}
+                    setActiveSuggestion={setActiveSuggestion}
+                  />
                 ))}
               </div>
 

@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import useClickOutside from '../../hooks/useClickOutside';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import StatCard from '../../components/common/StatCard';
@@ -7,6 +6,7 @@ import KPISelectorModal from '../../components/common/KPISelectorModal';
 import KPIDetailModal from '../../components/common/KPIDetailModal';
 import { salesWatchlistItems } from '../sales-intelligence/salesData';
 import { useFilterStore } from '../../store/useFilterStore';
+import { useActionStore } from '../../store/useActionStore';
 import apiClient from '../../api/client';
 import {
   INTEL_TABS,
@@ -25,7 +25,7 @@ import {
   CASH_STEPS_BY_INSIGHT_TAB,
   STEP_SLOT,
   STEPS_VISIBLE,
-} from './intelData';
+} from './intelV2Data';
 
 const INSIGHTS_BY_INTEL_TAB = {
   sales: INSIGHTS_DATA,
@@ -93,7 +93,7 @@ const ItemTabContent = ({ selectedSkuId, setSelectedSkuId, noSidePanel = false, 
   const handleSkuClick = (sku) => {
     if (noSidePanel) {
       const insight = makeItemInsight(sku);
-      navigate(`/intel/insight/${intelTab}/0`, {
+      navigate(`/intel-v2/insight/${intelTab}/0`, {
         state: {
           insights: [insight],
           currentIndex: 0,
@@ -101,7 +101,7 @@ const ItemTabContent = ({ selectedSkuId, setSelectedSkuId, noSidePanel = false, 
           insightTab: 'Item',
           itemSubTab,
           itemName: sku.name,
-          sourceRoute: sourceRoute || '/intel',
+          sourceRoute: sourceRoute || '/intel-v2',
         },
       });
     } else {
@@ -182,7 +182,7 @@ const ItemTabContent = ({ selectedSkuId, setSelectedSkuId, noSidePanel = false, 
                 )}
               </div>
               <button
-                onClick={(e) => { e.stopPropagation(); navigate('/product-view', { state: { product: { name: sku.name, sku: sku.sku }, from: sourceRoute || '/intel', fromState: { restoreInsightTab: 'Item', restoreItemSubTab: itemSubTab } } }); }}
+                onClick={(e) => { e.stopPropagation(); navigate('/product-view', { state: { product: { name: sku.name, sku: sku.sku }, from: sourceRoute || '/intel-v2', fromState: { restoreInsightTab: 'Item', restoreItemSubTab: itemSubTab } } }); }}
                 className="flex-shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-800 dark:hover:text-slate-200 transition-colors text-[10px] font-semibold"
               >
                 <i className="fa-solid fa-arrow-up-right-from-square text-[8px]" />
@@ -211,7 +211,7 @@ const ItemTabContent = ({ selectedSkuId, setSelectedSkuId, noSidePanel = false, 
                 )}
               </div>
               <button
-                onClick={(e) => { e.stopPropagation(); navigate('/product-view', { state: { product: { name: sku.name, sku: sku.sku }, from: sourceRoute || '/intel', fromState: { restoreInsightTab: 'Item', restoreItemSubTab: itemSubTab } } }); }}
+                onClick={(e) => { e.stopPropagation(); navigate('/product-view', { state: { product: { name: sku.name, sku: sku.sku }, from: sourceRoute || '/intel-v2', fromState: { restoreInsightTab: 'Item', restoreItemSubTab: itemSubTab } } }); }}
                 className="flex-shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-800 dark:hover:text-slate-200 transition-colors text-[10px] font-semibold"
               >
                 <i className="fa-solid fa-arrow-up-right-from-square text-[8px]" />
@@ -240,7 +240,7 @@ const ItemTabContent = ({ selectedSkuId, setSelectedSkuId, noSidePanel = false, 
                 )}
               </div>
               <button
-                onClick={(e) => { e.stopPropagation(); navigate('/product-view', { state: { product: { name: sku.name, sku: sku.sku }, from: sourceRoute || '/intel', fromState: { restoreInsightTab: 'Item', restoreItemSubTab: itemSubTab } } }); }}
+                onClick={(e) => { e.stopPropagation(); navigate('/product-view', { state: { product: { name: sku.name, sku: sku.sku }, from: sourceRoute || '/intel-v2', fromState: { restoreInsightTab: 'Item', restoreItemSubTab: itemSubTab } } }); }}
                 className="flex-shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-800 dark:hover:text-slate-200 transition-colors text-[10px] font-semibold"
               >
                 <i className="fa-solid fa-arrow-up-right-from-square text-[8px]" />
@@ -339,9 +339,9 @@ const makeSpark = (endVal) => {
   return r.map(x => +(endVal * x).toFixed(2));
 };
 
-const ItemDeepDivePanel = ({ selectedSkuId, onNavigate: _onNavigate, viewMode = 'grid', intelTab = 'sales', itemSubTab = 'revenue' }) => {
+const ItemDeepDivePanel = ({ selectedSkuId, onNavigate, viewMode = 'grid', intelTab = 'sales', itemSubTab = 'revenue' }) => {
   const dd = selectedSkuId ? (ITEM_SKU_DATA.deepDive[selectedSkuId] || null) : null;
-  const _def = ITEM_SKU_DATA.deepDive.default;
+  const def = ITEM_SKU_DATA.deepDive.default;
   const navigateDive = useNavigate();
   const [selectedActionIdx, setSelectedActionIdx] = useState(null);
   const [activeMetric, setActiveMetric] = useState('revenue');
@@ -516,14 +516,14 @@ const ItemDeepDivePanel = ({ selectedSkuId, onNavigate: _onNavigate, viewMode = 
             time: '2 min ago',
             steps: dd.actions.map((action, i) => ({ id: i + 1, title: action.title, sub: action.sub, type: action.type })),
           };
-          navigateDive(`/intel/insight/${intelTab}/0`, {
+          navigateDive(`/intel-v2/insight/${intelTab}/0`, {
             state: {
               insights: [insight],
               currentIndex: 0,
               intelTab,
               insightTab: 'Item',
               itemSubTab,
-              sourceRoute: '/intel',
+              sourceRoute: '/intel-v2',
               initialStepId: selectedActionIdx !== null ? selectedActionIdx + 1 : 1,
             },
           });
@@ -627,10 +627,10 @@ const InsightsPanel = ({
   setStepOffset,
   isEmpty = false,
   isCarouselMode = false,
-  onProductClick: _onProductClick,
-  onStepClick: _onStepClick,
-  showDetailedView: _showDetailedView = false,
-  onDetailedView: _onDetailedView,
+  onProductClick,
+  onStepClick,
+  showDetailedView = false,
+  onDetailedView,
   intelTab = 'sales',
   selectedCategory = 'all',
   noSidePanel = false,
@@ -638,36 +638,31 @@ const InsightsPanel = ({
 }) => {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [activeInsightIdx, setActiveInsightIdx] = useState(null);
-  const [_selectedSkuId, setSelectedSkuId] = useState(null);
+  const [selectedSkuId, setSelectedSkuId] = useState(null);
   const [selectedInsightIdx, setSelectedInsightIdx] = useState(null);
-  const [_expandedCardIdx, setExpandedCardIdx] = useState(null);
-  const [_selectedStepId, setSelectedStepId] = useState(null);
+  const [expandedCardIdx, setExpandedCardIdx] = useState(null);
+  const [selectedStepId, setSelectedStepId] = useState(null);
   const [expandedIdx, setExpandedIdx] = useState(null);
-  const [_itemSubTab, setItemSubTab] = useState('revenue');
+  const [itemSubTab, setItemSubTab] = useState('revenue');
+  const [insightViewFilter, setInsightViewFilter] = useState('recent');
+  const { executedMap } = useActionStore();
   const navigate = useNavigate();
   const containerRef = useRef(null);
   const cardRefs = useRef([]);
 
-  // Memoized: re-derived only when the active intelligence tab changes
-  const tabInsights   = useMemo(() => INSIGHTS_BY_INTEL_TAB[intelTab] || INSIGHTS_BY_INTEL_TAB.sales, [intelTab]);
-  const insightBlocks = useMemo(() => tabInsights['item'] || [], [tabInsights]);
+  const tabInsights = INSIGHTS_BY_INTEL_TAB[intelTab] || INSIGHTS_BY_INTEL_TAB.sales;
+  const insightBlocks = tabInsights['item'] || [];
   const effectiveInsightIdx = isCarouselMode ? selectedInsightIdx : activeInsightIdx;
-  const activeStepBlock = useMemo(
-    () => effectiveInsightIdx !== null ? (insightBlocks[effectiveInsightIdx] || null) : null,
-    [effectiveInsightIdx, insightBlocks]
-  );
-  const tabStepsData = useMemo(() => STEPS_BY_INTEL_TAB[intelTab] || STEPS_BY_INTEL_TAB.sales, [intelTab]);
-  const steps = useMemo(
-    () => (activeStepBlock?.steps?.length ? activeStepBlock.steps : null)
-      || tabStepsData[activeInsightTab]
-      || tabStepsData['Overall'],
-    [activeStepBlock, tabStepsData, activeInsightTab]
-  );
-  const _canStepUp   = useMemo(() => stepOffset > 0, [stepOffset]);
-  const _canStepDown = useMemo(() => stepOffset + STEPS_VISIBLE < steps.length, [stepOffset, steps]);
+  const activeStepBlock = effectiveInsightIdx !== null ? (insightBlocks[effectiveInsightIdx] || null) : null;
+  const tabStepsData = STEPS_BY_INTEL_TAB[intelTab] || STEPS_BY_INTEL_TAB.sales;
+  const steps = (activeStepBlock?.steps?.length ? activeStepBlock.steps : null)
+    || tabStepsData[activeInsightTab]
+    || tabStepsData['Overall'];
+  const canStepUp = stepOffset > 0;
+  const canStepDown = stepOffset + STEPS_VISIBLE < steps.length;
 
   const currentCarouselBlock = isCarouselMode ? (insightBlocks[carouselIndex] || null) : null;
-  const _currentCarouselMeta = currentCarouselBlock
+  const currentCarouselMeta = currentCarouselBlock
     ? (INSIGHT_TYPE_META[currentCarouselBlock.type] || INSIGHT_TYPE_META.INSIGHT)
     : null;
 
@@ -728,7 +723,7 @@ const InsightsPanel = ({
     <div ref={containerRef} className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-[#030712]">
 
       {/* Header */}
-      <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-800">
+      <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-800 bg-[#eeeff0]" >
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-gray-900 dark:text-slate-100">
@@ -763,20 +758,65 @@ const InsightsPanel = ({
         </div>
       </div>
 
+      {/* View filter tabs */}
+      {!isEmpty && (
+        <div className="px-4 pt-3 pb-2.5 flex items-center gap-1 border-b border-gray-100 dark:border-slate-800 bg-[#eeeff0]">
+          {[
+            { key: 'recent',   label: 'Most Recent' },
+            { key: 'month',    label: 'This Month'  },
+            { key: 'executed', label: 'Executed', count: insightBlocks.filter((_, i) => executedMap[`${intelTab}-item-${i}`]).length },
+          ].map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setInsightViewFilter(tab.key)}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
+                insightViewFilter === tab.key
+                  ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900'
+                  : 'text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              {tab.label}
+              {tab.count > 0 && (
+                <span className="w-4 h-4 rounded-full bg-green-500 text-white text-[9px] flex items-center justify-center flex-shrink-0">{tab.count}</span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Content */}
-      <div className="p-3">
-        {!isEmpty && (
+      <div className="p-3 bg-[#eeeff0]">
+        {!isEmpty && (() => {
+          const allWithIdx = insightBlocks.map((b, i) => ({ ...b, originalIdx: i }));
+          const displayBlocks = insightViewFilter === 'recent'
+            ? allWithIdx.slice(0, 7)
+            : insightViewFilter === 'executed'
+            ? allWithIdx.filter(b => executedMap[`${intelTab}-item-${b.originalIdx}`])
+            : allWithIdx;
+          return (
           <div className={itemViewMode === 'grid' ? 'grid grid-cols-2 gap-4' : 'flex flex-col gap-3'}>
-            {insightBlocks.map((block, idx) => (
+            {displayBlocks.length === 0 && insightViewFilter === 'executed' && (
+              <p className="text-xs text-gray-400 dark:text-slate-500 py-4 text-center">No executed insights yet.</p>
+            )}
+            {displayBlocks.map((block, displayIdx) => {
+              const idx = block.originalIdx;
+              const isExec = !!executedMap[`${intelTab}-item-${idx}`];
+              const execAt = executedMap[`${intelTab}-item-${idx}`];
+              return (
               <div
                 key={idx}
                 ref={(el) => { cardRefs.current[idx] = el; }}
-                onClick={() => navigate(`/intel/insight/${intelTab}/${idx}`, { state: { insights: insightBlocks, currentIndex: idx, intelTab, insightTab: 'Item', sourceRoute: sourceRoute || '/intel' } })}
+                onClick={() => navigate(`/intel-v2/insight/${intelTab}/${idx}`, { state: { insights: insightBlocks, currentIndex: idx, intelTab, insightTab: 'Item', sourceRoute: sourceRoute || '/intel-v2', executed: isExec, executedAt: execAt || null } })}
                 className="cursor-pointer rounded-xl border transition-all p-3 border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:bg-gray-50 dark:hover:bg-slate-800/40"
               >
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className={`px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-md ${INSIGHT_BADGE_COLORS[block.type] || 'bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-300'}`}>{block.type}</span>
+                    {isExec && (
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 text-[9px] font-bold">
+                        <i className="fa-solid fa-circle-check text-[8px]" /> EXECUTED
+                      </span>
+                    )}
                     <span className="text-[10px] text-gray-400">•</span>
                     <span className="text-[10px] text-gray-500 dark:text-slate-400">{block.time}</span>
                   </div>
@@ -788,7 +828,7 @@ const InsightsPanel = ({
                   )}
                 </div>
                 <h4 className="text-[13px] font-medium leading-snug text-gray-900 dark:text-slate-100 hover:text-brand dark:hover:text-gray-200 transition-colors flex items-center gap-2 mb-2">
-                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-50 dark:bg-amber-900/20 text-[9px] font-bold text-amber-600 dark:text-amber-400 flex-shrink-0">{idx + 1}</span>
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-50 dark:bg-amber-900/20 text-[9px] font-bold text-amber-600 dark:text-amber-400 flex-shrink-0">{displayIdx + 1}</span>
                   <span className="truncate">{block.heading}</span>
                 </h4>
                 <p
@@ -804,15 +844,17 @@ const InsightsPanel = ({
                   {expandedIdx === idx ? 'View Less.' : 'View More.'}
                 </button>
               </div>
-            ))}
+              );
+            })}
           </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );
 };
 
-/* ─── IntelPage ─────────────────────────────────────────────────────────── */
+/* ─── IntelV2Page ────────────────────────────────────────────────────────── */
 
 const TAB_TO_ROUTE = {
   sales: '/sales',
@@ -823,11 +865,11 @@ const TAB_TO_ROUTE = {
 };
 
 const V2_FULL_TAB_TO_ROUTE = {
-  sales: '/intel/sales',
-  margin: '/intel/margin',
-  inventory: '/intel/inventory',
-  ads: '/intel/ads',
-  cash: '/intel/cash',
+  sales: '/intel-v2/sales',
+  margin: '/intel-v2/margin',
+  inventory: '/intel-v2/inventory',
+  ads: '/intel-v2/ads',
+  cash: '/intel-v2/cash',
 };
 
 const ROUTE_TO_TAB = {
@@ -836,56 +878,15 @@ const ROUTE_TO_TAB = {
   '/inventory': 'inventory',
   '/ads': 'ads',
   '/cash': 'cash',
-  '/intel': 'sales',
-  '/intel/sales': 'sales',
-  '/intel/margin': 'margin',
-  '/intel/inventory': 'inventory',
-  '/intel/ads': 'ads',
-  '/intel/cash': 'cash',
+  '/intel-v2': 'sales',
+  '/intel-v2/sales': 'sales',
+  '/intel-v2/margin': 'margin',
+  '/intel-v2/inventory': 'inventory',
+  '/intel-v2/ads': 'ads',
+  '/intel-v2/cash': 'cash',
 };
 
-/* ── Module-level filter option arrays (never change — no need to recreate per render) ── */
-const V2_DATE_OPTS = [
-  ['last-7-days',  'Last 7 Days'],
-  ['last-30-days', 'Last 30 Days'],
-  ['last-90-days', 'Last 90 Days'],
-  ['ytd',          'Year to Date'],
-];
-const V2_CAT_OPTS = [
-  ['all',           'All Categories'],
-  ['electronics',   'Electronics'],
-  ['home-garden',   'Home & Garden'],
-  ['apparel',       'Apparel'],
-  ['pet-suppliers', 'Pet Suppliers'],
-];
-const V2_CAT_RECENT = [['electronics','Electronics'],['apparel','Apparel'],['home-garden','Home & Garden']];
-const V2_CAT_GRID   = [['electronics','Electronics'],['apparel','Apparel'],['home-garden','Home & Garden'],['pet-suppliers','Pet Suppliers'],['all','All Categories']];
-const CAL_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-
-/* ── Pure utility functions (no state deps — safe at module level) ── */
-const isSameDay = (a, b) => !!(a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate());
-const isInRange = (date, start, end) => {
-  if (!start || !end) return false;
-  const d = date.getTime(), s = Math.min(start.getTime(), end.getTime()), e = Math.max(start.getTime(), end.getTime());
-  return d > s && d < e;
-};
-const formatCalDate = (d) => !d ? '' : `${d.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]} ${d.getFullYear()}`;
-const _getDurLabel = (key) => ({ 'last-7-days': '7 days', 'last-30-days': '30 days', 'last-90-days': '90 days', 'ytd': 'YTD' }[key] || '30 days');
-const quickToRange = (key) => {
-  const end = new Date(); end.setHours(23,59,59,999);
-  const start = new Date(end);
-  if (key === 'last-7-days')       start.setDate(start.getDate() - 6);
-  else if (key === 'last-30-days') start.setDate(start.getDate() - 29);
-  else if (key === 'last-90-days') start.setDate(start.getDate() - 89);
-  else if (key === 'ytd')          { start.setMonth(0); start.setDate(1); }
-  else                             start.setDate(start.getDate() - 29);
-  start.setHours(0,0,0,0);
-  return { start, end };
-};
-const v2DateLabel = (v) => V2_DATE_OPTS.find(([k]) => k === v)?.[1] || v;
-const v2CatLabel  = (v) => V2_CAT_OPTS.find(([k]) => k === v)?.[1] || v;
-
-const IntelPage = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
+const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const location = useLocation();
   const activeIntelTab = ROUTE_TO_TAB[location.pathname] || defaultTab;
 
@@ -912,7 +913,7 @@ const IntelPage = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const kpiSectionRef = useRef(null);
   const compactFilterRef = useRef(null);
   const filterBtnRef = useRef(null);
-  const [_compactExpandedFilter, _setCompactExpandedFilter] = useState(null);
+  const [compactExpandedFilter, setCompactExpandedFilter] = useState(null);
   const [filterPanelPos, setFilterPanelPos] = useState({ top: 64, right: 24 });
 
   /* ── V2 filter panel ── */
@@ -952,25 +953,18 @@ const IntelPage = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
 
   useEffect(() => {
     if (location.state?.restoreInsightTab) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveInsightTab(location.state.restoreInsightTab);
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRestoreItemSubTab(location.state?.restoreItemSubTab || null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.key]);
 
-  // Parsed once per mount — localStorage value doesn't change during component lifetime
-  const activePlatforms = useMemo(
-    () => JSON.parse(localStorage.getItem('active_platforms') || '["shopify","amazon","tiktok"]'),
-    []
-  );
-  const channelOptions = useMemo(() => [
+  const activePlatforms = JSON.parse(localStorage.getItem('active_platforms') || '["shopify","amazon","tiktok"]');
+  const channelOptions = [
     ['all', 'All Channels'],
     ...(activePlatforms.includes('amazon') ? [['amazon', 'Amazon']] : []),
     ...(activePlatforms.includes('shopify') ? [['shopify', 'Shopify']] : []),
     ...(activePlatforms.includes('tiktok') ? [['tiktok-shop', 'TikTok Shop']] : []),
-  ], [activePlatforms]);
+  ];
   const fetchedRef = React.useRef(false);
 
   // Scroll detection — collapses search bar and shows Intel tabs in header
@@ -1000,11 +994,49 @@ const IntelPage = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     return () => observer.disconnect();
   }, []);
 
-  // Single document listener per dropdown — hook attaches only while open, cleans up on close
-  useClickOutside(compactFilterRef, compactFilterOpen, () => setCompactFilterOpen(false));
-  useClickOutside(v2FilterRef, v2FilterOpen, () => setV2FilterOpen(false), compactFilterRef);
-  useClickOutside(chanDropRef, chanDropOpen, () => setChanDropOpen(false));
-  useClickOutside(durRef, durOpen, () => setDurOpen(false));
+  // Close compact filter on outside click
+  useEffect(() => {
+    if (!compactFilterOpen) return;
+    const handler = (e) => {
+      if (compactFilterRef.current && !compactFilterRef.current.contains(e.target)) {
+        setCompactFilterOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [compactFilterOpen]);
+
+  // Close V2 filter panel on outside click (check both content ref and compact header ref)
+  useEffect(() => {
+    if (!v2FilterOpen) return;
+    const handler = (e) => {
+      const inContent = v2FilterRef.current && v2FilterRef.current.contains(e.target);
+      const inCompact = compactFilterRef.current && compactFilterRef.current.contains(e.target);
+      if (!inContent && !inCompact) setV2FilterOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [v2FilterOpen]);
+
+  // Close channel chips dropdown on outside click
+  useEffect(() => {
+    if (!chanDropOpen) return;
+    const handler = (e) => {
+      if (chanDropRef.current && !chanDropRef.current.contains(e.target)) setChanDropOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [chanDropOpen]);
+
+  // Close duration dropdown on outside click
+  useEffect(() => {
+    if (!durOpen) return;
+    const handler = (e) => {
+      if (durRef.current && !durRef.current.contains(e.target)) setDurOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [durOpen]);
 
   const openProductModal = (product) => {
     const watchlistItem = salesWatchlistItems.find(
@@ -1013,7 +1045,7 @@ const IntelPage = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
 
     navigate('/product-view', {
       state: {
-        from: '/intel',
+        from: '/intel-v2',
         product: {
           name: product.name,
           icon: 'fa-box',
@@ -1104,12 +1136,37 @@ const IntelPage = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   };
 
   // Compact header center — Intel tabs + single filter icon, shown when scrolled
-  // Options arrays are module-level constants; only value/onChange depend on state
-  const _compactFilterOptions = useMemo(() => [
-    { label: 'Date Range', value: dateRange, onChange: setDateRange, options: V2_DATE_OPTS },
-    { label: 'Category',   value: category,  onChange: setCategory,  options: V2_CAT_OPTS  },
-    { label: 'Channel',    value: channel,   onChange: setChannel,   options: channelOptions },
-  ], [dateRange, category, channel, channelOptions, setDateRange, setCategory, setChannel]);
+  const compactFilterOptions = [
+    {
+      label: 'Date Range',
+      value: dateRange,
+      onChange: setDateRange,
+      options: [
+        ['last-7-days', 'Last 7 Days'],
+        ['last-30-days', 'Last 30 Days'],
+        ['last-90-days', 'Last 90 Days'],
+        ['ytd', 'Year to Date'],
+      ],
+    },
+    {
+      label: 'Category',
+      value: category,
+      onChange: setCategory,
+      options: [
+        ['all', 'All Categories'],
+        ['electronics', 'Electronics'],
+        ['home-garden', 'Home & Garden'],
+        ['apparel', 'Apparel'],
+        ['pet-suppliers', 'Pet Suppliers'],
+      ],
+    },
+    {
+      label: 'Channel',
+      value: channel,
+      onChange: setChannel,
+      options: channelOptions,
+    },
+  ];
 
   const compactHeaderCenter = isScrolled ? (
     <div className="flex items-center gap-0.5">
@@ -1146,14 +1203,49 @@ const IntelPage = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     </div>
   ) : null;
 
-  /* ── V2 filter helpers — channel-specific (depend on memoized channelOptions) ── */
-  // V2_DATE_OPTS, V2_CAT_OPTS, V2_CAT_RECENT, V2_CAT_GRID, CAL_MONTHS are module-level constants above
-  // isSameDay, isInRange, formatCalDate, getDurLabel, quickToRange are module-level pure functions above
-  // v2DateLabel, v2CatLabel are module-level functions above
-  const v2ChanList   = useMemo(() => channelOptions.filter(([v]) => v !== 'all'), [channelOptions]);
-  const v2ChanRecent = useMemo(() => v2ChanList.slice(0, 2), [v2ChanList]);
-  const v2ChanGrid   = useMemo(() => [...v2ChanList, ['all-chans','All Channels']], [v2ChanList]);
-  const v2ChanLabel  = (v) => channelOptions.find(([k]) => k === v)?.[1] || v;
+  /* ── V2 filter helpers ── */
+  const V2_DATE_OPTS = [
+    ['last-7-days',  'Last 7 Days'],
+    ['last-30-days', 'Last 30 Days'],
+    ['last-90-days', 'Last 90 Days'],
+    ['ytd',          'Year to Date'],
+  ];
+  const V2_CAT_OPTS = [
+    ['all',           'All Categories'],
+    ['electronics',   'Electronics'],
+    ['home-garden',   'Home & Garden'],
+    ['apparel',       'Apparel'],
+    ['pet-suppliers', 'Pet Suppliers'],
+  ];
+  const V2_CAT_RECENT = [['electronics','Electronics'],['apparel','Apparel'],['home-garden','Home & Garden']];
+  const V2_CAT_GRID   = [['electronics','Electronics'],['apparel','Apparel'],['home-garden','Home & Garden'],['pet-suppliers','Pet Suppliers'],['all','All Categories']];
+  const v2ChanList    = channelOptions.filter(([v]) => v !== 'all');
+  const v2ChanRecent  = v2ChanList.slice(0, 2);
+  const v2ChanGrid    = [...v2ChanList, ['all-chans','All Channels']];
+  const v2DateLabel = (v) => V2_DATE_OPTS.find(([k]) => k === v)?.[1] || v;
+  const v2CatLabel  = (v) => V2_CAT_OPTS.find(([k]) => k === v)?.[1] || v;
+  const v2ChanLabel = (v) => channelOptions.find(([k]) => k === v)?.[1] || v;
+
+  const CAL_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const isSameDay = (a, b) => !!(a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate());
+  const isInRange = (date, start, end) => {
+    if (!start || !end) return false;
+    const d = date.getTime(), s = Math.min(start.getTime(), end.getTime()), e = Math.max(start.getTime(), end.getTime());
+    return d > s && d < e;
+  };
+  const formatCalDate = (d) => !d ? '' : `${d.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]} ${d.getFullYear()}`;
+  const getDurLabel  = (key) => ({ 'last-7-days': '7 days', 'last-30-days': '30 days', 'last-90-days': '90 days', 'ytd': 'YTD' }[key] || '30 days');
+  const quickToRange = (key) => {
+    const end = new Date(); end.setHours(23,59,59,999);
+    const start = new Date(end);
+    if (key === 'last-7-days')       start.setDate(start.getDate() - 6);
+    else if (key === 'last-30-days') start.setDate(start.getDate() - 29);
+    else if (key === 'last-90-days') start.setDate(start.getDate() - 89);
+    else if (key === 'ytd')          { start.setMonth(0); start.setDate(1); }
+    else                             start.setDate(start.getDate() - 29);
+    start.setHours(0,0,0,0);
+    return { start, end };
+  };
   const prevCalMonth = () => {
     if (calViewMonth === 0) { setCalViewMonth(11); setCalViewYear(y => y - 1); }
     else setCalViewMonth(m => m - 1);
@@ -1330,7 +1422,7 @@ const IntelPage = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           <div className="flex-shrink-0 flex items-center gap-2">
             <span className="text-[10px] text-gray-500 dark:text-slate-400 font-medium whitespace-nowrap">AI View</span>
             <button
-              onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { from: '/intel' } })}
+              onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { from: '/intel-v2' } })}
               className="relative inline-flex h-4 w-7 flex-shrink-0 items-center rounded-full bg-gray-300 dark:bg-slate-600 transition-colors hover:bg-gray-400 dark:hover:bg-slate-500"
             >
               <span className="inline-block h-3 w-3 transform rounded-full bg-white dark:bg-gray-900 transition-transform translate-x-0.5" />
@@ -1623,19 +1715,38 @@ const IntelPage = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                 </div>
 
                 {/* Footer */}
-                <div className="px-4 pb-4 pt-3 flex justify-end gap-2 border-t border-gray-100 dark:border-slate-800">
+                <div className="px-4 pb-4 pt-3 flex items-center justify-between gap-2 border-t border-gray-100 dark:border-slate-800">
                   <button
-                    onClick={() => setV2FilterOpen(false)}
-                    className="px-5 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
+                    onClick={() => {
+                      setPendingDate('last-7-days');
+                      setPendingCats([]);
+                      setPendingChans([]);
+                      setAppliedDate(null);
+                      setAppliedCats([]);
+                      setAppliedChans([]);
+                      setDateRange(null);
+                      setCategory('all');
+                      setChannel('all');
+                      setV2FilterOpen(false);
+                    }}
+                    className="px-5 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-red-500 dark:hover:text-red-400 transition"
                   >
-                    Cancel
+                    Clear Filters
                   </button>
-                  <button
-                    onClick={handleApplyV2Filter}
-                    className="px-5 py-2 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition"
-                  >
-                    Update
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setV2FilterOpen(false)}
+                      className="px-5 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleApplyV2Filter}
+                      className="px-5 py-2 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition"
+                    >
+                      Update
+                    </button>
+                  </div>
                 </div>
 
               </div>
@@ -1658,7 +1769,7 @@ const IntelPage = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           <div className="flex items-center gap-2">
             <span className="text-[11px] text-gray-500 dark:text-slate-400 font-medium">AI View</span>
             <button
-              onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel' } })}
+              onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel-v2' } })}
               className="relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full bg-gray-300 dark:bg-slate-600 transition-colors hover:bg-gray-400 dark:hover:bg-slate-500"
             >
               <span className="inline-block h-3.5 w-3.5 transform rounded-full bg-white dark:bg-gray-900 transition-transform translate-x-0.5" />
@@ -1697,7 +1808,7 @@ const IntelPage = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           onProductClick={openProductModal}
           onStepClick={handleStepClick}
           showDetailedView={true}
-          onDetailedView={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel' } })}
+          onDetailedView={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel-v2' } })}
           intelTab={activeIntelTab}
           selectedCategory={category}
           noSidePanel={fullWidthInsights}
@@ -1742,4 +1853,4 @@ const IntelPage = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   );
 };
 
-export default IntelPage;
+export default IntelV2Page;

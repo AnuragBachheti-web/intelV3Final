@@ -8,7 +8,7 @@ const HistoryItem = ({ item, onClick, onBookmark }) => {
     >
       <div className="flex items-start gap-4">
         <div className="flex-1 min-w-0">
-          <h3 className="font-medium text-gray-900 dark:text-slate-100 dark:group-hover:text-purple-400 mb-1 transition-colors line-clamp-1">
+          <h3 className="text-[13px] font-medium text-gray-900 dark:text-slate-100 dark:group-hover:text-purple-400 mb-1 transition-colors line-clamp-1">
             {item.title}
           </h3>
           <p className="text-sm text-gray-500 dark:text-slate-400 mb-3 line-clamp-2">
