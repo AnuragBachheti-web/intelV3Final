@@ -351,7 +351,7 @@ const IntelV2RollbackPage = () => {
           </p>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate('/intel-v2')}
+              onClick={() => navigate('/intel')}
               className="px-5 py-2.5 bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 rounded-xl font-bold text-sm hover:opacity-90 transition-all"
             >
               Back to Intelligence

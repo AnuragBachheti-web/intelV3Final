@@ -11,11 +11,11 @@ const PageHeader = ({ showTabs = true, tabs, filters: customFilters }) => {
   } = useFilterStore();
 
   const defaultTabs = useMemo(() => [
-    { path: '/sales',     label: 'Sales',     icon: 'fa-dollar-sign'   },
-    { path: '/margin',    label: 'Margin',    icon: 'fa-chart-line'    },
-    { path: '/inventory', label: 'Inventory', icon: 'fa-boxes'         },
-    { path: '/ads',       label: 'Ads',       icon: 'fa-bullhorn'      },
-    { path: '/cash',      label: 'Cash',      icon: 'fa-money-bill-wave'},
+    { path: '/intel/sales',     label: 'Sales',     icon: 'fa-dollar-sign'   },
+    { path: '/intel/margin',    label: 'Margin',    icon: 'fa-chart-line'    },
+    { path: '/intel/inventory', label: 'Inventory', icon: 'fa-boxes'         },
+    { path: '/intel/ads',       label: 'Ads',       icon: 'fa-bullhorn'      },
+    { path: '/intel/cash',      label: 'Cash',      icon: 'fa-money-bill-wave'},
   ], []);
 
   const activeTabs = tabs || defaultTabs;

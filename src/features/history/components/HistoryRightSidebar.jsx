@@ -90,9 +90,9 @@ const HistoryRightSidebar = ({
                         <button
                           key={i}
                           onClick={() =>
-                            navigate('/history', {
-                              state: { chatId, moduleFilter: modKey },
-                            })
+                            chatId
+                              ? navigate('/history/detail', { state: { chatId } })
+                              : navigate('/history', { state: { moduleFilter: modKey } })
                           }
                           className="w-full text-left text-[11px] text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200 py-0.5 truncate transition-colors"
                         >

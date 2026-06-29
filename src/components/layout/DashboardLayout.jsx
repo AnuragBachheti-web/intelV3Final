@@ -137,7 +137,7 @@ const DashboardLayout = ({
             <main
               ref={scrollRef}
               style={!showNoStores && showAIPrompt ? { paddingBottom: '9rem' } : undefined}
-              className={`dashboard-main-content flex-1 overflow-y-auto min-h-0 custom-scrollbar ${
+              className={`dashboard-main-content flex-1 overflow-y-auto overscroll-y-contain min-h-0 custom-scrollbar ${
                 noPadding && !showNoStores ? '' : 'p-4 sm:p-6'
               } ${contentClassName || ''}`}
             >

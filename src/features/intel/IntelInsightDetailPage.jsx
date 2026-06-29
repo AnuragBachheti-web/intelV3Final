@@ -8,7 +8,7 @@ import {
   INVENTORY_INSIGHTS_DATA,
   ADS_INSIGHTS_DATA,
   CASH_INSIGHTS_DATA,
-} from './intelV2Data';
+} from './intelData';
 
 const INSIGHTS_BY_INTEL_TAB = {
   sales:     INSIGHTS_DATA,
@@ -20,11 +20,11 @@ const INSIGHTS_BY_INTEL_TAB = {
 import CustomActionModal from '../action-center/components/CustomActionModal';
 
 const TAB_TO_ROUTE = {
-  sales: '/sales',
-  margin: '/margin',
-  inventory: '/inventory',
-  ads: '/ads',
-  cash: '/cash',
+  sales: '/intel/sales',
+  margin: '/intel/margin',
+  inventory: '/intel/inventory',
+  ads: '/intel/ads',
+  cash: '/intel/cash',
 };
 
 const INTEL_LABELS = {
@@ -205,13 +205,13 @@ const IntelV2InsightDetailPage = () => {
   const label = INTEL_LABELS[stateIntelTab] || 'Sales';
 
   const navigateToIndex = (newIndex) => {
-    navigate(`/intel-v2/insight/${stateIntelTab}/${newIndex}`, {
+    navigate(`/intel/insight/${stateIntelTab}/${newIndex}`, {
       state: { ...stateData, currentIndex: newIndex },
     });
   };
 
   const handleBack = () => {
-    const route = stateData?.sourceRoute || TAB_TO_ROUTE[stateIntelTab] || '/intel-v2';
+    const route = stateData?.sourceRoute || TAB_TO_ROUTE[stateIntelTab] || '/intel';
     if (route === '/product-view' && stateData?.productViewState) {
       navigate(route, { state: stateData.productViewState });
     } else {
@@ -394,7 +394,7 @@ const IntelV2InsightDetailPage = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() => navigate('/intel-v2/rollback', {
+                  onClick={() => navigate('/intel/rollback', {
                     state: {
                       insight,
                       intelTab: stateIntelTab,
@@ -413,7 +413,7 @@ const IntelV2InsightDetailPage = () => {
                   <i className="fa-solid fa-bolt text-[11px]" /> Execute
                 </button>
                 <button
-                  onClick={() => navigate('/intel-v2/simulate', {
+                  onClick={() => navigate('/intel/simulate', {
                     state: {
                       insight,
                       step: selectedStep,
@@ -443,7 +443,7 @@ const IntelV2InsightDetailPage = () => {
                   .map(({ ins, i }, listIdx) => (
                     <button
                       key={i}
-                      onClick={() => navigate(`/intel-v2/insight/${stateIntelTab}/${i}`, { state: { ...stateData, currentIndex: i } })}
+                      onClick={() => navigate(`/intel/insight/${stateIntelTab}/${i}`, { state: { ...stateData, currentIndex: i } })}
                       className="text-left w-full px-2 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/60 transition-colors group flex items-start gap-2"
                     >
                       <span className="flex-shrink-0 text-[10px] font-semibold text-gray-400 dark:text-slate-500 mt-0.5 w-3.5">{listIdx + 1}.</span>

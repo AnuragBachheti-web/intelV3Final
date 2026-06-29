@@ -7,7 +7,7 @@ import {
   INVENTORY_INSIGHTS_DATA,
   ADS_INSIGHTS_DATA,
   CASH_INSIGHTS_DATA,
-} from '../intel-v2/intelV2Data';
+} from '../intel/intelData';
 import { useActionStore } from '../../store/useActionStore';
 
 const ALL_STATUSES = ['CRITICAL', 'OPPORTUNITY', 'ALERT', 'REVIEW', 'MARKET', 'INSIGHT'];
@@ -341,7 +341,7 @@ const ActionLogPage = () => {
                     : STATUS_STYLE[item.status];
                   const isPrimary = item.action === 'EXECUTE' || item.action === 'RESOLVE';
                   const goToInsight = () => navigate(
-                    `/intel-v2/insight/${item.tab}/${item.idx}`,
+                    `/intel/insight/${item.tab}/${item.idx}`,
                     { state: { insights: item.insightArray, currentIndex: item.idx, intelTab: item.tab, insightTab: item.insightTabLabel, sourceRoute: '/action-log', executed: isExecuted, executedAt: executedAt || null } }
                   );
                   return (
@@ -404,7 +404,7 @@ const ActionLogPage = () => {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              navigate('/intel-v2/rollback', {
+                              navigate('/intel/rollback', {
                                 state: {
                                   insight: item.insightArray[item.idx],
                                   intelTab: item.tab,

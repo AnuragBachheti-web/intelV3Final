@@ -406,18 +406,10 @@ const GlobalAppHeader = ({
           value: dateRange, onChange: setDateRange,
           options: [['all','All'],['last-7-days','Last 7 Days'],['last-30-days','Last 30 Days'],['last-90-days','Last 90 Days'],['ytd','Year to Date']],
         },
-        // {
-        //   value: country, onChange: setCountry,
-        //   options: [['all','All Countries'],['usa','USA'],['uk','UK'],['canada','Canada']],
-        // },
         {
           value: category, onChange: setCategory,
           options: [['all','All Categories'],['electronics','Electronics'],['home-garden','Home & Garden'],['apparel','Apparel']],
         },
-        // {
-        //   value: channel, onChange: setChannel,
-        //   options: [['all','All Channels'],['amazon','Amazon'],['shopify','Shopify'],['tiktok-shop','TikTok Shop']],
-        // },
       ].map((sel, i) => (
         <select
           key={i}

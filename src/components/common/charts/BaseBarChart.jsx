@@ -23,7 +23,8 @@ const BaseBarChart = ({
   showGrid = true,
   gridType = "3 3",
   radius = [0, 4, 4, 0],
-  margin = { top: 10, right: 30, left: 10, bottom: 5 }
+  margin = { top: 10, right: 30, left: 10, bottom: 5 },
+  yDomain,
 }) => {
   return (
     <div style={{ width: '100%', height }}>
@@ -52,12 +53,13 @@ const BaseBarChart = ({
                 className="text-gray-500 dark:text-slate-400"
                 dy={10}
               />
-              <YAxis 
-                axisLine={false} 
-                tickLine={false} 
+              <YAxis
+                axisLine={false}
+                tickLine={false}
                 tick={{ fill: 'currentColor', fontSize: 11 }}
                 className="text-gray-500 dark:text-slate-400"
                 tickFormatter={yAxisFormatter}
+                domain={yDomain}
               />
             </>
           ) : (

@@ -101,7 +101,7 @@ const NewAnalysisPage = () => {
 
           <div className="w-full max-w-3xl flex flex-col gap-6">
             {/* Prompt Box */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-slate-500/20 focus-within:border-slate-500 transition-all">
               <div className="p-4">
                 <textarea
                   value={prompt}

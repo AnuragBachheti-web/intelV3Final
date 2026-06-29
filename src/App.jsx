@@ -7,6 +7,7 @@ import ErrorBoundary from "./components/common/ErrorBoundary";
 // Lazy loading features
 const Onboarding             = lazy(() => import("./features/onboarding/components/OnboardingLayout"));
 const History                = lazy(() => import("./features/history/HistoryPage"));
+const HistoryDetailPage      = lazy(() => import("./features/history/HistoryDetailPage"));
 const MarketplaceConnectionPage = lazy(() => import("./features/onboarding/pages/MarketplaceConnectionPage"));
 const ActionsPage            = lazy(() => import("./features/action-center"));
 const NewAnalysisPage        = lazy(() => import("./features/new-analysis"));
@@ -17,10 +18,10 @@ const SettingsPage           = lazy(() => import("./features/settings/SettingsPa
 const HubsPage               = lazy(() => import("./features/hubs"));
 const DetailedViewPage       = lazy(() => import("./features/detailed-view/DetailedViewPage"));
 const ProductViewPage        = lazy(() => import("./features/product-view/ProductViewPage"));
-const IntelV2Page            = lazy(() => import("./features/intel-v2"));
-const IntelV2InsightDetailPage = lazy(() => import("./features/intel-v2/IntelV2InsightDetailPage"));
-const IntelV2SimulationPage  = lazy(() => import("./features/intel-v2/IntelV2SimulationPage"));
-const IntelV2RollbackPage    = lazy(() => import("./features/intel-v2/IntelV2RollbackPage"));
+const IntelPage            = lazy(() => import("./features/intel"));
+const IntelInsightDetailPage = lazy(() => import("./features/intel/IntelInsightDetailPage"));
+const IntelSimulationPage  = lazy(() => import("./features/intel/IntelSimulationPage"));
+const IntelV2RollbackPage    = lazy(() => import("./features/intel/IntelV2RollbackPage"));
 const ProductsListPage       = lazy(() => import("./features/products/ProductsListPage"));
 const NotificationsPage      = lazy(() => import("./features/notifications/NotificationsPage"));
 const ActionLogPage          = lazy(() => import("./features/action-log/ActionLogPage"));
@@ -49,24 +50,18 @@ function App() {
             <Route path={ROUTES.ONBOARDING}           element={<Onboarding />} />
 
             {/* Intel V2 sub-routes */}
-            <Route path="/intel-v2"           element={<IntelV2Page defaultTab="sales"     fullWidthInsights={true} />} />
-            <Route path="/intel-v2/sales"     element={<IntelV2Page defaultTab="sales"     fullWidthInsights={true} />} />
-            <Route path="/intel-v2/margin"    element={<IntelV2Page defaultTab="margin"    fullWidthInsights={true} />} />
-            <Route path="/intel-v2/inventory" element={<IntelV2Page defaultTab="inventory" fullWidthInsights={true} />} />
-            <Route path="/intel-v2/ads"       element={<IntelV2Page defaultTab="ads"       fullWidthInsights={true} />} />
-            <Route path="/intel-v2/cash"      element={<IntelV2Page defaultTab="cash"      fullWidthInsights={true} />} />
-            <Route path="/intel-v2/insight/:intelTab/:idx" element={<IntelV2InsightDetailPage />} />
-            <Route path="/intel-v2/simulate"   element={<IntelV2SimulationPage />} />
-            <Route path="/intel-v2/rollback"  element={<IntelV2RollbackPage />} />
-
-            {/* Intel tab aliases */}
-            <Route path={ROUTES.SALES}     element={<IntelV2Page defaultTab="sales"     />} />
-            <Route path={ROUTES.MARGIN}    element={<IntelV2Page defaultTab="margin"    />} />
-            <Route path={ROUTES.INVENTORY} element={<IntelV2Page defaultTab="inventory" />} />
-            <Route path={ROUTES.ADS}       element={<IntelV2Page defaultTab="ads"       />} />
-            <Route path={ROUTES.CASH}      element={<IntelV2Page defaultTab="cash"      />} />
+            <Route path="/intel"           element={<IntelPage defaultTab="sales"     fullWidthInsights={true} />} />
+            <Route path="/intel/sales"     element={<IntelPage defaultTab="sales"     fullWidthInsights={true} />} />
+            <Route path="/intel/margin"    element={<IntelPage defaultTab="margin"    fullWidthInsights={true} />} />
+            <Route path="/intel/inventory" element={<IntelPage defaultTab="inventory" fullWidthInsights={true} />} />
+            <Route path="/intel/ads"       element={<IntelPage defaultTab="ads"       fullWidthInsights={true} />} />
+            <Route path="/intel/cash"      element={<IntelPage defaultTab="cash"      fullWidthInsights={true} />} />
+            <Route path="/intel/insight/:intelTab/:idx" element={<IntelInsightDetailPage />} />
+            <Route path="/intel/simulate"   element={<IntelSimulationPage />} />
+            <Route path="/intel/rollback"  element={<IntelV2RollbackPage />} />
 
             <Route path={ROUTES.HISTORY}              element={<History />} />
+            <Route path={ROUTES.HISTORY_DETAIL}       element={<HistoryDetailPage />} />
             {/* <Route path="/discover"                   element={<DiscoverPage />} /> */}
             <Route path="/research/actions/:id"       element={<ScreenerActionDetailPage />} />
             <Route path={`${ROUTES.SCREENER}/*`}      element={<Screener />} />

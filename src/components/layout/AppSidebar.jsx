@@ -124,7 +124,7 @@ const HistorySectionContent = () => {
             onMouseLeave={() => setFixedTooltip(null)}
           >
             <Link
-              to={ROUTES.HISTORY}
+              to={ROUTES.HISTORY_DETAIL}
               state={{ chatId: h.id }}
               className="flex-1 block px-2 py-1.5 text-xs text-gray-900 dark:text-slate-200 hover:text-gray-700 dark:hover:text-slate-300 truncate min-w-0 font-normal"
             >

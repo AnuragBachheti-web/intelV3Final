@@ -339,10 +339,10 @@ const ChannelMixWidget = () => {
   const C = 2 * Math.PI * 44;
   let cumulative = 0;
   return (
-    <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4">
-      <h3 className="text-sm font-bold text-gray-900 dark:text-slate-100 mb-4">Channel Mix</h3>
-      <div className="flex justify-center mb-4">
-        <div className="relative w-36 h-36">
+    <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4 h-[380px] flex flex-col">
+      <h3 className="text-sm font-bold text-gray-900 dark:text-slate-100 mb-4 flex-shrink-0">Channel Mix</h3>
+      <div className="flex-1 flex justify-center items-center">
+        <div className="relative w-44 h-44">
           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 112 112">
             <circle cx="56" cy="56" r="44" fill="none" stroke="currentColor" strokeWidth="18" className="text-gray-100 dark:text-slate-800" />
             {CHANNEL_MIX_DATA.map((ch) => {
@@ -400,45 +400,49 @@ const ChartCard = ({ title, children }) => (
 // ─── Charts per intel type (right column) ─────────────────────────────────────
 
 const SalesCharts = () => {
-  const charts = [
-    { title: 'Orders Trend', type: 'bar', dataKey: 'orders', data: [{ name: 'W1', orders: 340 }, { name: 'W2', orders: 380 }, { name: 'W3', orders: 290 }, { name: 'W4', orders: 420 }, { name: 'W5', orders: 390 }, { name: 'W6', orders: 450 }], color: '#22c55e', fmt: v => `${v}` },
-    { title: 'Avg Order Value', type: 'line', dataKey: 'aov', data: [{ name: 'W1', aov: 285 }, { name: 'W2', aov: 298 }, { name: 'W3', aov: 310 }, { name: 'W4', aov: 302 }, { name: 'W5', aov: 318 }, { name: 'W6', aov: 325 }], color: '#22c55e', fmt: v => `$${v}` },
-  ];
+  const ordersTrend = [{ name: 'W1', orders: 340 }, { name: 'W2', orders: 380 }, { name: 'W3', orders: 290 }, { name: 'W4', orders: 420 }, { name: 'W5', orders: 390 }, { name: 'W6', orders: 450 }];
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      {charts.map(c => (
-        <ChartCard key={c.dataKey} title={c.title}>
-          <div className="h-[140px]">
-            {c.type === 'area' && (
-              <BaseAreaChart
-                data={c.data}
-                yAxisFormatter={c.fmt}
-                tooltipFormatter={(v, n) => [c.fmt(v), n]}
-                areas={[{ key: c.dataKey, name: c.title, color: c.color }]}
-              />
-            )}
-            {c.type === 'bar' && (
-              <BaseBarChart
-                data={c.data}
-                bars={[{ key: c.dataKey, name: c.title, color: c.color }]}
-                yAxisFormatter={c.fmt}
-                tooltipFormatter={(v, n) => [c.fmt(v), n]}
-                layout="horizontal"
-                height={140}
-              />
-            )}
-            {c.type === 'line' && (
-              <BaseLineChart
-                data={c.data}
-                lines={[{ key: c.dataKey, name: c.title, color: c.color }]}
-                yAxisFormatter={c.fmt}
-                tooltipFormatter={(v, n) => [c.fmt(v), n]}
-                height={140}
-              />
-            )}
-          </div>
-        </ChartCard>
-      ))}
+      <ChartCard title="Orders Trend">
+        <div className="h-[140px]">
+          <BaseBarChart
+            data={ordersTrend}
+            bars={[{ key: 'orders', name: 'Orders Trend', color: '#22c55e' }]}
+            yAxisFormatter={v => `${v}`}
+            tooltipFormatter={(v, n) => [v, n]}
+            layout="horizontal"
+            height={140}
+            yDomain={[240, 'auto']}
+          />
+        </div>
+      </ChartCard>
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+        <div className="px-4 py-2.5 border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500">Buy Box % — by Product</p>
+        </div>
+        <div className="overflow-auto max-h-[300px]">
+          <table className="w-full">
+            <thead className="sticky top-0 z-10">
+              <tr className="border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800">
+                <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 whitespace-nowrap">Product</th>
+                <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 whitespace-nowrap">BB%</th>
+                <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 whitespace-nowrap">Gap vs Comp</th>
+                <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 whitespace-nowrap">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {BB_DATA.map((r, i) => (
+                <tr key={i} className="border-b border-gray-50 dark:border-slate-800/50 hover:bg-gray-50/40 dark:hover:bg-slate-800/20 transition-colors">
+                  <td className="px-4 py-2.5 text-xs font-semibold text-gray-900 dark:text-slate-100 max-w-[160px] truncate">{r.name}</td>
+                  <td className="px-4 py-2.5 text-xs"><BBDonut value={`${r.bb}%`} /></td>
+                  <td className={`px-4 py-2.5 text-xs ${r.status !== 'Won' ? 'font-semibold text-red-500 dark:text-red-400' : 'text-gray-400 dark:text-slate-500'}`}>{r.gap}</td>
+                  <td className="px-4 py-2.5 text-xs"><span className={`px-1.5 py-0.5 rounded-md text-[9px] font-bold uppercase ${bbStatusColor(r.status)}`}>{r.status}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
@@ -526,6 +530,24 @@ const BBDonut = ({ value }) => {
   );
 };
 
+const BB_DATA = [
+  { sku: 'SKU-005', name: 'Organic Pet Food 15lb',      bb: 96, competitor: '—',        yourPrice: '$42.99',  compPrice: '—',       gap: '—',       status: 'Won'    },
+  { sku: 'SKU-003', name: 'Stainless Water Bottle',     bb: 94, competitor: '—',        yourPrice: '$18.99',  compPrice: '—',       gap: '—',       status: 'Won'    },
+  { sku: 'SKU-008', name: 'Bamboo Cutting Board Set',   bb: 91, competitor: '—',        yourPrice: '$34.99',  compPrice: '—',       gap: '—',       status: 'Won'    },
+  { sku: 'SKU-002', name: 'Wireless Earbuds Pro',       bb: 88, competitor: 'SoundCo',  yourPrice: '$79.99',  compPrice: '$76.99',  gap: '+$3.00',  status: 'Won'    },
+  { sku: 'SKU-004', name: 'Yoga Mat Premium',           bb: 84, competitor: '—',        yourPrice: '$54.99',  compPrice: '—',       gap: '—',       status: 'Won'    },
+  { sku: 'SKU-007', name: 'Ergonomic Chair Cushion',    bb: 78, competitor: 'ComfortZ', yourPrice: '$52.00',  compPrice: '$49.99',  gap: '+$2.01',  status: 'At Risk'},
+  { sku: 'SKU-009', name: 'Running Shoes Pro',          bb: 72, competitor: 'RunFast',  yourPrice: '$124.99', compPrice: '$119.99', gap: '+$5.00',  status: 'At Risk'},
+  { sku: 'SKU-001', name: 'Smart Home Security Camera', bb: 71, competitor: 'SecurePro',yourPrice: '$89.99',  compPrice: '$74.99',  gap: '+$15.00', status: 'At Risk'},
+  { sku: 'SKU-010', name: 'Portable Bluetooth Speaker', bb: 58, competitor: 'AudioMax', yourPrice: '$89.99',  compPrice: '$84.99',  gap: '+$5.00',  status: 'Lost'   },
+  { sku: 'SKU-006', name: 'Desk Organizer Premium',     bb: 41, competitor: 'OfficePro',yourPrice: '$32.99',  compPrice: '$24.99',  gap: '+$8.00',  status: 'Lost'   },
+];
+const AOV_CHART_DATA = [
+  { name: 'W1', aov: 285 }, { name: 'W2', aov: 298 }, { name: 'W3', aov: 310 },
+  { name: 'W4', aov: 302 }, { name: 'W5', aov: 318 }, { name: 'W6', aov: 325 },
+];
+const bbStatusColor = (s) => s === 'Won' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : s === 'At Risk' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
+
 const SalesTables = () => {
   // KPI 1 - Total Revenue table
   const revenueData = [
@@ -575,19 +597,6 @@ const SalesTables = () => {
     { sku: 'SKU-008', name: 'Bamboo Cutting Board Set',   price: '$34.99',  orders: 246, aov: '$34.99',  vsAvg: '-$67', pctVsAvg: '-65.7%', positive: false },
     { sku: 'SKU-003', name: 'Stainless Water Bottle',     price: '$18.99',  orders: 156, aov: '$18.99',  vsAvg: '-$83', pctVsAvg: '-81.4%', positive: false },
   ];
-  // KPI 5 - Buy Box % table
-  const bbData = [
-    { sku: 'SKU-005', name: 'Organic Pet Food 15lb',      bb: 96, competitor: '—',       yourPrice: '$42.99', compPrice: '—',       gap: '—',      status: 'Won'    },
-    { sku: 'SKU-003', name: 'Stainless Water Bottle',     bb: 94, competitor: '—',       yourPrice: '$18.99', compPrice: '—',       gap: '—',      status: 'Won'    },
-    { sku: 'SKU-008', name: 'Bamboo Cutting Board Set',   bb: 91, competitor: '—',       yourPrice: '$34.99', compPrice: '—',       gap: '—',      status: 'Won'    },
-    { sku: 'SKU-002', name: 'Wireless Earbuds Pro',       bb: 88, competitor: 'SoundCo', yourPrice: '$79.99', compPrice: '$76.99',  gap: '+$3.00', status: 'Won'    },
-    { sku: 'SKU-004', name: 'Yoga Mat Premium',           bb: 84, competitor: '—',       yourPrice: '$54.99', compPrice: '—',       gap: '—',      status: 'Won'    },
-    { sku: 'SKU-007', name: 'Ergonomic Chair Cushion',    bb: 78, competitor: 'ComfortZ',yourPrice: '$52.00', compPrice: '$49.99',  gap: '+$2.01', status: 'At Risk'},
-    { sku: 'SKU-009', name: 'Running Shoes Pro',          bb: 72, competitor: 'RunFast', yourPrice: '$124.99',compPrice: '$119.99', gap: '+$5.00', status: 'At Risk'},
-    { sku: 'SKU-001', name: 'Smart Home Security Camera', bb: 71, competitor: 'SecurePro',yourPrice: '$89.99',compPrice: '$74.99',  gap: '+$15.00',status: 'At Risk'},
-    { sku: 'SKU-010', name: 'Portable Bluetooth Speaker', bb: 58, competitor: 'AudioMax', yourPrice: '$89.99',compPrice: '$84.99',  gap: '+$5.00', status: 'Lost'   },
-    { sku: 'SKU-006', name: 'Desk Organizer Premium',     bb: 41, competitor: 'OfficePro',yourPrice: '$32.99',compPrice: '$24.99',  gap: '+$8.00', status: 'Lost'   },
-  ];
   // KPI 6 - ROAS table
   const roasData = [
     { campaign: 'Organic Pet Food — TikTok Spark',      type: 'Spark Ads',   spend: '$150',   revenue: '$2,504', roas: '16.7×', acos: '6.0%',  impressions: '84,000',  status: 'Scale'  },
@@ -598,18 +607,79 @@ const SalesTables = () => {
     { campaign: 'Running Shoes — Sponsored Products',    type: 'SP',          spend: '$920',   revenue: '$1,288', roas: '1.4×',  acos: '71.4%', impressions: '276,000', status: 'Pause'  },
   ];
 
-  const bbStatusColor = (s) => s === 'Won' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : s === 'At Risk' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
   const roasStatusColor = (s) => s === 'Scale' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : s === 'Healthy' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400' : s === 'Review' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
 
-  const TableWrap = ({ children }) => (
+  const TableWrap = ({ children, scrollable }) => (
     <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden">
-      <div className="overflow-x-auto">{children}</div>
+      <div className={scrollable ? 'overflow-auto max-h-[300px]' : 'overflow-x-auto'}>{children}</div>
     </div>
   );
   const TH = ({ children }) => <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 whitespace-nowrap">{children}</th>;
   const TD = ({ children, className = '' }) => <td className={`px-4 py-2.5 text-xs ${className}`}>{children}</td>;
   const TR = ({ children }) => <tr className="border-b border-gray-50 dark:border-slate-800/50 hover:bg-gray-50/40 dark:hover:bg-slate-800/20 transition-colors">{children}</tr>;
-  const thead = (cols) => <thead><tr className="border-b border-gray-100 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-800/40">{cols.map(c => <TH key={c}>{c}</TH>)}</tr></thead>;
+  const thead = (cols) => <thead className="sticky top-0 z-10"><tr className="border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800">{cols.map(c => <TH key={c}>{c}</TH>)}</tr></thead>;
+
+  // ── Product card carousel (Total Revenue) ──────────────────────────────────
+  const carouselRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const STEP = 252;
+    let timer;
+    const checkArrows = () => {
+      setCanScrollLeft(el.scrollLeft > 2);
+      setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
+    };
+    const tick = () => {
+      if (!el) return;
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 4) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: STEP, behavior: 'smooth' });
+      }
+    };
+    const start = () => { timer = setInterval(tick, 3000); };
+    const stop = () => clearInterval(timer);
+    start();
+    el.addEventListener('mouseenter', stop);
+    el.addEventListener('mouseleave', start);
+    el.addEventListener('scroll', checkArrows);
+    checkArrows();
+    return () => {
+      stop();
+      el.removeEventListener('mouseenter', stop);
+      el.removeEventListener('mouseleave', start);
+      el.removeEventListener('scroll', checkArrows);
+    };
+  }, []);
+  const scrollCarousel = (dir) => carouselRef.current?.scrollBy({ left: dir * 252, behavior: 'smooth' });
+  const CHAN_STYLE = {
+    Amazon: { bg: 'bg-orange-50 dark:bg-orange-900/20', text: 'text-orange-700 dark:text-orange-400' },
+    Shopify: { bg: 'bg-green-50 dark:bg-green-900/20', text: 'text-green-700 dark:text-green-400' },
+    TikTok: { bg: 'bg-slate-100 dark:bg-slate-700', text: 'text-slate-700 dark:text-slate-300' },
+    Google: { bg: 'bg-blue-50 dark:bg-blue-900/20', text: 'text-blue-700 dark:text-blue-400' },
+    eBay: { bg: 'bg-red-50 dark:bg-red-900/20', text: 'text-red-600 dark:text-red-400' },
+  };
+  const SPARKLINE_DATA = [
+    [20,25,18,30,24,35,28],[30,28,22,25,20,18,15],[18,22,26,20,28,24,32],
+    [28,22,30,18,26,20,24],[14,20,25,18,30,26,34],[34,28,22,30,20,24,18],
+    [20,22,24,26,28,30,32],[32,28,24,20,22,18,16],[20,30,16,28,22,32,25],[25,18,28,20,14,22,18],
+  ];
+  const CARD_COLORS = ['bg-violet-50','bg-sky-50','bg-emerald-50','bg-amber-50','bg-rose-50','bg-indigo-50','bg-teal-50','bg-orange-50','bg-cyan-50','bg-pink-50'];
+  const ProductSparkline = ({ idx }) => {
+    const raw = SPARKLINE_DATA[idx % SPARKLINE_DATA.length];
+    const positive = raw[raw.length - 1] >= raw[0];
+    const min = Math.min(...raw), max = Math.max(...raw), range = max - min || 1;
+    const W = 80, H = 28;
+    const pts = raw.map((v, i) => `${(i / (raw.length - 1)) * W},${H - ((v - min) / range) * (H - 4) - 2}`).join(' ');
+    return (
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} fill="none">
+        <polyline points={pts} stroke={positive ? '#22c55e' : '#ef4444'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  };
 
   return (
     <div className="space-y-5">
@@ -617,31 +687,59 @@ const SalesTables = () => {
       {/* ── Total Revenue ── */}
       <div>
         <SectionHeading title="Total Revenue — by Product" />
-        <TableWrap>
-          <table className="w-full">
-            {thead(['SKU', 'Product', 'Channel', 'Units', 'Price', 'Revenue', 'Net'])}
-            <tbody>
-              {revenueData.map((r, i) => (
-                <TR key={i}>
-                  <TD className="font-mono text-gray-400 dark:text-slate-500">{r.sku}</TD>
-                  <TD className="font-semibold text-gray-900 dark:text-slate-100 max-w-[160px] truncate">{r.name}</TD>
-                  <TD className="text-gray-500 dark:text-slate-400">{r.channel}</TD>
-                  <TD className="text-gray-700 dark:text-slate-300">{r.units.toLocaleString()}</TD>
-                  <TD className="text-gray-700 dark:text-slate-300">{r.price}</TD>
-                  <TD className="font-semibold text-gray-900 dark:text-slate-100">{r.revenue}</TD>
-                  <TD className="font-bold text-green-600 dark:text-green-400">{r.net}</TD>
-                </TR>
-              ))}
-            </tbody>
-          </table>
-        </TableWrap>
+        <div className="relative">
+          {canScrollLeft && (
+            <button
+              onClick={() => scrollCarousel(-1)}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full shadow-sm flex items-center justify-center text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors -ml-3"
+            >
+              <i className="fa-solid fa-chevron-left text-[10px]" />
+            </button>
+          )}
+          <div ref={carouselRef} className="flex gap-3 overflow-x-auto pb-1 hide-scrollbar">
+            {revenueData.map((r, i) => {
+              const chanStyle = CHAN_STYLE[r.channel] || { bg: 'bg-gray-100', text: 'text-gray-600' };
+              return (
+                <div key={i} className="flex-shrink-0 w-[240px] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
+                  <div className="flex items-start gap-2">
+                    <div className={`w-10 h-10 rounded-xl ${CARD_COLORS[i % CARD_COLORS.length]} flex items-center justify-center flex-shrink-0`}>
+                      <span className="text-sm font-bold text-gray-500">{r.name[0]}</span>
+                    </div>
+                    <p className="text-xs font-bold text-gray-900 dark:text-slate-100 leading-tight line-clamp-2 flex-1 min-w-0">{r.name}</p>
+                  </div>
+                  <span className={`self-start text-[10px] font-semibold px-2 py-0.5 rounded-full ${chanStyle.bg} ${chanStyle.text}`}>{r.channel}</span>
+                  <div className="grid grid-cols-3 gap-x-1">
+                    <div><p className="text-[9px] text-gray-400 dark:text-slate-500">Units</p><p className="text-[11px] font-semibold text-gray-800 dark:text-slate-200">{r.units}</p></div>
+                    <div><p className="text-[9px] text-gray-400 dark:text-slate-500">Price</p><p className="text-[11px] font-semibold text-gray-800 dark:text-slate-200">{r.price}</p></div>
+                    <div><p className="text-[9px] text-gray-400 dark:text-slate-500">Revenue</p><p className="text-[11px] font-semibold text-gray-800 dark:text-slate-200 truncate">{r.revenue}</p></div>
+                  </div>
+                  <div className="flex items-end justify-between mt-auto pt-1.5 border-t border-gray-50 dark:border-slate-800">
+                    <div>
+                      <p className="text-[9px] text-gray-400 dark:text-slate-500">Net</p>
+                      <p className="text-sm font-bold text-green-600 dark:text-green-400">{r.net}</p>
+                    </div>
+                    <ProductSparkline idx={i} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          {canScrollRight && (
+            <button
+              onClick={() => scrollCarousel(1)}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full shadow-sm flex items-center justify-center text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors -mr-3"
+            >
+              <i className="fa-solid fa-chevron-right text-[10px]" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* ── Units Sold + Total Orders side by side ── */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <div className="min-w-0">
           <SectionHeading title="Units Sold — by Channel" />
-          <TableWrap>
+          <TableWrap scrollable>
             <table className="w-full">
               {thead(['SKU', 'Product', 'Top Channel', 'Units', 'Total'])}
               <tbody>
@@ -664,7 +762,7 @@ const SalesTables = () => {
         </div>
         <div className="min-w-0">
           <SectionHeading title="Total Orders — by Channel" />
-          <TableWrap>
+          <TableWrap scrollable>
             <table className="w-full">
               {thead(['Channel', 'Orders', 'Units', 'AOV', 'Revenue', '% of Total'])}
               <tbody>
@@ -691,11 +789,11 @@ const SalesTables = () => {
         </div>
       </div>
 
-      {/* ── AOV + Buy Box side by side ── */}
+      {/* ── AOV table + AOV trend chart side by side ── */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <div className="min-w-0">
           <SectionHeading title="Avg Order Value — by Product" />
-          <TableWrap>
+          <TableWrap scrollable>
             <table className="w-full">
               {thead(['SKU', 'Product', 'Orders', 'AOV', 'vs Avg ($302)', '±%'])}
               <tbody>
@@ -714,31 +812,25 @@ const SalesTables = () => {
           </TableWrap>
         </div>
         <div className="min-w-0">
-          <SectionHeading title="Buy Box % — by Product" />
-          <TableWrap>
-            <table className="w-full">
-              {thead(['SKU', 'Product', 'BB%', 'Your Price', 'Gap vs Comp', 'Status'])}
-              <tbody>
-                {bbData.map((r, i) => (
-                  <TR key={i}>
-                    <TD className="font-mono text-gray-400 dark:text-slate-500">{r.sku}</TD>
-                    <TD className="font-semibold text-gray-900 dark:text-slate-100 max-w-[130px] truncate">{r.name}</TD>
-                    <TD><BBDonut value={`${r.bb}%`} /></TD>
-                    <TD className="text-gray-700 dark:text-slate-300">{r.yourPrice}</TD>
-                    <TD className={r.status !== 'Won' ? 'font-semibold text-red-500 dark:text-red-400' : 'text-gray-400 dark:text-slate-500'}>{r.gap}</TD>
-                    <TD><span className={`px-1.5 py-0.5 rounded-md text-[9px] font-bold uppercase ${bbStatusColor(r.status)}`}>{r.status}</span></TD>
-                  </TR>
-                ))}
-              </tbody>
-            </table>
-          </TableWrap>
+          <SectionHeading title="Avg Order Value — Trend" />
+          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-3">
+            <div className="h-[276px]">
+              <BaseLineChart
+                data={AOV_CHART_DATA}
+                lines={[{ key: 'aov', name: 'Avg Order Value', color: '#22c55e' }]}
+                yAxisFormatter={v => `$${v}`}
+                tooltipFormatter={(v, n) => [`$${v}`, n]}
+                height={276}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
       {/* ── ROAS / Campaign Performance ── */}
       <div>
         <SectionHeading title="ROAS — Campaign Performance" />
-        <TableWrap>
+        <TableWrap scrollable>
           <table className="w-full">
             {thead(['Campaign', 'Type', 'Spend', 'Revenue', 'ROAS', 'ACoS', 'Impressions', 'Status'])}
             <tbody>
@@ -886,56 +978,150 @@ const MarginTables = () => (
   </div>
 );
 
+const MarginDashboardGrid = () => (
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+    {/* 1. Margin Trend Chart */}
+    <Suspense fallback={<div className="h-40 rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse" />}>
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4">
+        <MarginTrendChart />
+      </div>
+    </Suspense>
+    {/* 2. Fee Forensics */}
+    <Suspense fallback={<div className="h-40 rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse" />}>
+      <FeeForensics />
+    </Suspense>
+    {/* 3. Unprofitable SKUs */}
+    <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4">
+      <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-3">Unprofitable SKUs</p>
+      <div className="space-y-2">
+        {unprofitableSKUs.map((sku, i) => (
+          <div key={i} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-800">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{sku.name}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-500">{sku.sku} · {sku.channel}</p>
+            </div>
+            <div className="text-right ml-4 flex-shrink-0">
+              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{sku.loss}</p>
+              <p className="text-xs text-gray-400">{sku.sub}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+    {/* 4. Ad Spend Impact on Margin */}
+    <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4">
+      <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-3">Ad Spend Impact on Margin</p>
+      <div className="space-y-2">
+        {adSpendImpact.map((item, i) => (
+          <div key={i} className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{item.name}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-500 font-bold">Ad spend: {item.spend}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">{item.impact}</p>
+            </div>
+            <div className="text-right ml-4 flex-shrink-0">
+              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{item.erosion}</p>
+              <p className="text-xs text-gray-400">erosion</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+    {/* 5. COGS Compressions */}
+    <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4">
+      <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-3">COGS Compressions</p>
+      <div className="space-y-2">
+        {cogsCompressions.map((item, i) => (
+          <div key={i} className="flex items-center justify-between p-3 bg-amber-50/50 dark:bg-amber-900/10 rounded-xl border border-amber-100/50 dark:border-amber-900/20">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{item.name}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-500">{item.trend}</p>
+            </div>
+            <div className="text-right ml-4 flex-shrink-0">
+              <p className="text-sm font-bold text-red-500">{item.increase}</p>
+              <p className="text-xs text-gray-400">{item.impact}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+    {/* 6. Returns Impact */}
+    <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4">
+      <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-3">Returns Impact</p>
+      <div className="space-y-2">
+        {returnsImpact.map((item, i) => (
+          <div key={i} className="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-800/50 rounded-xl border border-slate-100/50 dark:border-slate-700/50">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{item.name}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-500">{item.meta}</p>
+            </div>
+            <div className="text-right ml-4 flex-shrink-0">
+              <p className="text-sm font-bold text-red-600">{item.loss}</p>
+              <p className="text-xs text-gray-400">{item.sub}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+    {/* 7. Margin Distribution Chart */}
+    <Suspense fallback={<div className="h-40 rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse" />}>
+      <MarginDistributionChart />
+    </Suspense>
+  </div>
+);
+
 const InventoryTables = () => (
   <div className="space-y-6">
     <div>
       <SectionHeading title="Reorder Recommendations" />
       <ReorderRecommendationsTable />
     </div>
-    <div>
-      <SectionHeading title="Recommended PO Drafts" />
-      <div className="space-y-3">
-        {[
-          { title: 'Premium Wireless Headphones', vendor: 'TechSource', lt: '14d', qty: '500 units', value: '$18,400', status: 'Critical' },
-          { title: 'USB-C Hub 7-in-1', vendor: 'ComponentPro', lt: '21d', qty: '300 units', value: '$12,200', status: 'High' },
-          { title: 'Pet Grooming Kit 5-Piece', vendor: 'PetSupplies Co', lt: '10d', qty: '200 units', value: '$8,600', status: 'Medium' },
-        ].map((po, idx) => (
-          <div key={idx} className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{po.title}</p>
-              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300">{po.status}</span>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+      <div>
+        <SectionHeading title="Recommended PO Drafts" />
+        <div className="space-y-3">
+          {[
+            { title: 'Premium Wireless Headphones', vendor: 'TechSource', lt: '14d', qty: '500 units', value: '$18,400', status: 'Critical' },
+            { title: 'USB-C Hub 7-in-1', vendor: 'ComponentPro', lt: '21d', qty: '300 units', value: '$12,200', status: 'High' },
+            { title: 'Pet Grooming Kit 5-Piece', vendor: 'PetSupplies Co', lt: '10d', qty: '200 units', value: '$8,600', status: 'Medium' },
+          ].map((po, idx) => (
+            <div key={idx} className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{po.title}</p>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300">{po.status}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                <div><p className="text-gray-400">Vendor</p><p className="font-semibold text-gray-800 dark:text-slate-200">{po.vendor}</p></div>
+                <div><p className="text-gray-400">Qty</p><p className="font-semibold text-gray-800 dark:text-slate-200">{po.qty}</p></div>
+                <div><p className="text-gray-400">Value</p><p className="font-semibold text-gray-800 dark:text-slate-200">{po.value}</p></div>
+              </div>
+              <p className="text-[10px] text-gray-400 mt-1">Lead time: {po.lt}</p>
             </div>
-            <div className="grid grid-cols-3 gap-2 text-xs">
-              <div><p className="text-gray-400">Vendor</p><p className="font-semibold text-gray-800 dark:text-slate-200">{po.vendor}</p></div>
-              <div><p className="text-gray-400">Qty</p><p className="font-semibold text-gray-800 dark:text-slate-200">{po.qty}</p></div>
-              <div><p className="text-gray-400">Value</p><p className="font-semibold text-gray-800 dark:text-slate-200">{po.value}</p></div>
-            </div>
-            <p className="text-[10px] text-gray-400 mt-1">Lead time: {po.lt}</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
-    <div>
-      <SectionHeading title="Overstock (DOC>180d)" />
-      <div className="space-y-3">
-        {[
-          { title: 'Bamboo Cutting Board Set', doc: '245d', units: '890', value: '$42,720', action: 'Liquidate', sub: 'Tied up capital · DOC critical' },
-          { title: 'Kitchen Timer Digital 3-Pack', doc: '210d', units: '1,420', value: '$28,400', action: 'Discount', sub: 'Slow moving · consider bundle' },
-          { title: 'Winter Coats (Old Season)', doc: '195d', units: '320', value: '$22,400', action: 'Bundle', sub: 'Seasonal overhang · offload' },
-        ].map((item, idx) => (
-          <div key={idx} className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{item.title}</p>
-              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300">{item.action}</span>
+      <div>
+        <SectionHeading title="Overstock (DOC>180d)" />
+        <div className="space-y-3">
+          {[
+            { title: 'Bamboo Cutting Board Set', doc: '245d', units: '890', value: '$42,720', action: 'Liquidate', sub: 'Tied up capital · DOC critical' },
+            { title: 'Kitchen Timer Digital 3-Pack', doc: '210d', units: '1,420', value: '$28,400', action: 'Discount', sub: 'Slow moving · consider bundle' },
+            { title: 'Winter Coats (Old Season)', doc: '195d', units: '320', value: '$22,400', action: 'Bundle', sub: 'Seasonal overhang · offload' },
+          ].map((item, idx) => (
+            <div key={idx} className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{item.title}</p>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300">{item.action}</span>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-slate-500 mb-2">{item.sub}</p>
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                <div><p className="text-gray-400">DOC</p><p className="font-bold text-gray-800 dark:text-slate-200">{item.doc}</p></div>
+                <div><p className="text-gray-400">Units</p><p className="font-semibold text-gray-800 dark:text-slate-200">{item.units}</p></div>
+                <div><p className="text-gray-400">Tied Capital</p><p className="font-bold text-gray-800 dark:text-slate-200">{item.value}</p></div>
+              </div>
             </div>
-            <p className="text-xs text-gray-500 dark:text-slate-500 mb-2">{item.sub}</p>
-            <div className="grid grid-cols-3 gap-2 text-xs">
-              <div><p className="text-gray-400">DOC</p><p className="font-bold text-gray-800 dark:text-slate-200">{item.doc}</p></div>
-              <div><p className="text-gray-400">Units</p><p className="font-semibold text-gray-800 dark:text-slate-200">{item.units}</p></div>
-              <div><p className="text-gray-400">Tied Capital</p><p className="font-bold text-gray-800 dark:text-slate-200">{item.value}</p></div>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
     <div>
@@ -964,21 +1150,21 @@ const AdsTables = () => {
 
   const statusColor = (s) => s === 'Scale' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : s === 'Healthy' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400' : s === 'Review' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
 
-  const TableWrap = ({ children }) => (
+  const TableWrap = ({ children, scrollable }) => (
     <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden">
-      <div className="overflow-x-auto">{children}</div>
+      <div className={scrollable ? 'overflow-auto max-h-[300px]' : 'overflow-x-auto'}>{children}</div>
     </div>
   );
   const TH = ({ children }) => <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 whitespace-nowrap">{children}</th>;
   const TD = ({ children, className = '' }) => <td className={`px-4 py-2.5 text-xs ${className}`}>{children}</td>;
   const TR = ({ children }) => <tr className="border-b border-gray-50 dark:border-slate-800/50 hover:bg-gray-50/40 dark:hover:bg-slate-800/20 transition-colors">{children}</tr>;
-  const thead = (cols) => <thead><tr className="border-b border-gray-100 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-800/40">{cols.map(c => <TH key={c}>{c}</TH>)}</tr></thead>;
+  const thead = (cols) => <thead className="sticky top-0 z-10"><tr className="border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800">{cols.map(c => <TH key={c}>{c}</TH>)}</tr></thead>;
 
   return (
     <div className="space-y-5">
       <div>
         <SectionHeading title="Campaign Performance — ROAS, ACoS, CTR" />
-        <TableWrap>
+        <TableWrap scrollable>
           <table className="w-full">
             {thead(['Campaign', 'Type', 'Spend', 'Revenue', 'ROAS', 'ACoS', 'Conv %', 'Status'])}
             <tbody>
@@ -998,26 +1184,35 @@ const AdsTables = () => {
           </table>
         </TableWrap>
       </div>
-      <div>
-        <SectionHeading title="Platform Performance Summary" />
-        <TableWrap>
-          <table className="w-full">
-            {thead(['Platform', 'Total Spend', 'Revenue', 'ROAS', 'ACoS', 'Campaigns', 'Active SKUs'])}
-            <tbody>
-              {platformData.map((r, i) => (
-                <TR key={i}>
-                  <TD className="font-semibold text-gray-900 dark:text-slate-100">{r.platform}</TD>
-                  <TD className="text-gray-700 dark:text-slate-300">{r.spend}</TD>
-                  <TD className="font-semibold text-gray-900 dark:text-slate-100">{r.revenue}</TD>
-                  <TD className="font-bold text-green-600 dark:text-green-400">{r.roas}</TD>
-                  <TD className={parseFloat(r.acos) <= 12 ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'}>{r.acos}</TD>
-                  <TD className="text-gray-600 dark:text-slate-400">{r.campaigns}</TD>
-                  <TD className="text-gray-600 dark:text-slate-400">{r.skus}</TD>
-                </TR>
-              ))}
-            </tbody>
-          </table>
-        </TableWrap>
+      {/* ── Platform Distribution + Platform Performance Summary 50-50 ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+        <Suspense fallback={<div className="h-40 rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse" />}>
+          <div>
+            <SectionHeading title="Platform Distribution" />
+            <PlatformDistributionChart />
+          </div>
+        </Suspense>
+        <div>
+          <SectionHeading title="Platform Performance Summary" />
+          <TableWrap>
+            <table className="w-full">
+              {thead(['Platform', 'Total Spend', 'Revenue', 'ROAS', 'ACoS', 'Campaigns', 'Active SKUs'])}
+              <tbody>
+                {platformData.map((r, i) => (
+                  <TR key={i}>
+                    <TD className="font-semibold text-gray-900 dark:text-slate-100">{r.platform}</TD>
+                    <TD className="text-gray-700 dark:text-slate-300">{r.spend}</TD>
+                    <TD className="font-semibold text-gray-900 dark:text-slate-100">{r.revenue}</TD>
+                    <TD className="font-bold text-green-600 dark:text-green-400">{r.roas}</TD>
+                    <TD className={parseFloat(r.acos) <= 12 ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'}>{r.acos}</TD>
+                    <TD className="text-gray-600 dark:text-slate-400">{r.campaigns}</TD>
+                    <TD className="text-gray-600 dark:text-slate-400">{r.skus}</TD>
+                  </TR>
+                ))}
+              </tbody>
+            </table>
+          </TableWrap>
+        </div>
       </div>
       <div>
         <SectionHeading title="Channel Distribution" />
@@ -1029,13 +1224,22 @@ const AdsTables = () => {
 
 const CashPageTables = () => (
   <div className="space-y-6">
+    {/* ── Cash Distribution + Upcoming Deposits 50-50 ── */}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+      <Suspense fallback={<div className="h-40 rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse" />}>
+        <div>
+          <SectionHeading title="Cash Distribution" />
+          <CashDistributionSection />
+        </div>
+      </Suspense>
+      <div>
+        <SectionHeading title="Upcoming Deposits" />
+        <UpcomingDepositsContent />
+      </div>
+    </div>
     <div>
       <SectionHeading title="Transaction Categories" />
       <TransactionAnalysisSection />
-    </div>
-    <div>
-      <SectionHeading title="Upcoming Deposits" />
-      <UpcomingDepositsContent />
     </div>
   </div>
 );
@@ -1686,42 +1890,85 @@ const DetailedViewPage = () => {
       {/* Main dashboard content */}
       <div className="space-y-4">
 
-        {/* Row 1: Trend chart (wide) + Channel Mix */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2">
-            {intelType === 'sales' && (
-              <ChartCard title="Revenue Trend">
-                <div className="h-[180px]">
-                  <BaseAreaChart
-                    data={revenueTrendData}
-                    yAxisFormatter={v => `$${(v / 1000).toFixed(0)}k`}
-                    tooltipFormatter={(v, n) => [`$${(v / 1000).toFixed(0)}k`, n]}
-                    areas={[{ key: 'revenue', name: 'Revenue Trend', color: '#22c55e' }]}
-                  />
+        {/* Row 1: For margin — BleedingMarginSKUs + ChannelMix. For others — primary trend chart + ChannelMix */}
+        {intelType === 'margin' ? (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100">Bleeding Margin SKUs</h4>
+                <span className="text-[11px] text-gray-400 dark:text-slate-500">Sorted by $ at risk descending</span>
+              </div>
+              <BleedingMarginTable onRowClick={() => {}} hideTitleBar />
+            </div>
+            <div><ChannelMixWidget /></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:items-stretch">
+            <div className="lg:col-span-2 flex flex-col">
+              {intelType === 'sales' && (
+                <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden h-full flex flex-col">
+                  <div className="px-4 py-3 border-b border-gray-100 dark:border-slate-800 flex-shrink-0">
+                    <p className="text-xs font-bold text-gray-800 dark:text-slate-200">Revenue Trend</p>
+                  </div>
+                  <div className="p-3">
+                    <BaseAreaChart
+                      data={revenueTrendData}
+                      yAxisFormatter={v => `$${(v / 1000).toFixed(0)}k`}
+                      tooltipFormatter={(v, n) => [`$${(v / 1000).toFixed(0)}k`, n]}
+                      areas={[{ key: 'revenue', name: 'Revenue Trend', color: '#22c55e' }]}
+                      height={308}
+                    />
+                  </div>
                 </div>
-              </ChartCard>
-            )}
-            {intelType !== 'sales' && (
-              <Suspense fallback={<div className="h-40 rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse" />}>
-                <ChartsComponent />
-              </Suspense>
-            )}
+              )}
+              {intelType === 'inventory' && (
+                <Suspense fallback={<div className="min-h-[200px] rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse" />}>
+                  <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden h-full flex flex-col">
+                    <div className="flex-1 min-h-0 p-4"><InventoryTrendChart /></div>
+                  </div>
+                </Suspense>
+              )}
+              {intelType === 'ads' && (
+                <Suspense fallback={<div className="min-h-[200px] rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse" />}>
+                  <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden h-full flex flex-col">
+                    <div className="px-4 py-3 border-b border-gray-100 dark:border-slate-800 flex-shrink-0">
+                      <p className="text-xs font-bold text-gray-800 dark:text-slate-200">Ad Spend Trend</p>
+                    </div>
+                    <div className="flex-1 min-h-0 p-3"><AdSpendTrendChart /></div>
+                  </div>
+                </Suspense>
+              )}
+              {intelType === 'cash' && (
+                <Suspense fallback={<div className="min-h-[200px] rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse" />}>
+                  <div className="h-full"><CashFlowTrendSection /></div>
+                </Suspense>
+              )}
+            </div>
+            <div>
+              <ChannelMixWidget />
+            </div>
           </div>
-          <div>
-            <ChannelMixWidget />
-          </div>
-        </div>
+        )}
 
-        {/* Row 2: Sales-only secondary charts */}
-        {intelType === 'sales' && <SalesCharts />}
-
-        {/* Row 3: KPI detail tables */}
-        <TablesComponent />
-
-        {/* Row 4: Product heatmap */}
+        {/* Row 2: Product heatmap */}
         <div className="bg-white dark:bg-[#030712] border border-gray-200 dark:border-slate-800 rounded-2xl p-4">
           <ProductHeatmap intelType={intelType} />
         </div>
+
+        {/* Row 3: Secondary charts — sales-specific or remaining inventory/ads/cash charts */}
+        {intelType === 'sales' && <SalesCharts />}
+        {intelType === 'inventory' && (
+          <Suspense fallback={<div className="h-40 rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse" />}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+              <StockStatusChart />
+              <DOCDistributionChart />
+              <ForecastActualChart />
+            </div>
+          </Suspense>
+        )}
+
+        {/* Row 4: KPI detail tables / Margin 50-50 grid */}
+        {intelType === 'margin' ? <MarginDashboardGrid /> : <TablesComponent />}
       </div>
 
       {/* Full-width Cash Flow table (below grid so all columns are visible) */}

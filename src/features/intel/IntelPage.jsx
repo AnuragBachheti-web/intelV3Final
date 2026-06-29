@@ -25,7 +25,7 @@ import {
   CASH_STEPS_BY_INSIGHT_TAB,
   STEP_SLOT,
   STEPS_VISIBLE,
-} from './intelV2Data';
+} from './intelData';
 
 const INSIGHTS_BY_INTEL_TAB = {
   sales: INSIGHTS_DATA,
@@ -93,7 +93,7 @@ const ItemTabContent = ({ selectedSkuId, setSelectedSkuId, noSidePanel = false, 
   const handleSkuClick = (sku) => {
     if (noSidePanel) {
       const insight = makeItemInsight(sku);
-      navigate(`/intel-v2/insight/${intelTab}/0`, {
+      navigate(`/intel/insight/${intelTab}/0`, {
         state: {
           insights: [insight],
           currentIndex: 0,
@@ -101,7 +101,7 @@ const ItemTabContent = ({ selectedSkuId, setSelectedSkuId, noSidePanel = false, 
           insightTab: 'Item',
           itemSubTab,
           itemName: sku.name,
-          sourceRoute: sourceRoute || '/intel-v2',
+          sourceRoute: sourceRoute || '/intel',
         },
       });
     } else {
@@ -182,7 +182,7 @@ const ItemTabContent = ({ selectedSkuId, setSelectedSkuId, noSidePanel = false, 
                 )}
               </div>
               <button
-                onClick={(e) => { e.stopPropagation(); navigate('/product-view', { state: { product: { name: sku.name, sku: sku.sku }, from: sourceRoute || '/intel-v2', fromState: { restoreInsightTab: 'Item', restoreItemSubTab: itemSubTab } } }); }}
+                onClick={(e) => { e.stopPropagation(); navigate('/product-view', { state: { product: { name: sku.name, sku: sku.sku }, from: sourceRoute || '/intel', fromState: { restoreInsightTab: 'Item', restoreItemSubTab: itemSubTab } } }); }}
                 className="flex-shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-800 dark:hover:text-slate-200 transition-colors text-[10px] font-semibold"
               >
                 <i className="fa-solid fa-arrow-up-right-from-square text-[8px]" />
@@ -211,7 +211,7 @@ const ItemTabContent = ({ selectedSkuId, setSelectedSkuId, noSidePanel = false, 
                 )}
               </div>
               <button
-                onClick={(e) => { e.stopPropagation(); navigate('/product-view', { state: { product: { name: sku.name, sku: sku.sku }, from: sourceRoute || '/intel-v2', fromState: { restoreInsightTab: 'Item', restoreItemSubTab: itemSubTab } } }); }}
+                onClick={(e) => { e.stopPropagation(); navigate('/product-view', { state: { product: { name: sku.name, sku: sku.sku }, from: sourceRoute || '/intel', fromState: { restoreInsightTab: 'Item', restoreItemSubTab: itemSubTab } } }); }}
                 className="flex-shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-800 dark:hover:text-slate-200 transition-colors text-[10px] font-semibold"
               >
                 <i className="fa-solid fa-arrow-up-right-from-square text-[8px]" />
@@ -240,7 +240,7 @@ const ItemTabContent = ({ selectedSkuId, setSelectedSkuId, noSidePanel = false, 
                 )}
               </div>
               <button
-                onClick={(e) => { e.stopPropagation(); navigate('/product-view', { state: { product: { name: sku.name, sku: sku.sku }, from: sourceRoute || '/intel-v2', fromState: { restoreInsightTab: 'Item', restoreItemSubTab: itemSubTab } } }); }}
+                onClick={(e) => { e.stopPropagation(); navigate('/product-view', { state: { product: { name: sku.name, sku: sku.sku }, from: sourceRoute || '/intel', fromState: { restoreInsightTab: 'Item', restoreItemSubTab: itemSubTab } } }); }}
                 className="flex-shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-800 dark:hover:text-slate-200 transition-colors text-[10px] font-semibold"
               >
                 <i className="fa-solid fa-arrow-up-right-from-square text-[8px]" />
@@ -516,14 +516,14 @@ const ItemDeepDivePanel = ({ selectedSkuId, onNavigate, viewMode = 'grid', intel
             time: '2 min ago',
             steps: dd.actions.map((action, i) => ({ id: i + 1, title: action.title, sub: action.sub, type: action.type })),
           };
-          navigateDive(`/intel-v2/insight/${intelTab}/0`, {
+          navigateDive(`/intel/insight/${intelTab}/0`, {
             state: {
               insights: [insight],
               currentIndex: 0,
               intelTab,
               insightTab: 'Item',
               itemSubTab,
-              sourceRoute: '/intel-v2',
+              sourceRoute: '/intel',
               initialStepId: selectedActionIdx !== null ? selectedActionIdx + 1 : 1,
             },
           });
@@ -806,7 +806,7 @@ const InsightsPanel = ({
               <div
                 key={idx}
                 ref={(el) => { cardRefs.current[idx] = el; }}
-                onClick={() => navigate(`/intel-v2/insight/${intelTab}/${idx}`, { state: { insights: insightBlocks, currentIndex: idx, intelTab, insightTab: 'Item', sourceRoute: sourceRoute || '/intel-v2', executed: isExec, executedAt: execAt || null } })}
+                onClick={() => navigate(`/intel/insight/${intelTab}/${idx}`, { state: { insights: insightBlocks, currentIndex: idx, intelTab, insightTab: 'Item', sourceRoute: sourceRoute || '/intel', executed: isExec, executedAt: execAt || null } })}
                 className="cursor-pointer rounded-xl border transition-all p-3 border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:bg-gray-50 dark:hover:bg-slate-800/40"
               >
                 <div className="flex items-center justify-between gap-2 mb-2">
@@ -857,19 +857,19 @@ const InsightsPanel = ({
 /* ─── IntelV2Page ────────────────────────────────────────────────────────── */
 
 const TAB_TO_ROUTE = {
-  sales: '/sales',
-  margin: '/margin',
-  inventory: '/inventory',
-  ads: '/ads',
-  cash: '/cash',
+  sales: '/intel/sales',
+  margin: '/intel/margin',
+  inventory: '/intel/inventory',
+  ads: '/intel/ads',
+  cash: '/intel/cash',
 };
 
 const V2_FULL_TAB_TO_ROUTE = {
-  sales: '/intel-v2/sales',
-  margin: '/intel-v2/margin',
-  inventory: '/intel-v2/inventory',
-  ads: '/intel-v2/ads',
-  cash: '/intel-v2/cash',
+  sales: '/intel/sales',
+  margin: '/intel/margin',
+  inventory: '/intel/inventory',
+  ads: '/intel/ads',
+  cash: '/intel/cash',
 };
 
 const ROUTE_TO_TAB = {
@@ -878,12 +878,12 @@ const ROUTE_TO_TAB = {
   '/inventory': 'inventory',
   '/ads': 'ads',
   '/cash': 'cash',
-  '/intel-v2': 'sales',
-  '/intel-v2/sales': 'sales',
-  '/intel-v2/margin': 'margin',
-  '/intel-v2/inventory': 'inventory',
-  '/intel-v2/ads': 'ads',
-  '/intel-v2/cash': 'cash',
+  '/intel': 'sales',
+  '/intel/sales': 'sales',
+  '/intel/margin': 'margin',
+  '/intel/inventory': 'inventory',
+  '/intel/ads': 'ads',
+  '/intel/cash': 'cash',
 };
 
 const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
@@ -1045,7 +1045,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
 
     navigate('/product-view', {
       state: {
-        from: '/intel-v2',
+        from: '/intel',
         product: {
           name: product.name,
           icon: 'fa-box',
@@ -1422,7 +1422,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           <div className="flex-shrink-0 flex items-center gap-2">
             <span className="text-[10px] text-gray-500 dark:text-slate-400 font-medium whitespace-nowrap">AI View</span>
             <button
-              onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { from: '/intel-v2' } })}
+              onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { from: '/intel' } })}
               className="relative inline-flex h-4 w-7 flex-shrink-0 items-center rounded-full bg-gray-300 dark:bg-slate-600 transition-colors hover:bg-gray-400 dark:hover:bg-slate-500"
             >
               <span className="inline-block h-3 w-3 transform rounded-full bg-white dark:bg-gray-900 transition-transform translate-x-0.5" />
@@ -1769,7 +1769,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           <div className="flex items-center gap-2">
             <span className="text-[11px] text-gray-500 dark:text-slate-400 font-medium">AI View</span>
             <button
-              onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel-v2' } })}
+              onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel' } })}
               className="relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full bg-gray-300 dark:bg-slate-600 transition-colors hover:bg-gray-400 dark:hover:bg-slate-500"
             >
               <span className="inline-block h-3.5 w-3.5 transform rounded-full bg-white dark:bg-gray-900 transition-transform translate-x-0.5" />
@@ -1808,7 +1808,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           onProductClick={openProductModal}
           onStepClick={handleStepClick}
           showDetailedView={true}
-          onDetailedView={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel-v2' } })}
+          onDetailedView={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel' } })}
           intelTab={activeIntelTab}
           selectedCategory={category}
           noSidePanel={fullWidthInsights}

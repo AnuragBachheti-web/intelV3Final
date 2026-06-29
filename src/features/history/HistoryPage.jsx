@@ -1,10 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import HistoryItem from './components/HistoryItem';
 import HistoryRightSidebar from './components/HistoryRightSidebar';
-import ChatDetailView from './components/ChatDetailView';
-import ModelSelector from '../../components/common/ModelSelector';
 import { historyItems, quickFilters, modules, mostUsedSearches, MODULE_ITEM_IDS } from './historyData';
 
 // Flat array used for filtering — defined once outside the component
@@ -16,20 +14,14 @@ const allItems = [
 
 const HistoryPage = () => {
   const location = useLocation();
-  const [selectedChat, setSelectedChat] = useState(null);
-  const [inputValue, setInputValue]     = useState('');
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('all');
   const [moduleFilter, setModuleFilter] = useState(location.state?.moduleFilter || null);
 
   useEffect(() => {
-    const chatId  = location.state?.chatId;
     const mFilter = location.state?.moduleFilter;
     if (mFilter !== undefined) setModuleFilter(mFilter || null);
-    if (chatId) {
-      const found = allItems.find(i => i.id === chatId);
-      if (found) setSelectedChat(found);
-    }
-  }, [location.state?.chatId, location.state?.moduleFilter]);
+  }, [location.state?.moduleFilter]);
 
   // Bookmark state — initialised from data, updated in memory
   const [bookmarks, setBookmarks] = useState(
@@ -69,90 +61,15 @@ const HistoryPage = () => {
     return allItems.filter(i => ids.includes(i.id)).map(i => ({ ...i, bookmarked: bookmarks.has(i.id) }));
   }, [moduleFilter, bookmarks]);
 
-  // Truncate long titles so the header never breaks layout
-  const pageTitle = selectedChat
-    ? (selectedChat.title.length > 52
-        ? selectedChat.title.slice(0, 52) + '…'
-        : selectedChat.title)
-    : 'History';
-
   return (
     <DashboardLayout
-      title={pageTitle}
-      subtitle={selectedChat ? '' : 'Track your previous intelligence searches and AI analysis'}
+      title="History"
+      subtitle="Track your previous intelligence searches and AI analysis"
       showTabs={false}
       showAIPrompt={false}
-      noPadding={!!selectedChat}
-      contentClassName={selectedChat ? '!p-0 !overflow-hidden' : ''}
     >
-      {selectedChat ? (
-        /*
-         * h-full inherits the defined height from <main> (which is flex-1 in a flex-col parent).
-         * flex-1 would have no effect here because <main> is a block container, not flex.
-         */
-        <div className="flex h-full overflow-hidden">
-
-          {/* Left: chat content (scrolls) + prompt (pinned) */}
-          <div className="flex flex-col flex-1 min-h-0">
-
-            {/* Scrollable chat messages */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 min-h-0">
-              <div className="max-w-3xl mx-auto">
-                <ChatDetailView chat={selectedChat} onBack={() => setSelectedChat(null)} />
-              </div>
-            </div>
-
-            {/* Pinned prompt — lives outside the scroll container, never moves */}
-            <div className="shrink-0 px-4 sm:px-6 pb-5 pt-3">
-              <div className="max-w-3xl mx-auto">
-                <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="flex items-center gap-3 px-4 py-3.5">
-                    <button className="w-7 h-7 flex items-center justify-center bg-slate-600 hover:bg-slate-700 text-white rounded-full transition-colors flex-shrink-0">
-                      <i className="fa-solid fa-plus text-[10px]"></i>
-                    </button>
-                    <input
-                      type="text"
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      placeholder={`Ask anything about ${selectedChat.title.split(' ').slice(0, 5).join(' ').toLowerCase()}...`}
-                      className="flex-1 bg-transparent text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 text-sm outline-none"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between px-4 py-1 border-t border-gray-100 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-800/40">
-                    <div className="flex items-center gap-2">
-                      <button className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
-                        <i className="fa-solid fa-sliders text-sm"></i>
-                      </button>
-                      <button className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
-                        <i className="fa-solid fa-microphone text-sm"></i>
-                      </button>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <ModelSelector variant="compact" />
-                      <button
-                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${
-                          inputValue.trim()
-                            ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 hover:bg-gray-700'
-                            : 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-default'
-                        }`}
-                      >
-                        <i className="fa-solid fa-arrow-up text-xs"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center mt-2 px-1">
-                  <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wide">AI can make mistakes.</span>
-                  <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wide">100% tokens available</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      ) : (
-        /* List view */
-        <div className="flex flex-col lg:flex-row gap-8 min-h-full">
+      {/* List view */}
+      <div className="flex flex-col lg:flex-row gap-8 min-h-full">
           <div className="flex-1">
 
             {/* Search bar */}
@@ -197,7 +114,7 @@ const HistoryPage = () => {
                       <HistoryItem
                         key={item.id}
                         item={item}
-                        onClick={() => setSelectedChat(item)}
+                        onClick={() => navigate('/history/detail', { state: { chatId: item.id } })}
                         onBookmark={toggleBookmark}
                       />
                     ))}
@@ -229,7 +146,7 @@ const HistoryPage = () => {
                       <HistoryItem
                         key={item.id}
                         item={item}
-                        onClick={() => setSelectedChat(item)}
+                        onClick={() => navigate('/history/detail', { state: { chatId: item.id } })}
                         onBookmark={toggleBookmark}
                       />
                     ))}
@@ -263,7 +180,7 @@ const HistoryPage = () => {
                       <HistoryItem
                         key={item.id}
                         item={item}
-                        onClick={() => setSelectedChat(item)}
+                        onClick={() => navigate('/history/detail', { state: { chatId: item.id } })}
                         onBookmark={toggleBookmark}
                       />
                     ))}
@@ -279,7 +196,7 @@ const HistoryPage = () => {
                       <HistoryItem
                         key={item.id}
                         item={item}
-                        onClick={() => setSelectedChat(item)}
+                        onClick={() => navigate('/history/detail', { state: { chatId: item.id } })}
                         onBookmark={toggleBookmark}
                       />
                     ))}
@@ -295,7 +212,7 @@ const HistoryPage = () => {
                       <HistoryItem
                         key={item.id}
                         item={item}
-                        onClick={() => setSelectedChat(item)}
+                        onClick={() => navigate('/history/detail', { state: { chatId: item.id } })}
                         onBookmark={toggleBookmark}
                       />
                     ))}
@@ -320,7 +237,6 @@ const HistoryPage = () => {
             bookmarkCount={bookmarks.size}
           />
         </div>
-      )}
     </DashboardLayout>
   );
 };
