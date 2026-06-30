@@ -14,23 +14,23 @@ import { SEMANTIC_COLORS } from '../../utils/chartColors';
 import { revenueTrendData } from '../sales-intelligence/salesData';
 
 // Margin charts — lazy: only loaded when intelType === 'margin'
-const MarginWaterfallChart    = lazy(() => import('../margin-intelligence/components/MarginWaterfallChart'));
-const MarginTrendChart        = lazy(() => import('../margin-intelligence/components/MarginTrendChart'));
-const FeeForensics            = lazy(() => import('../margin-intelligence/components/FeeForensics'));
+const MarginWaterfallChart = lazy(() => import('../margin-intelligence/components/MarginWaterfallChart'));
+const MarginTrendChart = lazy(() => import('../margin-intelligence/components/MarginTrendChart'));
+const FeeForensics = lazy(() => import('../margin-intelligence/components/FeeForensics'));
 const MarginDistributionChart = lazy(() => import('../margin-intelligence/components/MarginDistributionChart'));
 
 // Inventory charts — lazy: only loaded when intelType === 'inventory'
-const InventoryTrendChart     = lazy(() => import('../inventory-intelligence/components/InventoryTrendChart'));
-const StockStatusChart        = lazy(() => import('../inventory-intelligence/components/StockStatusChart'));
-const DOCDistributionChart    = lazy(() => import('../inventory-intelligence/components/DOCDistributionChart'));
-const ForecastActualChart     = lazy(() => import('../inventory-intelligence/components/ForecastActualChart'));
+const InventoryTrendChart = lazy(() => import('../inventory-intelligence/components/InventoryTrendChart'));
+const StockStatusChart = lazy(() => import('../inventory-intelligence/components/StockStatusChart'));
+const DOCDistributionChart = lazy(() => import('../inventory-intelligence/components/DOCDistributionChart'));
+const ForecastActualChart = lazy(() => import('../inventory-intelligence/components/ForecastActualChart'));
 
 // Ads charts — lazy: only loaded when intelType === 'ads'
-const AdSpendTrendChart         = lazy(() => import('../ads-intelligence/components/AdSpendTrendChart'));
+const AdSpendTrendChart = lazy(() => import('../ads-intelligence/components/AdSpendTrendChart'));
 const PlatformDistributionChart = lazy(() => import('../ads-intelligence/components/PlatformDistributionChart'));
 
 // Cash charts — lazy: only loaded when intelType === 'cash'
-const CashFlowTrendSection   = lazy(() => import('../cash-intelligence/components/CashFlowTrendSection'));
+const CashFlowTrendSection = lazy(() => import('../cash-intelligence/components/CashFlowTrendSection'));
 const CashDistributionSection = lazy(() => import('../cash-intelligence/components/CashDistributionSection'));
 
 // Sales tables
@@ -112,46 +112,46 @@ const STATS_DATA = {
 // ─── Product Heatmap ──────────────────────────────────────────────────────────
 
 const PRODUCT_HEATMAP_DATA = [
-  { name: 'Smart Hub Pro',      abbr: 'SHP',  category: 'Electronics',    size: 24800, change: 12.4,  revenue: '$24,800', margin: '32.1%', units: 412, roas: '4.8x', doc: 28,  adSpend: '$850',  cashFlow: '+$6.2k' },
-  { name: 'LED Strip 5m',       abbr: 'LS5',  category: 'Electronics',    size: 18600, change: 8.2,   revenue: '$18,600', margin: '28.4%', units: 820, roas: '3.9x', doc: 45,  adSpend: '$620',  cashFlow: '+$4.8k' },
-  { name: 'Wireless Charger',   abbr: 'WCH',  category: 'Electronics',    size: 15200, change: -3.1,  revenue: '$15,200', margin: '24.8%', units: 304, roas: '2.8x', doc: 62,  adSpend: '$540',  cashFlow: '+$2.1k' },
-  { name: 'Smart Plug 4-Pack',  abbr: 'SP4',  category: 'Electronics',    size: 12400, change: 5.7,   revenue: '$12,400', margin: '38.2%', units: 248, roas: '5.2x', doc: 34,  adSpend: '$310',  cashFlow: '+$3.8k' },
-  { name: 'Air Purifier XL',    abbr: 'APX',  category: 'Home & Garden',  size: 11800, change: -8.4,  revenue: '$11,800', margin: '18.6%', units: 98,  roas: '2.1x', doc: 88,  adSpend: '$760',  cashFlow: '-$0.4k' },
-  { name: 'Bamboo Organizer',   abbr: 'BOG',  category: 'Home & Garden',  size: 9800,  change: 18.2,  revenue: '$9,800',  margin: '42.4%', units: 490, roas: '6.1x', doc: 22,  adSpend: '$180',  cashFlow: '+$3.2k' },
-  { name: 'Yoga Mat Pro',       abbr: 'YMP',  category: 'Apparel',        size: 8400,  change: 22.8,  revenue: '$8,400',  margin: '45.8%', units: 280, roas: '7.2x', doc: 18,  adSpend: '$140',  cashFlow: '+$2.8k' },
-  { name: 'Plant Grow Light',   abbr: 'PGL',  category: 'Home & Garden',  size: 7600,  change: 0.3,   revenue: '$7,600',  margin: '29.4%', units: 152, roas: '3.4x', doc: 52,  adSpend: '$290',  cashFlow: '+$1.4k' },
-  { name: 'Stainless Tumbler',  abbr: 'STT',  category: 'Apparel',        size: 6900,  change: -12.8, revenue: '$6,900',  margin: '22.1%', units: 345, roas: '2.3x', doc: 95,  adSpend: '$420',  cashFlow: '-$0.8k' },
-  { name: 'Resistance Bands',   abbr: 'RBX',  category: 'Apparel',        size: 6200,  change: 15.6,  revenue: '$6,200',  margin: '48.2%', units: 620, roas: '8.4x', doc: 15,  adSpend: '$90',   cashFlow: '+$2.2k' },
-  { name: 'Smart Scale BT',     abbr: 'SSB',  category: 'Electronics',    size: 5800,  change: 4.1,   revenue: '$5,800',  margin: '31.8%', units: 116, roas: '4.1x', doc: 38,  adSpend: '$210',  cashFlow: '+$1.1k' },
-  { name: 'Cat Tree Deluxe',    abbr: 'CTD',  category: 'Pet Suppliers',  size: 5400,  change: -5.8,  revenue: '$5,400',  margin: '26.4%', units: 60,  roas: '2.6x', doc: 74,  adSpend: '$280',  cashFlow: '+$0.6k' },
-  { name: 'Foam Roller Set',    abbr: 'FRS',  category: 'Apparel',        size: 4900,  change: 9.4,   revenue: '$4,900',  margin: '44.2%', units: 245, roas: '6.8x', doc: 24,  adSpend: '$100',  cashFlow: '+$1.6k' },
-  { name: 'Cabinet Organizer',  abbr: 'COG',  category: 'Home & Garden',  size: 4400,  change: 7.2,   revenue: '$4,400',  margin: '36.8%', units: 220, roas: '5.6x', doc: 30,  adSpend: '$120',  cashFlow: '+$1.2k' },
-  { name: 'Pet Water Fountain', abbr: 'PWF',  category: 'Pet Suppliers',  size: 3800,  change: 28.4,  revenue: '$3,800',  margin: '52.4%', units: 190, roas: '9.2x', doc: 12,  adSpend: '$60',   cashFlow: '+$1.4k' },
-  { name: 'Aromatherapy Diffuser', abbr: 'ARD', category: 'Home & Garden', size: 3200, change: -18.2, revenue: '$3,200',  margin: '14.8%', units: 128, roas: '1.8x', doc: 112, adSpend: '$390',  cashFlow: '-$1.2k' },
-  { name: 'Luggage Lock Set',   abbr: 'LLS',  category: 'Apparel',        size: 2800,  change: 2.1,   revenue: '$2,800',  margin: '38.4%', units: 280, roas: '5.1x', doc: 42,  adSpend: '$75',   cashFlow: '+$0.8k' },
-  { name: 'Phone Holder Car',   abbr: 'PHC',  category: 'Electronics',    size: 2400,  change: 6.8,   revenue: '$2,400',  margin: '40.2%', units: 240, roas: '5.8x', doc: 28,  adSpend: '$65',   cashFlow: '+$0.7k' },
-  { name: 'Dog Chew Toy Pack',  abbr: 'DCT',  category: 'Pet Suppliers',  size: 2100,  change: 11.4,  revenue: '$2,100',  margin: '58.2%', units: 420, roas: '10.4x', doc: 10, adSpend: '$30',   cashFlow: '+$0.9k' },
+  { name: 'Smart Hub Pro', abbr: 'SHP', category: 'Electronics', size: 24800, change: 12.4, revenue: '$24,800', margin: '32.1%', units: 412, roas: '4.8x', doc: 28, adSpend: '$850', cashFlow: '+$6.2k' },
+  { name: 'LED Strip 5m', abbr: 'LS5', category: 'Electronics', size: 18600, change: 8.2, revenue: '$18,600', margin: '28.4%', units: 820, roas: '3.9x', doc: 45, adSpend: '$620', cashFlow: '+$4.8k' },
+  { name: 'Wireless Charger', abbr: 'WCH', category: 'Electronics', size: 15200, change: -3.1, revenue: '$15,200', margin: '24.8%', units: 304, roas: '2.8x', doc: 62, adSpend: '$540', cashFlow: '+$2.1k' },
+  { name: 'Smart Plug 4-Pack', abbr: 'SP4', category: 'Electronics', size: 12400, change: 5.7, revenue: '$12,400', margin: '38.2%', units: 248, roas: '5.2x', doc: 34, adSpend: '$310', cashFlow: '+$3.8k' },
+  { name: 'Air Purifier XL', abbr: 'APX', category: 'Home & Garden', size: 11800, change: -8.4, revenue: '$11,800', margin: '18.6%', units: 98, roas: '2.1x', doc: 88, adSpend: '$760', cashFlow: '-$0.4k' },
+  { name: 'Bamboo Organizer', abbr: 'BOG', category: 'Home & Garden', size: 9800, change: 18.2, revenue: '$9,800', margin: '42.4%', units: 490, roas: '6.1x', doc: 22, adSpend: '$180', cashFlow: '+$3.2k' },
+  { name: 'Yoga Mat Pro', abbr: 'YMP', category: 'Apparel', size: 8400, change: 22.8, revenue: '$8,400', margin: '45.8%', units: 280, roas: '7.2x', doc: 18, adSpend: '$140', cashFlow: '+$2.8k' },
+  { name: 'Plant Grow Light', abbr: 'PGL', category: 'Home & Garden', size: 7600, change: 0.3, revenue: '$7,600', margin: '29.4%', units: 152, roas: '3.4x', doc: 52, adSpend: '$290', cashFlow: '+$1.4k' },
+  { name: 'Stainless Tumbler', abbr: 'STT', category: 'Apparel', size: 6900, change: -12.8, revenue: '$6,900', margin: '22.1%', units: 345, roas: '2.3x', doc: 95, adSpend: '$420', cashFlow: '-$0.8k' },
+  { name: 'Resistance Bands', abbr: 'RBX', category: 'Apparel', size: 6200, change: 15.6, revenue: '$6,200', margin: '48.2%', units: 620, roas: '8.4x', doc: 15, adSpend: '$90', cashFlow: '+$2.2k' },
+  { name: 'Smart Scale BT', abbr: 'SSB', category: 'Electronics', size: 5800, change: 4.1, revenue: '$5,800', margin: '31.8%', units: 116, roas: '4.1x', doc: 38, adSpend: '$210', cashFlow: '+$1.1k' },
+  { name: 'Cat Tree Deluxe', abbr: 'CTD', category: 'Pet Suppliers', size: 5400, change: -5.8, revenue: '$5,400', margin: '26.4%', units: 60, roas: '2.6x', doc: 74, adSpend: '$280', cashFlow: '+$0.6k' },
+  { name: 'Foam Roller Set', abbr: 'FRS', category: 'Apparel', size: 4900, change: 9.4, revenue: '$4,900', margin: '44.2%', units: 245, roas: '6.8x', doc: 24, adSpend: '$100', cashFlow: '+$1.6k' },
+  { name: 'Cabinet Organizer', abbr: 'COG', category: 'Home & Garden', size: 4400, change: 7.2, revenue: '$4,400', margin: '36.8%', units: 220, roas: '5.6x', doc: 30, adSpend: '$120', cashFlow: '+$1.2k' },
+  { name: 'Pet Water Fountain', abbr: 'PWF', category: 'Pet Suppliers', size: 3800, change: 28.4, revenue: '$3,800', margin: '52.4%', units: 190, roas: '9.2x', doc: 12, adSpend: '$60', cashFlow: '+$1.4k' },
+  { name: 'Aromatherapy Diffuser', abbr: 'ARD', category: 'Home & Garden', size: 3200, change: -18.2, revenue: '$3,200', margin: '14.8%', units: 128, roas: '1.8x', doc: 112, adSpend: '$390', cashFlow: '-$1.2k' },
+  { name: 'Luggage Lock Set', abbr: 'LLS', category: 'Apparel', size: 2800, change: 2.1, revenue: '$2,800', margin: '38.4%', units: 280, roas: '5.1x', doc: 42, adSpend: '$75', cashFlow: '+$0.8k' },
+  { name: 'Phone Holder Car', abbr: 'PHC', category: 'Electronics', size: 2400, change: 6.8, revenue: '$2,400', margin: '40.2%', units: 240, roas: '5.8x', doc: 28, adSpend: '$65', cashFlow: '+$0.7k' },
+  { name: 'Dog Chew Toy Pack', abbr: 'DCT', category: 'Pet Suppliers', size: 2100, change: 11.4, revenue: '$2,100', margin: '58.2%', units: 420, roas: '10.4x', doc: 10, adSpend: '$30', cashFlow: '+$0.9k' },
 ];
 
 const getHeatColor = (change) => {
-  if (change >= 25)  return '#000000';
-  if (change >= 18)  return '#111827';
-  if (change >= 12)  return '#1f2937';
-  if (change >= 7)   return '#374151';
-  if (change >= 3)   return '#4b5563';
-  if (change >= 0)   return '#9ca3af';
-  if (change >= -3)  return '#d1d5db';
-  if (change >= -8)  return '#e5e7eb';
+  if (change >= 25) return '#000000';
+  if (change >= 18) return '#111827';
+  if (change >= 12) return '#1f2937';
+  if (change >= 7) return '#374151';
+  if (change >= 3) return '#4b5563';
+  if (change >= 0) return '#9ca3af';
+  if (change >= -3) return '#d1d5db';
+  if (change >= -8) return '#e5e7eb';
   if (change >= -14) return '#f3f4f6';
   return '#f9fafb';
 };
 
 const INTEL_METRIC = {
-  sales:     { label: 'Revenue',   valueKey: 'revenue',  secondary: 'units',    secondaryLabel: 'Units' },
-  margin:    { label: 'Revenue',   valueKey: 'revenue',  secondary: 'margin',   secondaryLabel: 'Margin' },
-  inventory: { label: 'Revenue',   valueKey: 'revenue',  secondary: 'doc',      secondaryLabel: 'DOC (days)' },
-  ads:       { label: 'Revenue',   valueKey: 'revenue',  secondary: 'roas',     secondaryLabel: 'ROAS' },
-  cash:      { label: 'Revenue',   valueKey: 'revenue',  secondary: 'cashFlow', secondaryLabel: 'Cash Flow' },
+  sales: { label: 'Revenue', valueKey: 'revenue', secondary: 'units', secondaryLabel: 'Units' },
+  margin: { label: 'Revenue', valueKey: 'revenue', secondary: 'margin', secondaryLabel: 'Margin' },
+  inventory: { label: 'Revenue', valueKey: 'revenue', secondary: 'doc', secondaryLabel: 'DOC (days)' },
+  ads: { label: 'Revenue', valueKey: 'revenue', secondary: 'roas', secondaryLabel: 'ROAS' },
+  cash: { label: 'Revenue', valueKey: 'revenue', secondary: 'cashFlow', secondaryLabel: 'Cash Flow' },
 };
 
 const ProductHeatmap = ({ intelType }) => {
@@ -208,7 +208,7 @@ const ProductHeatmap = ({ intelType }) => {
 
   // eslint-disable-next-line react-hooks/refs
   const tooltipRight = mousePos.x > (containerRef.current?.offsetWidth ?? 600) / 2;
-  const LEGEND_STOPS = ['#f9fafb','#f3f4f6','#e5e7eb','#d1d5db','#9ca3af','#4b5563','#374151','#1f2937','#111827','#000000'];
+  const LEGEND_STOPS = ['#f9fafb', '#f3f4f6', '#e5e7eb', '#d1d5db', '#9ca3af', '#4b5563', '#374151', '#1f2937', '#111827', '#000000'];
 
   return (
     <div>
@@ -403,7 +403,7 @@ const SalesCharts = () => {
   const ordersTrend = [{ name: 'W1', orders: 340 }, { name: 'W2', orders: 380 }, { name: 'W3', orders: 290 }, { name: 'W4', orders: 420 }, { name: 'W5', orders: 390 }, { name: 'W6', orders: 450 }];
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <ChartCard title="Orders Trend">
+      {/* <ChartCard title="Orders Trend">
         <div className="h-[140px]">
           <BaseBarChart
             data={ordersTrend}
@@ -415,10 +415,12 @@ const SalesCharts = () => {
             yDomain={[240, 'auto']}
           />
         </div>
-      </ChartCard>
-      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+      </ChartCard> */}
+
+      {/* Buy Box % — by Product table (commented out for now) */}
+      {/* <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden">
         <div className="px-4 py-2.5 border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500">Buy Box % — by Product</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-900 dark:text-slate-100">Buy Box % — by Product</p>
         </div>
         <div className="overflow-auto max-h-[300px]">
           <table className="w-full">
@@ -442,7 +444,7 @@ const SalesCharts = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -531,16 +533,16 @@ const BBDonut = ({ value }) => {
 };
 
 const BB_DATA = [
-  { sku: 'SKU-005', name: 'Organic Pet Food 15lb',      bb: 96, competitor: '—',        yourPrice: '$42.99',  compPrice: '—',       gap: '—',       status: 'Won'    },
-  { sku: 'SKU-003', name: 'Stainless Water Bottle',     bb: 94, competitor: '—',        yourPrice: '$18.99',  compPrice: '—',       gap: '—',       status: 'Won'    },
-  { sku: 'SKU-008', name: 'Bamboo Cutting Board Set',   bb: 91, competitor: '—',        yourPrice: '$34.99',  compPrice: '—',       gap: '—',       status: 'Won'    },
-  { sku: 'SKU-002', name: 'Wireless Earbuds Pro',       bb: 88, competitor: 'SoundCo',  yourPrice: '$79.99',  compPrice: '$76.99',  gap: '+$3.00',  status: 'Won'    },
-  { sku: 'SKU-004', name: 'Yoga Mat Premium',           bb: 84, competitor: '—',        yourPrice: '$54.99',  compPrice: '—',       gap: '—',       status: 'Won'    },
-  { sku: 'SKU-007', name: 'Ergonomic Chair Cushion',    bb: 78, competitor: 'ComfortZ', yourPrice: '$52.00',  compPrice: '$49.99',  gap: '+$2.01',  status: 'At Risk'},
-  { sku: 'SKU-009', name: 'Running Shoes Pro',          bb: 72, competitor: 'RunFast',  yourPrice: '$124.99', compPrice: '$119.99', gap: '+$5.00',  status: 'At Risk'},
-  { sku: 'SKU-001', name: 'Smart Home Security Camera', bb: 71, competitor: 'SecurePro',yourPrice: '$89.99',  compPrice: '$74.99',  gap: '+$15.00', status: 'At Risk'},
-  { sku: 'SKU-010', name: 'Portable Bluetooth Speaker', bb: 58, competitor: 'AudioMax', yourPrice: '$89.99',  compPrice: '$84.99',  gap: '+$5.00',  status: 'Lost'   },
-  { sku: 'SKU-006', name: 'Desk Organizer Premium',     bb: 41, competitor: 'OfficePro',yourPrice: '$32.99',  compPrice: '$24.99',  gap: '+$8.00',  status: 'Lost'   },
+  { sku: 'SKU-005', name: 'Organic Pet Food 15lb', bb: 96, competitor: '—', yourPrice: '$42.99', compPrice: '—', gap: '—', status: 'Won' },
+  { sku: 'SKU-003', name: 'Stainless Water Bottle', bb: 94, competitor: '—', yourPrice: '$18.99', compPrice: '—', gap: '—', status: 'Won' },
+  { sku: 'SKU-008', name: 'Bamboo Cutting Board Set', bb: 91, competitor: '—', yourPrice: '$34.99', compPrice: '—', gap: '—', status: 'Won' },
+  { sku: 'SKU-002', name: 'Wireless Earbuds Pro', bb: 88, competitor: 'SoundCo', yourPrice: '$79.99', compPrice: '$76.99', gap: '+$3.00', status: 'Won' },
+  { sku: 'SKU-004', name: 'Yoga Mat Premium', bb: 84, competitor: '—', yourPrice: '$54.99', compPrice: '—', gap: '—', status: 'Won' },
+  { sku: 'SKU-007', name: 'Ergonomic Chair Cushion', bb: 78, competitor: 'ComfortZ', yourPrice: '$52.00', compPrice: '$49.99', gap: '+$2.01', status: 'At Risk' },
+  { sku: 'SKU-009', name: 'Running Shoes Pro', bb: 72, competitor: 'RunFast', yourPrice: '$124.99', compPrice: '$119.99', gap: '+$5.00', status: 'At Risk' },
+  { sku: 'SKU-001', name: 'Smart Home Security Camera', bb: 71, competitor: 'SecurePro', yourPrice: '$89.99', compPrice: '$74.99', gap: '+$15.00', status: 'At Risk' },
+  { sku: 'SKU-010', name: 'Portable Bluetooth Speaker', bb: 58, competitor: 'AudioMax', yourPrice: '$89.99', compPrice: '$84.99', gap: '+$5.00', status: 'Lost' },
+  { sku: 'SKU-006', name: 'Desk Organizer Premium', bb: 41, competitor: 'OfficePro', yourPrice: '$32.99', compPrice: '$24.99', gap: '+$8.00', status: 'Lost' },
 ];
 const AOV_CHART_DATA = [
   { name: 'W1', aov: 285 }, { name: 'W2', aov: 298 }, { name: 'W3', aov: 310 },
@@ -549,62 +551,75 @@ const AOV_CHART_DATA = [
 const bbStatusColor = (s) => s === 'Won' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : s === 'At Risk' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
 
 const SalesTables = () => {
+  const navigate = useNavigate();
+  const navToProduct = (name, sku) => navigate('/product-view', {
+    state: {
+      from: '/detailed-view/sales',
+      product: {
+        name, sku, image: null,
+        description: `${name} is a key product driving your sales performance.`,
+        kpiGroups: [{ label: 'Sales', color: 'text-blue-600 dark:text-blue-400', bgColor: 'bg-blue-50 dark:bg-blue-900/10', kpis: [{ label: 'Total Revenue', value: '—' }, { label: 'Units Sold', value: '—' }, { label: 'Avg Price', value: '—' }, { label: 'Buy Box %', value: '—' }] }],
+        insights: ['No specific insights available'],
+        watchlistItem: { title: name, sku, stock: '—', velocity: '—', image: null, status: null, statusColor: 'bg-gray-50 dark:bg-slate-800/60 border-gray-200 dark:border-slate-700', progress: 50, progressColor: 'bg-gray-400', subtext: '' },
+      },
+    },
+  });
   // KPI 1 - Total Revenue table
   const revenueData = [
-    { sku: 'SKU-001', name: 'Smart Home Security Camera',  channel: 'Amazon',   units: 312, price: '$89.99', revenue: '$28,077', returns: 18,  net: '$26,457' },
-    { sku: 'SKU-002', name: 'Wireless Earbuds Pro',        channel: 'Shopify',  units: 284, price: '$79.99', revenue: '$22,717', returns: 9,   net: '$21,997' },
-    { sku: 'SKU-004', name: 'Yoga Mat Premium',            channel: 'Amazon',   units: 198, price: '$54.99', revenue: '$10,888', returns: 12,  net: '$10,228' },
-    { sku: 'SKU-005', name: 'Organic Pet Food 15lb',       channel: 'TikTok',   units: 420, price: '$42.99', revenue: '$18,056', returns: 5,   net: '$17,841' },
-    { sku: 'SKU-008', name: 'Bamboo Cutting Board Set',    channel: 'Google',   units: 246, price: '$34.99', revenue: '$8,607',  returns: 0,   net: '$8,607'  },
-    { sku: 'SKU-009', name: 'Running Shoes Pro',           channel: 'Amazon',   units: 168, price: '$124.99',revenue: '$20,999', returns: 21,  net: '$18,374' },
-    { sku: 'SKU-006', name: 'Desk Organizer Premium',      channel: 'Amazon',   units: 145, price: '$32.99', revenue: '$4,784',  returns: 4,   net: '$4,652'  },
-    { sku: 'SKU-007', name: 'Ergonomic Chair Cushion',     channel: 'Shopify',  units: 204, price: '$52.00', revenue: '$10,608', returns: 7,   net: '$10,244' },
-    { sku: 'SKU-003', name: 'Stainless Water Bottle',      channel: 'eBay',     units: 156, price: '$18.99', revenue: '$2,962',  returns: 3,   net: '$2,905'  },
-    { sku: 'SKU-010', name: 'Portable Bluetooth Speaker',  channel: 'Amazon',   units: 47,  price: '$89.99', revenue: '$4,230',  returns: 2,   net: '$4,050'  },
+    { sku: 'SKU-001', name: 'Smart Home Security Camera', channel: 'Amazon', units: 312, price: '$89.99', revenue: '$28,077', returns: 18, net: '$26,457' },
+    { sku: 'SKU-002', name: 'Wireless Earbuds Pro', channel: 'Shopify', units: 284, price: '$79.99', revenue: '$22,717', returns: 9, net: '$21,997' },
+    { sku: 'SKU-004', name: 'Yoga Mat Premium', channel: 'Amazon', units: 198, price: '$54.99', revenue: '$10,888', returns: 12, net: '$10,228' },
+    { sku: 'SKU-005', name: 'Organic Pet Food 15lb', channel: 'TikTok', units: 420, price: '$42.99', revenue: '$18,056', returns: 5, net: '$17,841' },
+    { sku: 'SKU-008', name: 'Bamboo Cutting Board Set', channel: 'Google', units: 246, price: '$34.99', revenue: '$8,607', returns: 0, net: '$8,607' },
+    { sku: 'SKU-009', name: 'Running Shoes Pro', channel: 'Amazon', units: 168, price: '$124.99', revenue: '$20,999', returns: 21, net: '$18,374' },
+    { sku: 'SKU-006', name: 'Desk Organizer Premium', channel: 'Amazon', units: 145, price: '$32.99', revenue: '$4,784', returns: 4, net: '$4,652' },
+    { sku: 'SKU-007', name: 'Ergonomic Chair Cushion', channel: 'Shopify', units: 204, price: '$52.00', revenue: '$10,608', returns: 7, net: '$10,244' },
+    { sku: 'SKU-003', name: 'Stainless Water Bottle', channel: 'eBay', units: 156, price: '$18.99', revenue: '$2,962', returns: 3, net: '$2,905' },
+    { sku: 'SKU-010', name: 'Portable Bluetooth Speaker', channel: 'Amazon', units: 47, price: '$89.99', revenue: '$4,230', returns: 2, net: '$4,050' },
   ];
   // KPI 2 - Units Sold table
   const unitsData = [
-    { sku: 'SKU-005', name: 'Organic Pet Food 15lb',      amazon: 180, shopify: 80,  tiktok: 160, ebay: 0,   google: 0,   total: 420 },
-    { sku: 'SKU-001', name: 'Smart Home Security Camera', amazon: 280, shopify: 0,   tiktok: 0,   ebay: 32,  google: 0,   total: 312 },
-    { sku: 'SKU-002', name: 'Wireless Earbuds Pro',       amazon: 0,   shopify: 220, tiktok: 0,   ebay: 64,  google: 0,   total: 284 },
-    { sku: 'SKU-008', name: 'Bamboo Cutting Board Set',   amazon: 0,   shopify: 40,  tiktok: 0,   ebay: 0,   google: 206, total: 246 },
-    { sku: 'SKU-007', name: 'Ergonomic Chair Cushion',    amazon: 80,  shopify: 124, tiktok: 0,   ebay: 0,   google: 0,   total: 204 },
-    { sku: 'SKU-004', name: 'Yoga Mat Premium',           amazon: 160, shopify: 0,   tiktok: 38,  ebay: 0,   google: 0,   total: 198 },
-    { sku: 'SKU-009', name: 'Running Shoes Pro',          amazon: 168, shopify: 0,   tiktok: 0,   ebay: 0,   google: 0,   total: 168 },
-    { sku: 'SKU-003', name: 'Stainless Water Bottle',     amazon: 60,  shopify: 0,   tiktok: 0,   ebay: 96,  google: 0,   total: 156 },
-    { sku: 'SKU-006', name: 'Desk Organizer Premium',     amazon: 145, shopify: 0,   tiktok: 0,   ebay: 0,   google: 0,   total: 145 },
-    { sku: 'SKU-010', name: 'Portable Bluetooth Speaker', amazon: 47,  shopify: 0,   tiktok: 0,   ebay: 0,   google: 0,   total: 47  },
+    { sku: 'SKU-005', name: 'Organic Pet Food 15lb', amazon: 180, shopify: 80, tiktok: 160, ebay: 0, google: 0, total: 420 },
+    { sku: 'SKU-001', name: 'Smart Home Security Camera', amazon: 280, shopify: 0, tiktok: 0, ebay: 32, google: 0, total: 312 },
+    { sku: 'SKU-002', name: 'Wireless Earbuds Pro', amazon: 0, shopify: 220, tiktok: 0, ebay: 64, google: 0, total: 284 },
+    { sku: 'SKU-008', name: 'Bamboo Cutting Board Set', amazon: 0, shopify: 40, tiktok: 0, ebay: 0, google: 206, total: 246 },
+    { sku: 'SKU-007', name: 'Ergonomic Chair Cushion', amazon: 80, shopify: 124, tiktok: 0, ebay: 0, google: 0, total: 204 },
+    { sku: 'SKU-004', name: 'Yoga Mat Premium', amazon: 160, shopify: 0, tiktok: 38, ebay: 0, google: 0, total: 198 },
+    { sku: 'SKU-009', name: 'Running Shoes Pro', amazon: 168, shopify: 0, tiktok: 0, ebay: 0, google: 0, total: 168 },
+    { sku: 'SKU-003', name: 'Stainless Water Bottle', amazon: 60, shopify: 0, tiktok: 0, ebay: 96, google: 0, total: 156 },
+    { sku: 'SKU-006', name: 'Desk Organizer Premium', amazon: 145, shopify: 0, tiktok: 0, ebay: 0, google: 0, total: 145 },
+    { sku: 'SKU-010', name: 'Portable Bluetooth Speaker', amazon: 47, shopify: 0, tiktok: 0, ebay: 0, google: 0, total: 47 },
   ];
   // KPI 3 - Total Orders table
   const ordersData = [
-    { channel: 'Amazon',           orders: 198, units: 1238, aov: '$302', revenue: '$59,796', pct: '48.1%' },
-    { channel: 'Shopify',          orders: 86,  units: 464,  aov: '$298', revenue: '$25,628', pct: '20.6%' },
-    { channel: 'TikTok Shop',      orders: 62,  units: 198,  aov: '$291', revenue: '$18,042', pct: '14.5%' },
-    { channel: 'eBay',             orders: 42,  units: 192,  aov: '$273', revenue: '$11,466', pct: '9.2%'  },
-    { channel: 'Google Shopping',  orders: 24,  units: 206,  aov: '$359', revenue: '$8,616',  pct: '6.9%'  },
-    { channel: 'Walmart',          orders: 0,   units: 0,    aov: '—',    revenue: '—',        pct: '0%'    },
+    { channel: 'Amazon', orders: 198, units: 1238, aov: '$302', revenue: '$59,796', pct: '48.1%' },
+    { channel: 'Shopify', orders: 86, units: 464, aov: '$298', revenue: '$25,628', pct: '20.6%' },
+    { channel: 'TikTok Shop', orders: 62, units: 198, aov: '$291', revenue: '$18,042', pct: '14.5%' },
+    { channel: 'eBay', orders: 42, units: 192, aov: '$273', revenue: '$11,466', pct: '9.2%' },
+    { channel: 'Google Shopping', orders: 24, units: 206, aov: '$359', revenue: '$8,616', pct: '6.9%' },
+    { channel: 'Walmart', orders: 0, units: 0, aov: '—', revenue: '—', pct: '0%' },
   ];
   // KPI 4 - Avg Order Value table
   const aovData = [
-    { sku: 'SKU-009', name: 'Running Shoes Pro',          price: '$124.99', orders: 168, aov: '$124.99', vsAvg: '+$23', pctVsAvg: '+22.6%', positive: true  },
-    { sku: 'SKU-001', name: 'Smart Home Security Camera', price: '$89.99',  orders: 312, aov: '$89.99',  vsAvg: '-$12', pctVsAvg: '-11.8%', positive: false },
-    { sku: 'SKU-010', name: 'Portable Bluetooth Speaker', price: '$89.99',  orders: 47,  aov: '$89.99',  vsAvg: '-$12', pctVsAvg: '-11.8%', positive: false },
-    { sku: 'SKU-002', name: 'Wireless Earbuds Pro',       price: '$79.99',  orders: 284, aov: '$79.99',  vsAvg: '-$22', pctVsAvg: '-21.6%', positive: false },
-    { sku: 'SKU-007', name: 'Ergonomic Chair Cushion',    price: '$52.00',  orders: 204, aov: '$52.00',  vsAvg: '-$50', pctVsAvg: '-49.0%', positive: false },
-    { sku: 'SKU-004', name: 'Yoga Mat Premium',           price: '$54.99',  orders: 198, aov: '$54.99',  vsAvg: '-$47', pctVsAvg: '-46.1%', positive: false },
-    { sku: 'SKU-005', name: 'Organic Pet Food 15lb',      price: '$42.99',  orders: 420, aov: '$42.99',  vsAvg: '-$59', pctVsAvg: '-57.8%', positive: false },
-    { sku: 'SKU-006', name: 'Desk Organizer Premium',     price: '$32.99',  orders: 145, aov: '$32.99',  vsAvg: '-$69', pctVsAvg: '-67.7%', positive: false },
-    { sku: 'SKU-008', name: 'Bamboo Cutting Board Set',   price: '$34.99',  orders: 246, aov: '$34.99',  vsAvg: '-$67', pctVsAvg: '-65.7%', positive: false },
-    { sku: 'SKU-003', name: 'Stainless Water Bottle',     price: '$18.99',  orders: 156, aov: '$18.99',  vsAvg: '-$83', pctVsAvg: '-81.4%', positive: false },
+    { sku: 'SKU-009', name: 'Running Shoes Pro', price: '$124.99', orders: 168, aov: '$124.99', vsAvg: '+$23', pctVsAvg: '+22.6%', positive: true },
+    { sku: 'SKU-001', name: 'Smart Home Security Camera', price: '$89.99', orders: 312, aov: '$89.99', vsAvg: '-$12', pctVsAvg: '-11.8%', positive: false },
+    { sku: 'SKU-010', name: 'Portable Bluetooth Speaker', price: '$89.99', orders: 47, aov: '$89.99', vsAvg: '-$12', pctVsAvg: '-11.8%', positive: false },
+    { sku: 'SKU-002', name: 'Wireless Earbuds Pro', price: '$79.99', orders: 284, aov: '$79.99', vsAvg: '-$22', pctVsAvg: '-21.6%', positive: false },
+    { sku: 'SKU-007', name: 'Ergonomic Chair Cushion', price: '$52.00', orders: 204, aov: '$52.00', vsAvg: '-$50', pctVsAvg: '-49.0%', positive: false },
+    { sku: 'SKU-004', name: 'Yoga Mat Premium', price: '$54.99', orders: 198, aov: '$54.99', vsAvg: '-$47', pctVsAvg: '-46.1%', positive: false },
+    { sku: 'SKU-005', name: 'Organic Pet Food 15lb', price: '$42.99', orders: 420, aov: '$42.99', vsAvg: '-$59', pctVsAvg: '-57.8%', positive: false },
+    { sku: 'SKU-006', name: 'Desk Organizer Premium', price: '$32.99', orders: 145, aov: '$32.99', vsAvg: '-$69', pctVsAvg: '-67.7%', positive: false },
+    { sku: 'SKU-008', name: 'Bamboo Cutting Board Set', price: '$34.99', orders: 246, aov: '$34.99', vsAvg: '-$67', pctVsAvg: '-65.7%', positive: false },
+    { sku: 'SKU-003', name: 'Stainless Water Bottle', price: '$18.99', orders: 156, aov: '$18.99', vsAvg: '-$83', pctVsAvg: '-81.4%', positive: false },
   ];
   // KPI 6 - ROAS table
   const roasData = [
-    { campaign: 'Organic Pet Food — TikTok Spark',      type: 'Spark Ads',   spend: '$150',   revenue: '$2,504', roas: '16.7×', acos: '6.0%',  impressions: '84,000',  status: 'Scale'  },
-    { campaign: 'Bamboo Board — Google Shopping',        type: 'Shopping',    spend: '$210',   revenue: '$3,510', roas: '16.7×', acos: '6.0%',  impressions: '42,000',  status: 'Scale'  },
-    { campaign: 'Wireless Earbuds — Sponsored Products', type: 'SP',          spend: '$620',   revenue: '$5,127', roas: '8.3×',  acos: '12.1%', impressions: '186,000', status: 'Healthy'},
-    { campaign: 'Security Camera — Sponsored Products',  type: 'SP',          spend: '$1,400', revenue: '$12,500',roas: '8.9×',  acos: '11.2%', impressions: '420,000', status: 'Review' },
-    { campaign: 'Yoga Mat — Google PMax',                type: 'PMax',        spend: '$380',   revenue: '$2,090', roas: '5.5×',  acos: '18.2%', impressions: '95,000',  status: 'Healthy'},
-    { campaign: 'Running Shoes — Sponsored Products',    type: 'SP',          spend: '$920',   revenue: '$1,288', roas: '1.4×',  acos: '71.4%', impressions: '276,000', status: 'Pause'  },
+    { campaign: 'Organic Pet Food — TikTok Spark', type: 'Spark Ads', spend: '$150', revenue: '$2,504', roas: '16.7×', acos: '6.0%', impressions: '84,000', status: 'Scale' },
+    { campaign: 'Bamboo Board — Google Shopping', type: 'Shopping', spend: '$210', revenue: '$3,510', roas: '16.7×', acos: '6.0%', impressions: '42,000', status: 'Scale' },
+    { campaign: 'Wireless Earbuds — Sponsored Products', type: 'SP', spend: '$620', revenue: '$5,127', roas: '8.3×', acos: '12.1%', impressions: '186,000', status: 'Healthy' },
+    { campaign: 'Security Camera — Sponsored Products', type: 'SP', spend: '$1,400', revenue: '$12,500', roas: '8.9×', acos: '11.2%', impressions: '420,000', status: 'Review' },
+    { campaign: 'Yoga Mat — Google PMax', type: 'PMax', spend: '$380', revenue: '$2,090', roas: '5.5×', acos: '18.2%', impressions: '95,000', status: 'Healthy' },
+    { campaign: 'Running Shoes — Sponsored Products', type: 'SP', spend: '$920', revenue: '$1,288', roas: '1.4×', acos: '71.4%', impressions: '276,000', status: 'Pause' },
   ];
 
   const roasStatusColor = (s) => s === 'Scale' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : s === 'Healthy' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400' : s === 'Review' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
@@ -616,7 +631,7 @@ const SalesTables = () => {
   );
   const TH = ({ children }) => <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 whitespace-nowrap">{children}</th>;
   const TD = ({ children, className = '' }) => <td className={`px-4 py-2.5 text-xs ${className}`}>{children}</td>;
-  const TR = ({ children }) => <tr className="border-b border-gray-50 dark:border-slate-800/50 hover:bg-gray-50/40 dark:hover:bg-slate-800/20 transition-colors">{children}</tr>;
+  const TR = ({ children, onClick }) => <tr onClick={onClick} className={`border-b border-gray-50 dark:border-slate-800/50 hover:bg-gray-50/40 dark:hover:bg-slate-800/20 transition-colors ${onClick ? 'cursor-pointer' : ''}`}>{children}</tr>;
   const thead = (cols) => <thead className="sticky top-0 z-10"><tr className="border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800">{cols.map(c => <TH key={c}>{c}</TH>)}</tr></thead>;
 
   // ── Product card carousel (Total Revenue) ──────────────────────────────────
@@ -663,11 +678,11 @@ const SalesTables = () => {
     eBay: { bg: 'bg-red-50 dark:bg-red-900/20', text: 'text-red-600 dark:text-red-400' },
   };
   const SPARKLINE_DATA = [
-    [20,25,18,30,24,35,28],[30,28,22,25,20,18,15],[18,22,26,20,28,24,32],
-    [28,22,30,18,26,20,24],[14,20,25,18,30,26,34],[34,28,22,30,20,24,18],
-    [20,22,24,26,28,30,32],[32,28,24,20,22,18,16],[20,30,16,28,22,32,25],[25,18,28,20,14,22,18],
+    [20, 25, 18, 30, 24, 35, 28], [30, 28, 22, 25, 20, 18, 15], [18, 22, 26, 20, 28, 24, 32],
+    [28, 22, 30, 18, 26, 20, 24], [14, 20, 25, 18, 30, 26, 34], [34, 28, 22, 30, 20, 24, 18],
+    [20, 22, 24, 26, 28, 30, 32], [32, 28, 24, 20, 22, 18, 16], [20, 30, 16, 28, 22, 32, 25], [25, 18, 28, 20, 14, 22, 18],
   ];
-  const CARD_COLORS = ['bg-violet-50','bg-sky-50','bg-emerald-50','bg-amber-50','bg-rose-50','bg-indigo-50','bg-teal-50','bg-orange-50','bg-cyan-50','bg-pink-50'];
+  const CARD_COLORS = ['bg-violet-50', 'bg-sky-50', 'bg-emerald-50', 'bg-amber-50', 'bg-rose-50', 'bg-indigo-50', 'bg-teal-50', 'bg-orange-50', 'bg-cyan-50', 'bg-pink-50'];
   const ProductSparkline = ({ idx }) => {
     const raw = SPARKLINE_DATA[idx % SPARKLINE_DATA.length];
     const positive = raw[raw.length - 1] >= raw[0];
@@ -700,7 +715,7 @@ const SalesTables = () => {
             {revenueData.map((r, i) => {
               const chanStyle = CHAN_STYLE[r.channel] || { bg: 'bg-gray-100', text: 'text-gray-600' };
               return (
-                <div key={i} className="flex-shrink-0 w-[240px] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
+                <div key={i} onClick={() => navToProduct(r.name, r.sku)} className="flex-shrink-0 w-[240px] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col gap-3 cursor-pointer hover:border-gray-300 dark:hover:border-slate-600 transition-colors">
                   <div className="flex items-start gap-2">
                     <div className={`w-10 h-10 rounded-xl ${CARD_COLORS[i % CARD_COLORS.length]} flex items-center justify-center flex-shrink-0`}>
                       <span className="text-sm font-bold text-gray-500">{r.name[0]}</span>
@@ -738,158 +753,146 @@ const SalesTables = () => {
       {/* ── Units Sold + Total Orders side by side ── */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <div className="min-w-0">
-          <SectionHeading title="Units Sold — by Channel" />
-          <TableWrap scrollable>
-            <table className="w-full">
-              {thead(['SKU', 'Product', 'Top Channel', 'Units', 'Total'])}
-              <tbody>
-                {unitsData.map((r, i) => {
-                  const chMap = { amazon: r.amazon, shopify: r.shopify, tiktok: r.tiktok, ebay: r.ebay, google: r.google };
-                  const topCh = Object.entries(chMap).sort((a, b) => b[1] - a[1])[0];
-                  return (
+          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+            <div className="px-4 py-2.5 border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800">
+              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">Units Sold — by Channel</p>
+            </div>
+            <div className="overflow-auto max-h-[300px]">
+              <table className="w-full">
+                {thead(['SKU', 'Product', 'Top Channel', 'Units', 'Total'])}
+                <tbody>
+                  {unitsData.map((r, i) => {
+                    const chMap = { amazon: r.amazon, shopify: r.shopify, tiktok: r.tiktok, ebay: r.ebay, google: r.google };
+                    const topCh = Object.entries(chMap).sort((a, b) => b[1] - a[1])[0];
+                    return (
+                      <TR key={i} onClick={() => navToProduct(r.name, r.sku)}>
+                        <TD className="font-mono text-gray-400 dark:text-slate-500">{r.sku}</TD>
+                        <TD className="font-semibold text-gray-900 dark:text-slate-100 max-w-[130px] truncate">{r.name}</TD>
+                        <TD className="text-gray-500 dark:text-slate-400 capitalize">{topCh[0]}</TD>
+                        <TD className="text-gray-700 dark:text-slate-300">{topCh[1].toLocaleString()}</TD>
+                        <TD className="font-bold text-gray-900 dark:text-slate-100">{r.total.toLocaleString()}</TD>
+                      </TR>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div className="min-w-0">
+          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+            <div className="px-4 py-2.5 border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800">
+              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">Total Orders — by Channel</p>
+            </div>
+            <div className="overflow-auto max-h-[300px]">
+              <table className="w-full">
+                {thead(['Channel', 'Orders', 'Units', 'AOV', 'Revenue', '% of Total'])}
+                <tbody>
+                  {ordersData.map((r, i) => (
                     <TR key={i}>
-                      <TD className="font-mono text-gray-400 dark:text-slate-500">{r.sku}</TD>
-                      <TD className="font-semibold text-gray-900 dark:text-slate-100 max-w-[130px] truncate">{r.name}</TD>
-                      <TD className="text-gray-500 dark:text-slate-400 capitalize">{topCh[0]}</TD>
-                      <TD className="text-gray-700 dark:text-slate-300">{topCh[1].toLocaleString()}</TD>
-                      <TD className="font-bold text-gray-900 dark:text-slate-100">{r.total.toLocaleString()}</TD>
-                    </TR>
-                  );
-                })}
-              </tbody>
-            </table>
-          </TableWrap>
-        </div>
-        <div className="min-w-0">
-          <SectionHeading title="Total Orders — by Channel" />
-          <TableWrap scrollable>
-            <table className="w-full">
-              {thead(['Channel', 'Orders', 'Units', 'AOV', 'Revenue', '% of Total'])}
-              <tbody>
-                {ordersData.map((r, i) => (
-                  <TR key={i}>
-                    <TD className="font-semibold text-gray-900 dark:text-slate-100">{r.channel}</TD>
-                    <TD className="text-gray-700 dark:text-slate-300">{r.orders > 0 ? r.orders : '—'}</TD>
-                    <TD className="text-gray-700 dark:text-slate-300">{r.units > 0 ? r.units.toLocaleString() : '—'}</TD>
-                    <TD className="text-gray-700 dark:text-slate-300">{r.aov}</TD>
-                    <TD className="font-semibold text-gray-900 dark:text-slate-100">{r.revenue}</TD>
-                    <TD>
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 h-1.5 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden min-w-[40px]">
-                          <div className="h-full bg-gray-700 dark:bg-slate-300 rounded-full" style={{ width: r.pct }} />
+                      <TD className="font-semibold text-gray-900 dark:text-slate-100">{r.channel}</TD>
+                      <TD className="text-gray-700 dark:text-slate-300">{r.orders > 0 ? r.orders : '—'}</TD>
+                      <TD className="text-gray-700 dark:text-slate-300">{r.units > 0 ? r.units.toLocaleString() : '—'}</TD>
+                      <TD className="text-gray-700 dark:text-slate-300">{r.aov}</TD>
+                      <TD className="font-semibold text-gray-900 dark:text-slate-100">{r.revenue}</TD>
+                      <TD>
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 h-1.5 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden min-w-[40px]">
+                            <div className="h-full bg-gray-700 dark:bg-slate-300 rounded-full" style={{ width: r.pct }} />
+                          </div>
+                          <span className="text-[10px] font-semibold text-gray-500 dark:text-slate-400 whitespace-nowrap">{r.pct}</span>
                         </div>
-                        <span className="text-[10px] font-semibold text-gray-500 dark:text-slate-400 whitespace-nowrap">{r.pct}</span>
-                      </div>
-                    </TD>
-                  </TR>
-                ))}
-              </tbody>
-            </table>
-          </TableWrap>
-        </div>
-      </div>
-
-      {/* ── AOV table + AOV trend chart side by side ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <div className="min-w-0">
-          <SectionHeading title="Avg Order Value — by Product" />
-          <TableWrap scrollable>
-            <table className="w-full">
-              {thead(['SKU', 'Product', 'Orders', 'AOV', 'vs Avg ($302)', '±%'])}
-              <tbody>
-                {aovData.map((r, i) => (
-                  <TR key={i}>
-                    <TD className="font-mono text-gray-400 dark:text-slate-500">{r.sku}</TD>
-                    <TD className="font-semibold text-gray-900 dark:text-slate-100 max-w-[130px] truncate">{r.name}</TD>
-                    <TD className="text-gray-600 dark:text-slate-400">{r.orders}</TD>
-                    <TD className="font-bold text-gray-900 dark:text-slate-100">{r.aov}</TD>
-                    <TD className={r.positive ? 'font-semibold text-green-600 dark:text-green-400' : 'font-semibold text-red-500 dark:text-red-400'}>{r.vsAvg}</TD>
-                    <TD className={r.positive ? 'font-semibold text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-slate-500'}>{r.pctVsAvg}</TD>
-                  </TR>
-                ))}
-              </tbody>
-            </table>
-          </TableWrap>
-        </div>
-        <div className="min-w-0">
-          <SectionHeading title="Avg Order Value — Trend" />
-          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-3">
-            <div className="h-[276px]">
-              <BaseLineChart
-                data={AOV_CHART_DATA}
-                lines={[{ key: 'aov', name: 'Avg Order Value', color: '#22c55e' }]}
-                yAxisFormatter={v => `$${v}`}
-                tooltipFormatter={(v, n) => [`$${v}`, n]}
-                height={276}
-              />
+                      </TD>
+                    </TR>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── ROAS / Campaign Performance ── */}
-      <div>
-        <SectionHeading title="ROAS — Campaign Performance" />
-        <TableWrap scrollable>
-          <table className="w-full">
-            {thead(['Campaign', 'Type', 'Spend', 'Revenue', 'ROAS', 'ACoS', 'Impressions', 'Status'])}
-            <tbody>
-              {roasData.map((r, i) => (
-                <TR key={i}>
-                  <TD className="font-semibold text-gray-900 dark:text-slate-100 max-w-[200px] truncate">{r.campaign}</TD>
-                  <TD><span className="px-1.5 py-0.5 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 rounded text-[9px] font-mono">{r.type}</span></TD>
-                  <TD className="text-gray-700 dark:text-slate-300">{r.spend}</TD>
-                  <TD className="font-semibold text-gray-900 dark:text-slate-100">{r.revenue}</TD>
-                  <TD className={parseFloat(r.roas) >= 5 ? 'font-bold text-green-600 dark:text-green-400' : parseFloat(r.roas) >= 3 ? 'font-bold text-amber-600 dark:text-amber-400' : 'font-bold text-red-500 dark:text-red-400'}>{r.roas}</TD>
-                  <TD className={parseFloat(r.acos) <= 15 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}>{r.acos}</TD>
-                  <TD className="text-gray-500 dark:text-slate-400">{r.impressions}</TD>
-                  <TD><span className={`px-1.5 py-0.5 rounded-md text-[9px] font-bold uppercase ${roasStatusColor(r.status)}`}>{r.status}</span></TD>
-                </TR>
-              ))}
-            </tbody>
-          </table>
-        </TableWrap>
-      </div>
-
-      {/* ── Top / Bottom Movers (keep existing) ── */}
+      {/* ── AOV table ── */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <div className="min-w-0">
-          <SectionHeading title="Top Movers (Revenue)" />
-          <TableWrap>
+          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+            <div className="px-4 py-2.5 border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800">
+              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">Avg Order Value — by Product</p>
+            </div>
+            <div className="overflow-auto max-h-[300px]">
+              <table className="w-full">
+                {thead(['SKU', 'Product', 'Orders', 'AOV', 'vs Avg ($302)', '±%'])}
+                <tbody>
+                  {aovData.map((r, i) => (
+                    <TR key={i} onClick={() => navToProduct(r.name, r.sku)}>
+                      <TD className="font-mono text-gray-400 dark:text-slate-500">{r.sku}</TD>
+                      <TD className="font-semibold text-gray-900 dark:text-slate-100 max-w-[130px] truncate">{r.name}</TD>
+                      <TD className="text-gray-600 dark:text-slate-400">{r.orders}</TD>
+                      <TD className="font-bold text-gray-900 dark:text-slate-100">{r.aov}</TD>
+                      <TD className={r.positive ? 'font-semibold text-green-600 dark:text-green-400' : 'font-semibold text-red-500 dark:text-red-400'}>{r.vsAvg}</TD>
+                      <TD className={r.positive ? 'font-semibold text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-slate-500'}>{r.pctVsAvg}</TD>
+                    </TR>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Movers Overview (full width combined) ── */}
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+        <div className="px-5 py-3 border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800 flex items-center gap-2">
+          <i className="fa-solid fa-chart-bar text-gray-600 dark:text-slate-300 text-sm" />
+          <p className="text-sm font-bold text-gray-900 dark:text-slate-100">Movers Overview (Revenue)</p>
+        </div>
+        <div className="grid grid-cols-1 xl:grid-cols-2 divide-y xl:divide-y-0 xl:divide-x divide-gray-100 dark:divide-slate-800">
+          {/* Top Movers */}
+          <div>
+            <div className="px-4 py-2 flex items-center gap-2 border-b border-gray-50 dark:border-slate-800/60">
+              <i className="fa-solid fa-arrow-trend-up text-green-500 text-xs" />
+              <p className="text-xs font-bold text-green-600 dark:text-green-400">Top Movers</p>
+            </div>
             <table className="w-full">
-              {thead(['#', 'Product', 'SKU', 'Revenue', 'Change'])}
+              {thead(['#', 'Product', 'SKU', 'Revenue', 'Change ▲'])}
               <tbody>
                 {salesTopMovers.map((item, i) => (
-                  <TR key={i}>
-                    <TD className="font-bold text-gray-400 dark:text-slate-500">{i + 1}</TD>
+                  <TR key={i} onClick={() => navToProduct(item.name, item.sku)}>
+                    <TD>
+                      <span className="inline-flex w-5 h-5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full items-center justify-center text-[10px] font-bold">{i + 1}</span>
+                    </TD>
                     <TD className="font-semibold text-gray-900 dark:text-slate-100">{item.name}</TD>
                     <TD className="font-mono text-[10px] text-gray-500 dark:text-slate-400">{item.sku}</TD>
                     <TD className="font-semibold text-gray-900 dark:text-slate-100">{item.revenue}</TD>
-                    <TD className="font-bold text-green-600">{item.change}</TD>
+                    <TD className="font-bold text-green-600 dark:text-green-400">{item.change}</TD>
                   </TR>
                 ))}
               </tbody>
             </table>
-          </TableWrap>
-        </div>
-        <div className="min-w-0">
-          <SectionHeading title="Bottom Movers (Revenue)" />
-          <TableWrap>
+          </div>
+          {/* Bottom Movers */}
+          <div>
+            <div className="px-4 py-2 flex items-center gap-2 border-b border-gray-50 dark:border-slate-800/60">
+              <i className="fa-solid fa-arrow-trend-down text-red-500 text-xs" />
+              <p className="text-xs font-bold text-red-600 dark:text-red-400">Bottom Movers</p>
+            </div>
             <table className="w-full">
-              {thead(['#', 'Product', 'SKU', 'Revenue', 'Change'])}
+              {thead(['#', 'Product', 'SKU', 'Revenue', 'Change ▼'])}
               <tbody>
                 {salesBottomMovers.map((item, i) => (
-                  <TR key={i}>
-                    <TD className="font-bold text-red-400">{i + 1}</TD>
+                  <TR key={i} onClick={() => navToProduct(item.name, item.sku)}>
+                    <TD>
+                      <span className="inline-flex w-5 h-5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full items-center justify-center text-[10px] font-bold">{i + 1}</span>
+                    </TD>
                     <TD className="font-semibold text-gray-900 dark:text-slate-100">{item.name}</TD>
                     <TD className="font-mono text-[10px] text-gray-500 dark:text-slate-400">{item.sku}</TD>
                     <TD className="font-semibold text-gray-900 dark:text-slate-100">{item.revenue}</TD>
-                    <TD className="font-bold text-red-500">{item.change}</TD>
+                    <TD className="font-bold text-red-500 dark:text-red-400">{item.change}</TD>
                   </TR>
                 ))}
               </tbody>
             </table>
-          </TableWrap>
+          </div>
         </div>
       </div>
 
@@ -904,7 +907,7 @@ const MarginTables = () => (
         <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100">Bleeding Margin SKUs</h4>
         <span className="text-[11px] text-gray-400 dark:text-slate-500">Sorted by $ at risk descending</span>
       </div>
-      <BleedingMarginTable onRowClick={() => {}} hideTitleBar />
+      <BleedingMarginTable onRowClick={() => { }} hideTitleBar />
     </div>
     <div>
       <SectionHeading title="Unprofitable SKUs" />
@@ -1133,19 +1136,19 @@ const InventoryTables = () => (
 
 const AdsTables = () => {
   const campaignData = [
-    { campaign: 'Security Camera — SP',         type: 'SP',       spend: '$1,400', revenue: '$12,500', roas: '8.9×', acos: '11.2%', impressions: '420,000', clicks: '4,200', ctr: '1.0%', cpc: '$0.33', convRate: '7.4%', status: 'Review'  },
-    { campaign: 'Earbuds — Sponsored Products', type: 'SP',       spend: '$620',   revenue: '$5,127',  roas: '8.3×', acos: '12.1%', impressions: '186,000', clicks: '2,480', ctr: '1.3%', cpc: '$0.25', convRate: '4.6%', status: 'Healthy' },
-    { campaign: 'Pet Food — TikTok Spark',      type: 'TikTok',   spend: '$150',   revenue: '$2,504',  roas: '16.7×',acos: '6.0%',  impressions: '84,000',  clicks: '1,680', ctr: '2.0%', cpc: '$0.09', convRate: '14.9%',status: 'Scale'   },
-    { campaign: 'Bamboo Board — Google Shop',   type: 'Shopping', spend: '$210',   revenue: '$3,510',  roas: '16.7×',acos: '6.0%',  impressions: '42,000',  clicks: '840',   ctr: '2.0%', cpc: '$0.25', convRate: '29.3%',status: 'Scale'   },
-    { campaign: 'Yoga Mat — Google PMax',       type: 'PMax',     spend: '$380',   revenue: '$2,090',  roas: '5.5×', acos: '18.2%', impressions: '95,000',  clicks: '950',   ctr: '1.0%', cpc: '$0.40', convRate: '8.4%', status: 'Healthy' },
-    { campaign: 'Running Shoes — SP',           type: 'SP',       spend: '$920',   revenue: '$1,288',  roas: '1.4×', acos: '71.4%', impressions: '276,000', clicks: '2,760', ctr: '1.0%', cpc: '$0.33', convRate: '2.2%', status: 'Pause'   },
-    { campaign: 'Chair Cushion — SP',           type: 'SP',       spend: '$340',   revenue: '$1,428',  roas: '4.2×', acos: '23.8%', impressions: '102,000', clicks: '1,020', ctr: '1.0%', cpc: '$0.33', convRate: '3.8%', status: 'Healthy' },
-    { campaign: 'Desk Organizer — SP',          type: 'SP',       spend: '$180',   revenue: '$432',    roas: '2.4×', acos: '41.7%', impressions: '72,000',  clicks: '720',   ctr: '1.0%', cpc: '$0.25', convRate: '2.8%', status: 'Review'  },
+    { campaign: 'Security Camera — SP', type: 'SP', spend: '$1,400', revenue: '$12,500', roas: '8.9×', acos: '11.2%', impressions: '420,000', clicks: '4,200', ctr: '1.0%', cpc: '$0.33', convRate: '7.4%', status: 'Review' },
+    { campaign: 'Earbuds — Sponsored Products', type: 'SP', spend: '$620', revenue: '$5,127', roas: '8.3×', acos: '12.1%', impressions: '186,000', clicks: '2,480', ctr: '1.3%', cpc: '$0.25', convRate: '4.6%', status: 'Healthy' },
+    { campaign: 'Pet Food — TikTok Spark', type: 'TikTok', spend: '$150', revenue: '$2,504', roas: '16.7×', acos: '6.0%', impressions: '84,000', clicks: '1,680', ctr: '2.0%', cpc: '$0.09', convRate: '14.9%', status: 'Scale' },
+    { campaign: 'Bamboo Board — Google Shop', type: 'Shopping', spend: '$210', revenue: '$3,510', roas: '16.7×', acos: '6.0%', impressions: '42,000', clicks: '840', ctr: '2.0%', cpc: '$0.25', convRate: '29.3%', status: 'Scale' },
+    { campaign: 'Yoga Mat — Google PMax', type: 'PMax', spend: '$380', revenue: '$2,090', roas: '5.5×', acos: '18.2%', impressions: '95,000', clicks: '950', ctr: '1.0%', cpc: '$0.40', convRate: '8.4%', status: 'Healthy' },
+    { campaign: 'Running Shoes — SP', type: 'SP', spend: '$920', revenue: '$1,288', roas: '1.4×', acos: '71.4%', impressions: '276,000', clicks: '2,760', ctr: '1.0%', cpc: '$0.33', convRate: '2.2%', status: 'Pause' },
+    { campaign: 'Chair Cushion — SP', type: 'SP', spend: '$340', revenue: '$1,428', roas: '4.2×', acos: '23.8%', impressions: '102,000', clicks: '1,020', ctr: '1.0%', cpc: '$0.33', convRate: '3.8%', status: 'Healthy' },
+    { campaign: 'Desk Organizer — SP', type: 'SP', spend: '$180', revenue: '$432', roas: '2.4×', acos: '41.7%', impressions: '72,000', clicks: '720', ctr: '1.0%', cpc: '$0.25', convRate: '2.8%', status: 'Review' },
   ];
   const platformData = [
-    { platform: 'Amazon Sponsored Products', spend: '$3,460', revenue: '$20,775', roas: '6.0×', acos: '16.7%', campaigns: 5, skus: 8  },
-    { platform: 'TikTok Shop Spark Ads',     spend: '$150',   revenue: '$2,504',  roas: '16.7×',acos: '6.0%',  campaigns: 1, skus: 1  },
-    { platform: 'Google Shopping / PMax',    spend: '$590',   revenue: '$5,600',  roas: '9.5×', acos: '10.5%', campaigns: 2, skus: 3  },
+    { platform: 'Amazon Sponsored Products', spend: '$3,460', revenue: '$20,775', roas: '6.0×', acos: '16.7%', campaigns: 5, skus: 8 },
+    { platform: 'TikTok Shop Spark Ads', spend: '$150', revenue: '$2,504', roas: '16.7×', acos: '6.0%', campaigns: 1, skus: 1 },
+    { platform: 'Google Shopping / PMax', spend: '$590', revenue: '$5,600', roas: '9.5×', acos: '10.5%', campaigns: 2, skus: 3 },
   ];
 
   const statusColor = (s) => s === 'Scale' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : s === 'Healthy' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400' : s === 'Review' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
@@ -1249,20 +1252,20 @@ const TABLES_MAP = { sales: SalesTables, margin: MarginTables, inventory: Invent
 // ─── Dashboard tab list ────────────────────────────────────────────────────────
 
 const DETAIL_VIEW_TABS = [
-  { key: 'sales',     label: 'Sales',     icon: 'fa-dollar-sign'    },
-  { key: 'margin',    label: 'Margin',    icon: 'fa-chart-line'     },
-  { key: 'inventory', label: 'Inventory', icon: 'fa-boxes'          },
-  { key: 'ads',       label: 'Ads',       icon: 'fa-bullhorn'       },
-  { key: 'cash',      label: 'Cash',      icon: 'fa-money-bill-wave'},
+  { key: 'sales', label: 'Sales', icon: 'fa-dollar-sign' },
+  { key: 'margin', label: 'Margin', icon: 'fa-chart-line' },
+  { key: 'inventory', label: 'Inventory', icon: 'fa-boxes' },
+  { key: 'ads', label: 'Ads', icon: 'fa-bullhorn' },
+  { key: 'cash', label: 'Cash', icon: 'fa-money-bill-wave' },
 ];
 
 // ─── Filter option arrays — never change, defined once at module level ────────
 
-const V2_DATE_OPTS  = [['last-7-days','Last 7 Days'],['last-30-days','Last 30 Days'],['last-90-days','Last 90 Days'],['ytd','Year to Date']];
-const V2_CAT_OPTS   = [['all','All Categories'],['electronics','Electronics'],['home-garden','Home & Garden'],['apparel','Apparel'],['pet-suppliers','Pet Suppliers']];
-const V2_CAT_RECENT = [['electronics','Electronics'],['apparel','Apparel'],['home-garden','Home & Garden']];
-const V2_CAT_GRID   = [['electronics','Electronics'],['apparel','Apparel'],['home-garden','Home & Garden'],['pet-suppliers','Pet Suppliers'],['all','All Categories']];
-const CAL_MONTHS    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const V2_DATE_OPTS = [['last-7-days', 'Last 7 Days'], ['last-30-days', 'Last 30 Days'], ['last-90-days', 'Last 90 Days'], ['ytd', 'Year to Date']];
+const V2_CAT_OPTS = [['all', 'All Categories'], ['electronics', 'Electronics'], ['home-garden', 'Home & Garden'], ['apparel', 'Apparel'], ['pet-suppliers', 'Pet Suppliers']];
+const V2_CAT_RECENT = [['electronics', 'Electronics'], ['apparel', 'Apparel'], ['home-garden', 'Home & Garden']];
+const V2_CAT_GRID = [['electronics', 'Electronics'], ['apparel', 'Apparel'], ['home-garden', 'Home & Garden'], ['pet-suppliers', 'Pet Suppliers'], ['all', 'All Categories']];
+const CAL_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 // Pure utility functions — no state/props deps, safe at module level
 const isSameDay = (a, b) => !!(a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate());
@@ -1271,9 +1274,9 @@ const isInRange = (date, start, end) => {
   const d = date.getTime(), s = Math.min(start.getTime(), end.getTime()), e = Math.max(start.getTime(), end.getTime());
   return d > s && d < e;
 };
-const formatCalDate = (d) => !d ? '' : `${d.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]} ${d.getFullYear()}`;
-const _getDurLabel  = (key) => ({ 'last-7-days': '7 days', 'last-30-days': '30 days', 'last-90-days': '90 days', 'ytd': 'YTD' }[key] || '30 days');
-const quickToRange  = (key) => {
+const formatCalDate = (d) => !d ? '' : `${d.getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getMonth()]} ${d.getFullYear()}`;
+const _getDurLabel = (key) => ({ 'last-7-days': '7 days', 'last-30-days': '30 days', 'last-90-days': '90 days', 'ytd': 'YTD' }[key] || '30 days');
+const quickToRange = (key) => {
   const end = new Date(); end.setHours(23, 59, 59, 999);
   const start = new Date(end);
   if (key === 'last-7-days') start.setDate(start.getDate() - 6);
@@ -1285,7 +1288,7 @@ const quickToRange  = (key) => {
   return { start, end };
 };
 const v2DateLabel = (v) => V2_DATE_OPTS.find(([k]) => k === v)?.[1] || v;
-const v2CatLabel  = (v) => V2_CAT_OPTS.find(([k]) => k === v)?.[1] || v;
+const v2CatLabel = (v) => V2_CAT_OPTS.find(([k]) => k === v)?.[1] || v;
 
 // ─── Main page ─────────────────────────────────────────────────────────────────
 
@@ -1297,8 +1300,8 @@ const DetailedViewPage = () => {
   const [kpiIsSticky, setKpiIsSticky] = useState(false);
   const kpiSectionRef = useRef(null);
   const compactFilterRef = useRef(null);
-  const [compactFilterOpen, setCompactFilterOpen] = useState(false);
-  const [compactExpandedFilter, setCompactExpandedFilter] = useState(null);
+  const filterBtnRef = useRef(null);
+  const [filterPanelPos, setFilterPanelPos] = useState({ top: 64, right: 24 });
 
   /* ── V2 filter panel state ── */
   const [v2FilterOpen, setV2FilterOpen] = useState(false);
@@ -1341,12 +1344,6 @@ const DetailedViewPage = () => {
     return () => el.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close compact filter when scrolling back to top
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (!isScrolled) setCompactFilterOpen(false);
-  }, [isScrolled]);
-
   // KPI sticky — triggers when KPI section < 28% visible
   useEffect(() => {
     const scrollEl = document.querySelector('.dashboard-main-content');
@@ -1361,7 +1358,6 @@ const DetailedViewPage = () => {
   }, []);
 
   // Single document listener per dropdown — hook attaches only while open, cleans up on close
-  useClickOutside(compactFilterRef, compactFilterOpen, () => setCompactFilterOpen(false));
   useClickOutside(v2FilterRef, v2FilterOpen, () => setV2FilterOpen(false));
   useClickOutside(chanDropRef, chanDropOpen, () => setChanDropOpen(false));
   useClickOutside(durRef, durOpen, () => setDurOpen(false));
@@ -1387,10 +1383,10 @@ const DetailedViewPage = () => {
 
   // V2_DATE_OPTS, V2_CAT_OPTS, V2_CAT_RECENT, V2_CAT_GRID, CAL_MONTHS → module-level constants above
   // isSameDay, isInRange, formatCalDate, getDurLabel, quickToRange, v2DateLabel, v2CatLabel → module-level pure functions above
-  const v2ChanList   = useMemo(() => channelOptions.filter(([v]) => v !== 'all'), [channelOptions]);
+  const v2ChanList = useMemo(() => channelOptions.filter(([v]) => v !== 'all'), [channelOptions]);
   const v2ChanRecent = useMemo(() => v2ChanList.slice(0, 2), [v2ChanList]);
-  const v2ChanGrid   = useMemo(() => [...v2ChanList, ['all-chans', 'All Channels']], [v2ChanList]);
-  const v2ChanLabel  = (v) => channelOptions.find(([k]) => k === v)?.[1] || v;
+  const v2ChanGrid = useMemo(() => [...v2ChanList, ['all-chans', 'All Channels']], [v2ChanList]);
+  const v2ChanLabel = (v) => channelOptions.find(([k]) => k === v)?.[1] || v;
   const prevCalMonth = () => {
     if (calViewMonth === 0) { setCalViewMonth(11); setCalViewYear(y => y - 1); }
     else setCalViewMonth(m => m - 1);
@@ -1436,7 +1432,7 @@ const DetailedViewPage = () => {
           ) : <span className="w-6" />}
         </div>
         <div className="grid grid-cols-7 mb-0.5">
-          {['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => (
+          {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
             <div key={d} className="text-center text-[10px] font-medium text-gray-400 dark:text-slate-500 py-0.5">{d}</div>
           ))}
         </div>
@@ -1444,7 +1440,7 @@ const DetailedViewPage = () => {
           {cells.map((date, i) => {
             if (!date) return <div key={i} className="aspect-square" />;
             const isStart = isSameDay(date, pendingRangeStart);
-            const isEnd   = isSameDay(date, pendingRangeEnd);
+            const isEnd = isSameDay(date, pendingRangeEnd);
             const inRange = isInRange(date, pendingRangeStart, effectiveEnd);
             const isToday = isSameDay(date, todayRef);
             return (
@@ -1453,15 +1449,14 @@ const DetailedViewPage = () => {
                   onClick={() => handleDateClick(date)}
                   onMouseEnter={() => { if (pendingRangeStart && !pendingRangeEnd) setHoverDay(date); }}
                   onMouseLeave={() => setHoverDay(null)}
-                  className={`w-6 h-6 flex items-center justify-center text-[11px] rounded-full transition-all ${
-                    isStart || isEnd
-                      ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 font-bold'
-                      : inRange
+                  className={`w-6 h-6 flex items-center justify-center text-[11px] rounded-full transition-all ${isStart || isEnd
+                    ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 font-bold'
+                    : inRange
                       ? 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300'
                       : isToday
-                      ? 'ring-1 ring-gray-400 dark:ring-slate-500 text-gray-900 dark:text-slate-100 font-semibold'
-                      : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'
-                  }`}
+                        ? 'ring-1 ring-gray-400 dark:ring-slate-500 text-gray-900 dark:text-slate-100 font-semibold'
+                        : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'
+                    }`}
                 >
                   {date.getDate()}
                 </button>
@@ -1474,6 +1469,11 @@ const DetailedViewPage = () => {
   };
 
   const handleOpenV2Filter = () => {
+    const triggerEl = isScrolled ? compactFilterRef.current : filterBtnRef.current;
+    if (triggerEl) {
+      const rect = triggerEl.getBoundingClientRect();
+      setFilterPanelPos({ top: rect.bottom + 8, right: Math.max(8, window.innerWidth - rect.right) });
+    }
     setPendingDate(appliedDate);
     setPendingCats([...appliedCats]);
     setPendingChans([...appliedChans]);
@@ -1490,7 +1490,7 @@ const DetailedViewPage = () => {
       setCalViewMonth(now.getMonth() === 0 ? 11 : now.getMonth() - 1);
       setCalViewYear(now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear());
     }
-    setV2FilterOpen(true);
+    setV2FilterOpen(v => !v);
   };
   const handleApplyV2Filter = () => {
     setAppliedDate(pendingDate);
@@ -1516,58 +1516,18 @@ const DetailedViewPage = () => {
   };
 
   /* ── Compact filter (scrolled header) ── */
-  const compactFilterOptions = [
-    { label: 'Date Range', value: dateRange, onChange: setDateRange, options: [['last-7-days','Last 7 Days'],['last-30-days','Last 30 Days'],['last-90-days','Last 90 Days'],['ytd','Year to Date']] },
-    { label: 'Category',   value: category,  onChange: setCategory,  options: [['all','All Categories'],['electronics','Electronics'],['home-garden','Home & Garden'],['apparel','Apparel'],['pet-suppliers','Pet Suppliers']] },
-    { label: 'Channel',    value: channel,   onChange: setChannel,   options: channelOptions },
-  ];
-
   const compactFilterElement = isScrolled ? (
     <div className="relative" ref={compactFilterRef}>
       <button
-        onClick={() => setCompactFilterOpen(o => !o)}
-        className={`w-8 h-8 flex items-center justify-center rounded-xl border transition-all ${compactFilterOpen
-          ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
-          : 'bg-gray-50 dark:bg-slate-800/60 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700'
+        onClick={handleOpenV2Filter}
+        className={`w-8 h-8 flex items-center justify-center rounded-xl border transition-all ${
+          v2FilterOpen
+            ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
+            : 'bg-gray-50 dark:bg-slate-800/60 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700'
         }`}
       >
         <i className="fa-solid fa-sliders text-[10px]" />
       </button>
-      {compactFilterOpen && (
-        <div className="absolute top-full mt-2 right-0 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-[9999]">
-          <div className="flex flex-col min-w-[168px] rounded-xl overflow-hidden">
-            {compactFilterOptions.map((sel, i) => {
-              const currentLabel = sel.options.find(([val]) => val === sel.value)?.[1] || sel.options[0][1];
-              const isExpanded = compactExpandedFilter === i;
-              return (
-                <button key={i} onClick={() => setCompactExpandedFilter(isExpanded ? null : i)}
-                  className={`flex items-center justify-between px-3.5 py-2.5 hover:bg-gray-50 dark:hover:bg-slate-800/60 transition-colors ${i > 0 ? 'border-t border-gray-100 dark:border-slate-800' : ''} ${isExpanded ? 'bg-gray-50 dark:bg-slate-800/40' : ''}`}
-                >
-                  <span className={`text-xs font-medium ${isExpanded ? 'text-gray-900 dark:text-slate-100' : 'text-gray-700 dark:text-slate-300'}`}>{currentLabel}</span>
-                  <i className={`fa-solid fa-chevron-right text-[9px] ml-2 transition-transform ${isExpanded ? 'text-brand dark:text-slate-300' : 'text-gray-400 dark:text-slate-500'}`} />
-                </button>
-              );
-            })}
-          </div>
-          {compactExpandedFilter !== null && (
-            <div className="absolute top-0 left-full ml-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-[10000] py-1.5 px-1.5 min-w-[152px]">
-              {compactFilterOptions[compactExpandedFilter].options.map(([val, label]) => {
-                const isSelected = compactFilterOptions[compactExpandedFilter].value === val;
-                return (
-                  <button key={val}
-                    onClick={() => { compactFilterOptions[compactExpandedFilter].onChange(val); setCompactExpandedFilter(null); setCompactFilterOpen(false); }}
-                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors mt-0.5 first:mt-0 ${
-                      isSelected ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 font-semibold' : 'text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 font-medium'
-                    }`}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   ) : null;
 
@@ -1578,11 +1538,10 @@ const DetailedViewPage = () => {
         <button
           key={tab.key}
           onClick={() => navigate(`/detailed-view/${tab.key}`, { state: { from: backRoute } })}
-          className={`px-3 py-1 text-[11px] font-medium transition-colors whitespace-nowrap flex items-center gap-1 border-b-2 -mb-px ${
-            intelType === tab.key
-              ? 'border-gray-900 dark:border-slate-300 text-gray-900 dark:text-slate-100 font-semibold'
-              : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
-          }`}
+          className={`px-3 py-1 text-[11px] font-medium transition-colors whitespace-nowrap flex items-center gap-1 border-b-2 -mb-px ${intelType === tab.key
+            ? 'border-gray-900 dark:border-slate-300 text-gray-900 dark:text-slate-100 font-semibold'
+            : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
+            }`}
         >
           <i className={`fa-solid ${tab.icon} text-[9px]`} />
           {tab.label}
@@ -1647,11 +1606,10 @@ const DetailedViewPage = () => {
             <button
               key={tab.key}
               onClick={() => navigate(`/detailed-view/${tab.key}`, { state: { from: backRoute } })}
-              className={`px-4 py-1.5 text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-1.5 border-b-2 -mb-px ${
-                intelType === tab.key
-                  ? 'border-gray-900 dark:border-slate-300 text-gray-900 dark:text-slate-100 font-semibold'
-                  : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
-              }`}
+              className={`px-4 py-1.5 text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-1.5 border-b-2 -mb-px ${intelType === tab.key
+                ? 'border-gray-900 dark:border-slate-300 text-gray-900 dark:text-slate-100 font-semibold'
+                : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
+                }`}
             >
               <i className={`fa-solid ${tab.icon} text-[11px]`} />
               {tab.label}
@@ -1662,12 +1620,12 @@ const DetailedViewPage = () => {
         {/* Filter button + chips + panel */}
         <div className="relative flex items-center gap-2" ref={v2FilterRef}>
           <button
+            ref={filterBtnRef}
             onClick={handleOpenV2Filter}
-            className={`flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${
-              v2FilterOpen
-                ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
-                : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
-            }`}
+            className={`flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
+              ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
+              : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
+              }`}
           >
             <i className="fa-solid fa-sliders text-[11px]" />
             Filters
@@ -1728,14 +1686,16 @@ const DetailedViewPage = () => {
 
           {/* Full filter panel */}
           {v2FilterOpen && (
-            <div className="absolute top-full mt-2 right-0 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl z-[9999] w-[580px] overflow-hidden">
-              <div className="flex" style={{ minHeight: '380px' }}>
+            <div
+              className="fixed bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl z-[9999] w-[580px] overflow-hidden"
+              style={{ top: filterPanelPos.top, right: filterPanelPos.right }}
+            >
+              <div className="flex" style={{ minHeight: '300px' }}>
                 <div className="w-[155px] flex-shrink-0 border-r border-gray-100 dark:border-slate-800 p-3 flex flex-col gap-1">
                   {[{ key: 'date', label: 'Select Date' }, { key: 'channel', label: 'All Channels' }, { key: 'category', label: 'All Categories' }].map(sec => (
                     <button key={sec.key} onClick={() => setV2Section(sec.key)}
-                      className={`flex items-center gap-2 w-full text-left px-2.5 py-2.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
-                        v2Section === sec.key ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
-                      }`}
+                      className={`flex items-center gap-2 w-full text-left px-2.5 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${v2Section === sec.key ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+                        }`}
                     >
                       <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${v2Section === sec.key ? 'border-white dark:border-gray-900' : 'border-gray-300 dark:border-slate-600'}`}>
                         {v2Section === sec.key && <span className="w-1.5 h-1.5 rounded-full bg-white dark:bg-gray-900" />}
@@ -1747,9 +1707,9 @@ const DetailedViewPage = () => {
                 <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
                   {v2Section === 'date' && (
                     <div className="flex-1 flex flex-col p-4 gap-2">
-                      <div className="flex items-center gap-2 flex-wrap mb-8">
+                      <div className="flex items-center gap-2 flex-wrap mb-3">
                         <span className="text-xs font-semibold text-gray-400 dark:text-slate-500">Quick Filters</span>
-                        {[['last-7-days','Last 7 Days'],['last-30-days','Last 30 Days'],['last-90-days','Last 90 Days']].map(([val, lbl]) => (
+                        {[['last-7-days', 'Last 7 Days'], ['last-30-days', 'Last 30 Days'], ['last-90-days', 'Last 90 Days']].map(([val, lbl]) => (
                           <button key={val}
                             onClick={() => { const r = quickToRange(val); setPendingRangeStart(r.start); setPendingRangeEnd(r.end); setPendingDate(val); }}
                             className={`px-3 py-1 rounded-full border text-xs font-medium transition-all ${pendingDate === val ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100' : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'}`}>
@@ -1776,15 +1736,6 @@ const DetailedViewPage = () => {
                   {v2Section === 'category' && (
                     <div className="flex-1 flex flex-col p-4 gap-5">
                       <div>
-                        <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-2">Recent Used</p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {V2_CAT_RECENT.map(([val, lbl]) => {
-                            const isSel = pendingCats.includes(val);
-                            return <button key={val} onClick={() => togglePendingCat(val)} className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${isSel ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100' : 'border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'}`}>{lbl}</button>;
-                          })}
-                        </div>
-                      </div>
-                      <div>
                         <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-2">All Categories</p>
                         <div className="flex flex-wrap gap-1.5">
                           {V2_CAT_GRID.map(([val, lbl]) => {
@@ -1806,15 +1757,6 @@ const DetailedViewPage = () => {
                   )}
                   {v2Section === 'channel' && (
                     <div className="flex-1 flex flex-col p-4 gap-5">
-                      <div>
-                        <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-2">Recent Used</p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {v2ChanRecent.map(([val, lbl]) => {
-                            const isSel = pendingChans.includes(val);
-                            return <button key={val} onClick={() => togglePendingChan(val)} className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${isSel ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100' : 'border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'}`}>{lbl}</button>;
-                          })}
-                        </div>
-                      </div>
                       <div>
                         <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-2">All Channels</p>
                         <div className="flex flex-wrap gap-1.5">
@@ -1898,7 +1840,7 @@ const DetailedViewPage = () => {
                 <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100">Bleeding Margin SKUs</h4>
                 <span className="text-[11px] text-gray-400 dark:text-slate-500">Sorted by $ at risk descending</span>
               </div>
-              <BleedingMarginTable onRowClick={() => {}} hideTitleBar />
+              <BleedingMarginTable onRowClick={() => { }} hideTitleBar />
             </div>
             <div><ChannelMixWidget /></div>
           </div>

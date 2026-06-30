@@ -658,9 +658,14 @@ const KPIDetailModal = ({ isOpen, onClose, stat, filterContext = {}, tab: _tab =
               ))}
             </div>
           </div>
-          <button onClick={onClose} className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 transition-colors">
-            <i className="fa-solid fa-xmark" />
-          </button>
+          <div className="flex items-center gap-1 flex-shrink-0">
+            <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 transition-colors" title="Download">
+              <i className="fa-solid fa-download text-sm" />
+            </button>
+            <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 transition-colors">
+              <i className="fa-solid fa-xmark" />
+            </button>
+          </div>
         </div>
 
         {/* ── Summary stats ── */}

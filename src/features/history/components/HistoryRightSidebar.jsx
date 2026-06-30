@@ -22,7 +22,12 @@ const HistoryRightSidebar = ({
     >
       {/* Quick Filters */}
       <div className="pl-6 pr-4 pt-4 pb-4 border-b border-gray-200 dark:border-slate-800">
-        <h2 className="font-medium text-gray-900 dark:text-slate-100 mb-3">Quick Filters</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-medium text-gray-900 dark:text-slate-100">Quick Filters</h2>
+          <button title="Export History" className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-700 dark:hover:text-slate-200 transition-colors">
+            <i className="fa-solid fa-file-arrow-down text-xs" />
+          </button>
+        </div>
         <div className="space-y-2">
           {quickFilters.map((filter) => {
             const isActive = filter.id === activeFilter;
@@ -52,62 +57,6 @@ const HistoryRightSidebar = ({
         </div>
       </div>
 
-      {/* Modules */}
-      <div className="pl-6 pr-4 pt-4 pb-4 border-b border-gray-200 dark:border-slate-800">
-        <h2 className="font-medium text-gray-900 dark:text-slate-100 mb-3">Modules</h2>
-        <div className="space-y-4">
-          {(modules || []).map((mod) => {
-            const modKey = mod.key || mod.name.toLowerCase();
-            const isCollapsed = !!collapsed[modKey];
-            return (
-              <div key={mod.name}>
-                {/* Module heading row */}
-                <div className="flex items-center gap-1.5 mb-1.5">
-                  <i className={`fa-solid ${mod.icon} text-[10px] text-gray-400 dark:text-slate-500`} />
-                  {/* Clicking the label navigates to filtered history */}
-                  <button
-                    onClick={() => navigate('/history', { state: { moduleFilter: modKey } })}
-                    className="flex-1 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide hover:text-gray-800 dark:hover:text-slate-200 transition-colors"
-                  >
-                    {mod.name}
-                  </button>
-                  {/* Arrow toggles collapse */}
-                  <button
-                    onClick={() => toggleCollapse(modKey)}
-                    className="p-0.5 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 transition-colors"
-                  >
-                    <i className={`fa-solid fa-chevron-${isCollapsed ? 'down' : 'up'} text-[8px]`} />
-                  </button>
-                </div>
-
-                {/* Collapsible search list */}
-                {!isCollapsed && (
-                  <div className="space-y-0.5 pl-3">
-                    {mod.searches.map((s, i) => {
-                      const text   = typeof s === 'string' ? s : s.text;
-                      const chatId = typeof s === 'object' ? s.chatId : null;
-                      return (
-                        <button
-                          key={i}
-                          onClick={() =>
-                            chatId
-                              ? navigate('/history/detail', { state: { chatId } })
-                              : navigate('/history', { state: { moduleFilter: modKey } })
-                          }
-                          className="w-full text-left text-[11px] text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200 py-0.5 truncate transition-colors"
-                        >
-                          {text}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
       {/* Most Used Searches */}
       <div className="flex-1 overflow-y-auto pl-6 pr-4 py-4 hide-scroll">
         <h2 className="font-medium text-gray-900 dark:text-slate-100 mb-3">Most Used Searches</h2>
@@ -123,13 +72,6 @@ const HistoryRightSidebar = ({
         </div>
       </div>
 
-      {/* Export */}
-      <div className="pl-6 pr-4 py-4 border-t border-gray-200 dark:border-slate-800">
-        <button className="w-full flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-600 rounded-lg p-2.5 text-sm font-medium transition-colors shadow-sm text-gray-700 dark:text-slate-300">
-          <i className="fa-solid fa-download"></i>
-          <span>Export History</span>
-        </button>
-      </div>
     </aside>
   );
 };

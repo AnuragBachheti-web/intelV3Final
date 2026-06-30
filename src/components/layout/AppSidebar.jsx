@@ -70,7 +70,7 @@ const HistorySectionContent = () => {
             onClick={() => setHistoryVisible(v => !v)}
             className="flex items-center gap-1 text-xs text-gray-400 dark:text-slate-500 hover:text-gray-500 dark:hover:text-slate-400 transition-colors"
           >
-            <span className="font-medium">Recents</span>
+            <span className="font-medium">Recent</span>
             <i className={`fa-solid fa-chevron-${historyVisible ? 'down' : 'right'} text-[8px] opacity-0 group-hover/recents:opacity-100 transition-opacity`} />
           </button>
           <div className="relative" ref={groupByRef}>
@@ -352,7 +352,7 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false }) => {
         <nav className="flex-1 w-full scrollbar-hide px-2 pt-2 flex flex-col gap-1 overflow-y-auto">
           {filteredNavItems.map(item => (
             <div key={item.name} className="w-full">
-              <SidebarItem item={item} isCollapsed={isSidebarCollapsed} />
+              <SidebarItem item={item} isCollapsed={isSidebarCollapsed} small={true} />
             </div>
           ))}
           {!isSidebarCollapsed && isConnected && <HistorySectionContent />}
@@ -417,7 +417,7 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false }) => {
       <nav className="flex-1 w-full scrollbar-hide px-2 pt-2 flex flex-col gap-1 overflow-y-auto">
         {filteredNavItems.map(item => (
           <div key={item.name} className="w-full">
-            <SidebarItem item={item} isCollapsed={isSidebarCollapsed} />
+            <SidebarItem item={item} isCollapsed={isSidebarCollapsed} small={true} />
           </div>
         ))}
         {!isSidebarCollapsed && isConnected && <HistorySectionContent />}

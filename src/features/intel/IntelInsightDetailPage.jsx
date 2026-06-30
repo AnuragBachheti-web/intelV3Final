@@ -233,7 +233,6 @@ const IntelV2InsightDetailPage = () => {
           className="flex items-center gap-2 text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200 transition-colors"
         >
           <i className="fa-solid fa-arrow-left text-sm" />
-          <span className="text-sm font-medium">Back</span>
         </button>
       </div>
 

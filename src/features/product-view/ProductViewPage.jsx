@@ -407,6 +407,11 @@ const ProductViewPage = () => {
   const [activeWatchlistIdx, setActiveWatchlistIdx] = useState(null);
   const [actionsViewMode, setActionsViewMode] = useState('list');
   const [activePerfStat, setActivePerfStat] = useState('revenue');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editDesc, setEditDesc] = useState('');
+  const [savedName, setSavedName] = useState(null);
+  const [savedDesc, setSavedDesc] = useState(null);
 
   // Filter panel state
   const [filterOpen, setFilterOpen] = useState(false);
@@ -620,13 +625,61 @@ const ProductViewPage = () => {
                   </span>
                 </div>
 
-                <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-0.5 leading-snug">{activeProduct.name}</h2>
-                <p className="text-[11px] text-gray-500 dark:text-slate-400 mb-3 font-mono">
-                  SKU: {activeProduct.sku || activeProduct.watchlistItem?.sku || 'WH-PRO-2024'} · Realify Audio · Added Mar 14, 2026
-                </p>
-                <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">
-                  {activeProduct.description || `${activeProduct.name} is one of your top-performing products, consistently driving strong revenue across channels. It maintains competitive pricing and healthy margin contribution relative to your catalog average. Recent demand signals indicate sustained buyer interest, with particular strength in repeat purchase behaviour. Monitor inventory velocity closely to avoid stockout risk during high-demand periods.`}
-                </p>
+                {isEditing ? (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1 block">Product Name</label>
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={e => setEditName(e.target.value)}
+                        className="w-full px-3 py-2 text-sm font-bold text-gray-900 dark:text-slate-100 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-slate-600 transition"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1 block">Description</label>
+                      <textarea
+                        value={editDesc}
+                        onChange={e => setEditDesc(e.target.value)}
+                        rows={4}
+                        className="w-full px-3 py-2 text-sm text-gray-600 dark:text-slate-400 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-slate-600 transition resize-none leading-relaxed"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => { setSavedName(editName); setSavedDesc(editDesc); setIsEditing(false); }}
+                        className="px-4 py-1.5 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition-colors"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => setIsEditing(false)}
+                        className="px-4 py-1.5 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100 leading-snug">{savedName || activeProduct.name}</h2>
+                      <button
+                        onClick={() => { setEditName(savedName || activeProduct.name); setEditDesc(savedDesc || activeProduct.description || `${activeProduct.name} is one of your top-performing products, consistently driving strong revenue across channels. It maintains competitive pricing and healthy margin contribution relative to your catalog average. Recent demand signals indicate sustained buyer interest, with particular strength in repeat purchase behaviour. Monitor inventory velocity closely to avoid stockout risk during high-demand periods.`); setIsEditing(true); }}
+                        className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-lg text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+                        title="Edit"
+                      >
+                        <i className="fa-solid fa-pen text-[10px]" />
+                      </button>
+                    </div>
+                    <p className="text-[11px] text-gray-500 dark:text-slate-400 mb-3 font-mono">
+                      SKU: {activeProduct.sku || activeProduct.watchlistItem?.sku || 'WH-PRO-2024'} · Realify Audio · Added Mar 14, 2026
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">
+                      {savedDesc || activeProduct.description || `${activeProduct.name} is one of your top-performing products, consistently driving strong revenue across channels. It maintains competitive pricing and healthy margin contribution relative to your catalog average. Recent demand signals indicate sustained buyer interest, with particular strength in repeat purchase behaviour. Monitor inventory velocity closely to avoid stockout risk during high-demand periods.`}
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </div>

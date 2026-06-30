@@ -50,19 +50,247 @@ const STATUS_STYLES = {
   Unlisted: { pill: 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400',           dot: 'bg-red-400'   },
 };
 
-// ─── Product Edit View ────────────────────────────────────────────────────────
+// ─── Edit Banner ──────────────────────────────────────────────────────────────
+const EditBanner = ({ onGoToMarketplace }) => (
+  <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40">
+    <div className="flex items-start gap-2.5">
+      <i className="fa-solid fa-circle-info text-amber-500 dark:text-amber-400 mt-0.5 flex-shrink-0 text-sm" />
+      <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
+        Changes made here apply only within the Realify platform. To sync these updates with your marketplace, create a stimulation and execute it.
+      </p>
+    </div>
+    <button
+      onClick={onGoToMarketplace}
+      className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-600 dark:bg-amber-500 text-white text-xs font-semibold hover:bg-amber-700 dark:hover:bg-amber-600 transition-colors whitespace-nowrap"
+    >
+      Go to Marketplace <i className="fa-solid fa-arrow-right text-[10px]" />
+    </button>
+  </div>
+);
 
-const ProductEditView = ({ items, onBack }) => {
+// ─── Bulk Delete Confirm Modal ────────────────────────────────────────────────
+const BulkDeleteConfirmModal = ({ count, onConfirm, onCancel }) => (
+  <div
+    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm"
+    onClick={onCancel}
+  >
+    <div
+      className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-700 p-6 max-w-sm w-full mx-4"
+      onClick={e => e.stopPropagation()}
+    >
+      <div className="flex items-center gap-3 mb-3">
+        <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
+          <i className="fa-solid fa-trash text-red-600 dark:text-red-400" />
+        </div>
+        <h3 className="text-base font-bold text-gray-900 dark:text-slate-100">Delete {count} items?</h3>
+      </div>
+      <p className="text-sm text-gray-600 dark:text-slate-400 mb-6 pl-[52px]">
+        Are you sure you want to delete <span className="font-semibold text-gray-900 dark:text-slate-100">{count} items</span>? They will be moved to the Recycle Bin.
+      </p>
+      <div className="flex items-center gap-3 justify-end">
+        <button
+          onClick={onCancel}
+          className="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+        >
+          No
+        </button>
+        <button
+          onClick={onConfirm}
+          className="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-colors"
+        >
+          Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+// ─── Delete Confirm Modal ─────────────────────────────────────────────────────
+const DeleteConfirmModal = ({ product, onConfirm, onCancel }) => (
+  <div
+    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm"
+    onClick={onCancel}
+  >
+    <div
+      className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-700 p-6 max-w-sm w-full mx-4"
+      onClick={e => e.stopPropagation()}
+    >
+      <div className="flex items-center gap-3 mb-3">
+        <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
+          <i className="fa-solid fa-trash text-red-600 dark:text-red-400" />
+        </div>
+        <h3 className="text-base font-bold text-gray-900 dark:text-slate-100">Delete product?</h3>
+      </div>
+      <p className="text-sm text-gray-600 dark:text-slate-400 mb-6 pl-[52px]">
+        Are you sure you want to delete "<span className="font-semibold text-gray-900 dark:text-slate-100">{product.name}</span>"?
+      </p>
+      <div className="flex items-center gap-3 justify-end">
+        <button
+          onClick={onCancel}
+          className="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+        >
+          No
+        </button>
+        <button
+          onClick={onConfirm}
+          className="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-colors"
+        >
+          Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+// ─── Bin View ─────────────────────────────────────────────────────────────────
+const BinView = ({ items, onBack, onRestore, onRestoreMany }) => {
+  const [selectedIds, setSelectedIds] = useState(new Set());
+
+  const toggleSelect = (id) => setSelectedIds(prev => {
+    const next = new Set(prev);
+    next.has(id) ? next.delete(id) : next.add(id);
+    return next;
+  });
+
+  const toggleAll = () => {
+    if (selectedIds.size === items.length) setSelectedIds(new Set());
+    else setSelectedIds(new Set(items.map(p => p.id)));
+  };
+
+  const handleBulkRestore = () => {
+    onRestoreMany([...selectedIds]);
+    setSelectedIds(new Set());
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-3 py-1">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 transition-colors"
+        >
+          <i className="fa-solid fa-arrow-left text-[11px]" />
+        </button>
+        <span className="text-gray-300 dark:text-slate-700 select-none">|</span>
+        <h3 className="text-base font-bold text-gray-900 dark:text-slate-100">
+          Deleted Products{' '}
+          <span className="text-gray-400 dark:text-slate-500 font-normal text-sm">({items.length})</span>
+        </h3>
+        {selectedIds.size > 1 && (
+          <button
+            onClick={handleBulkRestore}
+            className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/40 text-green-700 dark:text-green-400 text-xs font-bold hover:bg-green-100 dark:hover:bg-green-900/40 transition-all"
+          >
+            <i className="fa-solid fa-rotate-left text-[10px]" />
+            Restore ({selectedIds.size})
+          </button>
+        )}
+      </div>
+
+      {items.length === 0 ? (
+        <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm flex flex-col items-center justify-center py-16 gap-3">
+          <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center">
+            <span className="fa-stack" style={{fontSize:'0.75rem',lineHeight:'1'}}>
+              <i className="fa-solid fa-trash-can fa-stack-2x text-gray-400 dark:text-slate-500" />
+              <i className="fa-solid fa-recycle fa-stack-1x fa-inverse" style={{fontSize:'0.55em'}} />
+            </span>
+          </div>
+          <p className="text-sm text-gray-400 dark:text-slate-500">Recycle Bin is empty</p>
+        </div>
+      ) : (
+        <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-100 dark:border-slate-800">
+                <th className="px-4 py-3 w-8">
+                  <input type="checkbox" checked={items.length > 0 && selectedIds.size === items.length} onChange={toggleAll} className="rounded border-gray-300 dark:border-slate-600" />
+                </th>
+                <th className="px-4 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-10">#</th>
+                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-12">Image</th>
+                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Product</th>
+                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Status</th>
+                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Price</th>
+                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Category</th>
+                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Inventory</th>
+                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Velocity</th>
+                <th className="px-3 py-3 w-20"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50 dark:divide-slate-800/60">
+              {items.map((product, idx) => {
+                const ss = STATUS_STYLES[product.status] || STATUS_STYLES.Active;
+                return (
+                  <tr key={product.id} className="hover:bg-gray-50/80 dark:hover:bg-slate-800/30 transition-colors opacity-70">
+                    <td className="px-4 py-3 w-8">
+                      <input type="checkbox" checked={selectedIds.has(product.id)} onChange={() => toggleSelect(product.id)} className="rounded border-gray-300 dark:border-slate-600" />
+                    </td>
+                    <td className="px-4 py-3 text-xs text-gray-400 dark:text-slate-500 font-mono w-10">{idx + 1}</td>
+                    <td className="px-3 py-3">
+                      <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
+                        {product.image
+                          ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                          : <i className="fa-solid fa-box text-gray-300 dark:text-slate-600 text-[11px]" />}
+                      </div>
+                    </td>
+                    <td className="px-3 py-3 min-w-[160px]">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 leading-tight">{product.name}</p>
+                      <p className="text-[10px] text-gray-400 dark:text-slate-500 font-mono mt-0.5">{product.sku}</p>
+                    </td>
+                    <td className="px-3 py-3">
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${ss.pill}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${ss.dot} flex-shrink-0`} />
+                        {product.status}
+                      </span>
+                    </td>
+                    <td className="px-3 py-3">
+                      <span className="text-xs font-semibold text-gray-700 dark:text-slate-300">{product.price}</span>
+                    </td>
+                    <td className="px-3 py-3">
+                      <span className="text-xs text-gray-600 dark:text-slate-400">{product.category}</span>
+                    </td>
+                    <td className="px-3 py-3">
+                      <span className={`text-xs font-semibold ${product.inventory === 0 ? 'text-red-600 dark:text-red-400' : product.inventory < 20 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-700 dark:text-slate-300'}`}>
+                        {product.inventory === 0 ? 'Out of stock' : `${product.inventory.toLocaleString()} in stock`}
+                      </span>
+                    </td>
+                    <td className="px-3 py-3">
+                      <span className="text-xs text-gray-600 dark:text-slate-400">{product.velocity}</span>
+                    </td>
+                    <td className="px-3 py-3 text-right">
+                      <button
+                        onClick={() => onRestore(product.id)}
+                        title="Restore"
+                        className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-green-200 dark:border-green-800/40 text-green-700 dark:text-green-400 text-[11px] font-semibold hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
+                      >
+                        <i className="fa-solid fa-rotate-left text-[9px]" /> Restore
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── Product Edit View ────────────────────────────────────────────────────────
+const ProductEditView = ({ items, onBack, onGoToMarketplace }) => {
   const [rows, setRows] = useState(items.map(p => ({ ...p })));
   const update = (id, field, value) =>
     setRows(prev => prev.map(r => r.id === id ? { ...r, [field]: value } : r));
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Edit Banner */}
+      <EditBanner onGoToMarketplace={onGoToMarketplace} />
+
       <div className="flex items-center justify-between gap-3 py-1">
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="flex items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 transition-colors">
-            <i className="fa-solid fa-arrow-left text-[11px]" /> Back
+            <i className="fa-solid fa-arrow-left text-[11px]" />
           </button>
           <span className="text-gray-300 dark:text-slate-700 select-none">|</span>
           <h3 className="text-base font-bold text-gray-900 dark:text-slate-100">
@@ -143,10 +371,8 @@ const ProductEditView = ({ items, onBack }) => {
 };
 
 // ─── Products List Page ───────────────────────────────────────────────────────
-
 const ProductsListPage = () => {
   const navigate = useNavigate();
-  // Parsed once per mount — localStorage doesn't change during component lifetime
   const activePlatforms = useMemo(
     () => JSON.parse(localStorage.getItem('active_platforms') || '["shopify"]'),
     []
@@ -155,6 +381,7 @@ const ProductsListPage = () => {
     () => CHANNEL_TABS.filter(tab => activePlatforms.includes(tab.toLowerCase())),
     [activePlatforms]
   );
+
   const [activeTab, setActiveTab]           = useState(visibleChannelTabs[0] || 'Amazon');
   const [search, setSearch]                 = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
@@ -170,13 +397,20 @@ const ProductsListPage = () => {
   const [editingRowId, setEditingRowId]     = useState(null);
   const [editingRowVals, setEditingRowVals] = useState({});
 
+  // Product data state (mutable for delete/draft)
+  const [productsData, setProductsData]         = useState(ALL_PRODUCTS);
+  const [deletedProducts, setDeletedProducts]   = useState([]);
+  const [deleteConfirmProduct, setDeleteConfirmProduct] = useState(null);
+  const [showBin, setShowBin]                   = useState(false);
+  const [bulkDeletePending, setBulkDeletePending] = useState(false);
+
   /* ── Unified View Controls panel ── */
-  const [viewPanelOpen, setViewPanelOpen]       = useState(false);
-  const [viewPanelTab, setViewPanelTab]         = useState('filters');
-  const [pendingCategory, setPendingCategory]   = useState('All');
-  const [pendingSortBy, setPendingSortBy]       = useState(null);
-  const [pendingSortDir, setPendingSortDir]     = useState('asc');
-  const [pendingCols, setPendingCols]           = useState(DEFAULT_COLS);
+  const [viewPanelOpen, setViewPanelOpen]     = useState(false);
+  const [viewPanelTab, setViewPanelTab]       = useState('filters');
+  const [pendingCategory, setPendingCategory] = useState('All');
+  const [pendingSortBy, setPendingSortBy]     = useState(null);
+  const [pendingSortDir, setPendingSortDir]   = useState('asc');
+  const [pendingCols, setPendingCols]         = useState(DEFAULT_COLS);
   const viewPanelRef = useRef(null);
 
   const openViewPanel = (tab = 'filters') => {
@@ -214,14 +448,14 @@ const ProductsListPage = () => {
   }, [viewPanelOpen]);
 
   const filtered = useMemo(() => {
-    let list = ALL_PRODUCTS;
+    let list = productsData;
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(p => p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q));
     }
     if (filterCategory !== 'All') list = list.filter(p => p.category === filterCategory);
     return list;
-  }, [search, filterCategory]);
+  }, [search, filterCategory, productsData]);
 
   const sortedFiltered = useMemo(() => {
     if (!sortBy) return filtered;
@@ -257,6 +491,49 @@ const ProductsListPage = () => {
     setEditMode(true);
   };
 
+  const handleBulkDelete = () => {
+    setBulkDeletePending(true);
+  };
+
+  const confirmBulkDelete = () => {
+    const toDelete = productsData.filter(p => selectedIds.has(p.id));
+    setProductsData(prev => prev.filter(p => !selectedIds.has(p.id)));
+    setDeletedProducts(prev => [...prev, ...toDelete]);
+    setSelectedIds(new Set());
+    setBulkDeletePending(false);
+  };
+
+  const handleDeleteProduct = (product, e) => {
+    e.stopPropagation();
+    setDeleteConfirmProduct(product);
+  };
+
+  const confirmDelete = () => {
+    setProductsData(prev => prev.filter(p => p.id !== deleteConfirmProduct.id));
+    setDeletedProducts(prev => [...prev, deleteConfirmProduct]);
+    setSelectedIds(prev => { const next = new Set(prev); next.delete(deleteConfirmProduct.id); return next; });
+    setDeleteConfirmProduct(null);
+  };
+
+  const handleRestoreProduct = (productId) => {
+    const product = deletedProducts.find(p => p.id === productId);
+    if (!product) return;
+    setDeletedProducts(prev => prev.filter(p => p.id !== productId));
+    setProductsData(prev => [...prev, product]);
+  };
+
+  const handleRestoreMany = (ids) => {
+    const idSet = new Set(ids);
+    const toRestore = deletedProducts.filter(p => idSet.has(p.id));
+    setDeletedProducts(prev => prev.filter(p => !idSet.has(p.id)));
+    setProductsData(prev => [...prev, ...toRestore]);
+  };
+
+  const handleDraftRow = (product, e) => {
+    e.stopPropagation();
+    setProductsData(prev => prev.map(p => p.id === product.id ? { ...p, status: 'Draft' } : p));
+  };
+
   const handleProductClick = (product) => {
     const watchlistItem = salesWatchlistItems.find(w => w.title?.toLowerCase() === product.name?.toLowerCase()) || null;
     navigate('/product-view', {
@@ -286,6 +563,7 @@ const ProductsListPage = () => {
   };
   const saveEdit = (e) => {
     e.stopPropagation();
+    setProductsData(prev => prev.map(p => p.id === editingRowId ? { ...p, ...editingRowVals } : p));
     setEditingRowId(null);
     setEditingRowVals({});
   };
@@ -399,7 +677,7 @@ const ProductsListPage = () => {
     <DashboardLayout title="Products" subtitle="All your product listings" showTabs={false} showAIPrompt={false}>
       <div className="flex flex-col gap-4">
 
-        {/* Channel tabs with back button */}
+        {/* Channel tabs with bin icon */}
         <div className="flex items-center gap-0.5 border-b border-gray-200 dark:border-slate-800 -mt-1">
           <button
             onClick={() => navigate('/intel', { state: { restoreInsightTab: 'Item' } })}
@@ -413,165 +691,218 @@ const ProductsListPage = () => {
               {tab}
             </button>
           ))}
+          {/* Bin icon on the right */}
+          <button
+            onClick={() => setShowBin(true)}
+            className="ml-auto flex items-center gap-1.5 pb-2.5 px-2 text-gray-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 transition-colors relative"
+            title="Bin"
+          >
+            <span className="fa-stack" style={{fontSize:'0.5rem',lineHeight:'1'}}>
+              <i className="fa-solid fa-trash-can fa-stack-2x" />
+              <i className="fa-solid fa-recycle fa-stack-1x fa-inverse" style={{fontSize:'0.6em'}} />
+            </span>
+            {deletedProducts.length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center px-0.5">
+                {deletedProducts.length}
+              </span>
+            )}
+          </button>
         </div>
 
-        {editMode ? (
-          <ProductEditView items={editItems} onBack={() => { setEditMode(false); setSelectedIds(new Set()); }} />
+        {showBin ? (
+          <BinView items={deletedProducts} onBack={() => setShowBin(false)} onRestore={handleRestoreProduct} onRestoreMany={handleRestoreMany} />
+        ) : editMode ? (
+          <ProductEditView
+            items={editItems}
+            onBack={() => { setEditMode(false); setSelectedIds(new Set()); }}
+            onGoToMarketplace={() => {}}
+          />
         ) : (
           <>
             {/* Toolbar */}
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-gray-900 dark:text-slate-100 flex-shrink-0">Product Listing</h3>
-                {hasSelection && (
-                  <button onClick={handleEditClick} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition-all shadow-sm">
-                    <i className="fa-solid fa-pen text-[10px]" />
-                    {isBulk ? `Bulk Edit (${selectedIds.size})` : 'Edit'}
-                  </button>
+                {/* <h3 className="text-base font-bold text-gray-900 dark:text-slate-100 flex-shrink-0">Product Listing</h3> */}
+                {selectedIds.size > 1 && (
+                  <>
+                    <button onClick={handleEditClick} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition-all shadow-sm">
+                      <i className="fa-solid fa-pen text-[10px]" />
+                      Bulk Edit ({selectedIds.size})
+                    </button>
+                    <button
+                      onClick={handleBulkDelete}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 text-red-600 dark:text-red-400 text-xs font-bold hover:bg-red-100 dark:hover:bg-red-900/40 transition-all shadow-sm"
+                    >
+                      <i className="fa-solid fa-trash text-[10px]" />
+                      {selectedIds.size}
+                    </button>
+                  </>
                 )}
               </div>
-              {/* ── View Controls: single Filters button ── */}
-              <div className="relative" ref={viewPanelRef}>
-                <button onClick={() => viewPanelOpen ? setViewPanelOpen(false) : openViewPanel('filters')}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
-                    viewPanelOpen || filterCategory !== 'All' || sortBy !== null || cols.some(c => !c.visible)
-                      ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100'
-                      : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
-                  }`}>
-                  <i className="fa-solid fa-sliders text-[10px]" /> Filters
-                  {(filterCategory !== 'All' || sortBy !== null || cols.some(c => !c.visible)) &&
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />}
-                </button>
 
-                {/* ── Two-column panel ── */}
-                {viewPanelOpen && (
-                  <div className="absolute top-full mt-2 right-0 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl z-[9999] w-[340px] overflow-hidden flex flex-col">
+              {/* Right controls: search + filters */}
+              <div className="flex items-center gap-2">
 
-                    {/* Left tabs + right content */}
-                    <div className="flex" style={{ minHeight: 220 }}>
+                {/* Search input */}
+                <div className="relative">
+                  <i className="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-[10px] pointer-events-none" />
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                    placeholder="Search products…"
+                    className="pl-7 pr-3 py-1.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-gray-700 dark:text-slate-300 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-gray-400 dark:focus:border-slate-500 w-44 transition-all"
+                  />
+                </div>
 
-                      {/* Left sidebar */}
-                      <div className="w-[110px] flex-shrink-0 border-r border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/40 p-2 flex flex-col gap-0.5">
-                        {[
-                          { key: 'filters', label: 'Filters',  icon: 'fa-sliders',       badge: filterCategory !== 'All' },
-                          { key: 'sort',    label: 'Sort',     icon: 'fa-sort',           badge: !!pendingSortBy },
-                          { key: 'columns', label: 'Columns',  icon: 'fa-table-columns',  badge: pendingCols.some(c => !c.visible) },
-                        ].map(tab => (
-                          <button key={tab.key} onClick={() => setViewPanelTab(tab.key)}
-                            className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-left transition-colors ${
-                              viewPanelTab === tab.key
-                                ? 'bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 font-semibold shadow-sm'
-                                : 'text-gray-500 dark:text-slate-400 hover:bg-white/70 dark:hover:bg-slate-900/50 hover:text-gray-700 dark:hover:text-slate-200 font-medium'
-                            }`}>
-                            <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${
-                              viewPanelTab === tab.key ? 'border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
-                            }`}>
-                              {viewPanelTab === tab.key && <span className="w-1.5 h-1.5 rounded-full bg-gray-900 dark:bg-slate-100" />}
-                            </span>
-                            <span className="truncate">{tab.label}</span>
-                            {tab.badge && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />}
-                          </button>
-                        ))}
-                      </div>
+                {/* ── View Controls: single Filters button ── */}
+                <div className="relative" ref={viewPanelRef}>
+                  <button onClick={() => viewPanelOpen ? setViewPanelOpen(false) : openViewPanel('filters')}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                      viewPanelOpen || filterCategory !== 'All' || sortBy !== null || cols.some(c => !c.visible)
+                        ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100'
+                        : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
+                    }`}>
+                    <i className="fa-solid fa-sliders text-[10px]" /> Filters
+                    {(filterCategory !== 'All' || sortBy !== null || cols.some(c => !c.visible)) &&
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />}
+                  </button>
 
-                      {/* Right content */}
-                      <div className="flex-1 p-3.5 overflow-y-auto">
+                  {/* ── Two-column panel ── */}
+                  {viewPanelOpen && (
+                    <div className="absolute top-full mt-2 right-0 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl z-[9999] w-[340px] overflow-hidden flex flex-col">
 
-                        {/* Filters tab */}
-                        {viewPanelTab === 'filters' && (
-                          <div>
-                            <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-2.5">Category</p>
-                            <div className="flex flex-wrap gap-1.5">
-                              {CATEGORIES.map(cat => (
-                                <button key={cat} onClick={() => setPendingCategory(cat)}
-                                  className={`px-2.5 py-1 rounded-lg border text-[11px] font-medium transition-all ${
-                                    pendingCategory === cat
-                                      ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100'
-                                      : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
-                                  }`}>
-                                  {cat}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
+                      {/* Left tabs + right content */}
+                      <div className="flex" style={{ minHeight: 220 }}>
 
-                        {/* Sort tab */}
-                        {viewPanelTab === 'sort' && (
-                          <div>
-                            <div className="flex items-center justify-between mb-2.5">
-                              <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">Sort by</p>
-                              {pendingSortBy && (
-                                <button onClick={() => { setPendingSortBy(null); setPendingSortDir('asc'); }}
-                                  className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 transition-colors">
-                                  Clear
-                                </button>
-                              )}
-                            </div>
-                            <div className="flex flex-col gap-0.5">
-                              {SORT_OPTIONS.map(opt => (
-                                <button key={opt.key}
-                                  onClick={() => { if (pendingSortBy === opt.key) setPendingSortDir(d => d === 'asc' ? 'desc' : 'asc'); else { setPendingSortBy(opt.key); setPendingSortDir('asc'); } }}
-                                  className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
-                                    pendingSortBy === opt.key
-                                      ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100 font-semibold'
-                                      : 'text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 font-medium'
-                                  }`}>
-                                  <div className="flex items-center gap-2">
-                                    <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
-                                      pendingSortBy === opt.key ? 'border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
+                        {/* Left sidebar */}
+                        <div className="w-[110px] flex-shrink-0 border-r border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/40 p-2 flex flex-col gap-0.5">
+                          {[
+                            { key: 'filters', label: 'Filters',  icon: 'fa-sliders',       badge: filterCategory !== 'All' },
+                            { key: 'sort',    label: 'Sort',     icon: 'fa-sort',           badge: !!pendingSortBy },
+                            { key: 'columns', label: 'Columns',  icon: 'fa-table-columns',  badge: pendingCols.some(c => !c.visible) },
+                          ].map(tab => (
+                            <button key={tab.key} onClick={() => setViewPanelTab(tab.key)}
+                              className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-left transition-colors ${
+                                viewPanelTab === tab.key
+                                  ? 'bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 font-semibold shadow-sm'
+                                  : 'text-gray-500 dark:text-slate-400 hover:bg-white/70 dark:hover:bg-slate-900/50 hover:text-gray-700 dark:hover:text-slate-200 font-medium'
+                              }`}>
+                              <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${
+                                viewPanelTab === tab.key ? 'border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
+                              }`}>
+                                {viewPanelTab === tab.key && <span className="w-1.5 h-1.5 rounded-full bg-gray-900 dark:bg-slate-100" />}
+                              </span>
+                              <span className="truncate">{tab.label}</span>
+                              {tab.badge && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />}
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Right content */}
+                        <div className="flex-1 p-3.5 overflow-y-auto">
+
+                          {/* Filters tab */}
+                          {viewPanelTab === 'filters' && (
+                            <div>
+                              <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-2.5">Category</p>
+                              <div className="flex flex-wrap gap-1.5">
+                                {CATEGORIES.map(cat => (
+                                  <button key={cat} onClick={() => setPendingCategory(cat)}
+                                    className={`px-2.5 py-1 rounded-lg border text-[11px] font-medium transition-all ${
+                                      pendingCategory === cat
+                                        ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100'
+                                        : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
                                     }`}>
-                                      {pendingSortBy === opt.key && <span className="w-1.5 h-1.5 rounded-full bg-gray-900 dark:bg-slate-100" />}
-                                    </span>
-                                    {opt.label}
-                                  </div>
-                                  {pendingSortBy === opt.key && (
-                                    <i className={`fa-solid ${pendingSortDir === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down'} text-[10px] text-gray-500 dark:text-slate-400`} />
-                                  )}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Columns tab */}
-                        {viewPanelTab === 'columns' && (
-                          <div>
-                            <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-2.5">Visible Columns</p>
-                            <div className="flex flex-col gap-0.5">
-                              {pendingCols.map(col => (
-                                <div key={col.key} className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
-                                  <span className="text-xs font-medium text-gray-600 dark:text-slate-300">{col.label}</span>
-                                  <button onClick={() => togglePendingColVisible(col.key)} className="flex-shrink-0 p-0.5">
-                                    <div className={`w-8 h-4 rounded-full transition-colors flex items-center px-0.5 ${col.visible ? 'bg-gray-900 dark:bg-slate-100' : 'bg-gray-200 dark:bg-slate-700'}`}>
-                                      <span className={`w-3 h-3 rounded-full bg-white dark:bg-gray-900 transition-transform ${col.visible ? 'translate-x-4' : 'translate-x-0'}`} />
-                                    </div>
+                                    {cat}
                                   </button>
-                                </div>
-                              ))}
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
 
+                          {/* Sort tab */}
+                          {viewPanelTab === 'sort' && (
+                            <div>
+                              <div className="flex items-center justify-between mb-2.5">
+                                <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">Sort by</p>
+                                {pendingSortBy && (
+                                  <button onClick={() => { setPendingSortBy(null); setPendingSortDir('asc'); }}
+                                    className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 transition-colors">
+                                    Clear
+                                  </button>
+                                )}
+                              </div>
+                              <div className="flex flex-col gap-0.5">
+                                {SORT_OPTIONS.map(opt => (
+                                  <button key={opt.key}
+                                    onClick={() => { if (pendingSortBy === opt.key) setPendingSortDir(d => d === 'asc' ? 'desc' : 'asc'); else { setPendingSortBy(opt.key); setPendingSortDir('asc'); } }}
+                                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
+                                      pendingSortBy === opt.key
+                                        ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100 font-semibold'
+                                        : 'text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 font-medium'
+                                    }`}>
+                                    <div className="flex items-center gap-2">
+                                      <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
+                                        pendingSortBy === opt.key ? 'border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
+                                      }`}>
+                                        {pendingSortBy === opt.key && <span className="w-1.5 h-1.5 rounded-full bg-gray-900 dark:bg-slate-100" />}
+                                      </span>
+                                      {opt.label}
+                                    </div>
+                                    {pendingSortBy === opt.key && (
+                                      <i className={`fa-solid ${pendingSortDir === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down'} text-[10px] text-gray-500 dark:text-slate-400`} />
+                                    )}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Columns tab */}
+                          {viewPanelTab === 'columns' && (
+                            <div>
+                              <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-2.5">Visible Columns</p>
+                              <div className="flex flex-col gap-0.5">
+                                {pendingCols.map(col => (
+                                  <div key={col.key} className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+                                    <span className="text-xs font-medium text-gray-600 dark:text-slate-300">{col.label}</span>
+                                    <button onClick={() => togglePendingColVisible(col.key)} className="flex-shrink-0 p-0.5">
+                                      <div className={`w-8 h-4 rounded-full transition-colors flex items-center px-0.5 ${col.visible ? 'bg-gray-900 dark:bg-slate-100' : 'bg-gray-200 dark:bg-slate-700'}`}>
+                                        <span className={`w-3 h-3 rounded-full bg-white dark:bg-gray-900 transition-transform ${col.visible ? 'translate-x-4' : 'translate-x-0'}`} />
+                                      </div>
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Footer */}
-                    <div className="px-4 py-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between gap-2">
-                      <button onClick={resetViewPanel}
-                        className="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
-                        Reset
-                      </button>
-                      <button onClick={applyViewPanel}
-                        className="px-5 py-2 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition-colors">
-                        Apply
-                      </button>
-                    </div>
+                      {/* Footer */}
+                      <div className="px-4 py-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between gap-2">
+                        <button onClick={resetViewPanel}
+                          className="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+                          Reset
+                        </button>
+                        <button onClick={applyViewPanel}
+                          className="px-5 py-2 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition-colors">
+                          Apply
+                        </button>
+                      </div>
 
-                  </div>
-                )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
+
+            {/* Edit banner for inline row editing */}
+            {editingRowId !== null && (
+              <EditBanner onGoToMarketplace={() => {}} />
+            )}
 
             {/* Table */}
             <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
@@ -581,20 +912,22 @@ const ProductsListPage = () => {
                     <th className="px-4 py-3 w-8">
                       <input type="checkbox" checked={pageProducts.length > 0 && selectedIds.size === pageProducts.length} onChange={toggleAll} className="rounded border-gray-300 dark:border-slate-600 text-brand focus:ring-brand/20" />
                     </th>
+                    <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-8">#</th>
                     <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-12">Image</th>
                     <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Product</th>
                     {visibleCols.map(col => (
                       <th key={col.key} className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">{col.label}</th>
                     ))}
-                    <th className="px-3 py-3 w-16"></th>
+                    <th className="px-3 py-3 w-24"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50 dark:divide-slate-800/60">
                   {pageProducts.length === 0 ? (
-                    <tr><td colSpan={4 + visibleCols.length} className="px-4 py-12 text-center text-sm text-gray-400 dark:text-slate-500">No products match your search.</td></tr>
-                  ) : pageProducts.map(product => {
-                    const isEditing = editingRowId === product.id;
-                    const isDisabled = editingRowId !== null && !isEditing;
+                    <tr><td colSpan={5 + visibleCols.length} className="px-4 py-12 text-center text-sm text-gray-400 dark:text-slate-500">No products match your search.</td></tr>
+                  ) : pageProducts.map((product, idx) => {
+                    const isEditing   = editingRowId === product.id;
+                    const isDisabled  = editingRowId !== null && !isEditing;
+                    const rowNum      = (page - 1) * PAGE_SIZE + idx + 1;
                     return (
                       <tr
                         key={product.id}
@@ -602,7 +935,11 @@ const ProductsListPage = () => {
                         className={`transition-colors ${isEditing ? 'bg-gray-50/80 dark:bg-slate-800/30' : isDisabled ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/30 cursor-pointer group'}`}
                       >
                         <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
-                          <input type="checkbox"  checked={selectedIds.has(product.id)} onChange={() => toggleSelect(product.id)} disabled={editingRowId !== null} className="rounded border-gray-300 dark:border-slate-600 text-brand focus:ring-brand/20 disabled:opacity-40" />
+                          <input type="checkbox" checked={selectedIds.has(product.id)} onChange={() => toggleSelect(product.id)} disabled={editingRowId !== null} className="rounded border-gray-300 dark:border-slate-600 text-brand focus:ring-brand/20 disabled:opacity-40" />
+                        </td>
+                        {/* Row number */}
+                        <td className="px-3 py-3 w-8">
+                          <span className="text-xs text-gray-400 dark:text-slate-500 font-mono select-none">{rowNum}</span>
                         </td>
                         <td className="px-3 py-3">
                           <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
@@ -626,6 +963,8 @@ const ProductsListPage = () => {
                           )}
                         </td>
                         {visibleCols.map(col => isEditing ? renderEditCell(col.key) : renderCell(product, col.key))}
+
+                        {/* Action buttons */}
                         <td className="px-3 py-3" onClick={e => e.stopPropagation()}>
                           {isEditing ? (
                             <div className="flex items-center gap-1">
@@ -637,13 +976,35 @@ const ProductsListPage = () => {
                               </button>
                             </div>
                           ) : (
-                            <button
-                              onClick={e => startEdit(e, product)}
-                              disabled={editingRowId !== null}
-                              className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-0"
-                            >
-                              <i className="fa-solid fa-pen text-[10px]" />
-                            </button>
+                            <div className="flex items-center gap-0.5">
+                              {/* Edit */}
+                              <button
+                                onClick={e => startEdit(e, product)}
+                                disabled={editingRowId !== null}
+                                title="Edit"
+                                className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-0"
+                              >
+                                <i className="fa-solid fa-pen text-[10px]" />
+                              </button>
+                              {/* Draft */}
+                              <button
+                                onClick={e => handleDraftRow(product, e)}
+                                disabled={editingRowId !== null}
+                                title="Mark as Draft"
+                                className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors disabled:opacity-0"
+                              >
+                                <i className="fa-solid fa-file-pen text-[10px]" />
+                              </button>
+                              {/* Delete */}
+                              <button
+                                onClick={e => handleDeleteProduct(product, e)}
+                                disabled={editingRowId !== null}
+                                title="Delete"
+                                className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-0"
+                              >
+                                <i className="fa-solid fa-trash text-[10px]" />
+                              </button>
+                            </div>
                           )}
                         </td>
                       </tr>
@@ -680,6 +1041,25 @@ const ProductsListPage = () => {
             </div>
           </>
         )}
+
+        {/* Delete Confirm Modal */}
+        {deleteConfirmProduct && (
+          <DeleteConfirmModal
+            product={deleteConfirmProduct}
+            onConfirm={confirmDelete}
+            onCancel={() => setDeleteConfirmProduct(null)}
+          />
+        )}
+
+        {/* Bulk Delete Confirm Modal */}
+        {bulkDeletePending && (
+          <BulkDeleteConfirmModal
+            count={selectedIds.size}
+            onConfirm={confirmBulkDelete}
+            onCancel={() => setBulkDeletePending(false)}
+          />
+        )}
+
       </div>
     </DashboardLayout>
   );

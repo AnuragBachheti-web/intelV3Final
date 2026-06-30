@@ -608,6 +608,22 @@ const getStepPriority = (type) => {
   return 'Low';
 };
 
+const getInsightKeyMetrics = (block, idx) => {
+  const type = block.type;
+  const riskLevel = (type === 'CRITICAL' || type === 'ALERT') ? 'High' : (type === 'REVIEW' || type === 'MARKET') ? 'Medium' : 'Low';
+  const riskColor = riskLevel === 'High' ? 'text-red-600 dark:text-red-400' : riskLevel === 'Medium' ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400';
+  const revenues = ['+$12,400', '+$8,200', '+$15,600', '+$6,800', '+$9,500', '+$11,200', '+$7,400'];
+  const sensitivities = ['< 24h', '< 48h', '< 72h', '2 days', '3 days', '< 24h', '< 48h'];
+  const confidences = ['94%', '87%', '91%', '83%', '96%', '88%', '92%'];
+  const tsColor = riskLevel === 'High' ? 'text-red-600 dark:text-red-400' : 'text-amber-600 dark:text-amber-400';
+  return [
+    { label: 'Risk Level',         value: riskLevel,                       color: riskColor },
+    { label: 'Est. Revenue Saved', value: revenues[idx % revenues.length],  color: 'text-green-600 dark:text-green-400' },
+    { label: 'Time Sensitivity',   value: sensitivities[idx % sensitivities.length], color: tsColor },
+    { label: 'Confidence',         value: confidences[idx % confidences.length],     color: 'text-blue-600 dark:text-blue-400' },
+  ];
+};
+
 /* ─── InsightsPanel ──────────────────────────────────────────────────────── */
 
 const CATEGORY_KEY_MAP = {
@@ -720,10 +736,10 @@ const InsightsPanel = ({
   }, [activeInsightIdx, activeInsightTab, intelTab]);
 
   return (
-    <div ref={containerRef} className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-[#030712]">
+    <div ref={containerRef} className="rounded-xl bg-white dark:bg-[#030712]">
 
       {/* Header */}
-      <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-800 bg-[#eeeff0]" >
+      <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-800 bg-[#eeeff0] dark:bg-[#030712]" >
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-gray-900 dark:text-slate-100">
@@ -760,7 +776,7 @@ const InsightsPanel = ({
 
       {/* View filter tabs */}
       {!isEmpty && (
-        <div className="px-4 pt-3 pb-2.5 flex items-center gap-1 border-b border-gray-100 dark:border-slate-800 bg-[#eeeff0]">
+        <div className="px-4 pt-3 pb-2.5 flex items-center gap-1 border-b border-gray-100 dark:border-slate-800 bg-[#eeeff0] dark:bg-[#030712]">
           {[
             { key: 'recent',   label: 'Most Recent' },
             { key: 'month',    label: 'This Month'  },
@@ -785,7 +801,7 @@ const InsightsPanel = ({
       )}
 
       {/* Content */}
-      <div className="p-3 bg-[#eeeff0]">
+      <div className="p-3 bg-[#eeeff0] dark:bg-[#030712]">
         {!isEmpty && (() => {
           const allWithIdx = insightBlocks.map((b, i) => ({ ...b, originalIdx: i }));
           const displayBlocks = insightViewFilter === 'recent'
@@ -843,6 +859,21 @@ const InsightsPanel = ({
                 >
                   {expandedIdx === idx ? 'View Less.' : 'View More.'}
                 </button>
+                {expandedIdx === idx && (
+                  <div className="mt-3 pt-3 border-t border-gray-100 dark:border-slate-800" onClick={e => e.stopPropagation()}>
+                    <p className="text-[9px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1">
+                      <i className="fa-solid fa-chart-line text-[8px]" /> Key Metrics
+                    </p>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {getInsightKeyMetrics(block, idx).map((m, mi) => (
+                        <div key={mi} className="p-2 rounded-lg border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900/30">
+                          <p className="text-[9px] text-gray-400 dark:text-slate-500 mb-0.5">{m.label}</p>
+                          <p className={`text-sm font-bold ${m.color}`}>{m.value}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
               );
             })}
@@ -1174,7 +1205,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         <button
           key={tab.key}
           onClick={() => { navigate((fullWidthInsights ? V2_FULL_TAB_TO_ROUTE : TAB_TO_ROUTE)[tab.key]); setStepOffset(0); }}
-          className={`px-3 py-1 text-[11px] font-medium transition-colors whitespace-nowrap flex items-center gap-1 border-b-2 -mb-px
+          className={`px-3 h-[56px] text-[11px] font-medium transition-colors whitespace-nowrap flex items-center gap-1 border-b-2
             ${activeIntelTab === tab.key
               ? 'border-gray-900 dark:border-slate-300 text-gray-900 dark:text-slate-100 font-semibold'
               : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
@@ -1548,7 +1579,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                 style={{ top: filterPanelPos.top, right: filterPanelPos.right }}
               >
 
-                <div className="flex" style={{ minHeight: '380px' }}>
+                <div className="flex" style={{ minHeight: '300px' }}>
 
                   {/* LEFT: Vertical nav */}
                   <div className="w-[155px] flex-shrink-0 border-r border-gray-100 dark:border-slate-800 p-3 flex flex-col gap-1">
@@ -1560,7 +1591,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                       <button
                         key={sec.key}
                         onClick={() => setV2Section(sec.key)}
-                        className={`flex items-center gap-2 w-full text-left px-2.5 py-2.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
+                        className={`flex items-center gap-2 w-full text-left px-2.5 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
                           v2Section === sec.key
                             ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900'
                             : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
@@ -1622,20 +1653,6 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                     {v2Section === 'category' && (
                       <div className="flex-1 flex flex-col p-4 gap-5">
                         <div>
-                          <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-2">Recent Used</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {V2_CAT_RECENT.map(([val, lbl]) => {
-                              const isSel = pendingCats.includes(val);
-                              return (
-                                <button key={val} onClick={() => togglePendingCat(val)}
-                                  className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${
-                                    isSel ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100' : 'border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
-                                  }`}>{lbl}</button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                        <div>
                           <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-2">All Categories</p>
                           <div className="flex flex-wrap gap-1.5">
                             {V2_CAT_GRID.map(([val, lbl]) => {
@@ -1667,20 +1684,6 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                     {/* ── Channel section ── */}
                     {v2Section === 'channel' && (
                       <div className="flex-1 flex flex-col p-4 gap-5">
-                        <div>
-                          <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-2">Recent Used</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {v2ChanRecent.map(([val, lbl]) => {
-                              const isSel = pendingChans.includes(val);
-                              return (
-                                <button key={val} onClick={() => togglePendingChan(val)}
-                                  className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${
-                                    isSel ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100' : 'border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
-                                  }`}>{lbl}</button>
-                              );
-                            })}
-                          </div>
-                        </div>
                         <div>
                           <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-2">All Channels</p>
                           <div className="flex flex-wrap gap-1.5">

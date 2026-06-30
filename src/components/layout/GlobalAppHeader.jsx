@@ -218,7 +218,7 @@ const FilterPopover = ({ dateRange, setDateRange, category, setCategory, channel
           className="absolute right-0 top-full mt-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-xl z-[9999] overflow-hidden flex flex-col"
           style={{ width: 572 }}
         >
-          <div className="flex" style={{ minHeight: 320 }}>
+          <div className="flex" style={{ minHeight: 260 }}>
             {/* Left nav */}
             <div className="flex flex-col py-3 gap-1 px-2 flex-shrink-0 border-r border-gray-100 dark:border-slate-800" style={{ width: 148 }}>
               {navItems.map(nav => (
