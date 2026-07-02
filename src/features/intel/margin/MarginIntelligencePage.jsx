@@ -15,6 +15,7 @@ import { SEMANTIC_COLORS } from '../../../utils/chartColors';
 import { revenueTrendData } from '../sales/salesData';
 import MarginDeepDivePanel from './components/MarginDeepDivePanel';
 import useProductNavigation from '../../../hooks/useProductNavigation';
+import useModalToggle from '../../../hooks/useModalToggle';
 
 const MarginIntelligencePage = () => {
   const [marginData, setMarginData] = useState(null);
@@ -22,7 +23,7 @@ const MarginIntelligencePage = () => {
   const [selectedStatIdx, setSelectedStatIdx] = useState(0);
   const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3]);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
-  const [kpiDetailModal, setKpiDetailModal] = useState(null);
+  const kpiDetailModal = useModalToggle();
   const { dateRange } = useFilterStore();
   const [activeModal, setActiveModal] = useState({ isOpen: false, type: null, data: null });
   const [deepDiveTab, setDeepDiveTab] = useState('revenue');
@@ -133,7 +134,7 @@ const MarginIntelligencePage = () => {
                 <StatCard
                   key={kpiIdx}
                   {...stat}
-                  onClick={() => { setSelectedStatIdx(kpiIdx); setDeepDiveTab('revenue'); setKpiDetailModal(stat); }}
+                  onClick={() => { setSelectedStatIdx(kpiIdx); setDeepDiveTab('revenue'); kpiDetailModal.open(stat); }}
                 />
               );
             })}
@@ -172,9 +173,9 @@ const MarginIntelligencePage = () => {
       <ChartModal chart={expandedChart} onClose={() => setExpandedChart(null)} />
       <DeepDiveModal modal={componentModal} onClose={() => setComponentModal(null)} />
       <KPIDetailModal
-        isOpen={!!kpiDetailModal}
-        onClose={() => setKpiDetailModal(null)}
-        stat={kpiDetailModal}
+        isOpen={kpiDetailModal.isOpen}
+        onClose={kpiDetailModal.close}
+        stat={kpiDetailModal.data}
         filterContext={{ dateRange }}
         tab="margin"
       />

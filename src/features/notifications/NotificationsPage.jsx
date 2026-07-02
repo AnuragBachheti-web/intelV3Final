@@ -1,31 +1,13 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { notificationsData } from './notificationsData';
-
-const STATUS_CONFIG = {
-  'Processing': {
-    dot: 'bg-blue-500',
-    badge: 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-500/30',
-  },
-  'Completed': {
-    dot: 'bg-green-500',
-    badge: 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-500/30',
-  },
-  'Pending': {
-    dot: 'bg-amber-500',
-    badge: 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-500/30',
-  },
-  'Needs Review': {
-    dot: 'bg-red-500',
-    badge: 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-500/30',
-  },
-};
+import { NOTIFICATION_STATUS_CONFIG } from '../../utils/statusColors';
 
 const FILTERS = ['All', 'Unread', 'Errors', 'Done'];
 
 const StatusBadge = ({ status, size = 'sm' }) => {
-  const cfg = STATUS_CONFIG[status] || STATUS_CONFIG['Processing'];
+  const cfg = NOTIFICATION_STATUS_CONFIG[status] || NOTIFICATION_STATUS_CONFIG['Processing'];
   return (
     <span className={`inline-flex items-center gap-1.5 rounded-full font-bold border ${cfg.badge} ${
       size === 'sm' ? 'px-2.5 py-0.5 text-[10px]' : 'px-3 py-1 text-[11px]'
@@ -38,7 +20,6 @@ const StatusBadge = ({ status, size = 'sm' }) => {
 
 const NotificationsPage = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const initialId = location.state?.selectedId ?? notificationsData[0].id;
 
   const [selectedId, setSelectedId] = useState(initialId);
@@ -52,7 +33,6 @@ const NotificationsPage = () => {
   });
 
   const selected = notificationsData.find(n => n.id === selectedId);
-  const unreadCount = notificationsData.filter(n => n.unread).length;
 
   return (
     <DashboardLayout

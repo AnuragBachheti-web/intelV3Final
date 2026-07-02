@@ -8,6 +8,9 @@ import SimulationModal from './components/SimulationModal';
 import CustomActionModal from './components/CustomActionModal';
 import { AnimatePresence } from 'framer-motion';
 import { useActionFilters } from './hooks/useActionFilters';
+import SelectInput from '../../components/ui/SelectInput';
+
+const FILTER_SELECT_CLASS = 'px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 focus:ring-2 focus:ring-brand/30 dark:focus:ring-gray-500/30 outline-none transition-all shadow-sm cursor-pointer';
 
 const ActionsPage = () => {
   const [selectedAction, setSelectedAction] = useState(actionItems[0]);
@@ -25,44 +28,44 @@ const ActionsPage = () => {
   const actionFilters = (
     <div className="flex items-center gap-3 flex-wrap pb-4">
       <div className="relative">
-        <select
+        <SelectInput
           value={filters.priority}
           onChange={(e) => setFilters({ ...filters, priority: e.target.value })}
-          className="px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 focus:ring-2 focus:ring-brand/30 dark:focus:ring-gray-500/30 outline-none transition-all shadow-sm cursor-pointer"
+          className={FILTER_SELECT_CLASS}
         >
           <option value="all">All Priorities</option>
           <option value="critical">Critical</option>
           <option value="high">High</option>
           <option value="medium">Medium</option>
           <option value="low">Low</option>
-        </select>
+        </SelectInput>
       </div>
 
       <div className="relative">
-        <select
+        <SelectInput
           value={filters.category}
           onChange={(e) => setFilters({ ...filters, category: e.target.value })}
-          className="px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 focus:ring-2 focus:ring-brand/30 dark:focus:ring-gray-500/30 outline-none transition-all shadow-sm cursor-pointer"
+          className={FILTER_SELECT_CLASS}
         >
           <option value="all">All Categories</option>
           <option value="cash-management">Cash Management</option>
           <option value="payments">Payments</option>
           <option value="collections">Collections</option>
           <option value="forecasting">Forecasting</option>
-        </select>
+        </SelectInput>
       </div>
 
       <div className="relative">
-        <select
+        <SelectInput
           value={filters.status}
           onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-          className="px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 focus:ring-2 focus:ring-brand/30 dark:focus:ring-gray-500/30 outline-none transition-all shadow-sm cursor-pointer"
+          className={FILTER_SELECT_CLASS}
         >
           <option value="all">All Status</option>
           <option value="pending">Pending</option>
           <option value="in-progress">In Progress</option>
           <option value="completed">Completed</option>
-        </select>
+        </SelectInput>
       </div>
 
       <button

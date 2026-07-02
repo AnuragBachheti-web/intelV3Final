@@ -41,6 +41,44 @@ import { SEMANTIC_COLORS } from '../../../../utils/chartColors';
 //   return null;
 // };
 
+const computeProcessedData = () => {
+  let currentBase = 0;
+  return settlementDispositionData.map((item) => {
+    let start, end;
+    if (item.type === 'absolute' || item.type === 'total') {
+      start = 0;
+      end = Math.abs(item.value);
+      currentBase = end;
+    } else {
+      start = currentBase + item.value;
+      end = currentBase;
+      currentBase = start;
+    }
+    return {
+      ...item,
+      displayValue: [start, end],
+      actualValue: item.value,
+      color: item.type === 'absolute' ? SEMANTIC_COLORS.revenue :
+             item.type === 'total' ? SEMANTIC_COLORS.profit : SEMANTIC_COLORS.expense
+    };
+  });
+};
+
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-white dark:bg-slate-800 p-3 border border-gray-200 dark:border-slate-700 rounded-xl shadow-xl">
+        <p className="text-xs font-bold text-gray-900 dark:text-slate-100 mb-1">{data.name}</p>
+        <p className="text-sm font-mono font-bold" style={{ color: data.color }}>
+          {data.actualValue > 0 ? '+' : ''}{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(data.actualValue)}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const SettlementDispositionChart = () => {
   const processedData = computeProcessedData();
 

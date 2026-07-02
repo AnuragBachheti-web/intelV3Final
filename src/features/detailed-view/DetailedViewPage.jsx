@@ -16,6 +16,7 @@ import FilterBar from './components/FilterBar';
 import CompactFilterButton from './components/CompactFilterButton';
 import useDetailedViewFilters from './hooks/useDetailedViewFilters';
 import { useViewModeStore } from '../../store/useViewModeStore';
+import useModalToggle from '../../hooks/useModalToggle';
 import { STATS_DATA, PAGE_TITLES, BACK_ROUTES } from './detailedViewData';
 
 import SalesTables from './tabs/SalesTables';
@@ -63,7 +64,7 @@ const DetailedViewPage = () => {
 
   const [selectedKpiIndices, setSelectedKpiIndices] = useState(location.state?.selectedKpiIndices || [0, 1, 2, 3, 4, 5]);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
-  const [kpiDetailModal, setKpiDetailModal] = useState(null);
+  const kpiDetailModal = useModalToggle();
   const statsData = intelType === 'cash' ? cashStats : (STATS_DATA[intelType] || STATS_DATA.sales);
   const pageTitle = PAGE_TITLES[intelType] || 'Sales';
   const backRoute = location.state?.from || BACK_ROUTES[intelType] || '/intel';
@@ -148,7 +149,7 @@ const DetailedViewPage = () => {
               change={stat.change}
               isPositive={stat.isPositive}
               subtext={stat.subtext}
-              onClick={() => setKpiDetailModal(stat)}
+              onClick={() => kpiDetailModal.open(stat)}
             />
           );
         })}
@@ -246,9 +247,9 @@ const DetailedViewPage = () => {
       )}
 
       <KPIDetailModal
-        isOpen={!!kpiDetailModal}
-        onClose={() => setKpiDetailModal(null)}
-        stat={kpiDetailModal}
+        isOpen={kpiDetailModal.isOpen}
+        onClose={kpiDetailModal.close}
+        stat={kpiDetailModal.data}
         filterContext={{ dateRange: filters.appliedDate, categories: filters.appliedCats, channels: filters.appliedChans }}
         tab={intelType}
       />

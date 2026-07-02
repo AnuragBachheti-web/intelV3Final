@@ -375,8 +375,6 @@ const ProductsListPage = () => {
   const [sortBy, setSortBy]                 = useState(null);
   const [sortDir, setSortDir]               = useState('asc');
   const [cols, setCols]                     = useState(DEFAULT_COLS);
-  const [dragColKey, setDragColKey]         = useState(null);
-  const [dragOverColKey, setDragOverColKey] = useState(null);
   const [editMode, setEditMode]             = useState(false);
   const [editItems, setEditItems]           = useState([]);
   const [editingRowId, setEditingRowId]     = useState(null);
@@ -586,24 +584,6 @@ const ProductsListPage = () => {
     }
   };
 
-  // Column drag-and-drop
-  const handleColDragStart = (e, key) => { e.dataTransfer.effectAllowed = 'move'; setDragColKey(key); };
-  const handleColDragOver  = (e, key)  => { e.preventDefault(); if (key !== dragColKey) setDragOverColKey(key); };
-  const handleColDrop      = (key)     => {
-    if (!dragColKey || dragColKey === key) { setDragColKey(null); setDragOverColKey(null); return; }
-    setCols(prev => {
-      const next = [...prev];
-      const from = next.findIndex(c => c.key === dragColKey);
-      const to   = next.findIndex(c => c.key === key);
-      const [moved] = next.splice(from, 1);
-      next.splice(to, 0, moved);
-      return next;
-    });
-    setDragColKey(null); setDragOverColKey(null);
-  };
-  const handleColDragEnd = () => { setDragColKey(null); setDragOverColKey(null); };
-  const toggleColVisible = (key) => setCols(prev => prev.map(c => c.key === key ? { ...c, visible: !c.visible } : c));
-
   // Cell renderer
   const renderCell = (product, colKey) => {
     const ss = STATUS_STYLES[product.status] || STATUS_STYLES.Active;
@@ -642,8 +622,6 @@ const ProductsListPage = () => {
     }
   };
 
-  const hasSelection = selectedIds.size > 0;
-  const isBulk       = selectedIds.size > 1;
   const visibleCols  = cols.filter(c => c.visible);
 
   return (

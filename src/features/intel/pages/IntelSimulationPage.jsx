@@ -205,12 +205,6 @@ const IntelSimulationPage = () => {
   const sliderMax = Math.round(currentPrice * 1.5);
 
   /* ── Handlers ── */
-  const handleCurrentPriceChange = (v) => {
-    const p = Math.max(1, v);
-    setCurrentPrice(p);
-    setSimulatedPrice(prev => Math.min(Math.round(p * 1.5), Math.max(Math.round(p * 0.5), prev)));
-  };
-
   const removeChannel = (ch) => setChannels(prev => prev.filter(c => c !== ch));
   const addChannel    = (ch) => { setChannels(prev => [...prev, ch]); setChannelOpen(false); };
 

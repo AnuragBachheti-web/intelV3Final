@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import HistoryItem from './components/HistoryItem';
@@ -18,10 +18,12 @@ const HistoryPage = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [moduleFilter, setModuleFilter] = useState(location.state?.moduleFilter || null);
 
-  useEffect(() => {
+  const [prevModuleFilterState, setPrevModuleFilterState] = useState(location.state?.moduleFilter);
+  if (location.state?.moduleFilter !== prevModuleFilterState) {
+    setPrevModuleFilterState(location.state?.moduleFilter);
     const mFilter = location.state?.moduleFilter;
     if (mFilter !== undefined) setModuleFilter(mFilter || null);
-  }, [location.state?.moduleFilter]);
+  }
 
   // Bookmark state — initialised from data, updated in memory
   const [bookmarks, setBookmarks] = useState(

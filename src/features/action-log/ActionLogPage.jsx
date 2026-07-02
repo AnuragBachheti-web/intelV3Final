@@ -104,7 +104,7 @@ const STATUS_STYLE = {
 
 const ActionLogPage = () => {
   const navigate = useNavigate();
-  const { executedMap, execute, rollBack } = useActionStore();
+  const { executedMap } = useActionStore();
   const [search, setSearch] = useState('');
 
   /* ── Filter panel state ── */

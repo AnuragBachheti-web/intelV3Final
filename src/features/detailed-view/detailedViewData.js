@@ -77,7 +77,7 @@ export const INTEL_METRIC = {
 };
 
 export const PAGE_TITLES = { sales: 'Sales', margin: 'Margin', inventory: 'Inventory', ads: 'Ads', cash: 'Cash' };
-export const BACK_ROUTES = { sales: '/sales', margin: '/margin', inventory: '/inventory', ads: '/ads', cash: '/cash' };
+export const BACK_ROUTES = { sales: '/intel/sales', margin: '/intel/margin', inventory: '/intel/inventory', ads: '/intel/ads', cash: '/intel/cash' };
 
 export const CHANNEL_MIX_DATA = [
   { label: 'Online Store', pct: 1.0, amount: '$124,400', color: '#0A52E7', dot: 'bg-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20', border: 'border-blue-200 dark:border-blue-900/50' },

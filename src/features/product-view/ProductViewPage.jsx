@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import DashboardLayout from '../../components/layout/DashboardLayout';
@@ -400,13 +400,17 @@ const ProductViewPage = () => {
   const navigate = useNavigate();
 
   const activePlatforms = JSON.parse(localStorage.getItem('active_platforms') || '["shopify"]');
-  const [activeTime, setActiveTime] = useState('30d');
-  const [activeChannel, setActiveChannel] = useState('Both');
+  const [, setActiveTime] = useState('30d');
   const [activeTab, setActiveTab] = useState(
     ['Amazon', 'Shopify', 'Walmart'].find(t => activePlatforms.includes(t.toLowerCase())) || 'Amazon'
   );
   const [insightCategory, setInsightCategory] = useState('All');
   const [activeWatchlistIdx, setActiveWatchlistIdx] = useState(null);
+  const [prevWatchlistIdx, setPrevWatchlistIdx] = useState(activeWatchlistIdx);
+  if (activeWatchlistIdx !== prevWatchlistIdx) {
+    setPrevWatchlistIdx(activeWatchlistIdx);
+    setInsightCategory('All');
+  }
   const [actionsViewMode, setActionsViewMode] = useState('list');
   const [activePerfStat, setActivePerfStat] = useState('revenue');
   const [isEditing, setIsEditing] = useState(false);
@@ -427,10 +431,6 @@ const ProductViewPage = () => {
     return { year: d.getFullYear(), month: d.getMonth() };
   });
   const filterRef = useRef(null);
-
-  useEffect(() => {
-    setInsightCategory('All');
-  }, [activeWatchlistIdx]);
 
   useClickOutside(filterRef, filterOpen, () => setFilterOpen(false));
 
@@ -466,7 +466,6 @@ const ProductViewPage = () => {
   const initialActiveIdx = watchlistItems.findIndex(
     (item) => item.title?.toLowerCase() === initialProduct.name?.toLowerCase()
   );
-  const currentWatchlistItem = watchlistItems[activeWatchlistIdx !== null ? activeWatchlistIdx : Math.max(0, initialActiveIdx)];
 
   const productDd = ITEM_SKU_DATA.deepDive[activeProduct.sku] ||
     Object.values(ITEM_SKU_DATA.deepDive)
@@ -508,8 +507,6 @@ const ProductViewPage = () => {
     });
   };
 
-  const timeFilters   = ['7d', '30d', '90d', 'Custom'];
-  const channelFilters = ['Both', ...['Amazon', 'Shopify'].filter(t => activePlatforms.includes(t.toLowerCase()))];
   const channelTabs   = ['Amazon', 'Shopify', 'Walmart'].filter(t => activePlatforms.includes(t.toLowerCase()));
 
   const activeDateLabel = pendingDate === '7d' ? 'Last 7 Days'

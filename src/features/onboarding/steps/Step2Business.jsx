@@ -3,15 +3,6 @@ import { useOnboardingStore } from "../store/useOnboardingStore";
 
 const gmvMarkers = ['$0', '$100K', '$500K', '$1M', '$5M', '$10M+'];
 
-const primaryMarketplaces = [
-  { id: 'amazon', name: 'Amazon', icon: 'fa-brands fa-amazon', iconColor: 'text-orange-500' },
-  { id: 'shopify', name: 'Shopify', icon: 'fa-brands fa-shopify', iconColor: 'text-green-600' },
-  { id: 'ebay', name: 'eBay', icon: 'fa-brands fa-ebay', iconColor: 'text-red-500' },
-  { id: 'walmart', name: 'Walmart', icon: 'fa-solid fa-store', iconColor: 'text-blue-600' },
-  { id: 'etsy', name: 'Etsy', icon: 'fa-brands fa-etsy', iconColor: 'text-orange-600' },
-  { id: 'other', name: 'Other', icon: 'fa-solid fa-globe', iconColor: 'text-purple-600' },
-];
-
 const initialFocusItems = [
   { id: 'margin', label: 'Margin Optimization', desc: 'Focusing on profitability and unit economics' },
   { id: 'inventory', label: 'Inventory Velocity', desc: 'Improving turnover rates and stock management' },
@@ -19,7 +10,7 @@ const initialFocusItems = [
 ];
 
 function Step2Business() {
-  const { setStep, formValues, updateFormValues, toggleMarketplace } = useOnboardingStore();
+  const { setStep, formValues, updateFormValues } = useOnboardingStore();
   const [gmvSlider, setGmvSlider] = useState(2);
   const [focusItems, setFocusItems] = useState(initialFocusItems);
   const [draggedId, setDraggedId] = useState(null);

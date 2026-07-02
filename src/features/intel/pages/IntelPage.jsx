@@ -10,6 +10,7 @@ import apiClient from '../../../api/client';
 import { quickToRange, v2DateLabel, v2CatLabel } from '../../detailed-view/detailedViewUtils';
 import useClickOutside from '../../../hooks/useClickOutside';
 import useProductNavigation from '../../../hooks/useProductNavigation';
+import useModalToggle from '../../../hooks/useModalToggle';
 import InsightsPanel from '../shared/components/InsightsPanel';
 import IntelFilterPanel from '../shared/components/IntelFilterPanel';
 import { TAB_TO_ROUTE, V2_FULL_TAB_TO_ROUTE, ROUTE_TO_TAB } from '../shared/data/intelUiData';
@@ -33,7 +34,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [loading, setLoading] = useState(true);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
   const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3, 4, 5]);
-  const [kpiDetailModal, setKpiDetailModal] = useState(null);
+  const kpiDetailModal = useModalToggle();
 
   // Insights section 1
   const [activeInsightTab, setActiveInsightTab] = useState('Overall');
@@ -53,7 +54,6 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const kpiSectionRef = useRef(null);
   const compactFilterRef = useRef(null);
   const filterBtnRef = useRef(null);
-  const [compactExpandedFilter, setCompactExpandedFilter] = useState(null);
   const [filterPanelPos, setFilterPanelPos] = useState({ top: 64, right: 24 });
 
   /* ── V2 filter panel ── */
@@ -80,7 +80,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const v2FilterRef = useRef(null);
   const chanDropRef  = useRef(null);
 
-  const { dateRange, setDateRange, category, setCategory, channel, setChannel } = useFilterStore();
+  const { setDateRange, category, setCategory, setChannel } = useFilterStore();
   const navigate = useNavigate();
   const { goToProduct, findWatchlistItem, buildFallbackWatchlistItem, buildAnalyticsKpiGroups } = useProductNavigation();
 
@@ -95,7 +95,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
       setActiveInsightTab(location.state.restoreInsightTab);
     }
     setRestoreItemSubTab(location.state?.restoreItemSubTab || null);
-  }, [location.key]);
+  }, [location.key, location.state?.restoreInsightTab, location.state?.restoreItemSubTab]);
 
   const activePlatforms = JSON.parse(localStorage.getItem('active_platforms') || '["shopify","amazon","tiktok"]');
   const channelOptions = [
@@ -201,38 +201,6 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   };
 
   // Compact header center — Intel tabs + single filter icon, shown when scrolled
-  const compactFilterOptions = [
-    {
-      label: 'Date Range',
-      value: dateRange,
-      onChange: setDateRange,
-      options: [
-        ['last-7-days', 'Last 7 Days'],
-        ['last-30-days', 'Last 30 Days'],
-        ['last-90-days', 'Last 90 Days'],
-        ['ytd', 'Year to Date'],
-      ],
-    },
-    {
-      label: 'Category',
-      value: category,
-      onChange: setCategory,
-      options: [
-        ['all', 'All Categories'],
-        ['electronics', 'Electronics'],
-        ['home-garden', 'Home & Garden'],
-        ['apparel', 'Apparel'],
-        ['pet-suppliers', 'Pet Suppliers'],
-      ],
-    },
-    {
-      label: 'Channel',
-      value: channel,
-      onChange: setChannel,
-      options: channelOptions,
-    },
-  ];
-
   const compactHeaderCenter = isScrolled ? (
     <div className="flex items-center gap-0.5">
       {INTEL_TABS.map(tab => (
@@ -565,7 +533,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                 trend={stat.trend}
                 isPositive={stat.isPositive}
                 loading={loading}
-                onClick={() => setKpiDetailModal(stat)}
+                onClick={() => kpiDetailModal.open(stat)}
               />
             );
           })}
@@ -591,7 +559,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         />
 
         {/* Insights section 2 — carousel mode (commented out) */}
-        {false && (
+        {false && ( // eslint-disable-line no-constant-binary-expression
           <InsightsPanel
             activeInsightTab={activeInsightTab2}
             setActiveInsightTab={setActiveInsightTab2}
@@ -617,9 +585,9 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
       />
 
       <KPIDetailModal
-        isOpen={!!kpiDetailModal}
-        onClose={() => setKpiDetailModal(null)}
-        stat={kpiDetailModal}
+        isOpen={kpiDetailModal.isOpen}
+        onClose={kpiDetailModal.close}
+        stat={kpiDetailModal.data}
         filterContext={{ dateRange: appliedDate, categories: appliedCats, channels: appliedChans }}
         tab={activeIntelTab}
       />

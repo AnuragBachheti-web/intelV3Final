@@ -6,7 +6,7 @@ import ActionsPanel from '../../../../components/common/ActionsPanel';
 import BaseAreaChart from '../../../../components/common/charts/BaseAreaChart';
 import { SEMANTIC_COLORS } from '../../../../utils/chartColors';
 import { salesRecommendations, salesAnomalies, revenueTrendData, salesWatchlistItems } from '../salesData';
-import { WatchlistCard, deepDiveWatchlistItems } from '../../../../components/common/WatchlistSection';
+import { WatchlistCard } from '../../../../components/common/WatchlistSection';
 
 const kpiDetails = {
   "Total Revenue": {
@@ -219,103 +219,6 @@ const kpiDetails = {
       { cat: 'Beauty', count: '5', share: '5%' }
     ]
   }
-};
-
-const skuData = [
-  { sku: 'WH-PRO-2024', title: 'Premium Wireless Headphones', revenue: '$18,400', units: '184', orders: '62', bb: '92%', channel: ['AMZ'], status: 'Healthy' },
-  { sku: 'CB-DLX-001', title: 'Bamboo Cutting Board Deluxe', revenue: '$12,480', units: '156', orders: '48', bb: '88%', channel: ['AMZ', 'SHO'], status: 'Healthy' },
-  { sku: 'YM-STR-42', title: 'Yoga Mat Pro Stretch', revenue: '$8,520', units: '142', orders: '42', bb: '42%', channel: ['AMZ'], status: 'BB Lost' },
-  { sku: 'BT-SPK-99', title: 'Bluetooth Speaker Compact', revenue: '$11,520', units: '128', orders: '38', bb: '38%', channel: ['AMZ', 'SHO'], status: 'BB Lost' },
-  { sku: 'LED-DK-7', title: 'LED Desk Lamp Smart', revenue: '$6,840', units: '114', orders: '34', bb: '95%', channel: ['AMZ'], status: 'Healthy' },
-];
-
-const skuModalData = {
-  title: 'Top SKUs by Revenue', icon: 'fa-boxes',
-  cards: [
-    { label: 'TOTAL SKUS', val: '5', delta: 'Active', color: 'text-blue-600' },
-    { label: 'TOP REVENUE', val: '$18,400', delta: '+12.4%', color: 'text-blue-500' },
-    { label: 'AVG BB%', val: '71%', delta: 'Avg', color: 'text-emerald-500' },
-    { label: 'BB LOST', val: '2 SKUs', delta: 'Review Now', color: 'text-red-500' },
-  ],
-  tableColumns: [
-    { header: 'SKU', key: 'sku', render: (val) => <span className="font-mono text-xs text-gray-500 dark:text-slate-400">{val}</span> },
-    { header: 'Title', key: 'title', bold: true },
-    { header: 'Revenue', key: 'revenue', align: 'right', bold: true },
-    { header: 'Units', key: 'units', align: 'right' },
-    { header: 'Orders', key: 'orders', align: 'right' },
-    {
-      header: 'BB%', key: 'bb', align: 'right',
-      render: (val) => (
-        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${parseFloat(val) < 50 ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'}`}>{val}</span>
-      )
-    },
-    {
-      header: 'Channel', key: 'channel', align: 'center',
-      render: (channels) => (
-        <div className="flex gap-1 justify-center">
-          {channels.map((c) => <span key={c} className="px-1.5 py-0.5 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 text-[10px] font-medium rounded">{c}</span>)}
-        </div>
-      )
-    },
-    {
-      header: 'Status', key: 'status', align: 'center',
-      render: (val) => {
-        const colors = { Healthy: 'bg-emerald-100 text-emerald-600', 'At Risk': 'bg-amber-100 text-amber-600', 'BB Lost': 'bg-red-100 text-red-600' };
-        return <span className={`px-2 py-0.5 text-[10px] font-bold rounded ${colors[val] || 'bg-gray-100 text-gray-600'}`}>{val}</span>;
-      }
-    },
-  ],
-  tableData: skuData,
-};
-
-const topMovers = [
-  { name: 'Premium Wireless Headphones', sku: 'B09XYZ1234', revenue: '$124,500', change: '+34.2%' },
-  { name: 'Smart Home Security Camera', sku: 'B09ABC5678', revenue: '$98,700', change: '+28.1%' },
-  { name: 'Organic Pet Food 15lb', sku: 'B09DEF9012', revenue: '$76,340', change: '+22.5%' },
-  { name: 'Ergonomic Office Chair Pro', sku: 'B09GHI3456', revenue: '$68,900', change: '+19.8%' },
-  { name: 'USB-C Hub 7-in-1', sku: 'B09JKL7890', revenue: '$54,120', change: '+15.3%' },
-];
-
-const bottomMovers = [
-  { name: 'Portable Charger X 20000mAh', sku: 'B09MNO1234', revenue: '$8,420', change: '-42.1%' },
-  { name: 'Bamboo Cutting Board Set', sku: 'B09PQR5678', revenue: '$5,670', change: '-38.7%' },
-  { name: 'Yoga Mat Eco Premium', sku: 'B09STU9012', revenue: '$4,230', change: '-31.4%' },
-  { name: 'LED Desk Lamp Smart', sku: 'B09VWX3456', revenue: '$3,890', change: '-28.9%' },
-  { name: 'Kitchen Timer Digital 3-Pack', sku: 'B09YZA7890', revenue: '$2,140', change: '-25.3%' },
-];
-
-const topMoversModalData = {
-  title: 'Top Movers (Revenue)', icon: 'fa-arrow-trend-up',
-  cards: [
-    { label: 'TOP GAINER', val: '+34.2%', delta: 'vs Prior', color: 'text-green-600' },
-    { label: 'AVG GROWTH', val: '+24.0%', delta: 'Top 5 SKUs', color: 'text-green-500' },
-    { label: 'TOP REVENUE', val: '$124,500', delta: '+34.2%', color: 'text-blue-600' },
-    { label: 'TOTAL SKUs', val: '5', delta: 'Rising', color: 'text-green-500' },
-  ],
-  tableColumns: [
-    { header: 'Product', key: 'name', bold: true },
-    { header: 'SKU', key: 'sku', render: (val) => <span className="font-mono text-xs text-gray-500 dark:text-slate-400">{val}</span> },
-    { header: 'Revenue', key: 'revenue', align: 'right', bold: true },
-    { header: 'Change', key: 'change', align: 'right', render: (val) => <span className="text-green-600 font-bold">{val}</span> },
-  ],
-  tableData: topMovers,
-};
-
-const bottomMoversModalData = {
-  title: 'Bottom Movers (Revenue)', icon: 'fa-arrow-trend-down',
-  cards: [
-    { label: 'BIGGEST DROP', val: '-42.1%', delta: 'vs Prior', color: 'text-red-600' },
-    { label: 'AVG DECLINE', val: '-33.3%', delta: 'Bottom 5', color: 'text-red-500' },
-    { label: 'LOWEST REVENUE', val: '$2,140', delta: '-25.3%', color: 'text-red-500' },
-    { label: 'TOTAL SKUs', val: '5', delta: 'Declining', color: 'text-red-500' },
-  ],
-  tableColumns: [
-    { header: 'Product', key: 'name', bold: true },
-    { header: 'SKU', key: 'sku', render: (val) => <span className="font-mono text-xs text-gray-500 dark:text-slate-400">{val}</span> },
-    { header: 'Revenue', key: 'revenue', align: 'right', bold: true },
-    { header: 'Change', key: 'change', align: 'right', render: (val) => <span className="text-red-500 font-bold">{val}</span> },
-  ],
-  tableData: bottomMovers,
 };
 
 const SalesDeepDivePanel = ({ deepDiveTab, setDeepDiveTab, activeStat, activeStatChart, selectedKpiIndices, onProductClick, setActiveModal, setExpandedChart }) => {

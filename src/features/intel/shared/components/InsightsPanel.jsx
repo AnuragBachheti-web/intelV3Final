@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useActionStore } from '../../../../store/useActionStore';
-import { STEPS_VISIBLE } from '../data/intelData';
-import { INSIGHTS_BY_INTEL_TAB, STEPS_BY_INTEL_TAB, INSIGHT_TYPE_META, INSIGHT_BADGE_COLORS, CATEGORY_KEY_MAP } from '../data/intelUiData';
-import { getPriorityDotClass, getStepPriority, getInsightKeyMetrics } from '../utils/intelUiUtils';
+import { INSIGHTS_BY_INTEL_TAB, INSIGHT_BADGE_COLORS, CATEGORY_KEY_MAP } from '../data/intelUiData';
+import { getPriorityDotClass, getInsightKeyMetrics } from '../utils/intelUiUtils';
 
 const InsightsPanel = ({
   activeInsightTab,
@@ -11,27 +10,20 @@ const InsightsPanel = ({
   itemViewMode,
   sourceRoute,
   setItemViewMode,
-  stepOffset,
   setStepOffset,
   isEmpty = false,
   isCarouselMode = false,
-  onProductClick,
-  onStepClick,
-  showDetailedView = false,
-  onDetailedView,
   intelTab = 'sales',
   selectedCategory = 'all',
   noSidePanel = false,
-  initialItemSubTab = null,
 }) => {
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const [activeInsightIdx, setActiveInsightIdx] = useState(null);
-  const [selectedSkuId, setSelectedSkuId] = useState(null);
-  const [selectedInsightIdx, setSelectedInsightIdx] = useState(null);
-  const [expandedCardIdx, setExpandedCardIdx] = useState(null);
-  const [selectedStepId, setSelectedStepId] = useState(null);
+  const [, setCarouselIndex] = useState(0);
+  const [, setActiveInsightIdx] = useState(null);
+  const [, setSelectedSkuId] = useState(null);
+  const [, setSelectedInsightIdx] = useState(null);
+  const [, setExpandedCardIdx] = useState(null);
+  const [, setSelectedStepId] = useState(null);
   const [expandedIdx, setExpandedIdx] = useState(null);
-  const [itemSubTab, setItemSubTab] = useState('revenue');
   const [insightViewFilter, setInsightViewFilter] = useState('recent');
   const { executedMap } = useActionStore();
   const navigate = useNavigate();
@@ -40,21 +32,10 @@ const InsightsPanel = ({
 
   const tabInsights = INSIGHTS_BY_INTEL_TAB[intelTab] || INSIGHTS_BY_INTEL_TAB.sales;
   const insightBlocks = tabInsights['item'] || [];
-  const effectiveInsightIdx = isCarouselMode ? selectedInsightIdx : activeInsightIdx;
-  const activeStepBlock = effectiveInsightIdx !== null ? (insightBlocks[effectiveInsightIdx] || null) : null;
-  const tabStepsData = STEPS_BY_INTEL_TAB[intelTab] || STEPS_BY_INTEL_TAB.sales;
-  const steps = (activeStepBlock?.steps?.length ? activeStepBlock.steps : null)
-    || tabStepsData[activeInsightTab]
-    || tabStepsData['Overall'];
-  const canStepUp = stepOffset > 0;
-  const canStepDown = stepOffset + STEPS_VISIBLE < steps.length;
 
-  const currentCarouselBlock = isCarouselMode ? (insightBlocks[carouselIndex] || null) : null;
-  const currentCarouselMeta = currentCarouselBlock
-    ? (INSIGHT_TYPE_META[currentCarouselBlock.type] || INSIGHT_TYPE_META.INSIGHT)
-    : null;
-
-  useEffect(() => {
+  const [prevActiveInsightTab, setPrevActiveInsightTab] = useState(activeInsightTab);
+  if (activeInsightTab !== prevActiveInsightTab) {
+    setPrevActiveInsightTab(activeInsightTab);
     setCarouselIndex(0);
     setActiveInsightIdx(!isCarouselMode && !noSidePanel ? 0 : null);
     setSelectedSkuId(null);
@@ -62,9 +43,28 @@ const InsightsPanel = ({
     setExpandedCardIdx(null);
     setSelectedStepId(null);
     setExpandedIdx(null);
-  }, [activeInsightTab]);
+  }
 
   // Auto-activate the insight matching the selected category (without hiding others)
+  const [prevCategoryMatchKey, setPrevCategoryMatchKey] = useState(null);
+  const categoryMatchKey = `${selectedCategory}|${activeInsightTab}`;
+  if (categoryMatchKey !== prevCategoryMatchKey) {
+    setPrevCategoryMatchKey(categoryMatchKey);
+    if (activeInsightTab === 'Category' && selectedCategory !== 'all') {
+      const matcher = CATEGORY_KEY_MAP[selectedCategory];
+      if (matcher) {
+        const blocks = tabInsights[activeInsightTab.toLowerCase()] || [];
+        const idx = blocks.findIndex(b => matcher(b.heading || ''));
+        if (idx !== -1) {
+          setActiveInsightIdx(idx);
+          setCarouselIndex(idx);
+          setStepOffset(0);
+        }
+      }
+    }
+  }
+
+  // Scroll the newly-activated matching card into view (DOM sync, not derived state)
   useEffect(() => {
     if (activeInsightTab !== 'Category' || selectedCategory === 'all') return;
     const matcher = CATEGORY_KEY_MAP[selectedCategory];
@@ -72,40 +72,18 @@ const InsightsPanel = ({
     const blocks = tabInsights[activeInsightTab.toLowerCase()] || [];
     const idx = blocks.findIndex(b => matcher(b.heading || ''));
     if (idx !== -1) {
-      setActiveInsightIdx(idx);
-      setCarouselIndex(idx);
-      setStepOffset(0);
       setTimeout(() => {
         cardRefs.current[idx]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 200);
     }
-  }, [selectedCategory, activeInsightTab]);
+  }, [selectedCategory, activeInsightTab, tabInsights]);
 
   // Auto-switch to Category tab and scroll when top-level category filter changes
   useEffect(() => {
     if (selectedCategory === 'all') return;
     setActiveInsightTab('Category');
     setTimeout(() => containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 150);
-  }, [selectedCategory]);
-
-  // Restore item sub-tab (revenue/movers/decliners) when navigating back
-  useEffect(() => {
-    if (initialItemSubTab) setItemSubTab(initialItemSubTab);
-  }, [initialItemSubTab]);
-
-  // Auto-select first action card when active insight changes (normal mode only)
-  useEffect(() => {
-    if (isCarouselMode || activeInsightTab === 'Item') return;
-    const block = insightBlocks[activeInsightIdx];
-    if (!block) return;
-    const effectiveSteps = (block?.steps?.length ? block.steps : null)
-      || tabStepsData[activeInsightTab]
-      || tabStepsData['Overall'];
-    const toShow = activeInsightIdx === 0
-      ? ['High', 'Medium', 'Low'].map(p => effectiveSteps.find(s => getStepPriority(s.type) === p)).filter(Boolean)
-      : effectiveSteps.slice(0, 7);
-    setSelectedStepId(toShow[0]?.id ?? null);
-  }, [activeInsightIdx, activeInsightTab, intelTab]);
+  }, [selectedCategory, setActiveInsightTab]);
 
   return (
     <div ref={containerRef} className="rounded-xl bg-white dark:bg-[#030712]">

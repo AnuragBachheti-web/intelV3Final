@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import BaseModal from './BaseModal';
 
 const KPISelectorModal = ({ isOpen, onClose, allKpis, selectedIndices, onSave }) => {
@@ -8,14 +8,18 @@ const KPISelectorModal = ({ isOpen, onClose, allKpis, selectedIndices, onSave })
   const [draggingKpiIdx, setDraggingKpiIdx] = useState(null);
   const dragPosRef = useRef(null);
 
-  useEffect(() => {
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  const [prevSelectedIndices, setPrevSelectedIndices] = useState(selectedIndices);
+  if (isOpen !== prevIsOpen || selectedIndices !== prevSelectedIndices) {
+    setPrevIsOpen(isOpen);
+    setPrevSelectedIndices(selectedIndices);
     if (isOpen) {
       setSelected(selectedIndices);
       const unselected = allKpis.map((_, i) => i).filter(i => !selectedIndices.includes(i));
       setDisplayOrder([...selectedIndices, ...unselected]);
       setError('');
     }
-  }, [isOpen, selectedIndices]);
+  }
 
   const toggle = (idx) => {
     if (selected.includes(idx)) {

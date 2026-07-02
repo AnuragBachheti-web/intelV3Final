@@ -32,16 +32,6 @@ const ChatDetailView = ({ chat, onBack }) => {
   return (
     <div className="flex flex-col gap-6 pb-4">
 
-      {/* Back only — no title in breadcrumb */}
-      <div>
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200 transition-colors"
-        >
-          <i className="fa-solid fa-arrow-left text-sm" />
-        </button>
-      </div>
-
       {/* User message bubble + inline actions */}
       <div className="flex flex-col items-end gap-1.5">
         <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl rounded-tr-sm px-5 py-3.5 max-w-lg shadow-sm">

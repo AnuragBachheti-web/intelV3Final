@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion';
 import React from 'react';
 import BaseModal from '../../../components/common/BaseModal';
+import SelectInput from '../../../components/ui/SelectInput';
+
+const MODAL_SELECT_CLASS = 'w-full px-4 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand/30 dark:focus:ring-gray-500/30 focus:border-transparent outline-none cursor-pointer dark:text-slate-200';
 
 const CustomActionModal = ({ isOpen, onClose }) => (
   <BaseModal isOpen={isOpen} onClose={onClose}>
@@ -49,23 +52,23 @@ const CustomActionModal = ({ isOpen, onClose }) => (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-bold text-gray-900 dark:text-slate-100 mb-2">Priority</label>
-              <select className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand/30 dark:focus:ring-gray-500/30 focus:border-transparent outline-none cursor-pointer dark:text-slate-200">
+              <SelectInput className={MODAL_SELECT_CLASS}>
                 <option>Critical</option>
                 <option>High</option>
                 <option selected>Medium</option>
                 <option>Low</option>
-              </select>
+              </SelectInput>
             </div>
 
             <div>
               <label className="block text-sm font-bold text-gray-900 dark:text-slate-100 mb-2">Category</label>
-              <select className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand/30 dark:focus:ring-gray-500/30 focus:border-transparent outline-none cursor-pointer dark:text-slate-200">
+              <SelectInput className={MODAL_SELECT_CLASS}>
                 <option>Cash Management</option>
                 <option>Payments</option>
                 <option>Collections</option>
                 <option>Forecasting</option>
                 <option>Other</option>
-              </select>
+              </SelectInput>
             </div>
           </div>
 
@@ -80,12 +83,12 @@ const CustomActionModal = ({ isOpen, onClose }) => (
 
             <div>
               <label className="block text-sm font-bold text-gray-900 dark:text-slate-100 mb-2">Assignee</label>
-              <select className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand/30 dark:focus:ring-gray-500/30 focus:border-transparent outline-none cursor-pointer dark:text-slate-200">
+              <SelectInput className={MODAL_SELECT_CLASS}>
                 <option>Sarah Johnson</option>
                 <option>Michael Chen</option>
                 <option>Emily Rodriguez</option>
                 <option selected>Myself</option>
-              </select>
+              </SelectInput>
             </div>
           </div>
 

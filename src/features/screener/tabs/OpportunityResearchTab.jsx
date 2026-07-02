@@ -15,6 +15,7 @@ import AnalyticsModal from '../../../components/common/AnalyticsModal';
 import ClickToExpand from '../../../components/common/ClickToExpand';
 import DeepDiveTabBar from '../../../components/common/DeepDiveTabBar';
 import BaseAreaChart from '../../../components/common/charts/BaseAreaChart';
+import useModalToggle from '../../../hooks/useModalToggle';
 
 const kpis = [
   {
@@ -205,7 +206,7 @@ const opportunities = [
 
 const OpportunityResearchTab = () => {
   const [selectedKpiIdx, setSelectedKpiIdx] = useState(0);
-  const [kpiDetailModal, setKpiDetailModal] = useState(null);
+  const kpiDetailModal = useModalToggle();
   const { dateRange } = useFilterStore();
   const [oppDiveTab, setOppDiveTab] = useState('kpi');
   const [oppExpandModal, setOppExpandModal] = useState(null);
@@ -238,7 +239,7 @@ const OpportunityResearchTab = () => {
                 change={kpi.change}
                 subtext={kpi.subtext}
                 isPositive={kpi.isPositive !== false}
-                onClick={() => { setSelectedKpiIdx(idx); setKpiDetailModal(kpi); }}
+                onClick={() => { setSelectedKpiIdx(idx); kpiDetailModal.open(kpi); }}
               />
             ))}
           </div>
@@ -622,7 +623,7 @@ const OpportunityResearchTab = () => {
                   <div>
                     <h3 className="text-base font-bold text-gray-900 dark:text-slate-100 mb-4">Top Opportunities Ranked</h3>
                     <div className="space-y-3">
-                      {opportunities.slice(0, 4).map((opp, i) => (
+                      {opportunities.slice(0, 4).map((opp) => (
                         <div key={opp.id} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-800">
                           <div className="w-10 h-10 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-center shadow-sm">
                             <span className="text-lg font-black text-gray-400">#{opp.rank}</span>
@@ -710,7 +711,7 @@ const OpportunityResearchTab = () => {
                   <div>
                     <h3 className="text-base font-bold text-gray-900 dark:text-slate-100 mb-4">All Opportunities Overview</h3>
                     <div className="space-y-2">
-                      {opportunities.map((opp, i) => (
+                      {opportunities.map((opp) => (
                         <div key={opp.id} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-800">
                           <span className="text-sm font-black text-gray-400 w-5 shrink-0">{opp.rank}</span>
                           <i className={`fa-solid ${opp.icon} text-xs text-gray-400 dark:text-slate-500 shrink-0`}></i>
@@ -849,9 +850,9 @@ const OpportunityResearchTab = () => {
         </div>
       , document.body)}
       <KPIDetailModal
-        isOpen={!!kpiDetailModal}
-        onClose={() => setKpiDetailModal(null)}
-        stat={kpiDetailModal}
+        isOpen={kpiDetailModal.isOpen}
+        onClose={kpiDetailModal.close}
+        stat={kpiDetailModal.data}
         filterContext={{ dateRange }}
         tab="sales"
       />

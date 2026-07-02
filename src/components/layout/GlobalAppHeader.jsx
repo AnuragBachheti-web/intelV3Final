@@ -4,6 +4,7 @@ import { useFilterStore } from '../../store/useFilterStore';
 import { useHeaderScroll, notifyHeaderMeasured } from '../../hooks/useHeaderScroll';
 import { useSimulationStore } from '../../store/useSimulationStore';
 import useClickOutside from '../../hooks/useClickOutside';
+import SelectInput from '../ui/SelectInput';
 
 const CHANNEL_OPTS = [
   ['all', 'All Channels'],
@@ -56,7 +57,7 @@ const FilterPopover = ({ dateRange, setDateRange, category, setCategory, channel
     }
     const count = [pendingDate, pendingCategory, pendingChannel].filter(v => v !== 'all').length;
     onPendingCountChange?.(count);
-  }, [open, pendingDate, pendingCategory, pendingChannel]);
+  }, [open, pendingDate, pendingCategory, pendingChannel, onPendingCountChange]);
 
   // Click-outside to close
   useClickOutside(panelRef, open, () => setOpen(false), btnRef);
@@ -321,9 +322,11 @@ const GlobalAppHeader = ({
   const searchInputRef = useRef(null);
   const { isSimulating, progress: globalProgress } = useSimulationStore();
 
-  useEffect(() => {
+  const [prevSearchCollapsed, setPrevSearchCollapsed] = useState(searchCollapsed);
+  if (searchCollapsed !== prevSearchCollapsed) {
+    setPrevSearchCollapsed(searchCollapsed);
     if (!searchCollapsed) setSearchExpanded(false);
-  }, [searchCollapsed]);
+  }
 
   useEffect(() => {
     if (searchExpanded && searchInputRef.current) {
@@ -404,16 +407,15 @@ const GlobalAppHeader = ({
           options: [['all','All Categories'],['electronics','Electronics'],['home-garden','Home & Garden'],['apparel','Apparel']],
         },
       ].map((sel, i) => (
-        <select
+        <SelectInput
           key={i}
           value={sel.value}
           onChange={(e) => sel.onChange(e.target.value)}
-          className="px-3 py-1.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-gray-700 dark:text-slate-300 focus:ring-2 focus:ring-brand/30 dark:focus:ring-gray-500/30 outline-none transition-colors hover:border-gray-300 dark:hover:border-slate-600 shadow-sm"
         >
           {sel.options.map(([val, label]) => (
             <option key={val} value={val}>{label}</option>
           ))}
-        </select>
+        </SelectInput>
       ))}
     </div>
   );

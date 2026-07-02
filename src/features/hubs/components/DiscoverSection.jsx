@@ -2,6 +2,9 @@ import { memo } from 'react';
 import PluginCard from './PluginCard';
 import FAQItem from './FAQItem';
 import { PLUGINS_LIST, MAIN_FAQS, MAIN_REVIEWS, RATING_BARS } from '../hubsData';
+import SelectInput from '../../../components/ui/SelectInput';
+
+const DISCOVER_SELECT_CLASS = 'px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-medium text-gray-700 dark:text-slate-300 shadow-sm outline-none cursor-pointer';
 
 // ─── Featured Banner ──────────────────────────────────────────────────────────
 
@@ -41,19 +44,19 @@ FeaturedBanner.displayName = 'FeaturedBanner';
 const FilterBar = memo(({ viewMode, onViewMode }) => (
   <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
     <div className="flex gap-2 flex-wrap">
-      <select className="px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-medium text-gray-700 dark:text-slate-300 shadow-sm outline-none cursor-pointer">
+      <SelectInput className={DISCOVER_SELECT_CLASS}>
         <option>All Categories</option>
         <option>Marketing</option>
         <option>Finance</option>
         <option>Productivity</option>
         <option>Analytics</option>
-      </select>
-      <select className="px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-medium text-gray-700 dark:text-slate-300 shadow-sm outline-none cursor-pointer">
+      </SelectInput>
+      <SelectInput className={DISCOVER_SELECT_CLASS}>
         <option>Sort by: Popular</option>
         <option>Newest</option>
         <option>Price: Low to High</option>
         <option>Highest Rated</option>
-      </select>
+      </SelectInput>
     </div>
 
     <div className="flex items-center bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl p-1 shadow-sm">

@@ -32,6 +32,7 @@ import KPISelectorModal from '../../../components/common/KPISelectorModal';
 import KPIDetailModal from '../../../components/common/KPIDetailModal';
 import { useFilterStore } from '../../../store/useFilterStore';
 import useProductNavigation from '../../../hooks/useProductNavigation';
+import useModalToggle from '../../../hooks/useModalToggle';
 
 const CashIntelligencePage = () => {
   const [selectedStatIdx, setSelectedStatIdx] = useState(0);
@@ -41,7 +42,7 @@ const CashIntelligencePage = () => {
   const [componentModal, setComponentModal] = useState(null);
   const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3]);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
-  const [kpiDetailModal, setKpiDetailModal] = useState(null);
+  const kpiDetailModal = useModalToggle();
   const { dateRange } = useFilterStore();
   const [detailViewMode, setDetailViewMode] = useState('chart');
   const navigate = useNavigate();
@@ -225,7 +226,7 @@ const CashIntelligencePage = () => {
               <StatCard
                 key={kpiIdx}
                 {...cashStats[kpiIdx]}
-                onClick={() => { setSelectedStatIdx(kpiIdx); setDeepDiveTab('revenue'); setKpiDetailModal(cashStats[kpiIdx]); }}
+                onClick={() => { setSelectedStatIdx(kpiIdx); setDeepDiveTab('revenue'); kpiDetailModal.open(cashStats[kpiIdx]); }}
               />
             ))}
           </div>
@@ -446,9 +447,9 @@ const CashIntelligencePage = () => {
 
       <DeepDiveModal modal={componentModal} onClose={() => setComponentModal(null)} />
       <KPIDetailModal
-        isOpen={!!kpiDetailModal}
-        onClose={() => setKpiDetailModal(null)}
-        stat={kpiDetailModal}
+        isOpen={kpiDetailModal.isOpen}
+        onClose={kpiDetailModal.close}
+        stat={kpiDetailModal.data}
         filterContext={{ dateRange }}
         tab="cash"
       />

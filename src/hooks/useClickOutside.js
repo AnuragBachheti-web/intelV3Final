@@ -16,7 +16,7 @@ const useClickOutside = (ref, isOpen, onClose, extraRef) => {
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [isOpen]); // ref/extraRef are stable React refs; onCloseRef.current is always fresh
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps -- ref/extraRef are stable React refs; onCloseRef.current is always fresh
 };
 
 export default useClickOutside;

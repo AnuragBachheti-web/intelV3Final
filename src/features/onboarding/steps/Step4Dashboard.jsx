@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { useOnboardingStore } from "../store/useOnboardingStore";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
 
 function Step4Dashboard() {
-  const { setActiveModal } = useOnboardingStore();
   const navigate = useNavigate();
   const [showToast, setShowToast] = useState(true);
   const [showForgot, setShowForgot] = useState(false);

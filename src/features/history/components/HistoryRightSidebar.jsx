@@ -1,20 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 const HistoryRightSidebar = ({
   quickFilters,
-  modules,
   mostUsedSearches,
   activeFilter = 'all',
   onFilterChange,
   bookmarkCount,
 }) => {
-  const navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState({});
-
-  const toggleCollapse = (key) =>
-    setCollapsed(prev => ({ ...prev, [key]: !prev[key] }));
-
   return (
     <aside
       id="right-sidebar"

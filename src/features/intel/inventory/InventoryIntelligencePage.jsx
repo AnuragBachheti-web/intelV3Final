@@ -16,6 +16,7 @@ import { formatCurrency } from '../../../utils/formatters';
 import { revenueTrendData } from '../sales/salesData';
 import InventoryDeepDivePanel from './components/InventoryDeepDivePanel';
 import useProductNavigation from '../../../hooks/useProductNavigation';
+import useModalToggle from '../../../hooks/useModalToggle';
 
 const InventoryIntelligencePage = () => {
   const [invData, setInvData] = useState(null);
@@ -27,7 +28,7 @@ const InventoryIntelligencePage = () => {
   const [componentModal, setComponentModal] = useState(null);
   const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3]);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
-  const [kpiDetailModal, setKpiDetailModal] = useState(null);
+  const kpiDetailModal = useModalToggle();
   const { dateRange } = useFilterStore();
   const { goToProduct, findWatchlistItem, buildFallbackWatchlistItem, buildAnalyticsKpiGroups } = useProductNavigation();
 
@@ -141,7 +142,7 @@ const InventoryIntelligencePage = () => {
               <StatCard
                 key={kpiIdx}
                 {...stats[kpiIdx]}
-                onClick={() => { setSelectedStatIdx(kpiIdx); setDeepDiveTab('revenue'); setKpiDetailModal(stats[kpiIdx]); }}
+                onClick={() => { setSelectedStatIdx(kpiIdx); setDeepDiveTab('revenue'); kpiDetailModal.open(stats[kpiIdx]); }}
               />
             ))}
           </div>
@@ -180,9 +181,9 @@ const InventoryIntelligencePage = () => {
       <ChartModal chart={expandedChart} onClose={() => setExpandedChart(null)} />
       <DeepDiveModal modal={componentModal} onClose={() => setComponentModal(null)} />
       <KPIDetailModal
-        isOpen={!!kpiDetailModal}
-        onClose={() => setKpiDetailModal(null)}
-        stat={kpiDetailModal}
+        isOpen={kpiDetailModal.isOpen}
+        onClose={kpiDetailModal.close}
+        stat={kpiDetailModal.data}
         filterContext={{ dateRange }}
         tab="inventory"
       />

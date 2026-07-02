@@ -16,6 +16,7 @@ import AnalyticsModal from '../../../components/common/AnalyticsModal';
 import ClickToExpand from '../../../components/common/ClickToExpand';
 import DeepDiveTabBar from '../../../components/common/DeepDiveTabBar';
 import BaseAreaChart from '../../../components/common/charts/BaseAreaChart';
+import useModalToggle from '../../../hooks/useModalToggle';
 
 const kpis = [
   {
@@ -115,7 +116,7 @@ const kpis = [
 
 const PriceBuyBoxTab = () => {
   const [selectedKpiIdx, setSelectedKpiIdx] = useState(0);
-  const [kpiDetailModal, setKpiDetailModal] = useState(null);
+  const kpiDetailModal = useModalToggle();
   const { dateRange } = useFilterStore();
   const [priceDiveTab, setPriceDiveTab] = useState('kpi');
   const [priceExpandModal, setPriceExpandModal] = useState(null);
@@ -150,7 +151,7 @@ const PriceBuyBoxTab = () => {
                 change={kpi.change}
                 subtext={kpi.subtext}
                 isPositive={kpi.isPositive !== false}
-                onClick={() => { setSelectedKpiIdx(idx); setKpiDetailModal(kpi); }}
+                onClick={() => { setSelectedKpiIdx(idx); kpiDetailModal.open(kpi); }}
               />
             ))}
           </div>
@@ -683,9 +684,9 @@ const PriceBuyBoxTab = () => {
         </div>
       , document.body)}
       <KPIDetailModal
-        isOpen={!!kpiDetailModal}
-        onClose={() => setKpiDetailModal(null)}
-        stat={kpiDetailModal}
+        isOpen={kpiDetailModal.isOpen}
+        onClose={kpiDetailModal.close}
+        stat={kpiDetailModal.data}
         filterContext={{ dateRange }}
         tab="sales"
       />

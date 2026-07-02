@@ -1,6 +1,7 @@
 ﻿import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useFilterStore } from '../../store/useFilterStore';
+import SelectInput from '../ui/SelectInput';
 
 const PageHeader = ({ showTabs = true, tabs, filters: customFilters }) => {
   const {
@@ -40,16 +41,15 @@ const PageHeader = ({ showTabs = true, tabs, filters: customFilters }) => {
           options: [['all','All Channels'],['amazon','Amazon'],['shopify','Shopify'],['tiktok-shop','TikTok Shop']],
         },
       ].map((sel, i) => (
-        <select
+        <SelectInput
           key={i}
           value={sel.value}
           onChange={(e) => sel.onChange(e.target.value)}
-          className="px-3 py-1.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-gray-700 dark:text-slate-300 focus:ring-2 focus:ring-brand/30 dark:focus:ring-gray-500/30 outline-none transition-colors hover:border-gray-300 dark:hover:border-slate-600 shadow-sm"
         >
           {sel.options.map(([val, label]) => (
             <option key={val} value={val}>{label}</option>
           ))}
-        </select>
+        </SelectInput>
       ))}
     </div>
   );

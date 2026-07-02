@@ -12,6 +12,7 @@ import KPISelectorModal from '../../../components/common/KPISelectorModal';
 import KPIDetailModal from '../../../components/common/KPIDetailModal';
 import { useFilterStore } from '../../../store/useFilterStore';
 import useProductNavigation from '../../../hooks/useProductNavigation';
+import useModalToggle from '../../../hooks/useModalToggle';
 // import ActionAlert from '../../../components/common/ActionAlert';
 
 const AdSpendTrendChart         = lazy(() => import('./components/AdSpendTrendChart'));
@@ -37,7 +38,7 @@ const AdsIntelligencePage = () => {
   const [selectedStatIdx, setSelectedStatIdx] = useState(0);
   const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3]);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
-  const [kpiDetailModal, setKpiDetailModal] = useState(null);
+  const kpiDetailModal = useModalToggle();
   const { dateRange } = useFilterStore();
   const [activeModal, setActiveModal] = useState({ isOpen: false, type: null, data: null });
   const [deepDiveTab, setDeepDiveTab] = useState('revenue');
@@ -211,7 +212,7 @@ const AdsIntelligencePage = () => {
             {selectedKpiIndices.map((kpiIdx) => {
               const stat = stats[kpiIdx];
               return (
-                <StatCard key={kpiIdx} {...stat} onClick={() => { setSelectedStatIdx(kpiIdx); setDeepDiveTab('revenue'); setKpiDetailModal(stat); }} />
+                <StatCard key={kpiIdx} {...stat} onClick={() => { setSelectedStatIdx(kpiIdx); setDeepDiveTab('revenue'); kpiDetailModal.open(stat); }} />
               );
             })}
           </div>
@@ -430,9 +431,9 @@ const AdsIntelligencePage = () => {
 
       <DeepDiveModal modal={componentModal} onClose={() => setComponentModal(null)} />
       <KPIDetailModal
-        isOpen={!!kpiDetailModal}
-        onClose={() => setKpiDetailModal(null)}
-        stat={kpiDetailModal}
+        isOpen={kpiDetailModal.isOpen}
+        onClose={kpiDetailModal.close}
+        stat={kpiDetailModal.data}
         filterContext={{ dateRange }}
         tab="ads"
       />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import {
@@ -33,12 +33,6 @@ const INTEL_LABELS = {
   inventory: 'Inventory',
   cash: 'Cash',
   ads: 'Ads',
-};
-
-const getStepPriority = (type) => {
-  if (type === 'CRITICAL' || type === 'HIGH') return 'High';
-  if (type === 'OPPORTUNITY' || type === 'INSIGHT') return 'Medium';
-  return 'Low';
 };
 
 const STEP_TYPE_META = {
@@ -175,15 +169,15 @@ const IntelV2InsightDetailPage = () => {
   const insight = stateInsights[currentIndex];
 
   const [selectedStepId, setSelectedStepId] = useState(null);
-  const [stepFilter, setStepFilter] = useState('All');
   const [isCustomActionOpen, setIsCustomActionOpen] = useState(false);
 
   // First step selected by default; use initialStepId when arriving from product page
-  useEffect(() => {
+  const [prevLocationKey, setPrevLocationKey] = useState(location.key);
+  if (location.key !== prevLocationKey) {
+    setPrevLocationKey(location.key);
     const initId = stateData?.initialStepId ?? insight?.steps?.[0]?.id ?? null;
     setSelectedStepId(initId);
-    setStepFilter('All');
-  }, [location.key]);
+  }
 
   if (!insight) {
     return (
@@ -195,20 +189,10 @@ const IntelV2InsightDetailPage = () => {
     );
   }
 
-  const isFirst = currentIndex === 0;
-  const isLast = currentIndex === stateInsights.length - 1;
   const allSteps = insight.steps || [];
-  const filteredSteps = stepFilter === 'All' ? allSteps : allSteps.filter(s => getStepPriority(s.type) === stepFilter);
   const selectedStep = selectedStepId !== null ? allSteps.find(s => s.id === selectedStepId) : null;
   const insightMeta = INSIGHT_TYPE_META[insight.type] || INSIGHT_TYPE_META.INSIGHT;
   const recId = `REC-${8000 + currentIndex * 100 + 71}`;
-  const label = INTEL_LABELS[stateIntelTab] || 'Sales';
-
-  const navigateToIndex = (newIndex) => {
-    navigate(`/intel/insight/${stateIntelTab}/${newIndex}`, {
-      state: { ...stateData, currentIndex: newIndex },
-    });
-  };
 
   const handleBack = () => {
     const route = stateData?.sourceRoute || TAB_TO_ROUTE[stateIntelTab] || '/intel';

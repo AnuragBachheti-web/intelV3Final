@@ -14,6 +14,7 @@ import { useFilterStore } from '../../../store/useFilterStore';
 import apiClient from '../../../api/client';
 import SalesDeepDivePanel from './components/SalesDeepDivePanel';
 import useProductNavigation from '../../../hooks/useProductNavigation';
+import useModalToggle from '../../../hooks/useModalToggle';
 
 const SalesIntelligencePage = () => {
   const [, setIntelData] = useState(null);
@@ -25,7 +26,7 @@ const SalesIntelligencePage = () => {
   const [expandedChart, setExpandedChart] = useState(null);
   const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3]);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
-  const [kpiDetailModal, setKpiDetailModal] = useState(null);
+  const kpiDetailModal = useModalToggle();
   const { dateRange } = useFilterStore();
   const { goToProduct, findWatchlistItem, buildFallbackWatchlistItem, buildAnalyticsKpiGroups } = useProductNavigation();
 
@@ -137,7 +138,7 @@ const SalesIntelligencePage = () => {
                   trend={stat.trend}
                   isPositive={stat.isPositive}
                   loading={loading}
-                  onClick={() => { setSelectedStatIdx(kpiIdx); setDeepDiveTab('revenue'); setKpiDetailModal(stat); }}
+                  onClick={() => { setSelectedStatIdx(kpiIdx); setDeepDiveTab('revenue'); kpiDetailModal.open(stat); }}
                 />
               );
             })}
@@ -177,9 +178,9 @@ const SalesIntelligencePage = () => {
       />
       <ChartModal chart={expandedChart} onClose={() => setExpandedChart(null)} />
       <KPIDetailModal
-        isOpen={!!kpiDetailModal}
-        onClose={() => setKpiDetailModal(null)}
-        stat={kpiDetailModal}
+        isOpen={kpiDetailModal.isOpen}
+        onClose={kpiDetailModal.close}
+        stat={kpiDetailModal.data}
         filterContext={{ dateRange }}
         tab="sales"
       />

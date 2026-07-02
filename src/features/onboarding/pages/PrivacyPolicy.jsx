@@ -1,25 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../../constants/routes';
-import logoWhite from '../../../assets/logo_white.png';
 
 const PrivacyPolicy = () => {
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const handleSearch = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    if (!query.trim()) return;
-    const elements = document.querySelectorAll('h2, h3, p, li');
-    for (const el of elements) {
-      if (el.textContent.toLowerCase().includes(query.toLowerCase())) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        break;
-      }
-    }
-  };
-
   return (
     <div className="bg-white min-h-screen">
 
