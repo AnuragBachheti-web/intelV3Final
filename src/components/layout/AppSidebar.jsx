@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useUIStore } from '../../store/useUIStore';
 import { useMarketplaceStore } from '../../store/useMarketplaceStore';
+import { useViewModeStore } from '../../store/useViewModeStore';
 import { Link, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
 import logo_dark from '../../assets/logo_dark.png';
@@ -12,6 +13,7 @@ import white_latest from '../../assets/white_latest.png';
 import dark_latest from '../../assets/dark_latest.png';
 import { historyItems } from '../../features/history/historyData';
 import { rolePermissions } from "../../config/RolePermission";
+import useClickOutside from '../../hooks/useClickOutside';
 
 const EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
 const DUR = '200ms';
@@ -50,13 +52,11 @@ const HistorySectionContent = () => {
   const [historySearch, setHistorySearch] = useState('');
   const groupByRef = useRef(null);
 
+  useClickOutside(groupByRef, groupByOpen, () => setGroupByOpen(false));
+
+  // Any outside click also closes the per-item 3-dot context menu (no single ref to check).
   useEffect(() => {
-    const handler = (e) => {
-      if (groupByRef.current && !groupByRef.current.contains(e.target)) {
-        setGroupByOpen(false);
-      }
-      setActiveMenuId(null);
-    };
+    const handler = () => setActiveMenuId(null);
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
@@ -190,6 +190,7 @@ const ServicesItem = ({ isCollapsed, isServicesActive, isProductsActive, isActio
   const [flyoutPos, setFlyoutPos] = useState(null);
   const [tooltip, setTooltip] = useState(null);
   const btnRef = useRef(null);
+  const flyoutRef = useRef(null);
 
   const handleClick = () => {
     if (!btnRef.current) return;
@@ -202,17 +203,7 @@ const ServicesItem = ({ isCollapsed, isServicesActive, isProductsActive, isActio
     }
   };
 
-  useEffect(() => {
-    if (!showFlyout) return;
-    const handler = (e) => {
-      const flyout = document.getElementById('services-flyout');
-      if (btnRef.current?.contains(e.target)) return;
-      if (flyout?.contains(e.target)) return;
-      setShowFlyout(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [showFlyout]);
+  useClickOutside(flyoutRef, showFlyout, () => setShowFlyout(false), btnRef);
 
   return (
     <>
@@ -255,6 +246,7 @@ const ServicesItem = ({ isCollapsed, isServicesActive, isProductsActive, isActio
       {showFlyout && flyoutPos && ReactDOM.createPortal(
         <div
           id="services-flyout"
+          ref={flyoutRef}
           style={{ position: 'fixed', top: flyoutPos.top, left: flyoutPos.left, zIndex: 99999 }}
           className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1 min-w-[140px]"
         >
@@ -284,6 +276,7 @@ const ServicesItem = ({ isCollapsed, isServicesActive, isProductsActive, isActio
 const AppSidebar = ({ darkMode, setDarkMode, inline = false }) => {
   const { isSidebarCollapsed, toggleSidebar } = useUIStore();
   const { connectedStores } = useMarketplaceStore();
+  const { dashboardView, lastIntelTab } = useViewModeStore();
   const isConnected = connectedStores.length > 0;
   const location = useLocation();
 
@@ -291,17 +284,23 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false }) => {
   const isScreenerActive = location.pathname.startsWith(ROUTES.SCREENER);
   const isNewAnalysisActive = location.pathname === ROUTES.NEW_ANALYSIS;
   const isSettingsActive = location.pathname === ROUTES.SETTINGS;
-  const isIntelFullActive = INTEL_FULL_PATHS.includes(location.pathname) || location.pathname.startsWith('/intel/insight/') || location.pathname.startsWith('/intel/simulate');
+  const isIntelFullActive = INTEL_FULL_PATHS.includes(location.pathname) || location.pathname.startsWith('/intel/insight/') || location.pathname.startsWith('/intel/simulate') || location.pathname.startsWith('/detailed-view/');
+
+  // Land back on whichever view (AI or Dashboard) + tab the user last had open,
+  // instead of always defaulting to AI View / sales.
+  const intelHref = dashboardView ? `/detailed-view/${lastIntelTab}` : `/intel/${lastIntelTab}`;
+  // Role permissions are checked against the base path, not the tab-specific one.
+  const intelPermissionKey = dashboardView ? '/detailed-view' : ROUTES.INTEL_FULL;
 
   const navItems = [
     { name: 'New', icon: 'fa-plus', href: ROUTES.NEW_ANALYSIS, active: isNewAnalysisActive },
     { name: 'History', icon: 'fa-clock-rotate-left', href: ROUTES.HISTORY, active: isHistoryActive },
-    { name: 'Intel', icon: 'fa-chart-line', href: ROUTES.INTEL_FULL, active: isIntelFullActive },
+    { name: 'Intel', icon: 'fa-chart-line', href: intelHref, permissionKey: intelPermissionKey, active: isIntelFullActive },
     { name: 'Research', icon: 'fa-chart-column', href: ROUTES.SCREENER, active: isScreenerActive },
   ];
   const role = localStorage.getItem("userRole") || "admin";
   const allowedRoutes = rolePermissions[role] || [];
-  const filteredNavItems = navItems.filter(item => allowedRoutes.includes(item.href));
+  const filteredNavItems = navItems.filter(item => allowedRoutes.includes(item.permissionKey || item.href));
   const isProductsActive = location.pathname === '/products';
   const isActionLogActive = location.pathname === '/action-log';
   const showProducts = allowedRoutes.includes("/products");

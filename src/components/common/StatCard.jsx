@@ -1,7 +1,11 @@
 import { motion } from 'framer-motion';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Skeleton from './Skeleton';
 import { useAIStore } from '../../store/useAIStore';
+
+// Longer than any sparkline path in the 0..100x0..30 viewBox — used as a fixed
+// stroke-dasharray/offset pair so the wave draws itself in on every mount.
+const SPARKLINE_DRAW_LENGTH = 220;
 
 const StatCard = ({
   type = 'metric', // 'metric' (default dashboard) or 'iconic' (history style)
@@ -17,6 +21,13 @@ const StatCard = ({
   showIcon = true
 }) => {
   const { addAiReference } = useAIStore();
+
+  // Draw the sparkline in on mount/refresh instead of popping in static.
+  const [sparkDrawn, setSparkDrawn] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => requestAnimationFrame(() => setSparkDrawn(true)));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   const handleRefClick = (e) => {
     e.preventDefault();
@@ -102,12 +113,16 @@ const StatCard = ({
               d={isPositive ? "M0 30 L0 15 Q 15 0, 30 15 T 60 15 T 90 15 L 100 15 L 100 30 Z" : "M0 30 L0 20 Q 25 35, 50 20 T 100 25 L 100 30 Z"}
               fill={isPositive ? "#dcfce7" : "#fee2e2"}
               className="transition-colors duration-300 dark:fill-opacity-10"
+              style={{ opacity: sparkDrawn ? 1 : 0, transition: 'opacity 900ms ease-out 300ms' }}
             />
             <path
               d={isPositive ? "M0 15 Q 15 0, 30 15 T 60 15 T 90 15 L 100 15" : "M0 20 Q 25 35, 50 20 T 100 25"}
               fill="none"
               stroke={isPositive ? "#22c55e" : "#ef4444"}
               strokeWidth="0.5"
+              strokeDasharray={SPARKLINE_DRAW_LENGTH}
+              strokeDashoffset={sparkDrawn ? 0 : SPARKLINE_DRAW_LENGTH}
+              style={{ transition: 'stroke-dashoffset 2000ms ease-out' }}
             />
           </svg>
         </div>

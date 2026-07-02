@@ -216,13 +216,6 @@ const NewAnalysisPage = () => {
             </div>
 
           </div>
-
-          {/* Hidden For Now */}
-          {/* <div className="mt-auto pt-12 pb-6 flex items-center gap-6 text-xs text-gray-400">
-            <a href="#" className="hover:text-gray-900 dark:hover:text-slate-200 transition-colors">Help</a>
-            <a href="#" className="hover:text-gray-900 dark:hover:text-slate-200 transition-colors">Privacy</a>
-            <a href="#" className="hover:text-gray-900 dark:hover:text-slate-200 transition-colors">Terms</a>
-          </div> */}
         </div>
 
         {/* Right Sidebar - History */}

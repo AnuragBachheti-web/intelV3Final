@@ -1,7 +1,9 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
-import { salesWatchlistItems } from '../sales-intelligence/salesData';
+import MarketplaceSyncBanner from '../../components/common/MarketplaceSyncBanner';
+import useClickOutside from '../../hooks/useClickOutside';
+import useProductNavigation from '../../hooks/useProductNavigation';
 
 const CHANNEL_TABS = ['Amazon', 'Shopify', 'Walmart'];
 
@@ -49,24 +51,6 @@ const STATUS_STYLES = {
   Archived: { pill: 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400',       dot: 'bg-gray-400'  },
   Unlisted: { pill: 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400',           dot: 'bg-red-400'   },
 };
-
-// ─── Edit Banner ──────────────────────────────────────────────────────────────
-const EditBanner = ({ onGoToMarketplace }) => (
-  <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40">
-    <div className="flex items-start gap-2.5">
-      <i className="fa-solid fa-circle-info text-amber-500 dark:text-amber-400 mt-0.5 flex-shrink-0 text-sm" />
-      <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
-        Changes made here apply only within the Realify platform. To sync these updates with your marketplace, create a stimulation and execute it.
-      </p>
-    </div>
-    <button
-      onClick={onGoToMarketplace}
-      className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-600 dark:bg-amber-500 text-white text-xs font-semibold hover:bg-amber-700 dark:hover:bg-amber-600 transition-colors whitespace-nowrap"
-    >
-      Go to Marketplace <i className="fa-solid fa-arrow-right text-[10px]" />
-    </button>
-  </div>
-);
 
 // ─── Bulk Delete Confirm Modal ────────────────────────────────────────────────
 const BulkDeleteConfirmModal = ({ count, onConfirm, onCancel }) => (
@@ -285,7 +269,7 @@ const ProductEditView = ({ items, onBack, onGoToMarketplace }) => {
   return (
     <div className="flex flex-col gap-4">
       {/* Edit Banner */}
-      <EditBanner onGoToMarketplace={onGoToMarketplace} />
+      <MarketplaceSyncBanner onGoToMarketplace={onGoToMarketplace} />
 
       <div className="flex items-center justify-between gap-3 py-1">
         <div className="flex items-center gap-3">
@@ -373,6 +357,7 @@ const ProductEditView = ({ items, onBack, onGoToMarketplace }) => {
 // ─── Products List Page ───────────────────────────────────────────────────────
 const ProductsListPage = () => {
   const navigate = useNavigate();
+  const { goToProduct, findWatchlistItem, buildFallbackWatchlistItem, NO_SPECIFIC_INSIGHTS } = useProductNavigation();
   const activePlatforms = useMemo(
     () => JSON.parse(localStorage.getItem('active_platforms') || '["shopify"]'),
     []
@@ -438,14 +423,7 @@ const ProductsListPage = () => {
   const togglePendingColVisible = (key) =>
     setPendingCols(prev => prev.map(c => c.key === key ? { ...c, visible: !c.visible } : c));
 
-  useEffect(() => {
-    if (!viewPanelOpen) return;
-    const handler = (e) => {
-      if (viewPanelRef.current && !viewPanelRef.current.contains(e.target)) setViewPanelOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [viewPanelOpen]);
+  useClickOutside(viewPanelRef, viewPanelOpen, () => setViewPanelOpen(false));
 
   const filtered = useMemo(() => {
     let list = productsData;
@@ -535,20 +513,15 @@ const ProductsListPage = () => {
   };
 
   const handleProductClick = (product) => {
-    const watchlistItem = salesWatchlistItems.find(w => w.title?.toLowerCase() === product.name?.toLowerCase()) || null;
-    navigate('/product-view', {
-      state: {
-        from: '/products',
-        product: {
-          name: product.name, sku: product.sku,
-          image: product.image || watchlistItem?.image || null,
-          description: `${product.name} is a key product driving your sales performance.`,
-          kpiGroups: [{ label: 'Sales', color: 'text-blue-600 dark:text-blue-400', bgColor: 'bg-blue-50 dark:bg-blue-900/10', kpis: [{ label: 'Total Revenue', value: '$24,800' }, { label: 'Units Sold', value: String(product.inventory) }, { label: 'Avg Price', value: product.price || '—' }, { label: 'Buy Box %', value: '92%' }] }],
-          insights: ['No specific insights available'],
-          watchlistItem: watchlistItem || { title: product.name, sku: product.sku, stock: String(product.inventory), velocity: product.velocity, image: null, status: null, statusColor: 'bg-gray-50 dark:bg-slate-800/60 border-gray-200 dark:border-slate-700', progress: 50, progressColor: 'bg-gray-400', subtext: '' },
-        },
-      },
-    });
+    const watchlistItem = findWatchlistItem(product.name);
+    goToProduct({
+      name: product.name, sku: product.sku, price: product.price,
+      image: product.image || watchlistItem?.image || null,
+      description: `${product.name} is a key product driving your sales performance.`,
+      kpiGroups: [{ label: 'Sales', color: 'text-blue-600 dark:text-blue-400', bgColor: 'bg-blue-50 dark:bg-blue-900/10', kpis: [{ label: 'Total Revenue', value: '$24,800' }, { label: 'Units Sold', value: String(product.inventory) }, { label: 'Avg Price', value: product.price || '—' }, { label: 'Buy Box %', value: '92%' }] }],
+      insights: NO_SPECIFIC_INSIGHTS,
+      watchlistItem: watchlistItem || buildFallbackWatchlistItem(product.name, product.sku, { stock: String(product.inventory), velocity: product.velocity, subtext: '' }),
+    }, '/products');
   };
 
   const startEdit = (e, product) => {

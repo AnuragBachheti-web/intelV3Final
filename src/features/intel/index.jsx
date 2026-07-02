@@ -1,1 +1,1 @@
-export { default } from './IntelPage';
+export { default } from './pages/IntelPage';

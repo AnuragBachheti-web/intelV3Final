@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import DashboardLayout from '../../components/layout/DashboardLayout';
-import { salesWatchlistItems } from '../sales-intelligence/salesData';
-import { ITEM_SKU_DATA } from '../intel/intelData';
+import MarketplaceSyncBanner from '../../components/common/MarketplaceSyncBanner';
+import useClickOutside from '../../hooks/useClickOutside';
+import { salesWatchlistItems } from '../intel/sales/salesData';
+import { ITEM_SKU_DATA } from '../intel/shared/data/intelData';
 
 const PERF_STATS = [
   { key: 'revenue',    label: 'Revenue',         icon: 'fa-arrow-trend-up',  value: '$14,250', change: '+12.4%', isPositive: true,  sub: 'vs previous 7 days', color: '#6366f1' },
@@ -32,194 +34,194 @@ const WEEKDAYS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
 
 // ─── Custom Date Picker ───────────────────────────────────────────────────────
 
-const CustomDatePicker = ({ range, onRangeChange, hoverDate, onHoverChange, calViewMonth, onCalViewChange, onClose, onUpdate }) => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+// const CustomDatePicker = ({ range, onRangeChange, hoverDate, onHoverChange, calViewMonth, onCalViewChange, onClose, onUpdate }) => {
+//   const today = new Date();
+//   today.setHours(0, 0, 0, 0);
 
-  const applyPreset = (preset) => {
-    const t = new Date(today);
-    let start, end;
-    if (preset === 'thisWeek') {
-      start = new Date(t); start.setDate(t.getDate() - t.getDay());
-      end = new Date(start); end.setDate(start.getDate() + 6);
-    } else if (preset === 'lastWeek') {
-      end = new Date(t); end.setDate(t.getDate() - t.getDay() - 1);
-      start = new Date(end); start.setDate(end.getDate() - 6);
-    } else if (preset === 'thisMonth') {
-      start = new Date(t.getFullYear(), t.getMonth(), 1);
-      end = new Date(t.getFullYear(), t.getMonth() + 1, 0);
-    } else if (preset === 'lastMonth') {
-      start = new Date(t.getFullYear(), t.getMonth() - 1, 1);
-      end = new Date(t.getFullYear(), t.getMonth(), 0);
-    }
-    onRangeChange({ start, end });
-  };
+//   const applyPreset = (preset) => {
+//     const t = new Date(today);
+//     let start, end;
+//     if (preset === 'thisWeek') {
+//       start = new Date(t); start.setDate(t.getDate() - t.getDay());
+//       end = new Date(start); end.setDate(start.getDate() + 6);
+//     } else if (preset === 'lastWeek') {
+//       end = new Date(t); end.setDate(t.getDate() - t.getDay() - 1);
+//       start = new Date(end); start.setDate(end.getDate() - 6);
+//     } else if (preset === 'thisMonth') {
+//       start = new Date(t.getFullYear(), t.getMonth(), 1);
+//       end = new Date(t.getFullYear(), t.getMonth() + 1, 0);
+//     } else if (preset === 'lastMonth') {
+//       start = new Date(t.getFullYear(), t.getMonth() - 1, 1);
+//       end = new Date(t.getFullYear(), t.getMonth(), 0);
+//     }
+//     onRangeChange({ start, end });
+//   };
 
-  const handleDayClick = (date) => {
-    if (!range.start || (range.start && range.end)) {
-      onRangeChange({ start: date, end: null });
-    } else {
-      if (date < range.start) {
-        onRangeChange({ start: date, end: range.start });
-      } else {
-        onRangeChange({ start: range.start, end: date });
-      }
-    }
-  };
+//   const handleDayClick = (date) => {
+//     if (!range.start || (range.start && range.end)) {
+//       onRangeChange({ start: date, end: null });
+//     } else {
+//       if (date < range.start) {
+//         onRangeChange({ start: date, end: range.start });
+//       } else {
+//         onRangeChange({ start: range.start, end: date });
+//       }
+//     }
+//   };
 
-  const isSameDay = (a, b) => a && b && a.toDateString() === b.toDateString();
-  const isInRange = (date) => {
-    const s = range.start;
-    const e = range.end || (range.start && !range.end ? hoverDate : null);
-    if (!s) return false;
-    const lo = e && s > e ? e : s;
-    const hi = e && s > e ? s : e;
-    return hi && date >= lo && date <= hi;
-  };
+//   const isSameDay = (a, b) => a && b && a.toDateString() === b.toDateString();
+//   const isInRange = (date) => {
+//     const s = range.start;
+//     const e = range.end || (range.start && !range.end ? hoverDate : null);
+//     if (!s) return false;
+//     const lo = e && s > e ? e : s;
+//     const hi = e && s > e ? s : e;
+//     return hi && date >= lo && date <= hi;
+//   };
 
-  const renderMonth = (year, month) => {
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const cells = [];
-    for (let i = 0; i < firstDay; i++) cells.push(null);
-    for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(year, month, d));
+//   const renderMonth = (year, month) => {
+//     const firstDay = new Date(year, month, 1).getDay();
+//     const daysInMonth = new Date(year, month + 1, 0).getDate();
+//     const cells = [];
+//     for (let i = 0; i < firstDay; i++) cells.push(null);
+//     for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(year, month, d));
 
-    return (
-      <div>
-        <p className="text-xs font-bold text-gray-800 dark:text-slate-100 mb-2.5 text-center">
-          {MONTHS[month]} {year}
-        </p>
-        <div className="grid grid-cols-7 mb-1">
-          {WEEKDAYS.map(d => (
-            <div key={d} className="text-[9px] text-center text-gray-400 font-semibold py-1">{d}</div>
-          ))}
-        </div>
-        <div className="grid grid-cols-7">
-          {cells.map((date, i) => {
-            if (!date) return <div key={`e${i}`} />;
-            const start = isSameDay(date, range.start);
-            const end = isSameDay(date, range.end || (range.start && !range.end ? hoverDate : null));
-            const inRange = isInRange(date);
-            const isToday = isSameDay(date, today);
-            return (
-              <button
-                key={date.getTime()}
-                onClick={() => handleDayClick(date)}
-                onMouseEnter={() => range.start && !range.end && onHoverChange(date)}
-                onMouseLeave={() => onHoverChange(null)}
-                className={`w-8 h-8 mx-auto flex items-center justify-center text-[11px] font-medium rounded-lg transition-colors
-                  ${start || end
-                    ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 font-bold'
-                    : inRange
-                    ? 'bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200'
-                    : isToday
-                    ? 'ring-1 ring-inset ring-gray-400 text-gray-900 dark:text-slate-100'
-                    : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800'
-                  }`}
-              >
-                {date.getDate()}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
+//     return (
+//       <div>
+//         <p className="text-xs font-bold text-gray-800 dark:text-slate-100 mb-2.5 text-center">
+//           {MONTHS[month]} {year}
+//         </p>
+//         <div className="grid grid-cols-7 mb-1">
+//           {WEEKDAYS.map(d => (
+//             <div key={d} className="text-[9px] text-center text-gray-400 font-semibold py-1">{d}</div>
+//           ))}
+//         </div>
+//         <div className="grid grid-cols-7">
+//           {cells.map((date, i) => {
+//             if (!date) return <div key={`e${i}`} />;
+//             const start = isSameDay(date, range.start);
+//             const end = isSameDay(date, range.end || (range.start && !range.end ? hoverDate : null));
+//             const inRange = isInRange(date);
+//             const isToday = isSameDay(date, today);
+//             return (
+//               <button
+//                 key={date.getTime()}
+//                 onClick={() => handleDayClick(date)}
+//                 onMouseEnter={() => range.start && !range.end && onHoverChange(date)}
+//                 onMouseLeave={() => onHoverChange(null)}
+//                 className={`w-8 h-8 mx-auto flex items-center justify-center text-[11px] font-medium rounded-lg transition-colors
+//                   ${start || end
+//                     ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 font-bold'
+//                     : inRange
+//                     ? 'bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200'
+//                     : isToday
+//                     ? 'ring-1 ring-inset ring-gray-400 text-gray-900 dark:text-slate-100'
+//                     : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800'
+//                   }`}
+//               >
+//                 {date.getDate()}
+//               </button>
+//             );
+//           })}
+//         </div>
+//       </div>
+//     );
+//   };
 
-  const prevMonth = () => onCalViewChange(prev => {
-    const m = prev.month === 0 ? 11 : prev.month - 1;
-    const y = prev.month === 0 ? prev.year - 1 : prev.year;
-    return { year: y, month: m };
-  });
-  const nextMonth = () => onCalViewChange(prev => {
-    const m = prev.month === 11 ? 0 : prev.month + 1;
-    const y = prev.month === 11 ? prev.year + 1 : prev.year;
-    return { year: y, month: m };
-  });
+//   const prevMonth = () => onCalViewChange(prev => {
+//     const m = prev.month === 0 ? 11 : prev.month - 1;
+//     const y = prev.month === 0 ? prev.year - 1 : prev.year;
+//     return { year: y, month: m };
+//   });
+//   const nextMonth = () => onCalViewChange(prev => {
+//     const m = prev.month === 11 ? 0 : prev.month + 1;
+//     const y = prev.month === 11 ? prev.year + 1 : prev.year;
+//     return { year: y, month: m };
+//   });
 
-  const nextCal = calViewMonth.month === 11
-    ? { year: calViewMonth.year + 1, month: 0 }
-    : { year: calViewMonth.year, month: calViewMonth.month + 1 };
+//   const nextCal = calViewMonth.month === 11
+//     ? { year: calViewMonth.year + 1, month: 0 }
+//     : { year: calViewMonth.year, month: calViewMonth.month + 1 };
 
-  const fmtDate = (d) => d ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+//   const fmtDate = (d) => d ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
 
-  return (
-    <div className="absolute top-full left-0 mt-2 z-50 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl p-4" style={{ minWidth: 520 }}>
-      {/* Quick presets */}
-      <div className="flex gap-1.5 mb-4">
-        {[
-          { key: 'thisWeek',  label: 'This week'  },
-          { key: 'lastWeek',  label: 'Last week'  },
-          { key: 'thisMonth', label: 'This month' },
-          { key: 'lastMonth', label: 'Last month' },
-        ].map(p => (
-          <button
-            key={p.key}
-            onClick={() => applyPreset(p.key)}
-            className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600 transition-colors"
-          >
-            {p.label}
-          </button>
-        ))}
-      </div>
+//   return (
+//     <div className="absolute top-full left-0 mt-2 z-50 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl p-4" style={{ minWidth: 520 }}>
+//       {/* Quick presets */}
+//       <div className="flex gap-1.5 mb-4">
+//         {[
+//           { key: 'thisWeek',  label: 'This week'  },
+//           { key: 'lastWeek',  label: 'Last week'  },
+//           { key: 'thisMonth', label: 'This month' },
+//           { key: 'lastMonth', label: 'Last month' },
+//         ].map(p => (
+//           <button
+//             key={p.key}
+//             onClick={() => applyPreset(p.key)}
+//             className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600 transition-colors"
+//           >
+//             {p.label}
+//           </button>
+//         ))}
+//       </div>
 
-      {/* Dual calendar */}
-      <div className="flex gap-5 mb-4">
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-1">
-            <button onClick={prevMonth} className="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-500 dark:text-slate-400 transition">
-              <i className="fa-solid fa-chevron-left text-[9px]" />
-            </button>
-            <span />
-          </div>
-          {renderMonth(calViewMonth.year, calViewMonth.month)}
-        </div>
-        <div className="w-px bg-gray-100 dark:bg-slate-800 self-stretch" />
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-1">
-            <span />
-            <button onClick={nextMonth} className="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-500 dark:text-slate-400 transition">
-              <i className="fa-solid fa-chevron-right text-[9px]" />
-            </button>
-          </div>
-          {renderMonth(nextCal.year, nextCal.month)}
-        </div>
-      </div>
+//       {/* Dual calendar */}
+//       <div className="flex gap-5 mb-4">
+//         <div className="flex-1">
+//           <div className="flex items-center justify-between mb-1">
+//             <button onClick={prevMonth} className="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-500 dark:text-slate-400 transition">
+//               <i className="fa-solid fa-chevron-left text-[9px]" />
+//             </button>
+//             <span />
+//           </div>
+//           {renderMonth(calViewMonth.year, calViewMonth.month)}
+//         </div>
+//         <div className="w-px bg-gray-100 dark:bg-slate-800 self-stretch" />
+//         <div className="flex-1">
+//           <div className="flex items-center justify-between mb-1">
+//             <span />
+//             <button onClick={nextMonth} className="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-500 dark:text-slate-400 transition">
+//               <i className="fa-solid fa-chevron-right text-[9px]" />
+//             </button>
+//           </div>
+//           {renderMonth(nextCal.year, nextCal.month)}
+//         </div>
+//       </div>
 
-      {/* Date range display */}
-      <div className="flex items-center gap-2 mb-4">
-        <div className="flex-1 px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs">
-          {range.start
-            ? <span className="text-gray-700 dark:text-slate-300 font-medium">{fmtDate(range.start)}</span>
-            : <span className="text-gray-400 dark:text-slate-500">Start date</span>}
-        </div>
-        <i className="fa-solid fa-arrow-right text-gray-300 dark:text-slate-600 text-[10px] flex-shrink-0" />
-        <div className="flex-1 px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs">
-          {range.end
-            ? <span className="text-gray-700 dark:text-slate-300 font-medium">{fmtDate(range.end)}</span>
-            : <span className="text-gray-400 dark:text-slate-500">End date</span>}
-        </div>
-      </div>
+//       {/* Date range display */}
+//       <div className="flex items-center gap-2 mb-4">
+//         <div className="flex-1 px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs">
+//           {range.start
+//             ? <span className="text-gray-700 dark:text-slate-300 font-medium">{fmtDate(range.start)}</span>
+//             : <span className="text-gray-400 dark:text-slate-500">Start date</span>}
+//         </div>
+//         <i className="fa-solid fa-arrow-right text-gray-300 dark:text-slate-600 text-[10px] flex-shrink-0" />
+//         <div className="flex-1 px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs">
+//           {range.end
+//             ? <span className="text-gray-700 dark:text-slate-300 font-medium">{fmtDate(range.end)}</span>
+//             : <span className="text-gray-400 dark:text-slate-500">End date</span>}
+//         </div>
+//       </div>
 
-      {/* Actions */}
-      <div className="flex items-center justify-between">
-        <button
-          onClick={onClose}
-          className="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={() => onUpdate(range)}
-          disabled={!range.start || !range.end}
-          className="px-5 py-2 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          Update
-        </button>
-      </div>
-    </div>
-  );
-};
+//       {/* Actions */}
+//       <div className="flex items-center justify-between">
+//         <button
+//           onClick={onClose}
+//           className="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+//         >
+//           Cancel
+//         </button>
+//         <button
+//           onClick={() => onUpdate(range)}
+//           disabled={!range.start || !range.end}
+//           className="px-5 py-2 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+//         >
+//           Update
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
 
 // ─── Compact Watchlist Card ───────────────────────────────────────────────────
 
@@ -410,8 +412,10 @@ const ProductViewPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState('');
   const [editDesc, setEditDesc] = useState('');
+  const [editPrice, setEditPrice] = useState('');
   const [savedName, setSavedName] = useState(null);
   const [savedDesc, setSavedDesc] = useState(null);
+  const [savedPrice, setSavedPrice] = useState(null);
 
   // Filter panel state
   const [filterOpen, setFilterOpen] = useState(false);
@@ -428,16 +432,7 @@ const ProductViewPage = () => {
     setInsightCategory('All');
   }, [activeWatchlistIdx]);
 
-  useEffect(() => {
-    if (!filterOpen) return;
-    const handler = (e) => {
-      if (filterRef.current && !filterRef.current.contains(e.target)) {
-        setFilterOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [filterOpen]);
+  useClickOutside(filterRef, filterOpen, () => setFilterOpen(false));
 
   const initialProduct = state?.product;
   const from = state?.from || -1;
@@ -627,6 +622,7 @@ const ProductViewPage = () => {
 
                 {isEditing ? (
                   <div className="space-y-3">
+                    <MarketplaceSyncBanner onGoToMarketplace={() => {}} />
                     <div>
                       <label className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1 block">Product Name</label>
                       <input
@@ -634,6 +630,15 @@ const ProductViewPage = () => {
                         value={editName}
                         onChange={e => setEditName(e.target.value)}
                         className="w-full px-3 py-2 text-sm font-bold text-gray-900 dark:text-slate-100 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-slate-600 transition"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1 block">Price</label>
+                      <input
+                        type="text"
+                        value={editPrice}
+                        onChange={e => setEditPrice(e.target.value)}
+                        className="w-40 px-3 py-2 text-sm font-bold text-gray-900 dark:text-slate-100 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-slate-600 transition"
                       />
                     </div>
                     <div>
@@ -647,7 +652,7 @@ const ProductViewPage = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => { setSavedName(editName); setSavedDesc(editDesc); setIsEditing(false); }}
+                        onClick={() => { setSavedName(editName); setSavedDesc(editDesc); setSavedPrice(editPrice); setIsEditing(false); }}
                         className="px-4 py-1.5 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition-colors"
                       >
                         Save
@@ -665,13 +670,21 @@ const ProductViewPage = () => {
                     <div className="flex items-center gap-2 mb-0.5">
                       <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100 leading-snug">{savedName || activeProduct.name}</h2>
                       <button
-                        onClick={() => { setEditName(savedName || activeProduct.name); setEditDesc(savedDesc || activeProduct.description || `${activeProduct.name} is one of your top-performing products, consistently driving strong revenue across channels. It maintains competitive pricing and healthy margin contribution relative to your catalog average. Recent demand signals indicate sustained buyer interest, with particular strength in repeat purchase behaviour. Monitor inventory velocity closely to avoid stockout risk during high-demand periods.`); setIsEditing(true); }}
+                        onClick={() => {
+                          setEditName(savedName || activeProduct.name);
+                          setEditDesc(savedDesc || activeProduct.description || `${activeProduct.name} is one of your top-performing products, consistently driving strong revenue across channels. It maintains competitive pricing and healthy margin contribution relative to your catalog average. Recent demand signals indicate sustained buyer interest, with particular strength in repeat purchase behaviour. Monitor inventory velocity closely to avoid stockout risk during high-demand periods.`);
+                          setEditPrice(savedPrice || activeProduct.price || activeProduct.sellingPrice || '$149.99');
+                          setIsEditing(true);
+                        }}
                         className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-lg text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
                         title="Edit"
                       >
                         <i className="fa-solid fa-pen text-[10px]" />
                       </button>
                     </div>
+                    <p className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-1">
+                      {savedPrice || activeProduct.price || activeProduct.sellingPrice || '$149.99'}
+                    </p>
                     <p className="text-[11px] text-gray-500 dark:text-slate-400 mb-3 font-mono">
                       SKU: {activeProduct.sku || activeProduct.watchlistItem?.sku || 'WH-PRO-2024'} · Realify Audio · Added Mar 14, 2026
                     </p>

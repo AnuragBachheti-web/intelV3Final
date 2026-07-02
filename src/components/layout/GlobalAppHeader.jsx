@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useFilterStore } from '../../store/useFilterStore';
 import { useHeaderScroll, notifyHeaderMeasured } from '../../hooks/useHeaderScroll';
 import { useSimulationStore } from '../../store/useSimulationStore';
+import useClickOutside from '../../hooks/useClickOutside';
 
 const CHANNEL_OPTS = [
   ['all', 'All Channels'],
@@ -58,15 +59,7 @@ const FilterPopover = ({ dateRange, setDateRange, category, setCategory, channel
   }, [open, pendingDate, pendingCategory, pendingChannel]);
 
   // Click-outside to close
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e) => {
-      if (btnRef.current?.contains(e.target) || panelRef.current?.contains(e.target)) return;
-      setOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [open]);
+  useClickOutside(panelRef, open, () => setOpen(false), btnRef);
 
   const toggleOpen = () => {
     if (!open) {

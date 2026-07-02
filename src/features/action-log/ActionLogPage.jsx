@@ -1,13 +1,14 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
+import useClickOutside from '../../hooks/useClickOutside';
 import {
   INSIGHTS_DATA,
   MARGIN_INSIGHTS_DATA,
   INVENTORY_INSIGHTS_DATA,
   ADS_INSIGHTS_DATA,
   CASH_INSIGHTS_DATA,
-} from '../intel/intelData';
+} from '../intel/shared/data/intelData';
 import { useActionStore } from '../../store/useActionStore';
 
 const ALL_STATUSES = ['CRITICAL', 'OPPORTUNITY', 'ALERT', 'REVIEW', 'MARKET', 'INSIGHT'];
@@ -117,14 +118,7 @@ const ActionLogPage = () => {
   const [appliedSort, setAppliedSort] = useState('date-desc');
   const filterRef = useRef(null);
 
-  useEffect(() => {
-    if (!filterOpen) return;
-    const handler = (e) => {
-      if (filterRef.current && !filterRef.current.contains(e.target)) setFilterOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [filterOpen]);
+  useClickOutside(filterRef, filterOpen, () => setFilterOpen(false));
 
   const openFilter = () => {
     setPendingStatus([...appliedStatus]);

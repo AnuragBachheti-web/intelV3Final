@@ -1,5 +1,4 @@
 import { useOnboardingStore } from "../store/useOnboardingStore";
-// import fullLogo from "../../../assets/fulllogo_Lightv2.png";
 import fullLogoDark from "../../../assets/fulllogo_Dark.png";
 
 const steps = [

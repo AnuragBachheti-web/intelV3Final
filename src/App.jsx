@@ -19,9 +19,9 @@ const HubsPage               = lazy(() => import("./features/hubs"));
 const DetailedViewPage       = lazy(() => import("./features/detailed-view/DetailedViewPage"));
 const ProductViewPage        = lazy(() => import("./features/product-view/ProductViewPage"));
 const IntelPage            = lazy(() => import("./features/intel"));
-const IntelInsightDetailPage = lazy(() => import("./features/intel/IntelInsightDetailPage"));
-const IntelSimulationPage  = lazy(() => import("./features/intel/IntelSimulationPage"));
-const IntelV2RollbackPage    = lazy(() => import("./features/intel/IntelV2RollbackPage"));
+const IntelInsightDetailPage = lazy(() => import("./features/intel/pages/IntelInsightDetailPage"));
+const IntelSimulationPage  = lazy(() => import("./features/intel/pages/IntelSimulationPage"));
+const IntelRollbackPage    = lazy(() => import("./features/intel/pages/IntelRollbackPage"));
 const ProductsListPage       = lazy(() => import("./features/products/ProductsListPage"));
 const NotificationsPage      = lazy(() => import("./features/notifications/NotificationsPage"));
 const ActionLogPage          = lazy(() => import("./features/action-log/ActionLogPage"));
@@ -58,7 +58,7 @@ function App() {
             <Route path="/intel/cash"      element={<IntelPage defaultTab="cash"      fullWidthInsights={true} />} />
             <Route path="/intel/insight/:intelTab/:idx" element={<IntelInsightDetailPage />} />
             <Route path="/intel/simulate"   element={<IntelSimulationPage />} />
-            <Route path="/intel/rollback"  element={<IntelV2RollbackPage />} />
+            <Route path="/intel/rollback"  element={<IntelRollbackPage />} />
 
             <Route path={ROUTES.HISTORY}              element={<History />} />
             <Route path={ROUTES.HISTORY_DETAIL}       element={<HistoryDetailPage />} />

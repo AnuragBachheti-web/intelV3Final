@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
+import useClickOutside from '../../hooks/useClickOutside';
 
 const MODELS = [
   { id: 'base',       label: 'Base',       locked: false },
@@ -14,16 +15,7 @@ const ModelSelector = ({ variant = 'default' }) => {
   const triggerRef                = useRef(null);
   const dropdownRef               = useRef(null);
 
-  useEffect(() => {
-    const close = (e) => {
-      if (
-        triggerRef.current && !triggerRef.current.contains(e.target) &&
-        !(dropdownRef.current && dropdownRef.current.contains(e.target))
-      ) setOpen(false);
-    };
-    document.addEventListener('mousedown', close);
-    return () => document.removeEventListener('mousedown', close);
-  }, []);
+  useClickOutside(triggerRef, open, () => setOpen(false), dropdownRef);
 
   const handleToggle = () => {
     if (!open && triggerRef.current) {
