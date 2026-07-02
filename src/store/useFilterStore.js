@@ -8,12 +8,14 @@ export const useFilterStore = create(
       country: 'all',
       category: 'all',
       channel: 'all',
+      products: [],
       searchQuery: '',
 
       setDateRange: (range) => set({ dateRange: range }),
       setCountry: (country) => set({ country }),
       setCategory: (category) => set({ category }),
       setChannel: (channel) => set({ channel }),
+      setProducts: (products) => set({ products }),
       setSearchQuery: (query) => set({ searchQuery: query }),
 
       resetFilters: () => set({
@@ -21,6 +23,7 @@ export const useFilterStore = create(
         country: 'all',
         category: 'all',
         channel: 'all',
+        products: [],
         searchQuery: ''
       })
     }),
@@ -31,6 +34,7 @@ export const useFilterStore = create(
         country: state.country,
         category: state.category,
         channel: state.channel,
+        products: state.products,
       }),
     }
   )

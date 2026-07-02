@@ -64,12 +64,12 @@ function OnboardingLayout() {
         />
       </div>
 
-      <div className="flex h-full pt-1.5">
-        {/* LEFT SIDEBAR (Sticky) */}
+      <div className="flex flex-col sm:flex-row h-full pt-1.5">
+        {/* LEFT SIDEBAR (Sticky) — becomes a compact top header on mobile, see Sidebar.jsx */}
         <Sidebar />
 
         {/* RIGHT CONTENT */}
-        <main className="flex-1 bg-white h-full flex flex-col px-12 py-10 lg:px-20 lg:py-14 overflow-y-auto custom-scrollbar">
+        <main className="flex-1 bg-white h-full flex flex-col px-5 py-6 sm:px-12 sm:py-10 lg:px-20 lg:py-14 overflow-y-auto custom-scrollbar">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}

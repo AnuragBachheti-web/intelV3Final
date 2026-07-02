@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MiniCalendar from '../../../detailed-view/components/MiniCalendar';
 import { V2_CAT_GRID } from '../../../detailed-view/detailedViewData';
 import { quickToRange, formatCalDate, v2CatLabel } from '../../../detailed-view/detailedViewUtils';
+import { PRODUCT_CATALOG } from '../../../../constants/productCatalog';
 
 // The Intel (AI View) page's filter dropdown — vertical section nav (date/channel/
 // category) plus the matching editor. Mirrors the Detailed View filter panel's look,
@@ -11,25 +12,35 @@ const IntelFilterPanel = ({ filters, style }) => {
   const {
     v2Section, setV2Section,
     pendingDate, setPendingDate, pendingCats, pendingChans,
+    pendingProducts, setPendingProducts, togglePendingProduct,
     pendingRangeStart, pendingRangeEnd, hoverDay, setHoverDay,
     setPendingRangeStart, setPendingRangeEnd, setPendingCats, setPendingChans,
     calViewYear, calViewMonth, calRightM, calRightY,
     prevCalMonth, nextCalMonth, handleDateClick,
     togglePendingCat, togglePendingChan,
     v2ChanGrid, v2ChanLabel,
-    setAppliedDate, setAppliedCats, setAppliedChans,
-    setDateRange, setCategory, setChannel,
+    setAppliedDate, setAppliedCats, setAppliedChans, setAppliedProducts,
+    setDateRange, setCategory, setChannel, setProducts,
     setV2FilterOpen, handleApplyV2Filter,
   } = filters;
 
+  const [productSearch, setProductSearch] = useState('');
+
   const onDateHover = (date) => { if (pendingRangeStart && !pendingRangeEnd) setHoverDay(date); };
+
+  const filteredProducts = PRODUCT_CATALOG.filter(p =>
+    p.name.toLowerCase().includes(productSearch.toLowerCase())
+  );
+  const productLabel = pendingProducts.length
+    ? `${pendingProducts.length} Product${pendingProducts.length > 1 ? 's' : ''}`
+    : 'All Products';
 
   return (
     <div
       className="fixed bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl z-[9999] w-[580px] overflow-hidden"
       style={style}
     >
-      <div className="flex" style={{ minHeight: '300px' }}>
+      <div className="flex" style={{ minHeight: '300px', maxHeight: '300px' }}>
 
         {/* LEFT: Vertical nav */}
         <div className="w-[155px] flex-shrink-0 border-r border-gray-100 dark:border-slate-800 p-3 flex flex-col gap-1">
@@ -37,6 +48,7 @@ const IntelFilterPanel = ({ filters, style }) => {
             { key: 'date', label: 'Select Date' },
             { key: 'channel', label: 'All Channels' },
             { key: 'category', label: 'All Categories' },
+            { key: 'product', label: productLabel },
           ].map(sec => (
             <button
               key={sec.key}
@@ -172,6 +184,63 @@ const IntelFilterPanel = ({ filters, style }) => {
             </div>
           )}
 
+          {/* ── Product section ── */}
+          {v2Section === 'product' && (
+            <div className="flex-1 flex flex-col p-4 gap-3 min-h-0">
+              <div className="relative">
+                <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-xs" />
+                <input
+                  type="text"
+                  value={productSearch}
+                  onChange={(e) => setProductSearch(e.target.value)}
+                  placeholder="Search products..."
+                  className="w-full pl-8 pr-3 py-2 text-xs bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:border-gray-300 dark:focus:border-slate-600 text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 transition-colors"
+                />
+              </div>
+
+              <div className="flex items-center justify-between px-0.5">
+                <span className="text-[11px] font-medium text-gray-400 dark:text-slate-500">
+                  {pendingProducts.length} selected
+                </span>
+                <button
+                  onClick={() => setPendingProducts(
+                    pendingProducts.length === filteredProducts.length ? [] : filteredProducts.map(p => p.id)
+                  )}
+                  className="text-[11px] font-semibold text-gray-600 dark:text-slate-300 hover:underline"
+                >
+                  {pendingProducts.length === filteredProducts.length && filteredProducts.length > 0 ? 'Clear all' : 'Select all'}
+                </button>
+              </div>
+
+              <div className="flex-1 min-h-0 overflow-y-auto pr-1">
+                <div className="grid grid-cols-2 gap-x-2 gap-y-0.5">
+                  {filteredProducts.map(p => {
+                    const checked = pendingProducts.includes(p.id);
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => togglePendingProduct(p.id)}
+                        className="flex items-start gap-2.5 w-full px-2.5 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/40 text-left transition-colors min-w-0"
+                      >
+                        <div className={`w-4 h-4 mt-0.5 rounded flex items-center justify-center flex-shrink-0 border-2 transition-colors ${
+                          checked ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
+                        }`}>
+                          {checked && <i className="fa-solid fa-check text-[8px] text-white dark:text-gray-900" />}
+                        </div>
+                        <span className={`text-sm leading-snug break-words min-w-0 ${checked ? 'font-semibold text-gray-900 dark:text-white' : 'text-gray-700 dark:text-slate-300'}`}>
+                          {p.name}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                {filteredProducts.length === 0 && (
+                  <p className="text-xs text-gray-400 dark:text-slate-500 text-center py-6">No products found</p>
+                )}
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
 
@@ -182,12 +251,15 @@ const IntelFilterPanel = ({ filters, style }) => {
             setPendingDate('last-7-days');
             setPendingCats([]);
             setPendingChans([]);
+            setPendingProducts([]);
             setAppliedDate(null);
             setAppliedCats([]);
             setAppliedChans([]);
+            setAppliedProducts([]);
             setDateRange(null);
             setCategory('all');
             setChannel('all');
+            setProducts([]);
             setV2FilterOpen(false);
           }}
           className="px-5 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-red-500 dark:hover:text-red-400 transition"

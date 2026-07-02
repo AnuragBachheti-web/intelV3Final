@@ -473,7 +473,7 @@ const GlobalAppHeader = ({
                   placeholder="Search products, SKUs, or customers..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-[7px] text-xs text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 outline-none transition-all"
+                  className="w-full pl-9 pr-4 py-[7px] text-xs bg-transparent text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 outline-none transition-all"
                 />
               </div>
             ) : (

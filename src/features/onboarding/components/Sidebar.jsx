@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { useOnboardingStore } from "../store/useOnboardingStore";
 import fullLogoDark from "../../../assets/fulllogo_Dark.png";
 
@@ -31,7 +32,44 @@ function Sidebar() {
   const completedCount = Math.max(currentStep - 1, 0);
 
   return (
-    <div className="w-[300px] min-w-[260px] bg-white border-r border-gray-200 px-8 py-10 flex flex-col justify-between h-full overflow-y-auto custom-scrollbar">
+    <>
+      {/* MOBILE — compact logo + horizontal step indicator (hidden sm and up) */}
+      <div className="sm:hidden px-5 pt-5 pb-4 border-b border-gray-100">
+        <img src={fullLogoDark} alt="Realify" className="h-6 object-contain mb-5" />
+        <p className="text-center text-xs font-semibold text-gray-400 tracking-wide mb-3">
+          Step {currentStep} of {steps.length}
+        </p>
+        <div className="flex items-center">
+          {steps.map((step, index) => {
+            const isActive = currentStep === step.num;
+            const isCompleted = currentStep > step.num;
+            return (
+              <Fragment key={step.num}>
+                <div
+                  onClick={() => isCompleted && setStep(step.num)}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold transition-colors ${
+                    isActive
+                      ? 'bg-gray-900 text-white'
+                      : isCompleted
+                        ? 'bg-emerald-500 text-white cursor-pointer'
+                        : 'bg-gray-100 text-gray-400'
+                  }`}
+                >
+                  {isCompleted
+                    ? <i className="fa-solid fa-check text-[10px]" />
+                    : step.num}
+                </div>
+                {index < steps.length - 1 && (
+                  <div className={`flex-1 h-px mx-1.5 ${isCompleted ? 'bg-emerald-300' : 'bg-gray-200'}`} />
+                )}
+              </Fragment>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* DESKTOP/TABLET — full sidebar with step descriptions (unchanged, hidden below sm) */}
+      <div className="hidden sm:flex w-[300px] min-w-[260px] bg-white border-r border-gray-200 px-8 py-10 flex-col justify-between h-full overflow-y-auto custom-scrollbar">
       <div>
         {/* Logo */}
         <div className="mb-6">
@@ -103,7 +141,8 @@ function Sidebar() {
           <span>Help Center</span>
         </button>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

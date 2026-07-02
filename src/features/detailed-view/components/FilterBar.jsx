@@ -8,8 +8,8 @@ const FilterBar = ({ filters }) => {
   const {
     v2FilterOpen, handleOpenV2Filter, filterPanelPos,
     v2FilterRef, filterBtnRef, chanDropRef, chanDropOpen, setChanDropOpen,
-    appliedDate, appliedCats, appliedChans,
-    removeAppliedDate, removeAppliedCats, removeAppliedChan,
+    appliedDate, appliedCats, appliedChans, appliedProducts,
+    removeAppliedDate, removeAppliedCats, removeAppliedChan, removeAppliedProducts,
     v2ChanLabel,
   } = filters;
 
@@ -78,6 +78,15 @@ const FilterBar = ({ filters }) => {
             </div>
           )}
         </div>
+      )}
+
+      {appliedProducts.length > 0 && (
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-full text-xs font-medium text-gray-700 dark:text-slate-300 shadow-sm">
+          {appliedProducts.length} Product{appliedProducts.length > 1 ? 's' : ''}
+          <button onClick={removeAppliedProducts} className="text-gray-400 hover:text-gray-700 dark:hover:text-slate-200 ml-0.5 transition">
+            <i className="fa-solid fa-xmark text-[9px]" />
+          </button>
+        </span>
       )}
 
       {v2FilterOpen && <FilterPanel filters={filters} style={{ top: filterPanelPos.top, right: filterPanelPos.right }} />}

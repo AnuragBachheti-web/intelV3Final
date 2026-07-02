@@ -3,47 +3,106 @@ import ReactDOM from 'react-dom';
 import useClickOutside from '../../hooks/useClickOutside';
 
 const MODELS = [
-  { id: 'base',       label: 'Base',       locked: false },
-  { id: 'pro',        label: 'Pro',        locked: true  },
-  { id: 'enterprise', label: 'Enterprise', locked: true  },
+  { id: 'base',       label: 'Base',       locked: false, icon: 'fa-solid fa-star',     tagline: 'Great for everyday research' },
+  { id: 'pro',        label: 'Pro',        locked: true,  icon: 'fa-solid fa-bolt',      tagline: 'Deeper insights & priority speed' },
+  { id: 'enterprise', label: 'Enterprise', locked: true,  icon: 'fa-solid fa-building',  tagline: 'Custom limits, SSO & dedicated support' },
 ];
 
 const ModelSelector = ({ variant = 'default' }) => {
   const [open, setOpen]           = useState(false);
   const [selected, setSelected]   = useState(MODELS.find(m => !m.locked) || MODELS[0]);
-  const [dropdownPos, setPos]     = useState({ bottom: 0, left: 0 });
+  const [dropdownPos, setPos]     = useState({ top: 0, bottom: 0, left: 0 });
   const triggerRef                = useRef(null);
   const dropdownRef               = useRef(null);
+  const isTopbar                  = variant === 'topbar';
 
   useClickOutside(triggerRef, open, () => setOpen(false), dropdownRef);
 
   const handleToggle = () => {
     if (!open && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
-      const dropdownWidth = 224;
+      const dropdownWidth = isTopbar ? 288 : 224;
       const safeLeft = Math.min(
         window.innerWidth - dropdownWidth - 8,
-        Math.max(8, rect.right - dropdownWidth)
+        Math.max(8, rect.left)
       );
-      setPos({ bottom: window.innerHeight - rect.top + 8, left: safeLeft });
+      if (isTopbar) {
+        setPos({ top: rect.bottom + 8, left: safeLeft });
+      } else {
+        setPos({ bottom: window.innerHeight - rect.top + 8, left: safeLeft });
+      }
     }
     setOpen(v => !v);
   };
 
-  const triggerClass = variant === 'compact'
+  const triggerClass = isTopbar
+    ? 'flex items-center gap-1.5 text-[15px] font-normal text-gray-900 dark:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-800 px-2.5 py-1.5 rounded-lg transition-colors'
+    : variant === 'compact'
     ? 'flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors whitespace-nowrap'
     : 'flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 rounded-full border border-transparent hover:border-gray-200 dark:hover:border-slate-600 transition-all';
 
   return (
     <div ref={triggerRef} className="relative">
       <button onClick={handleToggle} className={triggerClass}>
-        <span className="text-gray-400 dark:text-slate-500 font-medium">Model</span>
-        <span className="text-gray-300 dark:text-slate-600 mx-0.5">|</span>
-        <span className="text-gray-700 dark:text-slate-200 font-semibold">{selected.label}</span>
-        <i className="fa-solid fa-chevron-down text-[8px]"></i>
+        {isTopbar ? (
+          <span>Realify {selected.label} Model</span>
+        ) : (
+          <>
+            <span className="text-gray-400 dark:text-slate-500 font-medium">Model</span>
+            <span className="text-gray-300 dark:text-slate-600 mx-0.5">|</span>
+            <span className="text-gray-700 dark:text-slate-200 font-semibold">{selected.label}</span>
+          </>
+        )}
+        <i className={`fa-solid fa-chevron-down ${isTopbar ? 'text-[10px] text-gray-400 dark:text-slate-500' : 'text-[8px]'}`}></i>
       </button>
 
-      {open && ReactDOM.createPortal(
+      {open && isTopbar && ReactDOM.createPortal(
+        <div
+          ref={dropdownRef}
+          style={{ position: 'fixed', top: dropdownPos.top, left: dropdownPos.left, zIndex: 99999 }}
+          className="w-72 bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-slate-700 rounded-2xl shadow-2xl py-2"
+        >
+          {MODELS.map((model) => {
+            const isSelected = selected.id === model.id && !model.locked;
+            return (
+              <div
+                key={model.id}
+                className="flex items-center gap-3 px-3 py-2.5 mx-1 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800/60 transition-colors"
+              >
+                <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300">
+                  <i className={`${model.icon} text-xs`}></i>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-normal text-gray-900 dark:text-slate-100 leading-snug">
+                    {model.label}
+                  </p>
+                  <p className="text-[11px] text-gray-400 dark:text-slate-500 leading-snug truncate">
+                    {model.tagline}
+                  </p>
+                </div>
+                {model.locked ? (
+                  <button
+                    onClick={() => setOpen(false)}
+                    className="flex-shrink-0 px-3 py-1.5 text-xs font-bold text-white bg-brand hover:bg-brand-hover dark:text-gray-900 rounded-lg transition-colors"
+                  >
+                    Upgrade
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => { setSelected(model); setOpen(false); }}
+                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center"
+                  >
+                    {isSelected && <i className="fa-solid fa-check text-gray-700 dark:text-slate-300 text-xs"></i>}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>,
+        document.body
+      )}
+
+      {open && !isTopbar && ReactDOM.createPortal(
         <div
           ref={dropdownRef}
           style={{ position: 'fixed', bottom: dropdownPos.bottom, left: dropdownPos.left, zIndex: 99999 }}

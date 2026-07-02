@@ -65,12 +65,14 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   });
   const [pendingCats,   setPendingCats]   = useState([]);
   const [pendingChans,  setPendingChans]  = useState([]);
+  const [pendingProducts, setPendingProducts] = useState([]);
   const [appliedDate,   setAppliedDate]   = useState(() => {
     const d = useFilterStore.getState().dateRange;
     return (d && d !== 'all') ? d : null;
   });
   const [appliedCats,   setAppliedCats]   = useState([]);
   const [appliedChans,  setAppliedChans]  = useState([]);
+  const [appliedProducts, setAppliedProducts] = useState([]);
   const [chanDropOpen,  setChanDropOpen]  = useState(false);
   const [pendingRangeStart, setPendingRangeStart] = useState(null);
   const [pendingRangeEnd,   setPendingRangeEnd]   = useState(null);
@@ -80,7 +82,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const v2FilterRef = useRef(null);
   const chanDropRef  = useRef(null);
 
-  const { setDateRange, category, setCategory, setChannel } = useFilterStore();
+  const { setDateRange, category, setCategory, setChannel, setProducts } = useFilterStore();
   const navigate = useNavigate();
   const { goToProduct, findWatchlistItem, buildFallbackWatchlistItem, buildAnalyticsKpiGroups } = useProductNavigation();
 
@@ -271,6 +273,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     setPendingDate(appliedDate);
     setPendingCats([...appliedCats]);
     setPendingChans([...appliedChans]);
+    setPendingProducts([...appliedProducts]);
     setV2Section('date');
     if (appliedDate) {
       const r = quickToRange(appliedDate === 'custom' ? 'last-30-days' : appliedDate);
@@ -292,9 +295,11 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     setAppliedDate(pendingDate);
     setAppliedCats([...pendingCats]);
     setAppliedChans([...pendingChans]);
+    setAppliedProducts([...pendingProducts]);
     setDateRange(pendingDate);
     setCategory(pendingCats.length === 1 ? pendingCats[0] : 'all');
     setChannel(pendingChans.length === 1 ? pendingChans[0] : 'all');
+    setProducts([...pendingProducts]);
     setV2FilterOpen(false);
   };
   const togglePendingCat = (cat) => {
@@ -303,6 +308,8 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   };
   const togglePendingChan = (ch) =>
     setPendingChans(prev => prev.includes(ch) ? prev.filter(c => c !== ch) : [...prev, ch]);
+  const togglePendingProduct = (id) =>
+    setPendingProducts(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]);
   const removeAppliedChan = (ch) => {
     const next = appliedChans.filter(c => c !== ch);
     setAppliedChans(next);
@@ -474,20 +481,34 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
               </div>
             )}
 
+            {/* Product chip — count only, since names would be too long to list */}
+            {appliedProducts.length > 0 && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-full text-xs font-medium text-gray-700 dark:text-slate-300 shadow-sm">
+                {appliedProducts.length} Product{appliedProducts.length > 1 ? 's' : ''}
+                <button
+                  onClick={() => { setAppliedProducts([]); setProducts([]); }}
+                  className="text-gray-400 hover:text-gray-700 dark:hover:text-slate-200 ml-0.5 transition"
+                >
+                  <i className="fa-solid fa-xmark text-[9px]" />
+                </button>
+              </span>
+            )}
+
             {/* Filter panel — vertical sidebar + content (fixed so it works from both header and content) */}
             {v2FilterOpen && (
               <IntelFilterPanel
                 filters={{
                   v2Section, setV2Section,
                   pendingDate, setPendingDate, pendingCats, setPendingCats, pendingChans, setPendingChans,
+                  pendingProducts, setPendingProducts, togglePendingProduct,
                   pendingRangeStart, pendingRangeEnd, hoverDay, setHoverDay,
                   setPendingRangeStart, setPendingRangeEnd,
                   calViewYear, calViewMonth, calRightM, calRightY,
                   prevCalMonth, nextCalMonth, handleDateClick,
                   togglePendingCat, togglePendingChan,
                   v2ChanGrid, v2ChanLabel,
-                  setAppliedDate, setAppliedCats, setAppliedChans,
-                  setDateRange, setCategory, setChannel,
+                  setAppliedDate, setAppliedCats, setAppliedChans, setAppliedProducts,
+                  setDateRange, setCategory, setChannel, setProducts,
                   setV2FilterOpen, handleApplyV2Filter,
                 }}
                 style={{ top: filterPanelPos.top, right: filterPanelPos.right }}
@@ -588,7 +609,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         isOpen={kpiDetailModal.isOpen}
         onClose={kpiDetailModal.close}
         stat={kpiDetailModal.data}
-        filterContext={{ dateRange: appliedDate, categories: appliedCats, channels: appliedChans }}
+        filterContext={{ dateRange: appliedDate, categories: appliedCats, channels: appliedChans, products: appliedProducts }}
         tab={activeIntelTab}
       />
     </DashboardLayout>

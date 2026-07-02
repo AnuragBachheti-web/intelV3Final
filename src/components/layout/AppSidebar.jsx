@@ -14,6 +14,8 @@ import dark_latest from '../../assets/dark_latest.png';
 import { historyItems } from '../../features/history/historyData';
 import { rolePermissions } from "../../config/RolePermission";
 import useClickOutside from '../../hooks/useClickOutside';
+import { usePinnedChatsStore } from '../../store/usePinnedChatsStore';
+import { truncateAtWordBoundary } from '../../utils/formatters';
 
 const EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
 const DUR = '200ms';
@@ -51,6 +53,8 @@ const HistorySectionContent = () => {
   const [fixedTooltip, setFixedTooltip] = useState(null);
   const [historySearch, setHistorySearch] = useState('');
   const groupByRef = useRef(null);
+  const pinnedIds = usePinnedChatsStore(s => s.pinnedIds);
+  const togglePinned = usePinnedChatsStore(s => s.togglePinned);
 
   useClickOutside(groupByRef, groupByOpen, () => setGroupByOpen(false));
 
@@ -61,9 +65,92 @@ const HistorySectionContent = () => {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  const visibleHistory = RECENT_HISTORY.filter(h => !historySearch || h.label.toLowerCase().includes(historySearch.toLowerCase()));
+  const pinnedItems = visibleHistory.filter(h => pinnedIds.includes(h.id));
+  const recentItems = visibleHistory.filter(h => !pinnedIds.includes(h.id));
+
+  const renderHistoryRow = (h) => {
+    const pinned = pinnedIds.includes(h.id);
+    return (
+      <div
+        key={h.id}
+        className="relative group/hist flex items-center rounded hover:bg-gray-50 dark:hover:bg-slate-800/30 transition-colors"
+        onMouseEnter={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          setFixedTooltip({ label: h.label, top: rect.top + rect.height / 2, left: rect.right + 8 });
+        }}
+        onMouseLeave={() => setFixedTooltip(null)}
+      >
+        <Link
+          to={ROUTES.HISTORY_DETAIL}
+          state={{ chatId: h.id }}
+          className="flex-1 block px-2 py-1.5 text-xs text-gray-900 dark:text-slate-200 hover:text-gray-700 dark:hover:text-slate-300 overflow-hidden whitespace-nowrap min-w-0 font-normal"
+        >
+          {truncateAtWordBoundary(h.label, 20)}
+        </Link>
+        <button
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); togglePinned(h.id); }}
+          title={pinned ? 'Unpin chat' : 'Pin chat'}
+          className={`w-5 h-5 flex-shrink-0 flex items-center justify-center rounded transition-colors ${
+            pinned
+              ? 'text-brand opacity-100'
+              : 'text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 opacity-0 group-hover/hist:opacity-100'
+          } ${activeMenuId === h.id ? 'opacity-100' : ''}`}
+        >
+          <i className="fa-solid fa-thumbtack text-[9px]" />
+        </button>
+        <div className={`relative flex-shrink-0 transition-opacity pr-1 ${activeMenuId === h.id ? 'opacity-100' : 'opacity-0 group-hover/hist:opacity-100'}`}>
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setActiveMenuId(activeMenuId === h.id ? null : h.id); }}
+            className="w-5 h-5 flex items-center justify-center rounded text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+          >
+            <i className="fa-solid fa-ellipsis text-[9px]" />
+          </button>
+          {activeMenuId === h.id && (
+            <div onMouseDown={e => e.stopPropagation()} className="absolute right-0 top-full mt-0.5 w-28 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-[9999] overflow-hidden py-1">
+              {[
+                { icon: 'fa-star', label: 'Star' },
+                { icon: 'fa-pen', label: 'Rename' },
+                { icon: 'fa-trash', label: 'Delete', danger: true },
+              ].map(action => (
+                <button
+                  key={action.label}
+                  className={`w-full flex items-center gap-2 px-3 py-1.5 text-[11px] font-medium hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors ${action.danger ? 'text-red-500 dark:text-red-400' : 'text-gray-700 dark:text-slate-300'}`}
+                >
+                  <i className={`fa-solid ${action.icon} text-[9px]`} />
+                  {action.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="w-full mt-2 mb-1 px-1">
+        {/* Search bar */}
+        <div className="relative mb-1.5 px-0.5">
+          <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-[9px] pointer-events-none" />
+          <input
+            type="text"
+            value={historySearch}
+            onChange={(e) => setHistorySearch(e.target.value)}
+            placeholder="Search..."
+            className="w-full pl-7 pr-3 py-1.5 text-[11px] bg-gray-50 dark:bg-slate-800/60 border border-gray-100 dark:border-slate-800 rounded-lg text-gray-700 dark:text-slate-300 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-gray-300 dark:focus:border-slate-600 transition-colors"
+          />
+        </div>
+
+        {/* Pinned list */}
+        {pinnedItems.length > 0 && (
+          <div className="mb-2">
+            <p className="px-1.5 mb-1 text-xs font-medium text-gray-400 dark:text-slate-500">Pinned</p>
+            {pinnedItems.map(renderHistoryRow)}
+          </div>
+        )}
+
         {/* Header: Recents toggle + Group by icon */}
         <div className="group/recents flex items-center justify-between px-1.5 mb-1.5">
           <button
@@ -100,63 +187,8 @@ const HistorySectionContent = () => {
           </div>
         </div>
 
-        {/* Search bar */}
-        <div className="relative mb-1.5 px-0.5">
-          <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-[9px] pointer-events-none" />
-          <input
-            type="text"
-            value={historySearch}
-            onChange={(e) => setHistorySearch(e.target.value)}
-            placeholder="Search..."
-            className="w-full pl-7 pr-3 py-1.5 text-[11px] bg-gray-50 dark:bg-slate-800/60 border border-gray-100 dark:border-slate-800 rounded-lg text-gray-700 dark:text-slate-300 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-gray-300 dark:focus:border-slate-600 transition-colors"
-          />
-        </div>
-
         {/* History list */}
-        {historyVisible && RECENT_HISTORY.filter(h => !historySearch || h.label.toLowerCase().includes(historySearch.toLowerCase())).map((h) => (
-          <div
-            key={h.id}
-            className="relative group/hist flex items-center rounded hover:bg-gray-50 dark:hover:bg-slate-800/30 transition-colors"
-            onMouseEnter={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              setFixedTooltip({ label: h.label, top: rect.top + rect.height / 2, left: rect.right + 8 });
-            }}
-            onMouseLeave={() => setFixedTooltip(null)}
-          >
-            <Link
-              to={ROUTES.HISTORY_DETAIL}
-              state={{ chatId: h.id }}
-              className="flex-1 block px-2 py-1.5 text-xs text-gray-900 dark:text-slate-200 hover:text-gray-700 dark:hover:text-slate-300 truncate min-w-0 font-normal"
-            >
-              {h.label}
-            </Link>
-            <div className={`relative flex-shrink-0 transition-opacity pr-1 ${activeMenuId === h.id ? 'opacity-100' : 'opacity-0 group-hover/hist:opacity-100'}`}>
-              <button
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setActiveMenuId(activeMenuId === h.id ? null : h.id); }}
-                className="w-5 h-5 flex items-center justify-center rounded text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-              >
-                <i className="fa-solid fa-ellipsis text-[9px]" />
-              </button>
-              {activeMenuId === h.id && (
-                <div onMouseDown={e => e.stopPropagation()} className="absolute right-0 top-full mt-0.5 w-28 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-[9999] overflow-hidden py-1">
-                  {[
-                    { icon: 'fa-star', label: 'Star' },
-                    { icon: 'fa-pen', label: 'Rename' },
-                    { icon: 'fa-trash', label: 'Delete', danger: true },
-                  ].map(action => (
-                    <button
-                      key={action.label}
-                      className={`w-full flex items-center gap-2 px-3 py-1.5 text-[11px] font-medium hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors ${action.danger ? 'text-red-500 dark:text-red-400' : 'text-gray-700 dark:text-slate-300'}`}
-                    >
-                      <i className={`fa-solid ${action.icon} text-[9px]`} />
-                      {action.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
+        {historyVisible && recentItems.map(renderHistoryRow)}
 
         {/* View All History */}
         <div className="mt-3 px-1">

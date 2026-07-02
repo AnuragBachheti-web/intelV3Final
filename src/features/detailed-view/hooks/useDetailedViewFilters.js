@@ -12,9 +12,11 @@ const useDetailedViewFilters = (isScrolled) => {
   const [pendingDate, setPendingDate] = useState(null);
   const [pendingCats, setPendingCats] = useState([]);
   const [pendingChans, setPendingChans] = useState([]);
+  const [pendingProducts, setPendingProducts] = useState([]);
   const [appliedDate, setAppliedDate] = useState(() => localStorage.getItem('dv_filter_date') || null);
   const [appliedCats, setAppliedCats] = useState([]);
   const [appliedChans, setAppliedChans] = useState([]);
+  const [appliedProducts, setAppliedProducts] = useState([]);
   const [chanDropOpen, setChanDropOpen] = useState(false);
   const [pendingRangeStart, setPendingRangeStart] = useState(null);
   const [pendingRangeEnd, setPendingRangeEnd] = useState(null);
@@ -28,7 +30,7 @@ const useDetailedViewFilters = (isScrolled) => {
   const filterBtnRef = useRef(null);
   const compactFilterRef = useRef(null);
 
-  const { setDateRange, setCategory, setChannel } = useFilterStore();
+  const { setDateRange, setCategory, setChannel, setProducts } = useFilterStore();
 
   useClickOutside(v2FilterRef, v2FilterOpen, () => setV2FilterOpen(false));
   useClickOutside(chanDropRef, chanDropOpen, () => setChanDropOpen(false));
@@ -83,6 +85,7 @@ const useDetailedViewFilters = (isScrolled) => {
     setPendingDate(appliedDate);
     setPendingCats([...appliedCats]);
     setPendingChans([...appliedChans]);
+    setPendingProducts([...appliedProducts]);
     setV2Section('date');
     if (appliedDate) {
       const r = quickToRange(appliedDate === 'custom' ? 'last-30-days' : appliedDate);
@@ -104,9 +107,11 @@ const useDetailedViewFilters = (isScrolled) => {
     else localStorage.removeItem('dv_filter_date');
     setAppliedCats([...pendingCats]);
     setAppliedChans([...pendingChans]);
+    setAppliedProducts([...pendingProducts]);
     setDateRange(pendingDate);
     setCategory(pendingCats.length === 1 ? pendingCats[0] : 'all');
     setChannel(pendingChans.length === 1 ? pendingChans[0] : 'all');
+    setProducts([...pendingProducts]);
     setV2FilterOpen(false);
   };
   const togglePendingCat = (cat) => {
@@ -116,6 +121,8 @@ const useDetailedViewFilters = (isScrolled) => {
   const togglePendingChan = (ch) =>
     setPendingChans(prev => prev.includes(ch) ? prev.filter(c => c !== ch) : [...prev, ch]);
   const clearPendingChans = () => setPendingChans([]);
+  const togglePendingProduct = (id) =>
+    setPendingProducts(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]);
   const removeAppliedChan = (ch) => {
     const next = appliedChans.filter(c => c !== ch);
     setAppliedChans(next);
@@ -123,12 +130,14 @@ const useDetailedViewFilters = (isScrolled) => {
   };
   const removeAppliedDate = () => { setAppliedDate(null); setDateRange(null); localStorage.removeItem('dv_filter_date'); };
   const removeAppliedCats = () => { setAppliedCats([]); setCategory('all'); };
+  const removeAppliedProducts = () => { setAppliedProducts([]); setProducts([]); };
 
   return {
     v2FilterOpen, setV2FilterOpen, v2Section, setV2Section,
     pendingDate, setPendingDate, pendingCats, pendingChans,
+    pendingProducts, setPendingProducts,
     setPendingRangeStart, setPendingRangeEnd,
-    appliedDate, appliedCats, appliedChans,
+    appliedDate, appliedCats, appliedChans, appliedProducts,
     chanDropOpen, setChanDropOpen,
     pendingRangeStart, pendingRangeEnd, hoverDay, setHoverDay,
     calViewYear, calViewMonth, calRightM, calRightY,
@@ -137,7 +146,8 @@ const useDetailedViewFilters = (isScrolled) => {
     v2ChanGrid, v2ChanLabel,
     prevCalMonth, nextCalMonth, handleDateClick,
     handleOpenV2Filter, handleApplyV2Filter,
-    togglePendingCat, togglePendingChan, clearPendingChans, removeAppliedChan, removeAppliedDate, removeAppliedCats,
+    togglePendingCat, togglePendingChan, clearPendingChans, togglePendingProduct,
+    removeAppliedChan, removeAppliedDate, removeAppliedCats, removeAppliedProducts,
   };
 };
 

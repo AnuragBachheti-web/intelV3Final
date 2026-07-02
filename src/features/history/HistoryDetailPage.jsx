@@ -3,6 +3,8 @@ import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import ChatDetailView from './components/ChatDetailView';
 import ModelSelector from '../../components/common/ModelSelector';
+import ChatOptionsMenu from './components/ChatOptionsMenu';
+import ShareChatModal from './components/ShareChatModal';
 import { historyItems } from './historyData';
 
 const allItems = [
@@ -15,6 +17,7 @@ const HistoryDetailPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState('');
+  const [shareOpen, setShareOpen] = useState(false);
 
   const chatId = location.state?.chatId;
   const chat = chatId ? allItems.find(i => i.id === chatId) : null;
@@ -38,6 +41,21 @@ const HistoryDetailPage = () => {
     >
       <div className="flex h-full overflow-hidden">
         <div className="flex flex-col flex-1 min-h-0">
+
+          {/* Chat toolbar: model selector (left) + share / options (right) */}
+          <div className="shrink-0 flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-gray-100 dark:border-slate-800">
+            <ModelSelector variant="topbar" />
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setShareOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+              >
+                <i className="fa-solid fa-share-nodes text-xs"></i>
+                Share
+              </button>
+              <ChatOptionsMenu chatId={chat.id} />
+            </div>
+          </div>
 
           {/* Scrollable chat messages */}
           <div className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 min-h-0">
@@ -93,6 +111,8 @@ const HistoryDetailPage = () => {
           </div>
         </div>
       </div>
+
+      <ShareChatModal isOpen={shareOpen} onClose={() => setShareOpen(false)} />
     </DashboardLayout>
   );
 };
