@@ -5,6 +5,8 @@ import { useHeaderScroll, notifyHeaderMeasured } from '../../hooks/useHeaderScro
 import { useSimulationStore } from '../../store/useSimulationStore';
 import useClickOutside from '../../hooks/useClickOutside';
 import SelectInput from '../ui/SelectInput';
+import white_latest from '../../assets/white_latest.png';
+import dark_latest from '../../assets/dark_latest.png';
 
 const CHANNEL_OPTS = [
   ['all', 'All Channels'],
@@ -290,6 +292,16 @@ const FilterPopover = ({ dateRange, setDateRange, category, setCategory, channel
 
 const TOOLBAR = { compressed: 64, expanded: 84 };
 
+const TOOLBAR_MARKETPLACE_PLATFORMS = [
+  { id: 'amazon',  icon: 'fa-amazon',  color: 'text-orange-500' },
+  { id: 'shopify', icon: 'fa-shopify',  color: 'text-green-500'  },
+];
+const FULL_MARKETPLACE_PLATFORMS = [
+  { id: 'amazon',  icon: 'fa-amazon',       color: 'text-orange-500' },
+  { id: 'shopify', icon: 'fa-shopify',       color: 'text-green-500'  },
+  { id: 'walmart', icon: 'fa-cart-shopping', color: 'text-blue-400'   },
+];
+
 const GlobalAppHeader = ({
   title,
   subtitle,
@@ -306,6 +318,8 @@ const GlobalAppHeader = ({
   renderOnly = null,
   searchCollapsed = false,
   centerElement = null,
+  darkMode = false,
+  onMenuClick,
 }) => {
   const location = useLocation();
   const {
@@ -395,6 +409,134 @@ const GlobalAppHeader = ({
     );
   };
 
+  // Shared pieces duplicated across the 'toolbar' and default render branches.
+  const renderMarketplaceToggles = (platforms) => (
+    <div className="flex items-center gap-1 px-2 py-1.5 bg-gray-50 dark:bg-slate-800/60 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
+      {platforms.map((p) => {
+        const activePlatforms = JSON.parse(localStorage.getItem('active_platforms') || '["shopify"]');
+        const isActive = activePlatforms.includes(p.id);
+        return (
+          <button
+            key={p.id}
+            onClick={() => {
+              let next;
+              if (isActive) {
+                if (activePlatforms.length > 1) next = activePlatforms.filter(id => id !== p.id);
+                else return;
+              } else {
+                next = [...activePlatforms, p.id];
+              }
+              localStorage.setItem('active_platforms', JSON.stringify(next));
+              localStorage.setItem('active_platform', next[0]);
+              window.location.reload();
+            }}
+            title={`${p.id.charAt(0).toUpperCase() + p.id.slice(1)} ${isActive ? '(Active)' : '(Connect)'}`}
+            className={`relative w-7 h-7 rounded-lg flex items-center justify-center transition-all active:scale-90 ${
+              isActive
+                ? 'bg-white dark:bg-slate-900 shadow-sm'
+                : 'opacity-35 grayscale hover:opacity-80 hover:grayscale-0'
+            }`}
+          >
+            <i className={`fa-brands ${p.icon} ${p.color} text-sm`} />
+            {isActive && (
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full border border-gray-50 dark:border-slate-900" />
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  const simulationRing = isSimulating && (
+    <div className="relative w-8 h-8 flex-shrink-0" title={`Executing: ${globalProgress}%`}>
+      <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
+        <circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-gray-200 dark:text-slate-700" />
+        <circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" strokeWidth="2.5"
+          className="text-gray-800 dark:text-slate-200 transition-all duration-700"
+          strokeDasharray={`${2 * Math.PI * 12}`}
+          strokeDashoffset={`${2 * Math.PI * 12 * (1 - globalProgress / 100)}`}
+          strokeLinecap="round"
+        />
+      </svg>
+      <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-gray-700 dark:text-slate-300">
+        {globalProgress}%
+      </span>
+    </div>
+  );
+
+  const refreshButton = (
+    <button
+      className="w-8 h-8 flex items-center justify-center group active:scale-95 transition-all"
+      onClick={() => window.location.reload()}
+      title="Refresh Data"
+    >
+      <i className="fa-solid fa-rotate text-gray-500 dark:text-slate-400 group-hover:text-gray-700 dark:group-hover:text-slate-200 text-sm group-hover:rotate-180 transition-transform duration-700 ease-out" />
+    </button>
+  );
+
+  const renderNotificationButton = (count = 0) => (
+    <button
+      onClick={onNotificationClick}
+      className="w-8 h-8 relative flex items-center justify-center group active:scale-95 transition-all"
+      title="Notifications"
+    >
+      <i className="fa-solid fa-bell text-gray-600 dark:text-slate-300 group-hover:text-gray-800 dark:group-hover:text-slate-100 text-sm transition-colors" />
+      {count > 0 ? (
+        <span className="absolute -top-1 -right-1 w-4 h-4 bg-gray-800 dark:bg-slate-200 text-white dark:text-gray-900 text-[9px] font-bold rounded-full flex items-center justify-center leading-none pointer-events-none">
+          {count}
+        </span>
+      ) : (
+        <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+      )}
+    </button>
+  );
+
+  const profileButton = (
+    <button
+      className="w-8 h-8 flex items-center justify-center group active:scale-95 transition-all"
+      title={shopProfile?.name || 'Profile'}
+    >
+      <i className="fa-solid fa-circle-user text-lg text-gray-400 dark:text-slate-500 group-hover:text-gray-600 dark:group-hover:text-slate-300 transition-colors" />
+    </button>
+  );
+
+  // Collapsed search icon that expands into a floating input — shared by the desktop
+  // toolbar's searchCollapsed state and the mobile top bar (ss1).
+  const renderSearchExpandToggle = () => (
+    <>
+      <button
+        onClick={() => setSearchExpanded(v => !v)}
+        className={`w-8 h-8 flex items-center justify-center bg-gray-50 dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm hover:bg-gray-100 dark:hover:bg-slate-700 transition-all${searchExpanded ? ' border-brand/40 bg-blue-50 dark:bg-slate-700' : ''}`}
+        title="Search"
+      >
+        <i className={`fa-solid fa-magnifying-glass text-xs ${searchExpanded ? 'text-brand dark:text-gray-300' : 'text-gray-400 dark:text-slate-500'}`} />
+      </button>
+      {searchExpanded && (
+        <div className="absolute right-0 top-full mt-1.5 w-72 z-[99999] shadow-xl rounded-xl overflow-hidden border border-gray-200 dark:border-slate-700">
+          <div className="relative bg-white dark:bg-slate-900">
+            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-brand dark:text-gray-400 text-xs pointer-events-none" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search products, SKUs, or customers..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onBlur={() => { if (!searchQuery) setSearchExpanded(false); }}
+              className="w-full pl-9 pr-8 py-2 bg-white dark:bg-slate-900 text-xs text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none"
+            />
+            <button
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => { setSearchExpanded(false); setSearchQuery(''); }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 transition-colors"
+            >
+              <i className="fa-solid fa-xmark text-xs" />
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+
   const defaultFilterBar = (
     <div className="flex items-center gap-2">
       {[
@@ -434,7 +576,31 @@ const GlobalAppHeader = ({
 
   if (renderOnly === 'toolbar') {
     return (
-      <div className="flex items-center px-4 sm:px-6 gap-4 h-[56px] relative border-b border-black/[0.05]">
+      <>
+      {/* MOBILE top bar — hamburger, logo, search/notifications/profile (ss1) */}
+      <div className="sm:hidden grid grid-cols-3 items-center px-4 h-[56px] border-b border-black/[0.05]">
+        <div className="justify-self-start">
+          {onMenuClick && (
+            <button
+              onClick={onMenuClick}
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-600 dark:text-slate-300 active:scale-95 transition-transform"
+              title="Menu"
+            >
+              <i className="fa-solid fa-bars text-base" />
+            </button>
+          )}
+        </div>
+        <div className="justify-self-center">
+          <img src={darkMode ? white_latest : dark_latest} alt="Realify" className="h-[2.5rem] w-auto max-w-[100px] object-contain" />
+        </div>
+        <div className="relative flex items-center gap-3 justify-self-end">
+          {renderSearchExpandToggle()}
+          {renderNotificationButton()}
+          {profileButton}
+        </div>
+      </div>
+
+      <div className="hidden sm:flex items-center px-4 sm:px-6 gap-4 h-[56px] relative border-b border-black/[0.05]">
         {/* LEFT — page title + subtitle */}
         {title && (
           <div className="shrink-0 min-w-0">
@@ -477,136 +643,43 @@ const GlobalAppHeader = ({
                 />
               </div>
             ) : (
-              <>
-                <button
-                  onClick={() => setSearchExpanded(v => !v)}
-                  className={`w-8 h-8 flex items-center justify-center bg-gray-50 dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm hover:bg-gray-100 dark:hover:bg-slate-700 transition-all${searchExpanded ? ' border-brand/40 bg-blue-50 dark:bg-slate-700' : ''}`}
-                  title="Search"
-                >
-                  <i className={`fa-solid fa-magnifying-glass text-xs ${searchExpanded ? 'text-brand dark:text-gray-300' : 'text-gray-400 dark:text-slate-500'}`} />
-                </button>
-                {searchExpanded && (
-                  <div className="absolute right-0 top-full mt-1.5 w-72 z-[99999] shadow-xl rounded-xl overflow-hidden border border-gray-200 dark:border-slate-700">
-                    <div className="relative bg-white dark:bg-slate-900">
-                      <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-brand dark:text-gray-400 text-xs pointer-events-none" />
-                      <input
-                        ref={searchInputRef}
-                        type="text"
-                        placeholder="Search products, SKUs, or customers..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onBlur={() => { if (!searchQuery) setSearchExpanded(false); }}
-                        className="w-full pl-9 pr-8 py-2 bg-white dark:bg-slate-900 text-xs text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none"
-                      />
-                      <button
-                        onMouseDown={(e) => e.preventDefault()}
-                        onClick={() => { setSearchExpanded(false); setSearchQuery(''); }}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 transition-colors"
-                      >
-                        <i className="fa-solid fa-xmark text-xs" />
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </>
+              renderSearchExpandToggle()
             )}
           </div>
 
           {customRightElement}
 
-          {isSimulating && (
-            <div className="relative w-8 h-8 flex-shrink-0" title={`Executing: ${globalProgress}%`}>
-              <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
-                <circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-gray-200 dark:text-slate-700" />
-                <circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" strokeWidth="2.5"
-                  className="text-gray-800 dark:text-slate-200 transition-all duration-700"
-                  strokeDasharray={`${2 * Math.PI * 12}`}
-                  strokeDashoffset={`${2 * Math.PI * 12 * (1 - globalProgress / 100)}`}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-gray-700 dark:text-slate-300">
-                {globalProgress}%
-              </span>
-            </div>
-          )}
+          {simulationRing}
 
-          <div className="flex items-center gap-1 px-2 py-1.5 bg-gray-50 dark:bg-slate-800/60 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
-            {[
-              { id: 'amazon',  icon: 'fa-amazon',  color: 'text-orange-500' },
-              { id: 'shopify', icon: 'fa-shopify',  color: 'text-green-500'  },
-              // { id: 'tiktok',  icon: 'fa-tiktok',   color: 'text-black dark:text-white' },
-            ].map((p) => {
-              const activePlatforms = JSON.parse(localStorage.getItem('active_platforms') || '["shopify"]');
-              const isActive = activePlatforms.includes(p.id);
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => {
-                    let next;
-                    if (isActive) {
-                      if (activePlatforms.length > 1) next = activePlatforms.filter(id => id !== p.id);
-                      else return;
-                    } else {
-                      next = [...activePlatforms, p.id];
-                    }
-                    localStorage.setItem('active_platforms', JSON.stringify(next));
-                    localStorage.setItem('active_platform', next[0]);
-                    window.location.reload();
-                  }}
-                  title={`${p.id.charAt(0).toUpperCase() + p.id.slice(1)} ${isActive ? '(Active)' : '(Connect)'}`}
-                  className={`relative w-7 h-7 rounded-lg flex items-center justify-center transition-all active:scale-90 ${
-                    isActive
-                      ? 'bg-white dark:bg-slate-900 shadow-sm'
-                      : 'opacity-35 grayscale hover:opacity-80 hover:grayscale-0'
-                  }`}
-                >
-                  <i className={`fa-brands ${p.icon} ${p.color} text-sm`} />
-                  {isActive && (
-                    <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full border border-gray-50 dark:border-slate-900" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
+          {renderMarketplaceToggles(TOOLBAR_MARKETPLACE_PLATFORMS)}
 
-          <button
-            className="w-8 h-8 flex items-center justify-center group active:scale-95 transition-all"
-            onClick={() => window.location.reload()}
-            title="Refresh Data"
-          >
-            <i className="fa-solid fa-rotate text-gray-500 dark:text-slate-400 group-hover:text-gray-700 dark:group-hover:text-slate-200 text-sm group-hover:rotate-180 transition-transform duration-700 ease-out" />
-          </button>
-          <button
-            onClick={onNotificationClick}
-            className="w-8 h-8 relative flex items-center justify-center group active:scale-95 transition-all"
-            title="Notifications"
-          >
-            <i className="fa-solid fa-bell text-gray-600 dark:text-slate-300 group-hover:text-gray-800 dark:group-hover:text-slate-100 text-sm transition-colors" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-          </button>
-          <button
-            className="w-8 h-8 flex items-center justify-center group active:scale-95 transition-all"
-            title={shopProfile?.name || 'Profile'}
-          >
-            <i className="fa-solid fa-circle-user text-lg text-gray-400 dark:text-slate-500 group-hover:text-gray-600 dark:group-hover:text-slate-300 transition-colors" />
-          </button>
+          {refreshButton}
+          {renderNotificationButton()}
+          {profileButton}
         </div>
       </div>
+      </>
     );
   }
 
   if (renderOnly === 'secondary') {
     return (
       <div className="flex-shrink-0 border-b border-gray-200 dark:border-slate-800">
-        <div ref={secondaryRef} className="flex items-center">
+        {/* MOBILE-only page heading (ss1) — the toolbar row hides title/subtitle below sm */}
+        {!tabsOnly && title && (
+          <div className="sm:hidden px-4 pt-3 pb-1">
+            <h2 className="font-bold text-gray-900 dark:text-slate-100 text-[17px] leading-tight tracking-tight">{title}</h2>
+            {subtitle && <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-0.5">{subtitle}</p>}
+          </div>
+        )}
+        <div ref={secondaryRef} className="flex flex-col sm:flex-row sm:items-center">
           {showTabs && (
             <div id="header-navigation" className="flex-1 flex items-center overflow-x-auto scrollbar-hide px-4 sm:px-6 py-2 gap-1 min-w-0">
               {activeTabs.map((tab) => renderTab(tab, 'full'))}
             </div>
           )}
           {!tabsOnly && filterBar && (
-            <div className={`flex items-center px-4 sm:px-6 pb-1 pt-1 ${showTabs ? 'flex-shrink-0' : 'flex-1 w-full'}`}>
+            <div className={`flex items-center px-4 sm:px-6 pb-2 sm:pb-1 pt-0 sm:pt-1 ${showTabs ? 'sm:flex-shrink-0' : 'flex-1 w-full'}`}>
               {filterBar}
             </div>
           )}
@@ -670,91 +743,15 @@ const GlobalAppHeader = ({
             />
           )}
 
-          {isSimulating && (
-            <div className="relative w-8 h-8 flex-shrink-0" title={`Executing: ${globalProgress}%`}>
-              <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
-                <circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-gray-200 dark:text-slate-700" />
-                <circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" strokeWidth="2.5"
-                  className="text-gray-800 dark:text-slate-200 transition-all duration-700"
-                  strokeDasharray={`${2 * Math.PI * 12}`}
-                  strokeDashoffset={`${2 * Math.PI * 12 * (1 - globalProgress / 100)}`}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-gray-700 dark:text-slate-300">
-                {globalProgress}%
-              </span>
-            </div>
-          )}
+          {simulationRing}
 
-          <div className="flex items-center gap-1 px-2 py-1.5 bg-gray-50 dark:bg-slate-800/60 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
-            {[
-              { id: 'amazon',  icon: 'fa-amazon',       color: 'text-orange-500' },
-              { id: 'shopify', icon: 'fa-shopify',       color: 'text-green-500'  },
-              { id: 'walmart', icon: 'fa-cart-shopping', color: 'text-blue-400'   },
-            ].map((p) => {
-              const activePlatforms = JSON.parse(localStorage.getItem('active_platforms') || '["shopify"]');
-              const isActive = activePlatforms.includes(p.id);
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => {
-                    let next;
-                    if (isActive) {
-                      if (activePlatforms.length > 1) next = activePlatforms.filter(id => id !== p.id);
-                      else return;
-                    } else {
-                      next = [...activePlatforms, p.id];
-                    }
-                    localStorage.setItem('active_platforms', JSON.stringify(next));
-                    localStorage.setItem('active_platform', next[0]);
-                    window.location.reload();
-                  }}
-                  title={`${p.id.charAt(0).toUpperCase() + p.id.slice(1)} ${isActive ? '(Active)' : '(Connect)'}`}
-                  className={`relative w-7 h-7 rounded-lg flex items-center justify-center transition-all active:scale-90 ${
-                    isActive
-                      ? 'bg-white dark:bg-slate-900 shadow-sm'
-                      : 'opacity-35 grayscale hover:opacity-80 hover:grayscale-0'
-                  }`}
-                >
-                  <i className={`fa-brands ${p.icon} ${p.color} text-sm`} />
-                  {isActive && (
-                    <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full border border-gray-50 dark:border-slate-900" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
+          {renderMarketplaceToggles(FULL_MARKETPLACE_PLATFORMS)}
 
-          <button
-            className="w-8 h-8 flex items-center justify-center group active:scale-95 transition-all"
-            onClick={() => window.location.reload()}
-            title="Refresh Data"
-          >
-            <i className="fa-solid fa-rotate text-gray-500 dark:text-slate-400 group-hover:text-gray-700 dark:group-hover:text-slate-200 text-sm group-hover:rotate-180 transition-transform duration-700 ease-out" />
-          </button>
+          {refreshButton}
 
-          <button
-            onClick={onNotificationClick}
-            className="w-8 h-8 relative flex items-center justify-center group active:scale-95 transition-all"
-            title="Notifications"
-          >
-            <i className="fa-solid fa-bell text-gray-600 dark:text-slate-300 group-hover:text-gray-800 dark:group-hover:text-slate-100 text-sm transition-colors" />
-            {filterPreviewCount > 0 ? (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-gray-800 dark:bg-slate-200 text-white dark:text-gray-900 text-[9px] font-bold rounded-full flex items-center justify-center leading-none pointer-events-none">
-                {filterPreviewCount}
-              </span>
-            ) : (
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-            )}
-          </button>
+          {renderNotificationButton(filterPreviewCount)}
 
-          <button
-            className="w-8 h-8 flex items-center justify-center group active:scale-95 transition-all"
-            title={shopProfile?.name || 'Profile'}
-          >
-            <i className="fa-solid fa-circle-user text-lg text-gray-400 dark:text-slate-500 group-hover:text-gray-600 dark:group-hover:text-slate-300 transition-colors" />
-          </button>
+          {profileButton}
 
           <button
             onClick={forceExpand}

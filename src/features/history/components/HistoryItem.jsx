@@ -14,25 +14,25 @@ const HistoryItem = ({ item, onClick, onBookmark }) => {
           <p className="text-sm text-gray-500 dark:text-slate-400 mb-3 line-clamp-2">
             {item.description}
           </p>
-          <div className="flex items-center gap-4 text-xs text-gray-400 dark:text-gray-500">
-            <span className="flex items-center gap-1.5">
+          <div className="flex items-center justify-between w-full flex-nowrap gap-1.5 text-[10px] sm:text-xs sm:w-auto sm:justify-start sm:gap-4 text-gray-400 dark:text-gray-500">
+            <span className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0 whitespace-nowrap">
               <i className="fa-regular fa-clock"></i>
               {item.time}
             </span>
             {item.messages && (
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0 whitespace-nowrap">
                 <i className="fa-solid fa-message"></i>
                 {item.messages} messages
               </span>
             )}
             {item.files && (
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0 whitespace-nowrap">
                 <i className="fa-solid fa-file"></i>
                 {item.files} files
               </span>
             )}
             {item.charts && (
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0 whitespace-nowrap">
                 <i className="fa-solid fa-chart-line"></i>
                 {item.charts} charts
               </span>

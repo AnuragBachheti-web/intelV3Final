@@ -37,11 +37,11 @@ const AIPromptBox = ({ placeholder = "Ask Realify...", sidebarActive = true, ful
         left: isMobile || !sidebarActive ? 16 : (isSidebarCollapsed ? 105 : 269),
       }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className="fixed bottom-0 right-[49px] z-50 pb-4 pointer-events-none"
+      className="fixed bottom-0 right-4 sm:right-[49px] z-50 pb-4 pointer-events-none"
     >
       <div className="pointer-events-auto">
         {/* Outer Container */}
-        <div className="bg-white/95 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-gray-200 dark:border-slate-800 dark:bg-slate-900/95 rounded-2xl p-4 transition-colors">
+        <div className="bg-white/95 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-gray-200 dark:border-slate-800 dark:bg-slate-900/95 rounded-2xl p-3 sm:p-4 transition-colors">
           
           {/* Reference Tag Section (If active) */}
           <AnimatePresence>
@@ -72,7 +72,7 @@ const AIPromptBox = ({ placeholder = "Ask Realify...", sidebarActive = true, ful
           </AnimatePresence>
 
           {/* Input Row */}
-          <div className="flex items-center gap-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full px-4 py-2 shadow-sm focus-within:ring-2 focus-within:ring-brand/10 dark:focus-within:ring-gray-500/20 focus-within:border-brand/30 dark:focus-within:border-gray-500 transition-all">
+          <div className="flex items-center gap-1.5 sm:gap-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full px-2.5 sm:px-4 py-2 shadow-sm focus-within:ring-2 focus-within:ring-brand/10 dark:focus-within:ring-gray-500/20 focus-within:border-brand/30 dark:focus-within:border-gray-500 transition-all">
 
             {/* Add Button */}
             <button
@@ -81,9 +81,9 @@ const AIPromptBox = ({ placeholder = "Ask Realify...", sidebarActive = true, ful
             >
               <i className="fa-solid fa-plus text-[10px]"></i>
             </button>
-            
+
             <button
-              className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+              className="hidden sm:flex w-8 h-8 items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
               title="Preferences"
             >
               <i className="fa-solid fa-sliders text-sm"></i>
@@ -96,21 +96,21 @@ const AIPromptBox = ({ placeholder = "Ask Realify...", sidebarActive = true, ful
               onChange={(e) => setAiPromptValue(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
               placeholder={aiReferences.length > 0 ? "Ask about the attached context..." : placeholder}
-              className="flex-1 bg-transparent text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 text-sm outline-none px-2 py-1.5"
+              className="flex-1 min-w-0 bg-transparent text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 text-sm outline-none px-1 sm:px-2 py-1.5"
             />
 
             {/* Right Controls */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
               <ModelSelector variant="compact" />
 
-              <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+              <button className="hidden sm:block text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
                 <i className="fa-solid fa-microphone text-sm"></i>
               </button>
 
               {/* Submit Button */}
-              <button 
+              <button
                 onClick={handleSubmit}
-                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${
+                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all flex-shrink-0 ${
                   aiPromptValue.trim() || aiReferences.length > 0 ? 'bg-brand hover:bg-brand-hover text-white dark:bg-gray-600 dark:hover:bg-gray-500' : 'bg-slate-200 dark:bg-slate-700 text-slate-400'
                 }`}
               >
@@ -120,11 +120,11 @@ const AIPromptBox = ({ placeholder = "Ask Realify...", sidebarActive = true, ful
           </div>
 
           {/* Footer */}
-          <div className="flex justify-between items-center mt-3 px-2">
-            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wide">
+          <div className="flex justify-between items-center gap-2 mt-2 sm:mt-3 px-2">
+            <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wide truncate">
               Realify is AI & can make mistakes.
             </span>
-            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wide">
+            <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wide whitespace-nowrap">
               100% tokens available
             </span>
           </div>

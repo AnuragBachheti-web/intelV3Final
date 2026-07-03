@@ -109,7 +109,7 @@ const DetailedViewPage = () => {
       <StickyKpiStrip kpiIsSticky={kpiIsSticky} statsData={statsData} onDashboardClick={() => navigate(backRoute)} />
 
       {/* Tab nav (left) + Filter button (right) */}
-      <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 mb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 border-b border-gray-100 dark:border-slate-800 mb-5 pb-2 sm:pb-0">
         <DetailViewTabNav intelType={intelType} onTabClick={goToTab} />
         <FilterBar filters={filters} />
       </div>
@@ -125,7 +125,7 @@ const DetailedViewPage = () => {
           </span>
           Customise KPIs
         </button>
-        <div className="flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-2">
           <span className="text-xs text-gray-400 dark:text-slate-500 font-medium">AI View</span>
           <button
             onClick={() => navigate(backRoute)}
@@ -138,7 +138,7 @@ const DetailedViewPage = () => {
       </div>
 
       {/* KPI cards — 6 StatCards matching AI View style */}
-      <div ref={kpiSectionRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
+      <div ref={kpiSectionRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3 mb-4">
         {selectedKpiIndices.map(idx => {
           const stat = statsData[idx] || statsData[0];
           return (

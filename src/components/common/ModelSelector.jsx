@@ -15,6 +15,7 @@ const ModelSelector = ({ variant = 'default' }) => {
   const triggerRef                = useRef(null);
   const dropdownRef               = useRef(null);
   const isTopbar                  = variant === 'topbar';
+  const isCompact                 = variant === 'compact';
 
   useClickOutside(triggerRef, open, () => setOpen(false), dropdownRef);
 
@@ -48,8 +49,8 @@ const ModelSelector = ({ variant = 'default' }) => {
           <span>Realify {selected.label} Model</span>
         ) : (
           <>
-            <span className="text-gray-400 dark:text-slate-500 font-medium">Model</span>
-            <span className="text-gray-300 dark:text-slate-600 mx-0.5">|</span>
+            <span className={`${isCompact ? 'hidden sm:inline' : ''} text-gray-400 dark:text-slate-500 font-medium`}>Model</span>
+            <span className={`${isCompact ? 'hidden sm:inline' : ''} text-gray-300 dark:text-slate-600 mx-0.5`}>|</span>
             <span className="text-gray-700 dark:text-slate-200 font-semibold">{selected.label}</span>
           </>
         )}

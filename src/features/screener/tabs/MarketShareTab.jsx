@@ -17,10 +17,12 @@ import DeepDiveTabBar from '../../../components/common/DeepDiveTabBar';
 import BaseAreaChart from '../../../components/common/charts/BaseAreaChart';
 import useModalToggle from '../../../hooks/useModalToggle';
 
+const yourBrandTrend = trendData.map(d => ({ name: d.name, val: d.yourBrand }));
+
 const kpis = [
   {
     title: 'Your Market Share', shortLabel: 'Mkt Share', value: '18.4%', change: '+2.1% vs last month', isPositive: true,
-    chartData: trendData.map(d => ({ name: d.name, val: d.yourBrand })), chartColor: '#FDA4AF',
+    chartData: yourBrandTrend, chartColor: '#FDA4AF',
     deepDive: {
       title: 'Your Market Share', icon: 'fa-chart-pie',
       cards: [
@@ -93,7 +95,7 @@ const kpis = [
   },
   {
     title: 'Growth Rate', shortLabel: 'Growth', value: '+15.2%', change: 'Year over year', isPositive: true,
-    chartData: trendData.map(d => ({ name: d.name, val: d.yourBrand })), chartColor: '#f59e0b',
+    chartData: yourBrandTrend, chartColor: '#f59e0b',
     deepDive: {
       title: 'Growth Rate', icon: 'fa-chart-line',
       cards: [
@@ -238,6 +240,96 @@ const OpportunityDetail = ({ id }) => {
   );
 };
 
+const positioningQuadrants = [
+  { title: 'Stars', sub: 'High Share, High Growth', color: 'indigo', icon: 'fa-star', items: ['Market Leader (28.7% • +22%)', 'TechMaster Pro (22.3% • +18%)'] },
+  { title: 'Rising Stars', sub: 'Low Share, High Growth', color: 'blue', icon: 'fa-rocket', items: ['Your Brand (18.4% • +15%)', 'SmartBuy Co (9.2% • +24%)'] },
+  { title: 'Cash Cows', sub: 'High Share, Low Growth', color: 'sky', icon: 'fa-coins', items: ['EliteGadgets (14.8% • +5%)', 'ValueMart (11.6% • +3%)'] },
+  { title: 'Question Marks', sub: 'Low Share, Low Growth', color: 'slate', icon: 'fa-question', items: ['BudgetTech (5.4% • -2%)', 'Others (10.2% • +1%)'] },
+];
+
+const trendsSummaryStats = [
+  { label: 'Your Growth', val: '+2.1%', sub: 'vs last year', color: 'blue' },
+  { label: 'Best Month', val: 'Nov', sub: '19.2% share', color: 'indigo' },
+  { label: 'Momentum', val: 'Positive', sub: '3 months up', color: 'sky' },
+  { label: 'Volatility', val: 'Low', sub: '±1.2% variance', color: 'slate' },
+];
+
+// Rendered both standalone (chart-positioning modal) and inside the combined "charts" view.
+const PositioningMatrixScatter = () => (
+  <ResponsiveContainer width="100%" height="100%">
+    <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+      <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
+      <XAxis type="number" dataKey="x" name="Market Share" unit="%" label={{ value: 'Market Share (%)', position: 'insideBottom', offset: -10 }} />
+      <YAxis type="number" dataKey="y" name="Growth Rate" unit="%" label={{ value: 'Growth Rate (%)', angle: -90, position: 'insideLeft' }} />
+      <ZAxis type="number" dataKey="size" range={[200, 1500]} />
+      <RechartsTooltip cursor={{ strokeDasharray: '3 3' }} />
+      <Scatter name="Brands" data={matrixData}>
+        {matrixData.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={entry.color} />
+        ))}
+        <LabelList dataKey="name" position="top" style={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }} />
+      </Scatter>
+    </ScatterChart>
+  </ResponsiveContainer>
+);
+
+const PositioningQuadrantsGrid = () => (
+  <div className="grid grid-cols-2 gap-4 mt-4">
+    {positioningQuadrants.map((quad, i) => (
+      <div key={i} className={`bg-${quad.color}-50 dark:bg-${quad.color}-900/10 border border-${quad.color}-200 dark:border-${quad.color}-800/50 rounded-xl p-4`}>
+        <div className="flex items-center gap-2 mb-2">
+          <i className={`fa-solid ${quad.icon} text-${quad.color}-600 dark:text-${quad.color}-400`}></i>
+          <h4 className="font-bold text-gray-900 dark:text-slate-100 text-sm">{quad.title}</h4>
+        </div>
+        <p className="text-xs text-gray-500 dark:text-slate-400 mb-2">{quad.sub}</p>
+        {quad.items.map((item, j) => (
+          <div key={j} className="flex items-center justify-between bg-white dark:bg-slate-900 rounded-lg px-2 py-1.5 mb-1 border border-white dark:border-slate-800">
+            <span className="text-xs font-medium text-gray-700 dark:text-slate-300">{item.split(' (')[0]}</span>
+            <span className={`text-xs font-bold text-${quad.color}-600 dark:text-${quad.color}-400`}>{item.split(' (')[1].replace(')', '')}</span>
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+);
+
+// Rendered both standalone (chart-trends modal) and inside the combined "charts" view.
+const TrendsLineChart = () => (
+  <ResponsiveContainer width="100%" height="100%">
+    <LineChart data={trendData}>
+      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
+      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} />
+      <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} />
+      <RechartsTooltip />
+      <Line type="monotone" dataKey="yourBrand" stroke="#8B5CF6" strokeWidth={3} dot={{ r: 3, fill: '#fff', strokeWidth: 2, stroke: '#8B5CF6' }} name="Your Brand" />
+      <Line type="monotone" dataKey="leader" stroke="#22D3EE" strokeWidth={2} strokeDasharray="5 5" name="Leader" />
+      <Line type="monotone" dataKey="techMaster" stroke="#10B981" strokeWidth={2} strokeDasharray="5 5" name="TechMaster" />
+      <Line type="monotone" dataKey="elite" stroke="#F59E0B" strokeWidth={2} strokeDasharray="5 5" name="EliteGadgets" />
+    </LineChart>
+  </ResponsiveContainer>
+);
+
+const TrendsStatsGrid = () => (
+  <div className="grid grid-cols-4 gap-3 mt-4">
+    {trendsSummaryStats.map((s, i) => (
+      <div key={i} className={`bg-${s.color}-50 dark:bg-${s.color}-900/20 border border-${s.color}-200 dark:border-${s.color}-800 rounded-xl p-3`}>
+        <p className={`text-xs text-${s.color}-600 dark:text-${s.color}-400 font-medium mb-1`}>{s.label}</p>
+        <p className={`text-xl font-bold text-${s.color}-900 dark:text-${s.color}-100`}>{s.val}</p>
+        <p className={`text-xs text-${s.color}-700 dark:text-${s.color}-500 mt-0.5`}>{s.sub}</p>
+      </div>
+    ))}
+  </div>
+);
+
+const EXPAND_MODAL_META = {
+  distribution: { icon: 'fa-chart-pie', title: 'Market Share Distribution' },
+  'by-category': { icon: 'fa-layer-group', title: 'Market Share by Category' },
+  movements: { icon: 'fa-arrow-trend-up', title: 'Recent Market Movements' },
+  'chart-positioning': { icon: 'fa-circle-dot', title: 'Competitive Positioning Matrix' },
+  'chart-trends': { icon: 'fa-chart-line', title: 'Market Share Trends (12 Months)' },
+  charts: { icon: 'fa-chart-line', title: 'Charts' },
+};
+
 const MarketShareTab = () => {
   const [selectedKpiIdx, setSelectedKpiIdx] = useState(0);
   const kpiDetailModal = useModalToggle();
@@ -250,6 +342,7 @@ const MarketShareTab = () => {
   const [activeModal, setActiveModal] = useState({ isOpen: false, data: null });
 
   const selectedKpi = kpis[Math.min(selectedKpiIdx, kpis.length - 1)];
+  const expandModalMeta = EXPAND_MODAL_META[mktExpandModal] || EXPAND_MODAL_META.charts;
 
   const handleDetailedView = () => {
     if (mktDiveTab === 'kpi') {
@@ -545,22 +638,10 @@ const MarketShareTab = () => {
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-800">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                  <i className={`fa-solid ${
-                    mktExpandModal === 'distribution' ? 'fa-chart-pie' :
-                    mktExpandModal === 'by-category' ? 'fa-layer-group' :
-                    mktExpandModal === 'movements' ? 'fa-arrow-trend-up' :
-                    mktExpandModal === 'chart-positioning' ? 'fa-circle-dot' :
-                    mktExpandModal === 'chart-trends' ? 'fa-chart-line' :
-                    'fa-chart-line'
-                  } text-blue-600 dark:text-blue-400 text-sm`}></i>
+                  <i className={`fa-solid ${expandModalMeta.icon} text-blue-600 dark:text-blue-400 text-sm`}></i>
                 </div>
                 <h2 className="text-lg font-bold text-gray-800 dark:text-slate-100">
-                  {mktExpandModal === 'distribution' ? 'Market Share Distribution' :
-                   mktExpandModal === 'by-category' ? 'Market Share by Category' :
-                   mktExpandModal === 'movements' ? 'Recent Market Movements' :
-                   mktExpandModal === 'chart-positioning' ? 'Competitive Positioning Matrix' :
-                   mktExpandModal === 'chart-trends' ? 'Market Share Trends (12 Months)' :
-                   'Charts'}
+                  {expandModalMeta.title}
                 </h2>
               </div>
               <button
@@ -824,44 +905,9 @@ const MarketShareTab = () => {
                 <div>
                   <p className="text-sm text-gray-600 dark:text-slate-400 mb-4">Market share vs growth rate analysis across all competitors</p>
                   <div className="h-[420px] w-full bg-gray-50 dark:bg-slate-800/30 rounded-xl p-4">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
-                        <XAxis type="number" dataKey="x" name="Market Share" unit="%" label={{ value: 'Market Share (%)', position: 'insideBottom', offset: -10 }} />
-                        <YAxis type="number" dataKey="y" name="Growth Rate" unit="%" label={{ value: 'Growth Rate (%)', angle: -90, position: 'insideLeft' }} />
-                        <ZAxis type="number" dataKey="size" range={[200, 1500]} />
-                        <RechartsTooltip cursor={{ strokeDasharray: '3 3' }} />
-                        <Scatter name="Brands" data={matrixData}>
-                          {matrixData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                          <LabelList dataKey="name" position="top" style={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }} />
-                        </Scatter>
-                      </ScatterChart>
-                    </ResponsiveContainer>
+                    <PositioningMatrixScatter />
                   </div>
-                  <div className="grid grid-cols-2 gap-4 mt-4">
-                    {[
-                      { title: 'Stars', sub: 'High Share, High Growth', color: 'indigo', icon: 'fa-star', items: ['Market Leader (28.7% • +22%)', 'TechMaster Pro (22.3% • +18%)'] },
-                      { title: 'Rising Stars', sub: 'Low Share, High Growth', color: 'blue', icon: 'fa-rocket', items: ['Your Brand (18.4% • +15%)', 'SmartBuy Co (9.2% • +24%)'] },
-                      { title: 'Cash Cows', sub: 'High Share, Low Growth', color: 'sky', icon: 'fa-coins', items: ['EliteGadgets (14.8% • +5%)', 'ValueMart (11.6% • +3%)'] },
-                      { title: 'Question Marks', sub: 'Low Share, Low Growth', color: 'slate', icon: 'fa-question', items: ['BudgetTech (5.4% • -2%)', 'Others (10.2% • +1%)'] },
-                    ].map((quad, i) => (
-                      <div key={i} className={`bg-${quad.color}-50 dark:bg-${quad.color}-900/10 border border-${quad.color}-200 dark:border-${quad.color}-800/50 rounded-xl p-4`}>
-                        <div className="flex items-center gap-2 mb-2">
-                          <i className={`fa-solid ${quad.icon} text-${quad.color}-600 dark:text-${quad.color}-400`}></i>
-                          <h4 className="font-bold text-gray-900 dark:text-slate-100 text-sm">{quad.title}</h4>
-                        </div>
-                        <p className="text-xs text-gray-500 dark:text-slate-400 mb-2">{quad.sub}</p>
-                        {quad.items.map((item, j) => (
-                          <div key={j} className="flex items-center justify-between bg-white dark:bg-slate-900 rounded-lg px-2 py-1.5 mb-1 border border-white dark:border-slate-800">
-                            <span className="text-xs font-medium text-gray-700 dark:text-slate-300">{item.split(' (')[0]}</span>
-                            <span className={`text-xs font-bold text-${quad.color}-600 dark:text-${quad.color}-400`}>{item.split(' (')[1].replace(')', '')}</span>
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
+                  <PositioningQuadrantsGrid />
                 </div>
               )}
 
@@ -870,33 +916,9 @@ const MarketShareTab = () => {
                 <div>
                   <p className="text-sm text-gray-600 dark:text-slate-400 mb-4">Track how market share has evolved over the past 12 months</p>
                   <div className="h-[400px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={trendData}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
-                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} />
-                        <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} />
-                        <RechartsTooltip />
-                        <Line type="monotone" dataKey="yourBrand" stroke="#8B5CF6" strokeWidth={3} dot={{ r: 3, fill: '#fff', strokeWidth: 2, stroke: '#8B5CF6' }} name="Your Brand" />
-                        <Line type="monotone" dataKey="leader" stroke="#22D3EE" strokeWidth={2} strokeDasharray="5 5" name="Leader" />
-                        <Line type="monotone" dataKey="techMaster" stroke="#10B981" strokeWidth={2} strokeDasharray="5 5" name="TechMaster" />
-                        <Line type="monotone" dataKey="elite" stroke="#F59E0B" strokeWidth={2} strokeDasharray="5 5" name="EliteGadgets" />
-                      </LineChart>
-                    </ResponsiveContainer>
+                    <TrendsLineChart />
                   </div>
-                  <div className="grid grid-cols-4 gap-3 mt-4">
-                    {[
-                      { label: 'Your Growth', val: '+2.1%', sub: 'vs last year', color: 'blue' },
-                      { label: 'Best Month', val: 'Nov', sub: '19.2% share', color: 'indigo' },
-                      { label: 'Momentum', val: 'Positive', sub: '3 months up', color: 'sky' },
-                      { label: 'Volatility', val: 'Low', sub: '±1.2% variance', color: 'slate' },
-                    ].map((s, i) => (
-                      <div key={i} className={`bg-${s.color}-50 dark:bg-${s.color}-900/20 border border-${s.color}-200 dark:border-${s.color}-800 rounded-xl p-3`}>
-                        <p className={`text-xs text-${s.color}-600 dark:text-${s.color}-400 font-medium mb-1`}>{s.label}</p>
-                        <p className={`text-xl font-bold text-${s.color}-900 dark:text-${s.color}-100`}>{s.val}</p>
-                        <p className={`text-xs text-${s.color}-700 dark:text-${s.color}-500 mt-0.5`}>{s.sub}</p>
-                      </div>
-                    ))}
-                  </div>
+                  <TrendsStatsGrid />
                 </div>
               )}
 
@@ -908,44 +930,9 @@ const MarketShareTab = () => {
                     <h3 className="text-base font-bold text-gray-900 dark:text-slate-100 mb-1">Competitive Positioning Matrix</h3>
                     <p className="text-sm text-gray-600 dark:text-slate-400 mb-4">Market share vs growth rate analysis</p>
                     <div className="h-[400px] w-full bg-gray-50 dark:bg-slate-800/30 rounded-xl p-4">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
-                          <XAxis type="number" dataKey="x" name="Market Share" unit="%" label={{ value: 'Market Share (%)', position: 'insideBottom', offset: -10 }} />
-                          <YAxis type="number" dataKey="y" name="Growth Rate" unit="%" label={{ value: 'Growth Rate (%)', angle: -90, position: 'insideLeft' }} />
-                          <ZAxis type="number" dataKey="size" range={[200, 1500]} />
-                          <RechartsTooltip cursor={{ strokeDasharray: '3 3' }} />
-                          <Scatter name="Brands" data={matrixData}>
-                            {matrixData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                            <LabelList dataKey="name" position="top" style={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }} />
-                          </Scatter>
-                        </ScatterChart>
-                      </ResponsiveContainer>
+                      <PositioningMatrixScatter />
                     </div>
-                    <div className="grid grid-cols-2 gap-4 mt-4">
-                      {[
-                        { title: 'Stars', sub: 'High Share, High Growth', color: 'indigo', icon: 'fa-star', items: ['Market Leader (28.7% • +22%)', 'TechMaster Pro (22.3% • +18%)'] },
-                        { title: 'Rising Stars', sub: 'Low Share, High Growth', color: 'blue', icon: 'fa-rocket', items: ['Your Brand (18.4% • +15%)', 'SmartBuy Co (9.2% • +24%)'] },
-                        { title: 'Cash Cows', sub: 'High Share, Low Growth', color: 'sky', icon: 'fa-coins', items: ['EliteGadgets (14.8% • +5%)', 'ValueMart (11.6% • +3%)'] },
-                        { title: 'Question Marks', sub: 'Low Share, Low Growth', color: 'slate', icon: 'fa-question', items: ['BudgetTech (5.4% • -2%)', 'Others (10.2% • +1%)'] },
-                      ].map((quad, i) => (
-                        <div key={i} className={`bg-${quad.color}-50 dark:bg-${quad.color}-900/10 border border-${quad.color}-200 dark:border-${quad.color}-800/50 rounded-xl p-4`}>
-                          <div className="flex items-center gap-2 mb-2">
-                            <i className={`fa-solid ${quad.icon} text-${quad.color}-600 dark:text-${quad.color}-400`}></i>
-                            <h4 className="font-bold text-gray-900 dark:text-slate-100 text-sm">{quad.title}</h4>
-                          </div>
-                          <p className="text-xs text-gray-500 dark:text-slate-400 mb-2">{quad.sub}</p>
-                          {quad.items.map((item, j) => (
-                            <div key={j} className="flex items-center justify-between bg-white dark:bg-slate-900 rounded-lg px-2 py-1.5 mb-1 border border-white dark:border-slate-800">
-                              <span className="text-xs font-medium text-gray-700 dark:text-slate-300">{item.split(' (')[0]}</span>
-                              <span className={`text-xs font-bold text-${quad.color}-600 dark:text-${quad.color}-400`}>{item.split(' (')[1].replace(')', '')}</span>
-                            </div>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
+                    <PositioningQuadrantsGrid />
                   </div>
 
                   {/* Market Share Trends */}
@@ -953,33 +940,9 @@ const MarketShareTab = () => {
                     <h3 className="text-base font-bold text-gray-900 dark:text-slate-100 mb-1">Market Share Trends (12 Months)</h3>
                     <p className="text-sm text-gray-600 dark:text-slate-400 mb-4">Track how market share has evolved over the past year</p>
                     <div className="h-[380px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={trendData}>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
-                          <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} />
-                          <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} />
-                          <RechartsTooltip />
-                          <Line type="monotone" dataKey="yourBrand" stroke="#8B5CF6" strokeWidth={3} dot={{ r: 3, fill: '#fff', strokeWidth: 2, stroke: '#8B5CF6' }} name="Your Brand" />
-                          <Line type="monotone" dataKey="leader" stroke="#22D3EE" strokeWidth={2} strokeDasharray="5 5" name="Leader" />
-                          <Line type="monotone" dataKey="techMaster" stroke="#10B981" strokeWidth={2} strokeDasharray="5 5" name="TechMaster" />
-                          <Line type="monotone" dataKey="elite" stroke="#F59E0B" strokeWidth={2} strokeDasharray="5 5" name="EliteGadgets" />
-                        </LineChart>
-                      </ResponsiveContainer>
+                      <TrendsLineChart />
                     </div>
-                    <div className="grid grid-cols-4 gap-3 mt-4">
-                      {[
-                        { label: 'Your Growth', val: '+2.1%', sub: 'vs last year', color: 'blue' },
-                        { label: 'Best Month', val: 'Nov', sub: '19.2% share', color: 'indigo' },
-                        { label: 'Momentum', val: 'Positive', sub: '3 months up', color: 'sky' },
-                        { label: 'Volatility', val: 'Low', sub: '±1.2% variance', color: 'slate' },
-                      ].map((s, i) => (
-                        <div key={i} className={`bg-${s.color}-50 dark:bg-${s.color}-900/20 border border-${s.color}-200 dark:border-${s.color}-800 rounded-xl p-3`}>
-                          <p className={`text-xs text-${s.color}-600 dark:text-${s.color}-400 font-medium mb-1`}>{s.label}</p>
-                          <p className={`text-xl font-bold text-${s.color}-900 dark:text-${s.color}-100`}>{s.val}</p>
-                          <p className={`text-xs text-${s.color}-700 dark:text-${s.color}-500 mt-0.5`}>{s.sub}</p>
-                        </div>
-                      ))}
-                    </div>
+                    <TrendsStatsGrid />
                   </div>
                 </div>
               )}

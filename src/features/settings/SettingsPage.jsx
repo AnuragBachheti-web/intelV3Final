@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import SettingsInnerSidebar from './components/SettingsInnerSidebar';
@@ -29,6 +29,14 @@ const SettingsPage = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'account');
   const [isDirty, setIsDirty] = useState(false);
+
+  // The mobile burger-drawer settings sub-list navigates via ?tab=, not the
+  // desktop sidebar's setActiveTab calls — keep activeTab in sync when it does.
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && tab !== activeTab) setActiveTab(tab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
   const [showToast, setShowToast] = useState(false);
   const [modalState, setModalState] = useState({
     invite: false,

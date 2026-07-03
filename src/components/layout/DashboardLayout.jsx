@@ -43,6 +43,7 @@ const DashboardLayout = ({
     !EXEMPT_PREFIXES.some((p) => location.pathname.startsWith(p));
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
   const [shopProfile, setShopProfile] = useState(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -90,7 +91,13 @@ const DashboardLayout = ({
 
       {/* Left sidebar */}
       {sidebarActive && (
-        <AppSidebar darkMode={darkMode} setDarkMode={setDarkMode} inline />
+        <AppSidebar
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+          inline
+          mobileOpen={mobileNavOpen}
+          onMobileClose={() => setMobileNavOpen(false)}
+        />
       )}
 
       {/* Right column: toolbar + content */}
@@ -108,6 +115,8 @@ const DashboardLayout = ({
               searchCollapsed={searchCollapsed}
               centerElement={headerCenterElement}
               renderOnly="toolbar"
+              darkMode={darkMode}
+              onMenuClick={sidebarActive ? () => setMobileNavOpen(true) : undefined}
             />
           </div>
         )}
@@ -122,6 +131,8 @@ const DashboardLayout = ({
             {!hideHeader && !showNoStores && (showTabs || filters) && (
               <div className="flex-shrink-0">
                 <GlobalAppHeader
+                  title={title}
+                  subtitle={subtitle}
                   showTabs={showTabs}
                   tabs={tabs}
                   filters={filters}
@@ -155,7 +166,7 @@ const DashboardLayout = ({
 
       {showAIPrompt && !showNoStores && (
         <AIPromptBox
-          placeholder={`Ask Realify about your ${title?.toLowerCase() ?? 'dashboard'}...`}
+          placeholder={`Ask Realify`}
           sidebarActive={sidebarActive}
           fullWidth={aiPromptFullWidth}
         />

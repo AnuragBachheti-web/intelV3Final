@@ -27,6 +27,9 @@ const FilterBar = ({ filters }) => {
         Filters
       </button>
 
+      {/* Applied-filter chips — desktop only; mobile shows a count in the panel header instead */}
+      <div className="hidden sm:flex items-center gap-2">
+
       {appliedDate !== null && (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-full text-xs font-medium text-gray-700 dark:text-slate-300 shadow-sm">
           {v2DateLabel(appliedDate)}
@@ -89,7 +92,9 @@ const FilterBar = ({ filters }) => {
         </span>
       )}
 
-      {v2FilterOpen && <FilterPanel filters={filters} style={{ top: filterPanelPos.top, right: filterPanelPos.right }} />}
+      </div>
+
+      {v2FilterOpen && <FilterPanel filters={filters} style={{ top: filterPanelPos.top, left: filterPanelPos.left, right: filterPanelPos.right }} />}
     </div>
   );
 };

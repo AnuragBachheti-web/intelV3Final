@@ -18,6 +18,8 @@ const CategoryTab = ({ cat, idx, activeSuggestion, setActiveSuggestion }) => {
         onMouseEnter={(e) => {
           const r = e.currentTarget.getBoundingClientRect();
           setTooltip({ top: r.bottom + 8, left: r.left });
+          // Mobile: reveal the suggestions panel on hover instead of requiring a tap.
+          if (window.innerWidth < 640) setActiveSuggestion(idx);
         }}
         onMouseLeave={() => setTooltip(null)}
         className={`flex items-center gap-2 whitespace-nowrap px-4 py-2 border rounded-xl text-sm font-semibold transition-all hover:shadow-sm ${
@@ -85,15 +87,15 @@ const NewAnalysisPage = () => {
         {/* Main Content */}
         <div className="flex-1 flex flex-col items-center overflow-y-auto hide-scroll px-4 sm:px-6 lg:px-8 py-4 md:py-6">
 
-          <div className="mb-8 text-center mt-4 md:mt-8">
+          <div className="mb-5 sm:mb-8 text-center mt-4 md:mt-8">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center justify-center gap-3"
+              className="flex items-center justify-center gap-2 sm:gap-3"
             >
-              <img src={logoDark} alt="Realify" className="h-10 object-contain block dark:hidden opacity-80" />
-              <img src={logoLight} alt="Realify" className="h-10 object-contain hidden dark:block opacity-80" />
-              <h2 className="text-[40px] font-medium tracking-tight text-gray-900 dark:text-slate-100" style={{ fontWeight: 200 }}>
+              <img src={logoDark} alt="Realify" className="h-6 sm:h-10 object-contain block dark:hidden opacity-80" />
+              <img src={logoLight} alt="Realify" className="h-6 sm:h-10 object-contain hidden dark:block opacity-80" />
+              <h2 className="text-[22px] sm:text-[40px] font-medium tracking-tight text-gray-900 dark:text-slate-100" style={{ fontWeight: 200 }}>
                 {greeting}, {userName}
               </h2>
             </motion.div>
@@ -102,11 +104,11 @@ const NewAnalysisPage = () => {
           <div className="w-full max-w-3xl flex flex-col gap-6">
             {/* Prompt Box */}
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-slate-500/20 focus-within:border-slate-500 transition-all">
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
                 <textarea
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  className="w-full resize-none bg-transparent border-none focus:ring-0 outline-none text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 text-lg min-h-[60px] p-0"
+                  className="w-full resize-none bg-transparent border-none focus:ring-0 outline-none text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 text-base sm:text-lg min-h-[40px] sm:min-h-[60px] p-0"
                   placeholder="How may I help you?"
                   rows="1"
                 />

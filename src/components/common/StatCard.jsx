@@ -68,46 +68,46 @@ const StatCard = ({
     return (
       <div
         onClick={onClick}
-        className={`bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all relative h-40 flex flex-col justify-between group ${onClick ? 'cursor-pointer' : ''}`}
+        className={`bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all relative h-[86px] sm:h-40 flex flex-col justify-between group ${onClick ? 'cursor-pointer' : ''}`}
       >
 
         {/* AI Reference Icon */}
         <button
           onClick={handleRefClick}
-          className="absolute top-4 right-4 z-20 w-7 h-7 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-brand-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-700 shadow-sm transition-all opacity-0 group-hover:opacity-100"
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20 w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-brand-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-700 shadow-sm transition-all opacity-0 group-hover:opacity-100"
           title="Attach as reference"
         >
-          <i className="fa-solid fa-paperclip text-[12px]"></i>
+          <i className="fa-solid fa-paperclip text-[10px] sm:text-[12px]"></i>
         </button>
 
-        <div className="p-[1.1rem] pb-16 z-10 relative">
-          <p className="text-[14px] text-gray-500 dark:text-slate-400 font-medium mb-1">{title}</p>
+        <div className="p-2.5 sm:p-[1.1rem] pb-8 sm:pb-16 z-10 relative">
+          <p className="text-[10px] sm:text-[14px] text-gray-500 dark:text-slate-400 font-medium mb-0.5 sm:mb-1">{title}</p>
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-[22px] font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-none mb-1">{value}</p>
+              <p className="text-[16px] sm:text-[22px] font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-none mb-0.5 sm:mb-1">{value}</p>
               <div className="flex flex-col items-start">
                 <span
-                  className="text-[13px] text-gray-500 dark:text-slate-400 truncate w-full"
+                  className="text-[10px] sm:text-[13px] text-gray-500 dark:text-slate-400 truncate w-full"
                   title={subtext || "from last week"}
                 >
                   {subtext || "from last week"}
                 </span>
 
                 <span
-                  className={`text-[13px] font-medium flex items-center mt-0.5 ${isPositive ? 'text-[#22c55e]' : 'text-red-500'
+                  className={`text-[10px] sm:text-[13px] font-medium flex items-center mt-0.5 ${isPositive ? 'text-[#22c55e]' : 'text-red-500'
                     }`}
                 >
               {change}
                   <i
                     className={`fa-solid ${isPositive ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'
-                      } ml-1 text-[10px]`}
+                      } ml-1 text-[9px] sm:text-[10px]`}
                   />
             </span>
               </div>
             </div>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 w-full h-14 z-0 opacity-50 group-hover:opacity-80 transition-opacity">
+        <div className="absolute bottom-0 left-0 w-full h-8 sm:h-14 z-0 opacity-50 group-hover:opacity-80 transition-opacity">
           <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="w-full h-full">
             <path
               d={isPositive ? "M0 30 L0 15 Q 15 0, 30 15 T 60 15 T 90 15 L 100 15 L 100 30 Z" : "M0 30 L0 20 Q 25 35, 50 20 T 100 25 L 100 30 Z"}

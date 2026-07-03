@@ -23,6 +23,7 @@ const FilterPanel = ({ filters, style }) => {
   } = filters;
 
   const [productSearch, setProductSearch] = useState('');
+  const [channelSearch, setChannelSearch] = useState('');
 
   const onDateHover = (date) => { if (pendingRangeStart && !pendingRangeEnd) setHoverDay(date); };
 
@@ -32,6 +33,11 @@ const FilterPanel = ({ filters, style }) => {
   const productLabel = pendingProducts.length
     ? `${pendingProducts.length} Product${pendingProducts.length > 1 ? 's' : ''}`
     : 'All Products';
+  const mobileChanList = v2ChanGrid
+    .filter(([v]) => v !== 'all-chans')
+    .filter(([, lbl]) => lbl.toLowerCase().includes(channelSearch.toLowerCase()));
+  const activeFilterTypeCount = [pendingCats.length > 0, pendingChans.length > 0, pendingProducts.length > 0].filter(Boolean).length;
+  const CATEGORY_ICONS = { electronics: 'fa-tv', apparel: 'fa-shirt', 'home-garden': 'fa-house', 'pet-suppliers': 'fa-paw', all: 'fa-table-cells' };
 
   const SECTIONS = [
     { key: 'date', label: 'Select Date' },
@@ -42,14 +48,32 @@ const FilterPanel = ({ filters, style }) => {
 
   return (
     <div
-      className="fixed bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl z-[9999] w-[580px] overflow-hidden"
+      className="fixed bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl z-[9999] sm:w-[580px] overflow-hidden"
       style={style}
     >
-      <div className="flex" style={{ minHeight: '300px', maxHeight: '300px' }}>
-        <div className="w-[155px] flex-shrink-0 border-r border-gray-100 dark:border-slate-800 p-3 flex flex-col gap-1">
+      {/* MOBILE-only header — title + active-filter count badge + close */}
+      <div className="sm:hidden flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-800">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-bold text-gray-900 dark:text-slate-100">Filters</span>
+          {activeFilterTypeCount > 0 && (
+            <span className="w-5 h-5 flex items-center justify-center bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-[10px] font-bold rounded-full">
+              {activeFilterTypeCount}
+            </span>
+          )}
+        </div>
+        <button
+          onClick={() => setV2FilterOpen(false)}
+          className="w-7 h-7 flex items-center justify-center rounded-md text-gray-400 hover:text-gray-700 dark:hover:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-colors"
+        >
+          <i className="fa-solid fa-xmark text-sm" />
+        </button>
+      </div>
+
+      <div className="flex flex-col sm:flex-row max-h-[70vh] sm:max-h-[300px] sm:min-h-[300px] overflow-y-auto sm:overflow-hidden">
+        <div className="flex flex-row sm:flex-col gap-1 overflow-x-auto scrollbar-hide sm:overflow-visible border-b sm:border-b-0 sm:border-r border-gray-100 dark:border-slate-800 p-3 sm:w-[155px] sm:flex-shrink-0">
           {SECTIONS.map(sec => (
             <button key={sec.key} onClick={() => setV2Section(sec.key)}
-              className={`flex items-center gap-2 w-full text-left px-2.5 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${v2Section === sec.key ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+              className={`flex items-center gap-2 flex-shrink-0 sm:w-full text-left px-2.5 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${v2Section === sec.key ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
                 }`}
             >
               <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${v2Section === sec.key ? 'border-white dark:border-gray-900' : 'border-gray-300 dark:border-slate-600'}`}>
@@ -59,7 +83,7 @@ const FilterPanel = ({ filters, style }) => {
             </button>
           ))}
         </div>
-        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <div className="flex-1 flex flex-col min-w-0 sm:overflow-hidden">
           {v2Section === 'date' && (
             <div className="flex-1 flex flex-col p-4 gap-2">
               <div className="flex items-center gap-2 flex-wrap mb-3">
@@ -72,7 +96,53 @@ const FilterPanel = ({ filters, style }) => {
                   </button>
                 ))}
               </div>
-              <div className="flex gap-3 flex-1">
+              {/* MOBILE: Custom Range — Start/End info boxes + both calendars visible at once */}
+              <div className="sm:hidden flex flex-col gap-3">
+                <div>
+                  <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-1.5">Custom Range</p>
+                  <div className="flex items-center justify-between px-3 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-medium text-gray-600 dark:text-slate-300">
+                    Custom Range
+                    <i className="fa-solid fa-chevron-down text-[10px] text-gray-400 dark:text-slate-500" />
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 min-w-0 px-3 py-2 rounded-xl border border-gray-200 dark:border-slate-700">
+                    <p className="text-[9px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-0.5">Start Date</p>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-medium text-gray-800 dark:text-slate-200 truncate">
+                        {pendingRangeStart ? formatCalDate(pendingRangeStart) : 'Select date'}
+                      </span>
+                      <i className="fa-regular fa-calendar text-[11px] text-gray-400 dark:text-slate-500 flex-shrink-0" />
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0 px-3 py-2 rounded-xl border border-gray-200 dark:border-slate-700">
+                    <p className="text-[9px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-0.5">End Date</p>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-medium text-gray-800 dark:text-slate-200 truncate">
+                        {pendingRangeEnd ? formatCalDate(pendingRangeEnd) : 'Select date'}
+                      </span>
+                      <i className="fa-regular fa-calendar text-[11px] text-gray-400 dark:text-slate-500 flex-shrink-0" />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <MiniCalendar
+                    year={calViewYear} month={calViewMonth} showPrev showNext={false}
+                    onPrev={prevCalMonth} onNext={nextCalMonth}
+                    rangeStart={pendingRangeStart} rangeEnd={pendingRangeEnd} hoverDay={hoverDay}
+                    onDateClick={handleDateClick} onDateHover={onDateHover} onDateLeave={() => setHoverDay(null)}
+                  />
+                  <MiniCalendar
+                    year={calRightY} month={calRightM} showPrev={false} showNext
+                    onPrev={prevCalMonth} onNext={nextCalMonth}
+                    rangeStart={pendingRangeStart} rangeEnd={pendingRangeEnd} hoverDay={hoverDay}
+                    onDateClick={handleDateClick} onDateHover={onDateHover} onDateLeave={() => setHoverDay(null)}
+                  />
+                </div>
+              </div>
+
+              {/* DESKTOP: dual side-by-side calendar, unchanged */}
+              <div className="hidden sm:flex gap-3 flex-1">
                 <MiniCalendar
                   year={calViewYear} month={calViewMonth} showPrev showNext={false}
                   onPrev={prevCalMonth} onNext={nextCalMonth}
@@ -88,7 +158,7 @@ const FilterPanel = ({ filters, style }) => {
                 />
               </div>
               {pendingRangeStart && (
-                <div className="flex items-center gap-3 pt-2 border-t border-gray-100 dark:border-slate-800">
+                <div className="hidden sm:flex items-center gap-3 pt-2 border-t border-gray-100 dark:border-slate-800">
                   <span className="text-[11px] text-gray-600 dark:text-slate-400">
                     {formatCalDate(pendingRangeStart)}{pendingRangeEnd ? ` — ${formatCalDate(pendingRangeEnd)}` : ''}
                   </span>
@@ -97,48 +167,172 @@ const FilterPanel = ({ filters, style }) => {
             </div>
           )}
           {v2Section === 'category' && (
-            <div className="flex-1 flex flex-col p-4 gap-5">
-              <div>
-                <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-2">All Categories</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {V2_CAT_GRID.map(([val, lbl]) => {
-                    const isSel = val === 'all' ? pendingCats.length === 0 : pendingCats.includes(val);
-                    return <button key={val} onClick={() => togglePendingCat(val)} className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${isSel ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100' : 'border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'}`}>{lbl}</button>;
-                  })}
+            <>
+              {/* MOBILE: icon-card grid */}
+              <div className="sm:hidden flex-1 flex flex-col p-4 gap-4 min-h-0">
+                <div>
+                  <p className="text-sm font-bold text-gray-900 dark:text-slate-100 mb-3">All Categories</p>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {V2_CAT_GRID.map(([val, lbl]) => {
+                      const isSel = val === 'all' ? pendingCats.length === 0 : pendingCats.includes(val);
+                      return (
+                        <button
+                          key={val}
+                          onClick={() => togglePendingCat(val)}
+                          className={`relative flex items-center gap-2.5 px-3 py-3 rounded-xl border-2 text-left transition-all ${val === 'all' ? 'col-span-2' : ''} ${
+                            isSel ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-slate-700'
+                          }`}
+                        >
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                            isSel ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400'
+                          }`}>
+                            <i className={`fa-solid ${CATEGORY_ICONS[val] || 'fa-tag'} text-sm`} />
+                          </div>
+                          <span className="text-xs font-semibold text-gray-800 dark:text-slate-200">{lbl}</span>
+                          {isSel && (
+                            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900">
+                              <i className="fa-solid fa-check text-[7px] text-white" />
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
+                {pendingCats.length > 0 && (
+                  <div className="pt-3 border-t border-gray-100 dark:border-slate-800 mt-auto">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-bold text-gray-700 dark:text-slate-300">Selected ({pendingCats.length})</span>
+                      <button onClick={() => pendingCats.forEach(c => togglePendingCat(c))} className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 hover:underline">Clear All</button>
+                    </div>
+                    <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide">
+                      {pendingCats.map(cat => (
+                        <span key={cat} className="flex-shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-medium text-gray-700 dark:text-slate-300 whitespace-nowrap">
+                          {v2CatLabel(cat)}
+                          <button onClick={() => togglePendingCat(cat)} className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 transition">
+                            <i className="fa-solid fa-xmark text-[9px]" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              {pendingCats.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-gray-100 dark:border-slate-800 mt-auto">
-                  {pendingCats.map(cat => (
-                    <span key={cat} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-medium text-gray-700 dark:text-slate-300">
-                      {v2CatLabel(cat)} <button onClick={() => togglePendingCat(cat)} className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 transition"><i className="fa-solid fa-xmark text-[9px]" /></button>
-                    </span>
-                  ))}
+
+              {/* DESKTOP: pill-wrap grid, unchanged */}
+              <div className="hidden sm:flex flex-1 flex-col p-4 gap-5">
+                <div>
+                  <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-2">All Categories</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {V2_CAT_GRID.map(([val, lbl]) => {
+                      const isSel = val === 'all' ? pendingCats.length === 0 : pendingCats.includes(val);
+                      return <button key={val} onClick={() => togglePendingCat(val)} className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${isSel ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100' : 'border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'}`}>{lbl}</button>;
+                    })}
+                  </div>
                 </div>
-              )}
-            </div>
+                {pendingCats.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-2 border-t border-gray-100 dark:border-slate-800 mt-auto">
+                    {pendingCats.map(cat => (
+                      <span key={cat} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-medium text-gray-700 dark:text-slate-300">
+                        {v2CatLabel(cat)} <button onClick={() => togglePendingCat(cat)} className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 transition"><i className="fa-solid fa-xmark text-[9px]" /></button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
           )}
           {v2Section === 'channel' && (
-            <div className="flex-1 flex flex-col p-4 gap-5">
-              <div>
-                <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-2">All Channels</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {v2ChanGrid.map(([val, lbl]) => {
-                    const isSel = val === 'all-chans' ? pendingChans.length === 0 : pendingChans.includes(val);
-                    return <button key={val} onClick={() => val === 'all-chans' ? clearPendingChans() : togglePendingChan(val)} className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${isSel ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100' : 'border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'}`}>{lbl}</button>;
+            <>
+              {/* MOBILE: search + checkbox list */}
+              <div className="sm:hidden flex-1 flex flex-col p-4 gap-3 min-h-0">
+                <div className="relative flex-shrink-0">
+                  <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-xs" />
+                  <input
+                    type="text"
+                    value={channelSearch}
+                    onChange={(e) => setChannelSearch(e.target.value)}
+                    placeholder="Search channels..."
+                    className="w-full pl-8 pr-3 py-2 text-xs bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:border-gray-300 dark:focus:border-slate-600 text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 transition-colors"
+                  />
+                </div>
+                <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-0.5">
+                  {!channelSearch && (
+                    <button
+                      onClick={clearPendingChans}
+                      className="flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/40 text-left transition-colors"
+                    >
+                      <div className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 border-2 transition-colors ${
+                        pendingChans.length === 0 ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
+                      }`}>
+                        {pendingChans.length === 0 && <i className="fa-solid fa-check text-[8px] text-white dark:text-gray-900" />}
+                      </div>
+                      <span className="text-sm text-gray-700 dark:text-slate-300">All Channels</span>
+                    </button>
+                  )}
+                  {mobileChanList.map(([val, lbl]) => {
+                    const checked = pendingChans.includes(val);
+                    return (
+                      <button
+                        key={val}
+                        onClick={() => togglePendingChan(val)}
+                        className="flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/40 text-left transition-colors"
+                      >
+                        <div className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 border-2 transition-colors ${
+                          checked ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
+                        }`}>
+                          {checked && <i className="fa-solid fa-check text-[8px] text-white dark:text-gray-900" />}
+                        </div>
+                        <span className="text-sm text-gray-700 dark:text-slate-300">{lbl}</span>
+                      </button>
+                    );
                   })}
+                  {mobileChanList.length === 0 && (
+                    <p className="text-xs text-gray-400 dark:text-slate-500 text-center py-6">No channels found</p>
+                  )}
                 </div>
+                {pendingChans.length > 0 && (
+                  <div className="flex-shrink-0 pt-3 border-t border-gray-100 dark:border-slate-800">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-bold text-gray-700 dark:text-slate-300">Selected ({pendingChans.length})</span>
+                      <button onClick={clearPendingChans} className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 hover:underline">Clear All</button>
+                    </div>
+                    <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide">
+                      {pendingChans.map(ch => (
+                        <span key={ch} className="flex-shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-medium text-gray-700 dark:text-slate-300 whitespace-nowrap">
+                          {v2ChanLabel(ch)}
+                          <button onClick={() => togglePendingChan(ch)} className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 transition">
+                            <i className="fa-solid fa-xmark text-[9px]" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              {pendingChans.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-gray-100 dark:border-slate-800 mt-auto">
-                  {pendingChans.map(ch => (
-                    <span key={ch} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-medium text-gray-700 dark:text-slate-300">
-                      {v2ChanLabel(ch)} <button onClick={() => togglePendingChan(ch)} className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 transition"><i className="fa-solid fa-xmark text-[9px]" /></button>
-                    </span>
-                  ))}
+
+              {/* DESKTOP: pill-wrap grid, unchanged */}
+              <div className="hidden sm:flex flex-1 flex-col p-4 gap-5">
+                <div>
+                  <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-2">All Channels</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {v2ChanGrid.map(([val, lbl]) => {
+                      const isSel = val === 'all-chans' ? pendingChans.length === 0 : pendingChans.includes(val);
+                      return <button key={val} onClick={() => val === 'all-chans' ? clearPendingChans() : togglePendingChan(val)} className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${isSel ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100' : 'border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'}`}>{lbl}</button>;
+                    })}
+                  </div>
                 </div>
-              )}
-            </div>
+                {pendingChans.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-2 border-t border-gray-100 dark:border-slate-800 mt-auto">
+                    {pendingChans.map(ch => (
+                      <span key={ch} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-medium text-gray-700 dark:text-slate-300">
+                        {v2ChanLabel(ch)} <button onClick={() => togglePendingChan(ch)} className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 transition"><i className="fa-solid fa-xmark text-[9px]" /></button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
           )}
           {v2Section === 'product' && (
             <div className="flex-1 flex flex-col p-4 gap-3 min-h-0">

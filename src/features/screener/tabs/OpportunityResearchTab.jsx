@@ -204,6 +204,21 @@ const opportunities = [
   }
 ];
 
+// Shared Recharts tooltip style (used across all chart tooltips below).
+const tooltipStyle = { backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' };
+
+// Renders <Cell> entries colored per-item for Bar/Pie charts (reused across several charts below).
+const renderCells = (data) => data.map((entry, idx) => <Cell key={idx} fill={entry.color} />);
+
+// Icon + title metadata for each expandable opportunity modal panel.
+const OPP_EXPAND_MODAL_META = {
+  'opportunity-deep-dive': { icon: 'fa-magnifying-glass-chart', title: 'Opportunity Deep Dive' },
+  'filter-sort': { icon: 'fa-filter', title: 'Filter & Sort Opportunities' },
+  'opportunity-snapshot': { icon: 'fa-camera', title: 'Opportunity Snapshot' },
+  'hot-opportunity': { icon: 'fa-fire', title: 'Hot Opportunity' },
+  charts: { icon: 'fa-chart-bar', title: 'Opportunity Charts' },
+};
+
 const OpportunityResearchTab = () => {
   const [selectedKpiIdx, setSelectedKpiIdx] = useState(0);
   const kpiDetailModal = useModalToggle();
@@ -214,6 +229,7 @@ const OpportunityResearchTab = () => {
   const [expandedRow, setExpandedRow] = useState('smart-home-sensors');
 
   const selectedKpi = kpis[Math.min(selectedKpiIdx, kpis.length - 1)];
+  const modalMeta = OPP_EXPAND_MODAL_META[oppExpandModal] || OPP_EXPAND_MODAL_META.charts;
 
   const handleDetailedView = () => {
     if (oppDiveTab === 'kpi') {
@@ -527,11 +543,9 @@ const OpportunityResearchTab = () => {
                         <BarChart data={oppDistributionData}>
                           <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 8 }} />
                           <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 9 }} />
-                          <RechartsTooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' }} />
+                          <RechartsTooltip contentStyle={tooltipStyle} />
                           <Bar dataKey="value" radius={[3, 3, 0, 0]} barSize={24}>
-                            {oppDistributionData.map((entry, idx) => (
-                              <Cell key={idx} fill={entry.color} />
-                            ))}
+                            {renderCells(oppDistributionData)}
                           </Bar>
                         </BarChart>
                       </ResponsiveContainer>
@@ -578,21 +592,9 @@ const OpportunityResearchTab = () => {
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-800">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                  <i className={`fa-solid ${
-                    oppExpandModal === 'opportunity-deep-dive' ? 'fa-magnifying-glass-chart' :
-                    oppExpandModal === 'filter-sort' ? 'fa-filter' :
-                    oppExpandModal === 'opportunity-snapshot' ? 'fa-camera' :
-                    oppExpandModal === 'hot-opportunity' ? 'fa-fire' :
-                    'fa-chart-bar'
-                  } text-purple-600 dark:text-purple-400 text-sm`}></i>
+                  <i className={`fa-solid ${modalMeta.icon} text-purple-600 dark:text-purple-400 text-sm`}></i>
                 </div>
-                <h2 className="text-lg font-bold text-gray-800 dark:text-slate-100">
-                  {oppExpandModal === 'opportunity-deep-dive' ? 'Opportunity Deep Dive' :
-                   oppExpandModal === 'filter-sort' ? 'Filter & Sort Opportunities' :
-                   oppExpandModal === 'opportunity-snapshot' ? 'Opportunity Snapshot' :
-                   oppExpandModal === 'hot-opportunity' ? 'Hot Opportunity' :
-                   'Opportunity Charts'}
-                </h2>
+                <h2 className="text-lg font-bold text-gray-800 dark:text-slate-100">{modalMeta.title}</h2>
               </div>
               <button
                 onClick={() => setOppExpandModal(null)}
@@ -660,11 +662,9 @@ const OpportunityResearchTab = () => {
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
                             <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10 }} />
                             <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
-                            <RechartsTooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' }} />
+                            <RechartsTooltip contentStyle={tooltipStyle} />
                             <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={32}>
-                              {oppDistributionData.map((entry, idx) => (
-                                <Cell key={idx} fill={entry.color} />
-                              ))}
+                              {renderCells(oppDistributionData)}
                             </Bar>
                           </BarChart>
                         </ResponsiveContainer>
@@ -678,11 +678,9 @@ const OpportunityResearchTab = () => {
                             <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
                             <XAxis type="number" domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
                             <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10 }} width={120} />
-                            <RechartsTooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' }} />
+                            <RechartsTooltip contentStyle={tooltipStyle} />
                             <Bar dataKey="score" radius={[0, 4, 4, 0]} barSize={24}>
-                              {oppFactorScoresData.map((entry, idx) => (
-                                <Cell key={idx} fill={entry.color} />
-                              ))}
+                              {renderCells(oppFactorScoresData)}
                             </Bar>
                           </BarChart>
                         </ResponsiveContainer>
@@ -764,11 +762,9 @@ const OpportunityResearchTab = () => {
                             <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(255,255,255,0.3)" />
                             <XAxis type="number" domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 10 }} />
                             <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 10 }} width={120} />
-                            <RechartsTooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' }} />
+                            <RechartsTooltip contentStyle={tooltipStyle} />
                             <Bar dataKey="score" radius={[0, 4, 4, 0]} barSize={20}>
-                              {oppFactorScoresData.map((entry, idx) => (
-                                <Cell key={idx} fill={entry.color} />
-                              ))}
+                              {renderCells(oppFactorScoresData)}
                             </Bar>
                           </BarChart>
                         </ResponsiveContainer>
@@ -789,11 +785,9 @@ const OpportunityResearchTab = () => {
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
                             <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10 }} />
                             <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
-                            <RechartsTooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' }} />
+                            <RechartsTooltip contentStyle={tooltipStyle} />
                             <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={32}>
-                              {oppDistributionData.map((entry, idx) => (
-                                <Cell key={idx} fill={entry.color} />
-                              ))}
+                              {renderCells(oppDistributionData)}
                             </Bar>
                           </BarChart>
                         </ResponsiveContainer>
@@ -813,9 +807,7 @@ const OpportunityResearchTab = () => {
                               paddingAngle={5}
                               dataKey="value"
                             >
-                              {oppDistributionData.map((entry, idx) => (
-                                <Cell key={idx} fill={entry.color} />
-                              ))}
+                              {renderCells(oppDistributionData)}
                             </Pie>
                             <RechartsTooltip />
                             <Legend iconType="circle" />
@@ -832,11 +824,9 @@ const OpportunityResearchTab = () => {
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
                           <XAxis type="number" domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
                           <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10 }} width={120} />
-                          <RechartsTooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' }} />
+                          <RechartsTooltip contentStyle={tooltipStyle} />
                           <Bar dataKey="score" radius={[0, 4, 4, 0]} barSize={24}>
-                            {oppFactorScoresData.map((entry, idx) => (
-                              <Cell key={idx} fill={entry.color} />
-                            ))}
+                            {renderCells(oppFactorScoresData)}
                           </Bar>
                         </BarChart>
                       </ResponsiveContainer>

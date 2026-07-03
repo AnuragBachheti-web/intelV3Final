@@ -57,30 +57,31 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [filterPanelPos, setFilterPanelPos] = useState({ top: 64, right: 24 });
 
   /* ── V2 filter panel ── */
-  const [v2FilterOpen,  setV2FilterOpen]  = useState(false);
-  const [v2Section,     setV2Section]     = useState('date');
-  const [pendingDate,   setPendingDate]   = useState(() => {
+  const [v2FilterOpen, setV2FilterOpen] = useState(false);
+  const [v2Section, setV2Section] = useState('date');
+  const [pendingDate, setPendingDate] = useState(() => {
     const d = useFilterStore.getState().dateRange;
     return (d && d !== 'all') ? d : 'last-7-days';
   });
-  const [pendingCats,   setPendingCats]   = useState([]);
-  const [pendingChans,  setPendingChans]  = useState([]);
+  const [pendingCats, setPendingCats] = useState([]);
+  const [pendingChans, setPendingChans] = useState([]);
   const [pendingProducts, setPendingProducts] = useState([]);
-  const [appliedDate,   setAppliedDate]   = useState(() => {
+  const [appliedDate, setAppliedDate] = useState(() => {
     const d = useFilterStore.getState().dateRange;
     return (d && d !== 'all') ? d : null;
   });
-  const [appliedCats,   setAppliedCats]   = useState([]);
-  const [appliedChans,  setAppliedChans]  = useState([]);
+  const [appliedCats, setAppliedCats] = useState([]);
+  const [appliedChans, setAppliedChans] = useState([]);
   const [appliedProducts, setAppliedProducts] = useState([]);
-  const [chanDropOpen,  setChanDropOpen]  = useState(false);
+  const [chanDropOpen, setChanDropOpen] = useState(false);
   const [pendingRangeStart, setPendingRangeStart] = useState(null);
-  const [pendingRangeEnd,   setPendingRangeEnd]   = useState(null);
-  const [hoverDay,      setHoverDay]      = useState(null);
-  const [calViewYear,   setCalViewYear]   = useState(() => new Date().getMonth() === 0 ? new Date().getFullYear() - 1 : new Date().getFullYear());
-  const [calViewMonth,  setCalViewMonth]  = useState(() => new Date().getMonth() === 0 ? 11 : new Date().getMonth() - 1);
+  const [pendingRangeEnd, setPendingRangeEnd] = useState(null);
+  const [hoverDay, setHoverDay] = useState(null);
+  const [calViewYear, setCalViewYear] = useState(() => new Date().getMonth() === 0 ? new Date().getFullYear() - 1 : new Date().getFullYear());
+  const [calViewMonth, setCalViewMonth] = useState(() => new Date().getMonth() === 0 ? 11 : new Date().getMonth() - 1);
   const v2FilterRef = useRef(null);
-  const chanDropRef  = useRef(null);
+  const chanDropRef = useRef(null);
+  const mobileFilterBtnRef = useRef(null);
 
   const { setDateRange, category, setCategory, setChannel, setProducts } = useFilterStore();
   const navigate = useNavigate();
@@ -226,11 +227,10 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     <div className="flex items-center gap-1.5" ref={compactFilterRef}>
       <button
         onClick={handleOpenV2Filter}
-        className={`flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${
-          v2FilterOpen
+        className={`flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
             ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
             : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
-        }`}
+          }`}
       >
         <i className="fa-solid fa-sliders text-[11px]" />
         Filters
@@ -239,8 +239,8 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   ) : null;
 
   /* ── V2 filter helpers ── */
-  const v2ChanList    = channelOptions.filter(([v]) => v !== 'all');
-  const v2ChanGrid    = [...v2ChanList, ['all-chans','All Channels']];
+  const v2ChanList = channelOptions.filter(([v]) => v !== 'all');
+  const v2ChanGrid = [...v2ChanList, ['all-chans', 'All Channels']];
   const v2ChanLabel = (v) => channelOptions.find(([k]) => k === v)?.[1] || v;
 
   const prevCalMonth = () => {
@@ -265,10 +265,15 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
 
   function handleOpenV2Filter() {
     // Compute where to anchor the panel (below whichever trigger button is visible)
-    const triggerEl = isScrolled ? compactFilterRef.current : filterBtnRef.current;
+    const isMobile = window.innerWidth < 640;
+    const triggerEl = isMobile ? mobileFilterBtnRef.current : (isScrolled ? compactFilterRef.current : filterBtnRef.current);
     if (triggerEl) {
       const rect = triggerEl.getBoundingClientRect();
-      setFilterPanelPos({ top: rect.bottom + 8, right: Math.max(8, window.innerWidth - rect.right) });
+      if (isMobile) {
+        setFilterPanelPos({ top: rect.bottom + 8, left: 16, right: 16 });
+      } else {
+        setFilterPanelPos({ top: rect.bottom + 8, right: Math.max(8, window.innerWidth - rect.right) });
+      }
     }
     setPendingDate(appliedDate);
     setPendingCats([...appliedCats]);
@@ -359,7 +364,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
               );
             })}
           </div>
-          <div className="flex-shrink-0 flex items-center gap-2">
+          <div className="hidden md:flex flex-shrink-0 items-center gap-2">
             <span className="text-[10px] text-gray-500 dark:text-slate-400 font-medium whitespace-nowrap">AI View</span>
             <button
               onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { from: '/intel' } })}
@@ -373,9 +378,28 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
       </div>
       <div className="flex flex-col gap-5">
 
+        {/* MOBILE-only: page heading + Filters trigger (ss1 layout) */}
+        <div className="sm:hidden flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="font-bold text-gray-900 dark:text-slate-100 text-[17px] leading-tight tracking-tight">Intelligence</h2>
+            <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-0.5">Real-time sales analytics</p>
+          </div>
+          <button
+            ref={mobileFilterBtnRef}
+            onClick={handleOpenV2Filter}
+            className={`flex-shrink-0 flex items-center gap-1.5 px-3 h-8 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
+                ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
+                : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
+              }`}
+          >
+            <i className="fa-solid fa-sliders text-[11px]" />
+            Filters
+          </button>
+        </div>
+
         {/* Intel tabs (left) + Filter dropdowns (right) */}
-        <div className="flex items-center justify-between -mt-2 pb-4">
-          <div className="flex items-center gap-0.5">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between -mt-2 pb-0 sm:pb-4 gap-2 sm:gap-0">
+          <div className="flex items-center gap-0.5 overflow-x-auto scrollbar-hide sm:overflow-visible">
             {INTEL_TABS.map(tab => (
               <button
                 key={tab.key}
@@ -394,19 +418,21 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           {/* V2 filter — search icon + filter icon + chips + panel */}
           <div className="relative flex items-center gap-2" ref={v2FilterRef}>
 
-            {/* Filter button */}
+            {/* Filter button — hidden on mobile, replaced by the heading-row Filters button above */}
             <button
               ref={filterBtnRef}
               onClick={handleOpenV2Filter}
-              className={`flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${
-                v2FilterOpen
+              className={`hidden sm:flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
                   ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
                   : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
-              }`}
+                }`}
             >
               <i className="fa-solid fa-sliders text-[11px]" />
               Filters
             </button>
+
+            {/* Applied-filter chips — desktop only; mobile shows a count in the panel header instead */}
+            <div className="hidden sm:flex items-center gap-2">
 
             {/* Date chip — visible only when a date filter is applied */}
             {appliedDate !== null && (
@@ -494,6 +520,8 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
               </span>
             )}
 
+            </div>
+
             {/* Filter panel — vertical sidebar + content (fixed so it works from both header and content) */}
             {v2FilterOpen && (
               <IntelFilterPanel
@@ -511,7 +539,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                   setDateRange, setCategory, setChannel, setProducts,
                   setV2FilterOpen, handleApplyV2Filter,
                 }}
-                style={{ top: filterPanelPos.top, right: filterPanelPos.right }}
+                style={{ top: filterPanelPos.top, left: filterPanelPos.left, right: filterPanelPos.right }}
               />
             )}
 
@@ -529,20 +557,31 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
             </span>
             Customise KPIs
           </button>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] text-gray-500 dark:text-slate-400 font-medium">AI View</span>
+          {/* Hidden on mobile, visible from md and above */}
+          <div className="hidden md:flex items-center gap-2">
+            <span className="text-[11px] text-gray-500 dark:text-slate-400 font-medium">
+              AI View
+            </span>
+
             <button
-              onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel' } })}
+              onClick={() =>
+                navigate(`/detailed-view/${activeIntelTab}`, {
+                  state: { selectedKpiIndices, from: '/intel' },
+                })
+              }
               className="relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full bg-gray-300 dark:bg-slate-600 transition-colors hover:bg-gray-400 dark:hover:bg-slate-500"
             >
               <span className="inline-block h-3.5 w-3.5 transform rounded-full bg-white dark:bg-gray-900 transition-transform translate-x-0.5" />
             </button>
-            <span className="text-[11px] font-medium text-gray-500 dark:text-slate-400">Dashboard View</span>
+
+            <span className="text-[11px] font-medium text-gray-500 dark:text-slate-400">
+              Dashboard View
+            </span>
           </div>
         </div>
 
         {/* 6 stat cards */}
-        <div ref={kpiSectionRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 -mt-2">
+        <div ref={kpiSectionRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-4 -mt-2">
           {selectedKpiIndices.map(idx => {
             const stat = activeStats[idx] || activeStats[0];
             return (

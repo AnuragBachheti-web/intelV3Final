@@ -186,12 +186,12 @@ const InsightsPanel = ({
                     <span className="text-[10px] text-gray-400">•</span>
                     <span className="text-[10px] text-gray-500 dark:text-slate-400">{block.time}</span>
                   </div>
-                  {block.steps?.length > 0 && (
+                  {/* {block.steps?.length > 0 && (
                     <span className="flex items-center gap-0.5 flex-shrink-0">
                       <span className={`w-1.5 h-1.5 rounded-full inline-block flex-shrink-0 ${getPriorityDotClass(block.type)}`} />
                       <span className="text-[9px] font-semibold text-gray-700 dark:text-slate-300">{block.steps.length}</span>
                     </span>
-                  )}
+                  )} */}
                 </div>
                 <h4 className="text-[13px] font-medium leading-snug text-gray-900 dark:text-slate-100 hover:text-brand dark:hover:text-gray-200 transition-colors flex items-center gap-2 mb-2">
                   <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-50 dark:bg-amber-900/20 text-[9px] font-bold text-amber-600 dark:text-amber-400 flex-shrink-0">{displayIdx + 1}</span>

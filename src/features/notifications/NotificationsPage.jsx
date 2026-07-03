@@ -24,6 +24,8 @@ const NotificationsPage = () => {
 
   const [selectedId, setSelectedId] = useState(initialId);
   const [activeFilter, setActiveFilter] = useState('All');
+  // Mobile: list and detail are separate full-width screens instead of side-by-side panes.
+  const [mobileShowDetail, setMobileShowDetail] = useState(false);
 
   const filteredNotifications = notificationsData.filter(n => {
     if (activeFilter === 'Unread') return n.unread;
@@ -46,7 +48,7 @@ const NotificationsPage = () => {
       <div className="flex h-full bg-white dark:bg-slate-900">
 
         {/* ── Left panel: notification list ─────────────────────────────── */}
-        <div className="w-72 flex-shrink-0 border-r border-gray-200 dark:border-slate-800 flex flex-col bg-white dark:bg-slate-900">
+        <div className={`${mobileShowDetail ? 'hidden sm:flex' : 'flex'} w-full sm:w-72 sm:flex-shrink-0 flex-col border-r border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900`}>
 
           {/* Panel header */}
           <div className="px-4 pt-2.5 pb-2.5 border-b border-gray-200 dark:border-slate-800 flex-shrink-0">
@@ -89,7 +91,7 @@ const NotificationsPage = () => {
                 return (
                   <div
                     key={n.id}
-                    onClick={() => setSelectedId(n.id)}
+                    onClick={() => { setSelectedId(n.id); setMobileShowDetail(true); }}
                     className={`px-4 py-3.5 cursor-pointer transition-colors border-l-2 ${
                       isSelected
                         ? 'bg-gray-50 dark:bg-slate-800 border-l-gray-900 dark:border-l-slate-300'
@@ -119,7 +121,16 @@ const NotificationsPage = () => {
 
         {/* ── Right panel: detail view ───────────────────────────────────── */}
         {selected ? (
-          <div className="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-slate-950">
+          <div className={`${mobileShowDetail ? 'block' : 'hidden'} sm:block flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50 dark:bg-slate-950`}>
+
+            {/* Mobile-only: back to the notification list */}
+            <button
+              onClick={() => setMobileShowDetail(false)}
+              className="sm:hidden mb-4 flex items-center gap-1.5 text-xs font-semibold text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200 transition-colors"
+            >
+              <i className="fa-solid fa-arrow-left text-[10px]" />
+              Back to notifications
+            </button>
 
             {/* Notification header */}
             <div className="flex items-start gap-4 mb-6">
@@ -237,7 +248,7 @@ const NotificationsPage = () => {
             </button>
           </div>
         ) : (
-          <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-slate-950">
+          <div className={`${mobileShowDetail ? 'flex' : 'hidden'} sm:flex flex-1 items-center justify-center bg-gray-50 dark:bg-slate-950`}>
             <p className="text-gray-400 dark:text-slate-600 text-sm">Select a notification to view details</p>
           </div>
         )}

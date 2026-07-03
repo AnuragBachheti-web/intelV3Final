@@ -77,10 +77,17 @@ const useDetailedViewFilters = (isScrolled) => {
   const calRightY = calViewMonth === 11 ? calViewYear + 1 : calViewYear;
 
   const handleOpenV2Filter = () => {
-    const triggerEl = isScrolled ? compactFilterRef.current : filterBtnRef.current;
+    const isMobile = window.innerWidth < 640;
+    // Mobile has no compact header (it's hidden below sm), so always anchor off
+    // the FilterBar's own button rather than the (possibly hidden) compact one.
+    const triggerEl = isMobile ? filterBtnRef.current : (isScrolled ? compactFilterRef.current : filterBtnRef.current);
     if (triggerEl) {
       const rect = triggerEl.getBoundingClientRect();
-      setFilterPanelPos({ top: rect.bottom + 8, right: Math.max(8, window.innerWidth - rect.right) });
+      if (isMobile) {
+        setFilterPanelPos({ top: rect.bottom + 8, left: 16, right: 16 });
+      } else {
+        setFilterPanelPos({ top: rect.bottom + 8, right: Math.max(8, window.innerWidth - rect.right) });
+      }
     }
     setPendingDate(appliedDate);
     setPendingCats([...appliedCats]);

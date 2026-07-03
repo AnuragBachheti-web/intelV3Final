@@ -26,7 +26,7 @@ const StickyKpiStrip = ({ kpiIsSticky, statsData, onDashboardClick }) => (
           </div>
         ))}
       </div>
-      <div className="flex-shrink-0 flex items-center gap-2">
+      <div className="hidden md:flex flex-shrink-0 items-center gap-2">
         <span className="text-[10px] text-gray-400 dark:text-slate-500 font-medium whitespace-nowrap">AI View</span>
         <button
           onClick={onDashboardClick}
