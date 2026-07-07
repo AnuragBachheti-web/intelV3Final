@@ -94,7 +94,7 @@ const FilterBar = ({ filters }) => {
 
       </div>
 
-      {v2FilterOpen && <FilterPanel filters={filters} style={{ top: filterPanelPos.top, left: filterPanelPos.left, right: filterPanelPos.right }} />}
+      {v2FilterOpen && <FilterPanel filters={filters} style={{ top: filterPanelPos.top, left: filterPanelPos.left, right: filterPanelPos.right, bottom: filterPanelPos.bottom }} />}
     </div>
   );
 };

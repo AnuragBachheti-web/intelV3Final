@@ -366,13 +366,13 @@ const IntelSimulationPage = () => {
         </button>
       </div>
 
-      <div className="flex gap-4 min-h-0">
+      <div className="flex flex-col sm:flex-row gap-4 min-h-0">
 
         {/* ── Left: Simulation Input ────────────────────────────────────────── */}
-        <div className="w-[255px] flex-shrink-0">
-          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col h-full">
+        <div className="w-full sm:w-[255px] sm:flex-shrink-0">
+          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col sm:h-full">
 
-            <div className="space-y-3.5 flex-1 overflow-y-auto">
+            <div className="space-y-3.5 sm:flex-1 sm:overflow-y-auto">
 
               {/* INSIGHT — static label from the step that triggered the simulation */}
               <div>
@@ -508,8 +508,8 @@ const IntelSimulationPage = () => {
         </div>
 
         {/* ── Center: Simulation Results ────────────────────────────────────── */}
-        <div className="flex-1 min-w-0">
-          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4 h-full flex flex-col">
+        <div className="w-full sm:flex-1 sm:min-w-0">
+          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4 sm:h-full flex flex-col">
 
             {/* Header */}
             <div className="flex items-center justify-between mb-4 flex-shrink-0">
@@ -583,7 +583,7 @@ const IntelSimulationPage = () => {
             )}
 
             {/* Summary cards */}
-            <div className="grid grid-cols-3 gap-3 mb-4 flex-shrink-0">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 flex-shrink-0">
               {summaryCards.map(card => (
                 <div key={card.label} className={`p-3 border rounded-xl transition-colors ${
                   card.positive
@@ -612,8 +612,8 @@ const IntelSimulationPage = () => {
             </div>
 
             {/* Comparison table */}
-            <div className="flex-1 border border-gray-100 dark:border-slate-800 rounded-xl overflow-hidden min-h-0">
-              <div className="overflow-auto h-full">
+            <div className="sm:flex-1 border border-gray-100 dark:border-slate-800 rounded-xl overflow-hidden sm:min-h-0">
+              <div className="overflow-auto sm:h-full">
                 <table className="w-full">
                   <thead>
                     <tr className="bg-gray-50 dark:bg-slate-800/60 border-b border-gray-100 dark:border-slate-800">
@@ -665,10 +665,10 @@ const IntelSimulationPage = () => {
         </div>
 
         {/* ── Right: AI Copilot ─────────────────────────────────────────────── */}
-        <div className="w-[255px] flex-shrink-0">
-          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col h-full">
+        <div className="w-full sm:w-[255px] sm:flex-shrink-0">
+          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col sm:h-full">
 
-            <div className="flex-1 overflow-y-auto space-y-4 min-h-0">
+            <div className="sm:flex-1 sm:overflow-y-auto space-y-4 sm:min-h-0">
 
             {/* Context breadcrumb */}
               <div className="bg-gray-50 dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700 rounded-xl p-3">

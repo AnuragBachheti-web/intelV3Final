@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useOnboardingStore } from "../store/useOnboardingStore";
 import Sidebar from "./Sidebar";
 import Step1Auth from "../steps/Step1Auth";
@@ -40,6 +40,15 @@ function OnboardingLayout() {
     }
   }, [addConnectedMarketplace, setStep]);
 
+  const mainRef = useRef(null);
+
+  // Each Next/Back should land on the top of the new step instead of keeping
+  // the previous step's scroll position (most noticeable on mobile, where
+  // steps are taller than the viewport).
+  useEffect(() => {
+    mainRef.current?.scrollTo(0, 0);
+  }, [step]);
+
   const renderStep = () => {
     switch (step) {
       case 1: return <Step1Auth />;
@@ -69,7 +78,7 @@ function OnboardingLayout() {
         <Sidebar />
 
         {/* RIGHT CONTENT */}
-        <main className="flex-1 bg-white h-full flex flex-col px-5 py-6 sm:px-12 sm:py-10 lg:px-20 lg:py-14 overflow-y-auto custom-scrollbar">
+        <main ref={mainRef} className="flex-1 bg-white h-full flex flex-col px-5 py-6 sm:px-12 sm:py-10 lg:px-20 lg:py-14 overflow-y-auto custom-scrollbar">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}

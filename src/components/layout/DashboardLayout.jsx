@@ -29,6 +29,7 @@ const DashboardLayout = ({
   aiPromptFullWidth = false,
   searchCollapsed = false,
   headerCenterElement = null,
+  hideMobileSearchIcon = false,
 }) => {
   const _navigate = useNavigate();
   const location = useLocation();
@@ -117,6 +118,7 @@ const DashboardLayout = ({
               renderOnly="toolbar"
               darkMode={darkMode}
               onMenuClick={sidebarActive ? () => setMobileNavOpen(true) : undefined}
+              hideMobileSearchIcon={hideMobileSearchIcon}
             />
           </div>
         )}

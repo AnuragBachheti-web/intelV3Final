@@ -25,7 +25,10 @@ const NotificationsPage = () => {
   const [selectedId, setSelectedId] = useState(initialId);
   const [activeFilter, setActiveFilter] = useState('All');
   // Mobile: list and detail are separate full-width screens instead of side-by-side panes.
-  const [mobileShowDetail, setMobileShowDetail] = useState(false);
+  // If we arrived with an explicit selection (e.g. tapped a notification in the header
+  // drawer), skip straight to the detail screen instead of showing the list first.
+  // Desktop is unaffected — it always renders both panes regardless of this flag.
+  const [mobileShowDetail, setMobileShowDetail] = useState(!!location.state?.selectedId);
 
   const filteredNotifications = notificationsData.filter(n => {
     if (activeFilter === 'Unread') return n.unread;
@@ -129,7 +132,6 @@ const NotificationsPage = () => {
               className="sm:hidden mb-4 flex items-center gap-1.5 text-xs font-semibold text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200 transition-colors"
             >
               <i className="fa-solid fa-arrow-left text-[10px]" />
-              Back to notifications
             </button>
 
             {/* Notification header */}

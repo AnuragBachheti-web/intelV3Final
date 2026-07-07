@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import {
@@ -11,11 +11,11 @@ import {
 } from '../shared/data/intelData';
 
 const INSIGHTS_BY_INTEL_TAB = {
-  sales:     INSIGHTS_DATA,
-  margin:    MARGIN_INSIGHTS_DATA,
+  sales: INSIGHTS_DATA,
+  margin: MARGIN_INSIGHTS_DATA,
   inventory: INVENTORY_INSIGHTS_DATA,
-  ads:       ADS_INSIGHTS_DATA,
-  cash:      CASH_INSIGHTS_DATA,
+  ads: ADS_INSIGHTS_DATA,
+  cash: CASH_INSIGHTS_DATA,
 };
 import CustomActionModal from '../../action-center/components/CustomActionModal';
 
@@ -36,69 +36,69 @@ const INTEL_LABELS = {
 };
 
 const STEP_TYPE_META = {
-  CRITICAL:    { bg: 'bg-red-100 dark:bg-red-900/30',      color: 'text-red-600 dark:text-red-400'      },
-  HIGH:        { bg: 'bg-amber-100 dark:bg-amber-900/30',  color: 'text-amber-600 dark:text-amber-400'  },
-  OPPORTUNITY: { bg: 'bg-green-100 dark:bg-green-900/30',  color: 'text-green-600 dark:text-green-400'  },
-  INSIGHT:     { bg: 'bg-blue-100 dark:bg-blue-900/30',    color: 'text-blue-600 dark:text-blue-400'    },
-  MARKET:      { bg: 'bg-purple-100 dark:bg-purple-900/30',color: 'text-purple-600 dark:text-purple-400'},
-  PAYMENT:     { bg: 'bg-orange-100 dark:bg-orange-900/30',color: 'text-orange-600 dark:text-orange-400'},
+  CRITICAL: { bg: 'bg-red-100 dark:bg-red-900/30', color: 'text-red-600 dark:text-red-400' },
+  HIGH: { bg: 'bg-amber-100 dark:bg-amber-900/30', color: 'text-amber-600 dark:text-amber-400' },
+  OPPORTUNITY: { bg: 'bg-green-100 dark:bg-green-900/30', color: 'text-green-600 dark:text-green-400' },
+  INSIGHT: { bg: 'bg-blue-100 dark:bg-blue-900/30', color: 'text-blue-600 dark:text-blue-400' },
+  MARKET: { bg: 'bg-purple-100 dark:bg-purple-900/30', color: 'text-purple-600 dark:text-purple-400' },
+  PAYMENT: { bg: 'bg-orange-100 dark:bg-orange-900/30', color: 'text-orange-600 dark:text-orange-400' },
 };
 
 const INSIGHT_TYPE_META = {
-  CRITICAL:    { bg: 'bg-red-100 dark:bg-red-900/30',      color: 'text-red-600 dark:text-red-400'      },
-  OPPORTUNITY: { bg: 'bg-green-100 dark:bg-green-900/30',  color: 'text-green-600 dark:text-green-400'  },
-  INSIGHT:     { bg: 'bg-blue-100 dark:bg-blue-900/30',    color: 'text-blue-600 dark:text-blue-400'    },
-  MARKET:      { bg: 'bg-purple-100 dark:bg-purple-900/30',color: 'text-purple-600 dark:text-purple-400'},
-  REVIEW:      { bg: 'bg-amber-100 dark:bg-amber-900/30',  color: 'text-amber-600 dark:text-amber-400'  },
-  ALERT:       { bg: 'bg-orange-100 dark:bg-orange-900/30',color: 'text-orange-600 dark:text-orange-400'},
+  CRITICAL: { bg: 'bg-red-100 dark:bg-red-900/30', color: 'text-red-600 dark:text-red-400' },
+  OPPORTUNITY: { bg: 'bg-green-100 dark:bg-green-900/30', color: 'text-green-600 dark:text-green-400' },
+  INSIGHT: { bg: 'bg-blue-100 dark:bg-blue-900/30', color: 'text-blue-600 dark:text-blue-400' },
+  MARKET: { bg: 'bg-purple-100 dark:bg-purple-900/30', color: 'text-purple-600 dark:text-purple-400' },
+  REVIEW: { bg: 'bg-amber-100 dark:bg-amber-900/30', color: 'text-amber-600 dark:text-amber-400' },
+  ALERT: { bg: 'bg-orange-100 dark:bg-orange-900/30', color: 'text-orange-600 dark:text-orange-400' },
 };
 
 const PRIORITY_FILTERS = ['All', 'High', 'Medium', 'Low'];
 
 const TAB_STEP_METRIC = {
-  sales:     (id) => ({ label: 'Price',      value: `$${(149.99 - ((id - 1) % 3) * 14.50).toFixed(2)}` }),
-  margin:    (id) => ({ label: 'Margin',     value: `${(58.2  - ((id - 1) % 3) * 4.8).toFixed(1)}%` }),
-  inventory: (id) => ({ label: 'Stock',      value: `${47 - ((id - 1) % 3) * 11} units` }),
-  ads:       (id) => ({ label: 'Ad Budget',  value: `$${850 - ((id - 1) % 3) * 135}` }),
-  cash:      (id) => ({ label: 'Revenue',    value: `$${(8.4 - ((id - 1) % 3) * 0.9).toFixed(1)}k` }),
+  sales: (id) => ({ label: 'Price', value: `$${(149.99 - ((id - 1) % 3) * 14.50).toFixed(2)}` }),
+  margin: (id) => ({ label: 'Margin', value: `${(58.2 - ((id - 1) % 3) * 4.8).toFixed(1)}%` }),
+  inventory: (id) => ({ label: 'Stock', value: `${47 - ((id - 1) % 3) * 11} units` }),
+  ads: (id) => ({ label: 'Ad Budget', value: `$${850 - ((id - 1) % 3) * 135}` }),
+  cash: (id) => ({ label: 'Revenue', value: `$${(8.4 - ((id - 1) % 3) * 0.9).toFixed(1)}k` }),
 };
 
 const STEP_METRICS = {
   CRITICAL: [
-    { label: 'Risk Level',        value: 'High',      color: 'text-red-600 dark:text-red-400'     },
-    { label: 'Est. Revenue Saved', value: '+$12,400',  color: 'text-green-600 dark:text-green-400' },
-    { label: 'Time Sensitivity',  value: '< 24h',     color: 'text-red-600 dark:text-red-400'     },
-    { label: 'Confidence',        value: '94%',       color: 'text-blue-600 dark:text-blue-400'   },
+    { label: 'Risk Level', value: 'High', color: 'text-red-600 dark:text-red-400' },
+    { label: 'Est. Revenue Saved', value: '+$12,400', color: 'text-green-600 dark:text-green-400' },
+    { label: 'Time Sensitivity', value: '< 24h', color: 'text-red-600 dark:text-red-400' },
+    { label: 'Confidence', value: '94%', color: 'text-blue-600 dark:text-blue-400' },
   ],
   HIGH: [
-    { label: 'Est. Revenue Gain', value: '+$8,200',   color: 'text-green-600 dark:text-green-400' },
-    { label: 'Effort Level',      value: 'Medium',    color: 'text-amber-600 dark:text-amber-400' },
-    { label: 'Time to Execute',   value: '2–3 days',  color: 'text-gray-700 dark:text-slate-300'  },
-    { label: 'Confidence',        value: '88%',       color: 'text-blue-600 dark:text-blue-400'   },
+    { label: 'Est. Revenue Gain', value: '+$8,200', color: 'text-green-600 dark:text-green-400' },
+    { label: 'Effort Level', value: 'Medium', color: 'text-amber-600 dark:text-amber-400' },
+    { label: 'Time to Execute', value: '2–3 days', color: 'text-gray-700 dark:text-slate-300' },
+    { label: 'Confidence', value: '88%', color: 'text-blue-600 dark:text-blue-400' },
   ],
   OPPORTUNITY: [
     { label: 'Market Opportunity', value: '+$18,400', color: 'text-green-600 dark:text-green-400' },
-    { label: 'Est. ROAS',         value: '5.2x',      color: 'text-blue-600 dark:text-blue-400'   },
-    { label: 'Upside Potential',  value: 'High',      color: 'text-green-600 dark:text-green-400' },
-    { label: 'Confidence',        value: '82%',       color: 'text-blue-600 dark:text-blue-400'   },
+    { label: 'Est. ROAS', value: '5.2x', color: 'text-blue-600 dark:text-blue-400' },
+    { label: 'Upside Potential', value: 'High', color: 'text-green-600 dark:text-green-400' },
+    { label: 'Confidence', value: '82%', color: 'text-blue-600 dark:text-blue-400' },
   ],
   INSIGHT: [
-    { label: 'Data Points',       value: '47',        color: 'text-gray-700 dark:text-slate-300'  },
-    { label: 'Impact Score',      value: '7.4 / 10',  color: 'text-blue-600 dark:text-blue-400'   },
-    { label: 'Confidence',        value: '91%',       color: 'text-blue-600 dark:text-blue-400'   },
-    { label: 'Time to Action',    value: '3–5 days',  color: 'text-gray-700 dark:text-slate-300'  },
+    { label: 'Data Points', value: '47', color: 'text-gray-700 dark:text-slate-300' },
+    { label: 'Impact Score', value: '7.4 / 10', color: 'text-blue-600 dark:text-blue-400' },
+    { label: 'Confidence', value: '91%', color: 'text-blue-600 dark:text-blue-400' },
+    { label: 'Time to Action', value: '3–5 days', color: 'text-gray-700 dark:text-slate-300' },
   ],
   MARKET: [
-    { label: 'Market Reach',      value: '2.4 M',     color: 'text-purple-600 dark:text-purple-400'},
-    { label: 'Competitive Index', value: 'High',      color: 'text-amber-600 dark:text-amber-400' },
-    { label: 'Confidence',        value: '86%',       color: 'text-blue-600 dark:text-blue-400'   },
-    { label: 'Window',            value: '5–9 days',  color: 'text-gray-700 dark:text-slate-300'  },
+    { label: 'Market Reach', value: '2.4 M', color: 'text-purple-600 dark:text-purple-400' },
+    { label: 'Competitive Index', value: 'High', color: 'text-amber-600 dark:text-amber-400' },
+    { label: 'Confidence', value: '86%', color: 'text-blue-600 dark:text-blue-400' },
+    { label: 'Window', value: '5–9 days', color: 'text-gray-700 dark:text-slate-300' },
   ],
   PAYMENT: [
-    { label: 'Est. Savings',      value: '+$4,200',   color: 'text-green-600 dark:text-green-400' },
-    { label: 'Outstanding',       value: '$18,400',   color: 'text-red-600 dark:text-red-400'     },
-    { label: 'Confidence',        value: '95%',       color: 'text-blue-600 dark:text-blue-400'   },
-    { label: 'Processing Time',   value: '1–2 days',  color: 'text-gray-700 dark:text-slate-300'  },
+    { label: 'Est. Savings', value: '+$4,200', color: 'text-green-600 dark:text-green-400' },
+    { label: 'Outstanding', value: '$18,400', color: 'text-red-600 dark:text-red-400' },
+    { label: 'Confidence', value: '95%', color: 'text-blue-600 dark:text-blue-400' },
+    { label: 'Processing Time', value: '1–2 days', color: 'text-gray-700 dark:text-slate-300' },
   ],
 };
 
@@ -141,22 +141,23 @@ const getStepOutcomes = (type) => STEP_OUTCOMES[type] || STEP_OUTCOMES.INSIGHT;
 const getImplementationPlan = (step) => {
   if (!step) return 'Execute the recommended steps in priority order. Monitor key metrics over the next 48 hours and adjust based on performance data.';
   const { type, title } = step;
-  if (type === 'CRITICAL')    return `Escalate "${title}" immediately. Assign ownership within 2 hours and set up hourly metric monitoring. Prepare a rollback plan in case performance deviates from target.`;
-  if (type === 'HIGH')        return `Prioritise "${title}" in your next sprint. Brief the relevant team and validate results against projected impact after 72 hours.`;
+  if (type === 'CRITICAL') return `Escalate "${title}" immediately. Assign ownership within 2 hours and set up hourly metric monitoring. Prepare a rollback plan in case performance deviates from target.`;
+  if (type === 'HIGH') return `Prioritise "${title}" in your next sprint. Brief the relevant team and validate results against projected impact after 72 hours.`;
   if (type === 'OPPORTUNITY') return `Capture the "${title}" opportunity within the current window. Allocate budget and resources, track leading indicators daily, and scale up if early signals are positive within 48 hours.`;
-  if (type === 'MARKET')      return `Act on "${title}" before the competitive window closes. Brief marketing and pricing teams; set weekly review cadences to track market response.`;
+  if (type === 'MARKET') return `Act on "${title}" before the competitive window closes. Brief marketing and pricing teams; set weekly review cadences to track market response.`;
   return `Implement "${title}" as a measured action. Monitor key metrics over the next 48 hours and adjust based on performance data.`;
 };
 
 const getGuardrails = (step) => {
   const type = step?.type;
-  if (type === 'CRITICAL')    return 'Set price floor rules before any repricing. Monitor buy box and margin every 2 hours. Halt if gross margin drops below 20%. Ensure a rollback plan is ready.';
+  if (type === 'CRITICAL') return 'Set price floor rules before any repricing. Monitor buy box and margin every 2 hours. Halt if gross margin drops below 20%. Ensure a rollback plan is ready.';
   if (type === 'OPPORTUNITY') return 'Cap spend increases at 30% per day to avoid overspend. Confirm stock cover before scaling demand. Set a ROAS minimum alert at 3.0×.';
-  if (type === 'HIGH')        return 'Confirm resource availability before starting. Set clear success metrics for the 72-hour checkpoint. Flag any unexpected dependency on third-party systems or suppliers.';
+  if (type === 'HIGH') return 'Confirm resource availability before starting. Set clear success metrics for the 72-hour checkpoint. Flag any unexpected dependency on third-party systems or suppliers.';
   return 'Proceed carefully and monitor for unintended side effects. Stop or pause if key metrics deviate beyond acceptable thresholds. Maintain rollback capability throughout execution.';
 };
 
 const IntelV2InsightDetailPage = () => {
+  const topRef = useRef(null);
   const { intelTab, idx } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -210,6 +211,7 @@ const IntelV2InsightDetailPage = () => {
       showSearch={false}
       showTabs={false}
     >
+      <div ref={topRef} />
       {/* Back button */}
       <div className="flex items-center -mt-2 pb-4">
         <button
@@ -439,6 +441,89 @@ const IntelV2InsightDetailPage = () => {
             </div>
           )}
         </aside>
+      </div>
+
+      {/* MOBILE: Execute/Simulate + Other Insights — shown at the bottom of the page; desktop keeps the sticky sidebar above */}
+      <div className="lg:hidden flex flex-col gap-3 mt-4">
+        <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm p-4 flex flex-col gap-3">
+          {stateData?.executed ? (
+            <>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/40">
+                <i className="fa-solid fa-circle-check text-green-500 text-sm" />
+                <div>
+                  <p className="text-xs font-bold text-green-700 dark:text-green-400">Executed</p>
+                  {stateData?.executedAt && <p className="text-[10px] text-green-600/70 dark:text-green-500/70">{stateData.executedAt}</p>}
+                </div>
+              </div>
+              <button
+                onClick={() => navigate('/intel/rollback', {
+                  state: {
+                    insight,
+                    intelTab: stateIntelTab,
+                    executedAt: stateData?.executedAt,
+                    backState: location.state,
+                  },
+                })}
+                className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow"
+              >
+                <i className="fa-solid fa-rotate-left text-[11px]" /> Roll Back
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="w-full py-3 bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 rounded-xl font-bold text-sm hover:opacity-90 transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow">
+                <i className="fa-solid fa-bolt text-[11px]" /> Execute
+              </button>
+              <button
+                onClick={() => navigate('/intel/simulate', {
+                  state: {
+                    insight,
+                    step: selectedStep,
+                    intelTab: stateIntelTab,
+                    backTo: location.pathname,
+                    backState: location.state,
+                  },
+                })}
+                className="w-full py-3 bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-slate-200 rounded-xl font-bold text-sm border border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+              >
+                <i className="fa-solid fa-flask-vial text-[11px]" /> Simulate
+              </button>
+            </>
+          )}
+        </div>
+
+        {stateInsights.filter((_, i) => i !== currentIndex).length > 0 && (
+          <div>
+            <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-2 px-1 flex items-center gap-1.5">
+              <i className="fa-solid fa-list text-[9px]" /> Other Insights
+            </p>
+            <div className="flex flex-col divide-y divide-gray-200 dark:divide-slate-700/60 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl px-2">
+              {stateInsights
+                .map((ins, i) => ({ ins, i }))
+                .filter(({ i }) => i !== currentIndex)
+                .map(({ ins, i }, listIdx) => (
+                  // <button
+                  //   key={i}
+                  //   onClick={() => navigate(`/intel/insight/${stateIntelTab}/${i}`, { state: { ...stateData, currentIndex: i } })}
+                  //   className="text-left w-full px-2 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-800/60 transition-colors group flex items-start gap-2"
+                  // >
+                  <button
+  key={i}
+  onClick={() => {
+    navigate(`/intel/insight/${stateIntelTab}/${i}`, { state: { ...stateData, currentIndex: i } });
+    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }}
+  className="text-left w-full px-2 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-800/60 transition-colors group flex items-start gap-2"
+>
+                    <span className="flex-shrink-0 text-[10px] font-semibold text-gray-400 dark:text-slate-500 mt-0.5 w-3.5">{listIdx + 1}.</span>
+                    <span className="text-[13px] font-medium text-gray-700 dark:text-slate-300 leading-snug group-hover:text-gray-900 dark:group-hover:text-slate-100 truncate">
+                      {ins.heading}
+                    </span>
+                  </button>
+                ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <CustomActionModal isOpen={isCustomActionOpen} onClose={() => setIsCustomActionOpen(false)} />

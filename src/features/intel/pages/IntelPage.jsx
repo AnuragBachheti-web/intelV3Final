@@ -83,7 +83,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const chanDropRef = useRef(null);
   const mobileFilterBtnRef = useRef(null);
 
-  const { setDateRange, category, setCategory, setChannel, setProducts } = useFilterStore();
+  const { setDateRange, category, setCategory, setChannel, setProducts, searchQuery, setSearchQuery } = useFilterStore();
   const navigate = useNavigate();
   const { goToProduct, findWatchlistItem, buildFallbackWatchlistItem, buildAnalyticsKpiGroups } = useProductNavigation();
 
@@ -270,7 +270,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     if (triggerEl) {
       const rect = triggerEl.getBoundingClientRect();
       if (isMobile) {
-        setFilterPanelPos({ top: rect.bottom + 8, left: 16, right: 16 });
+        setFilterPanelPos({ top: rect.bottom + 8, left: 16, right: 16, bottom: 16 });
       } else {
         setFilterPanelPos({ top: rect.bottom + 8, right: Math.max(8, window.innerWidth - rect.right) });
       }
@@ -331,6 +331,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
       searchCollapsed={isScrolled}
       headerCenterElement={compactHeaderCenter}
       customRightElement={compactFilterElement}
+      hideMobileSearchIcon={!isScrolled}
     >
       {/* Sticky compact KPI strip — smoothly slides in when KPI section scrolls out of view */}
       <div
@@ -395,6 +396,18 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
             <i className="fa-solid fa-sliders text-[11px]" />
             Filters
           </button>
+        </div>
+
+        {/* MOBILE-only: search bar — sits between the heading/filters row and the tabs row */}
+        <div className="sm:hidden relative">
+          <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-xs pointer-events-none" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search products, SKUs, or customers..."
+            className="w-full pl-9 pr-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 outline-none focus:border-gray-300 dark:focus:border-slate-600 transition-colors"
+          />
         </div>
 
         {/* Intel tabs (left) + Filter dropdowns (right) */}
@@ -539,7 +552,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                   setDateRange, setCategory, setChannel, setProducts,
                   setV2FilterOpen, handleApplyV2Filter,
                 }}
-                style={{ top: filterPanelPos.top, left: filterPanelPos.left, right: filterPanelPos.right }}
+                style={{ top: filterPanelPos.top, left: filterPanelPos.left, right: filterPanelPos.right, bottom: filterPanelPos.bottom }}
               />
             )}
 

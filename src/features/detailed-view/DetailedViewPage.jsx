@@ -108,10 +108,14 @@ const DetailedViewPage = () => {
     >
       <StickyKpiStrip kpiIsSticky={kpiIsSticky} statsData={statsData} onDashboardClick={() => navigate(backRoute)} />
 
-      {/* Tab nav (left) + Filter button (right) */}
+      {/* Tab nav (left) + Filter button (right) — mobile shows Filters above the tabs, desktop unchanged */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 border-b border-gray-100 dark:border-slate-800 mb-5 pb-2 sm:pb-0">
-        <DetailViewTabNav intelType={intelType} onTabClick={goToTab} />
-        <FilterBar filters={filters} />
+        <div className="order-2 sm:order-none">
+          <DetailViewTabNav intelType={intelType} onTabClick={goToTab} />
+        </div>
+        <div className="order-1 sm:order-none">
+          <FilterBar filters={filters} />
+        </div>
       </div>
 
       {/* Toggle row — Customize KPIs (left) + Dashboard toggle (right) */}

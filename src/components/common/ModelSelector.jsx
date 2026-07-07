@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import useClickOutside from '../../hooks/useClickOutside';
+import { useNavigate } from 'react-router-dom';
 
 const MODELS = [
   { id: 'base',       label: 'Base',       locked: false, icon: 'fa-solid fa-star',     tagline: 'Great for everyday research' },
@@ -9,13 +10,14 @@ const MODELS = [
 ];
 
 const ModelSelector = ({ variant = 'default' }) => {
-  const [open, setOpen]           = useState(false);
-  const [selected, setSelected]   = useState(MODELS.find(m => !m.locked) || MODELS[0]);
-  const [dropdownPos, setPos]     = useState({ top: 0, bottom: 0, left: 0 });
-  const triggerRef                = useRef(null);
-  const dropdownRef               = useRef(null);
-  const isTopbar                  = variant === 'topbar';
-  const isCompact                 = variant === 'compact';
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(MODELS.find(m => !m.locked) || MODELS[0]);
+  const [dropdownPos, setPos] = useState({ top: 0, bottom: 0, left: 0 });
+  const triggerRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const isTopbar = variant === 'topbar';
+  const isCompact = variant === 'compact';
 
   useClickOutside(triggerRef, open, () => setOpen(false), dropdownRef);
 
@@ -37,16 +39,30 @@ const ModelSelector = ({ variant = 'default' }) => {
   };
 
   const triggerClass = isTopbar
-    ? 'flex items-center gap-1.5 text-[15px] font-normal text-gray-900 dark:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-800 px-2.5 py-1.5 rounded-lg transition-colors'
+    ? 'flex items-center gap-1.5 text-[15px] font-normal text-gray-900 dark:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-800 px-0 md:px-2.5 py-1.5 rounded-lg transition-colors'
     : variant === 'compact'
-    ? 'flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors whitespace-nowrap'
-    : 'flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 rounded-full border border-transparent hover:border-gray-200 dark:hover:border-slate-600 transition-all';
+      ? 'flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors whitespace-nowrap'
+      : 'flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 rounded-full border border-transparent hover:border-gray-200 dark:hover:border-slate-600 transition-all';
 
   return (
     <div ref={triggerRef} className="relative">
       <button onClick={handleToggle} className={triggerClass}>
         {isTopbar ? (
-          <span>Realify {selected.label} Model</span>
+          <>
+            {/* Mobile Back Button */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(-1);
+              }}
+              className="md:hidden w-7 pl-0 pr-2 h-7 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800"
+            >
+              <i className="fa-solid fa-arrow-left text-sm"></i>
+            </button>
+
+            <span> {selected.label} </span>
+          </>
         ) : (
           <>
             <span className={`${isCompact ? 'hidden sm:inline' : ''} text-gray-400 dark:text-slate-500 font-medium`}>Model</span>
@@ -122,13 +138,12 @@ const ModelSelector = ({ variant = 'default' }) => {
                   onClick={() => {
                     if (!model.locked) { setSelected(model); setOpen(false); }
                   }}
-                  className={`w-full text-left px-4 py-2.5 text-sm flex items-center justify-between transition-colors ${
-                    isSelected
+                  className={`w-full text-left px-4 py-2.5 text-sm flex items-center justify-between transition-colors ${isSelected
                       ? 'bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-slate-100'
                       : model.locked
-                      ? 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700/60 cursor-default'
-                      : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700/60 cursor-pointer'
-                  }`}
+                        ? 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700/60 cursor-default'
+                        : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700/60 cursor-pointer'
+                    }`}
                 >
                   <span className={`font-medium ${isSelected ? 'text-gray-900 dark:text-slate-100' : ''}`}>
                     {model.label}

@@ -84,7 +84,7 @@ const useDetailedViewFilters = (isScrolled) => {
     if (triggerEl) {
       const rect = triggerEl.getBoundingClientRect();
       if (isMobile) {
-        setFilterPanelPos({ top: rect.bottom + 8, left: 16, right: 16 });
+        setFilterPanelPos({ top: rect.bottom + 8, left: 16, right: 16, bottom: 16 });
       } else {
         setFilterPanelPos({ top: rect.bottom + 8, right: Math.max(8, window.innerWidth - rect.right) });
       }

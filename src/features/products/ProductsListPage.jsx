@@ -183,77 +183,79 @@ const BinView = ({ items, onBack, onRestore, onRestoreMany }) => {
         </div>
       ) : (
         <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-100 dark:border-slate-800">
-                <th className="px-4 py-3 w-8">
-                  <input type="checkbox" checked={items.length > 0 && selectedIds.size === items.length} onChange={toggleAll} className="rounded border-gray-300 dark:border-slate-600" />
-                </th>
-                <th className="px-4 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-10">#</th>
-                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-12">Image</th>
-                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Product</th>
-                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Status</th>
-                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Price</th>
-                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Category</th>
-                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Inventory</th>
-                <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Velocity</th>
-                <th className="px-3 py-3 w-20"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50 dark:divide-slate-800/60">
-              {items.map((product, idx) => {
-                const ss = STATUS_STYLES[product.status] || STATUS_STYLES.Active;
-                return (
-                  <tr key={product.id} className="hover:bg-gray-50/80 dark:hover:bg-slate-800/30 transition-colors opacity-70">
-                    <td className="px-4 py-3 w-8">
-                      <input type="checkbox" checked={selectedIds.has(product.id)} onChange={() => toggleSelect(product.id)} className="rounded border-gray-300 dark:border-slate-600" />
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-400 dark:text-slate-500 font-mono w-10">{idx + 1}</td>
-                    <td className="px-3 py-3">
-                      <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
-                        {product.image
-                          ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-                          : <i className="fa-solid fa-box text-gray-300 dark:text-slate-600 text-[11px]" />}
-                      </div>
-                    </td>
-                    <td className="px-3 py-3 min-w-[160px]">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 leading-tight">{product.name}</p>
-                      <p className="text-[10px] text-gray-400 dark:text-slate-500 font-mono mt-0.5">{product.sku}</p>
-                    </td>
-                    <td className="px-3 py-3">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${ss.pill}`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${ss.dot} flex-shrink-0`} />
-                        {product.status}
-                      </span>
-                    </td>
-                    <td className="px-3 py-3">
-                      <span className="text-xs font-semibold text-gray-700 dark:text-slate-300">{product.price}</span>
-                    </td>
-                    <td className="px-3 py-3">
-                      <span className="text-xs text-gray-600 dark:text-slate-400">{product.category}</span>
-                    </td>
-                    <td className="px-3 py-3">
-                      <span className={`text-xs font-semibold ${product.inventory === 0 ? 'text-red-600 dark:text-red-400' : product.inventory < 20 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-700 dark:text-slate-300'}`}>
-                        {product.inventory === 0 ? 'Out of stock' : `${product.inventory.toLocaleString()} in stock`}
-                      </span>
-                    </td>
-                    <td className="px-3 py-3">
-                      <span className="text-xs text-gray-600 dark:text-slate-400">{product.velocity}</span>
-                    </td>
-                    <td className="px-3 py-3 text-right">
-                      <button
-                        onClick={() => onRestore(product.id)}
-                        title="Restore"
-                        className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-green-200 dark:border-green-800/40 text-green-700 dark:text-green-400 text-[11px] font-semibold hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
-                      >
-                        <i className="fa-solid fa-rotate-left text-[9px]" /> Restore
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[640px] lg:min-w-0">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-slate-800">
+                  <th className="px-4 py-3 w-8">
+                    <input type="checkbox" checked={items.length > 0 && selectedIds.size === items.length} onChange={toggleAll} className="rounded border-gray-300 dark:border-slate-600" />
+                  </th>
+                  <th className="px-4 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-10">#</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-12">Image</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Product</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Status</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Price</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Category</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Inventory</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Velocity</th>
+                  <th className="px-3 py-3 w-20"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50 dark:divide-slate-800/60">
+                {items.map((product, idx) => {
+                  const ss = STATUS_STYLES[product.status] || STATUS_STYLES.Active;
+                  return (
+                    <tr key={product.id} className="hover:bg-gray-50/80 dark:hover:bg-slate-800/30 transition-colors opacity-70">
+                      <td className="px-4 py-3 w-8">
+                        <input type="checkbox" checked={selectedIds.has(product.id)} onChange={() => toggleSelect(product.id)} className="rounded border-gray-300 dark:border-slate-600" />
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-400 dark:text-slate-500 font-mono w-10">{idx + 1}</td>
+                      <td className="px-3 py-3">
+                        <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
+                          {product.image
+                            ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                            : <i className="fa-solid fa-box text-gray-300 dark:text-slate-600 text-[11px]" />}
+                        </div>
+                      </td>
+                      <td className="px-3 py-3 min-w-[160px]">
+                        <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 leading-tight">{product.name}</p>
+                        <p className="text-[10px] text-gray-400 dark:text-slate-500 font-mono mt-0.5">{product.sku}</p>
+                      </td>
+                      <td className="px-3 py-3">
+                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${ss.pill}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${ss.dot} flex-shrink-0`} />
+                          {product.status}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3">
+                        <span className="text-xs font-semibold text-gray-700 dark:text-slate-300">{product.price}</span>
+                      </td>
+                      <td className="px-3 py-3">
+                        <span className="text-xs text-gray-600 dark:text-slate-400">{product.category}</span>
+                      </td>
+                      <td className="px-3 py-3">
+                        <span className={`text-xs font-semibold ${product.inventory === 0 ? 'text-red-600 dark:text-red-400' : product.inventory < 20 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-700 dark:text-slate-300'}`}>
+                          {product.inventory === 0 ? 'Out of stock' : `${product.inventory.toLocaleString()} in stock`}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3">
+                        <span className="text-xs text-gray-600 dark:text-slate-400">{product.velocity}</span>
+                      </td>
+                      <td className="px-3 py-3 text-right">
+                        <button
+                          onClick={() => onRestore(product.id)}
+                          title="Restore"
+                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-green-200 dark:border-green-800/40 text-green-700 dark:text-green-400 text-[11px] font-semibold hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
+                        >
+                          <i className="fa-solid fa-rotate-left text-[9px]" /> Restore
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
@@ -709,11 +711,10 @@ const ProductsListPage = () => {
                 {/* ── View Controls: single Filters button ── */}
                 <div className="relative" ref={viewPanelRef}>
                   <button onClick={() => viewPanelOpen ? setViewPanelOpen(false) : openViewPanel('filters')}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
-                      viewPanelOpen || filterCategory !== 'All' || sortBy !== null || cols.some(c => !c.visible)
-                        ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100'
-                        : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
-                    }`}>
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${viewPanelOpen || filterCategory !== 'All' || sortBy !== null || cols.some(c => !c.visible)
+                      ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100'
+                      : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
+                      }`}>
                     <i className="fa-solid fa-sliders text-[10px]" /> Filters
                     {(filterCategory !== 'All' || sortBy !== null || cols.some(c => !c.visible)) &&
                       <span className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />}
@@ -729,19 +730,17 @@ const ProductsListPage = () => {
                         {/* Left sidebar */}
                         <div className="w-[110px] flex-shrink-0 border-r border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/40 p-2 flex flex-col gap-0.5">
                           {[
-                            { key: 'filters', label: 'Filters',  icon: 'fa-sliders',       badge: filterCategory !== 'All' },
-                            { key: 'sort',    label: 'Sort',     icon: 'fa-sort',           badge: !!pendingSortBy },
-                            { key: 'columns', label: 'Columns',  icon: 'fa-table-columns',  badge: pendingCols.some(c => !c.visible) },
+                            { key: 'filters', label: 'Filters', icon: 'fa-sliders', badge: filterCategory !== 'All' },
+                            { key: 'sort', label: 'Sort', icon: 'fa-sort', badge: !!pendingSortBy },
+                            { key: 'columns', label: 'Columns', icon: 'fa-table-columns', badge: pendingCols.some(c => !c.visible) },
                           ].map(tab => (
                             <button key={tab.key} onClick={() => setViewPanelTab(tab.key)}
-                              className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-left transition-colors ${
-                                viewPanelTab === tab.key
-                                  ? 'bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 font-semibold shadow-sm'
-                                  : 'text-gray-500 dark:text-slate-400 hover:bg-white/70 dark:hover:bg-slate-900/50 hover:text-gray-700 dark:hover:text-slate-200 font-medium'
-                              }`}>
-                              <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${
-                                viewPanelTab === tab.key ? 'border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
-                              }`}>
+                              className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-left transition-colors ${viewPanelTab === tab.key
+                                ? 'bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 font-semibold shadow-sm'
+                                : 'text-gray-500 dark:text-slate-400 hover:bg-white/70 dark:hover:bg-slate-900/50 hover:text-gray-700 dark:hover:text-slate-200 font-medium'
+                                }`}>
+                              <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${viewPanelTab === tab.key ? 'border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
+                                }`}>
                                 {viewPanelTab === tab.key && <span className="w-1.5 h-1.5 rounded-full bg-gray-900 dark:bg-slate-100" />}
                               </span>
                               <span className="truncate">{tab.label}</span>
@@ -760,11 +759,10 @@ const ProductsListPage = () => {
                               <div className="flex flex-wrap gap-1.5">
                                 {CATEGORIES.map(cat => (
                                   <button key={cat} onClick={() => setPendingCategory(cat)}
-                                    className={`px-2.5 py-1 rounded-lg border text-[11px] font-medium transition-all ${
-                                      pendingCategory === cat
-                                        ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100'
-                                        : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
-                                    }`}>
+                                    className={`px-2.5 py-1 rounded-lg border text-[11px] font-medium transition-all ${pendingCategory === cat
+                                      ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100'
+                                      : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
+                                      }`}>
                                     {cat}
                                   </button>
                                 ))}
@@ -788,15 +786,13 @@ const ProductsListPage = () => {
                                 {SORT_OPTIONS.map(opt => (
                                   <button key={opt.key}
                                     onClick={() => { if (pendingSortBy === opt.key) setPendingSortDir(d => d === 'asc' ? 'desc' : 'asc'); else { setPendingSortBy(opt.key); setPendingSortDir('asc'); } }}
-                                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
-                                      pendingSortBy === opt.key
-                                        ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100 font-semibold'
-                                        : 'text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 font-medium'
-                                    }`}>
-                                    <div className="flex items-center gap-2">
-                                      <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
-                                        pendingSortBy === opt.key ? 'border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
+                                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${pendingSortBy === opt.key
+                                      ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100 font-semibold'
+                                      : 'text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 font-medium'
                                       }`}>
+                                    <div className="flex items-center gap-2">
+                                      <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${pendingSortBy === opt.key ? 'border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
+                                        }`}>
                                         {pendingSortBy === opt.key && <span className="w-1.5 h-1.5 rounded-full bg-gray-900 dark:bg-slate-100" />}
                                       </span>
                                       {opt.label}
@@ -852,117 +848,123 @@ const ProductsListPage = () => {
 
             {/* Edit banner for inline row editing */}
             {editingRowId !== null && (
-              <EditBanner onGoToMarketplace={() => {}} />
+              // <EditBanner onGoToMarketplace={() => { }} />
+              <MarketplaceSyncBanner onGoToMarketplace={() => { }} />
             )}
 
             {/* Table */}
             <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-100 dark:border-slate-800">
-                    <th className="px-4 py-3 w-8">
-                      <input type="checkbox" checked={pageProducts.length > 0 && selectedIds.size === pageProducts.length} onChange={toggleAll} className="rounded border-gray-300 dark:border-slate-600 text-brand focus:ring-brand/20" />
-                    </th>
-                    <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-8">#</th>
-                    <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-12">Image</th>
-                    <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Product</th>
-                    {visibleCols.map(col => (
-                      <th key={col.key} className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">{col.label}</th>
-                    ))}
-                    <th className="px-3 py-3 w-24"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50 dark:divide-slate-800/60">
-                  {pageProducts.length === 0 ? (
-                    <tr><td colSpan={5 + visibleCols.length} className="px-4 py-12 text-center text-sm text-gray-400 dark:text-slate-500">No products match your search.</td></tr>
-                  ) : pageProducts.map((product, idx) => {
-                    const isEditing   = editingRowId === product.id;
-                    const isDisabled  = editingRowId !== null && !isEditing;
-                    const rowNum      = (page - 1) * PAGE_SIZE + idx + 1;
-                    return (
-                      <tr
-                        key={product.id}
-                        onClick={!isEditing && !isDisabled ? () => handleProductClick(product) : undefined}
-                        className={`transition-colors ${isEditing ? 'bg-gray-50/80 dark:bg-slate-800/30' : isDisabled ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/30 cursor-pointer group'}`}
-                      >
-                        <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
-                          <input type="checkbox" checked={selectedIds.has(product.id)} onChange={() => toggleSelect(product.id)} disabled={editingRowId !== null} className="rounded border-gray-300 dark:border-slate-600 text-brand focus:ring-brand/20 disabled:opacity-40" />
-                        </td>
-                        {/* Row number */}
-                        <td className="px-3 py-3 w-8">
-                          <span className="text-xs text-gray-400 dark:text-slate-500 font-mono select-none">{rowNum}</span>
-                        </td>
-                        <td className="px-3 py-3">
-                          <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
-                            {product.image
-                              ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-                              : <i className="fa-solid fa-box text-gray-300 dark:text-slate-600 text-[11px]" />}
-                          </div>
-                        </td>
-                        <td className="px-3 py-3 min-w-[160px]">
-                          {isEditing ? (
-                            <div className="flex flex-col gap-0.5">
-                              <input type="text" value={editingRowVals.name} onChange={e => updateEditVal('name', e.target.value)}
-                                className="text-sm font-semibold text-gray-900 dark:text-slate-100 bg-transparent border-b border-gray-300 dark:border-slate-600 focus:border-gray-500 dark:focus:border-slate-400 outline-none py-0.5 w-full" />
-                              <p className="text-[10px] text-gray-400 dark:text-slate-500 font-mono">{product.sku}</p>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[640px] lg:min-w-0">
+                  <thead>
+                    <tr className="border-b border-gray-100 dark:border-slate-800">
+                      <th className="px-4 py-3 w-8">
+                        <input type="checkbox" checked={pageProducts.length > 0 && selectedIds.size === pageProducts.length} onChange={toggleAll} className="rounded border-gray-300 dark:border-slate-600 text-brand focus:ring-brand/20" />
+                      </th>
+                      <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-8">#</th>
+                      <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-12">Image</th>
+                      <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Product</th>
+                      {visibleCols.map(col => (
+                        <th key={col.key} className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">{col.label}</th>
+                      ))}
+                      <th className="px-3 py-3 w-24"></th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50 dark:divide-slate-800/60">
+                    {pageProducts.length === 0 ? (
+                      <tr><td colSpan={5 + visibleCols.length} className="px-4 py-12 text-center text-sm text-gray-400 dark:text-slate-500">No products match your search.</td></tr>
+                    ) : (editingRowId !== null
+                      ? pageProducts.filter(p => p.id === editingRowId)
+                      : pageProducts
+                    ).map((product) => {
+                      const isEditing = editingRowId === product.id;
+                      const isDisabled = false;
+                      const rowNum = pageProducts.findIndex(p => p.id === product.id) + (page - 1) * PAGE_SIZE + 1;
+                      return (
+                        <tr
+                          key={product.id}
+                          onClick={!isEditing && !isDisabled ? () => handleProductClick(product) : undefined}
+                          className={`transition-colors ${isEditing ? 'bg-gray-50/80 dark:bg-slate-800/30' : isDisabled ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/30 cursor-pointer group'}`}
+                        >
+                          <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
+                            <input type="checkbox" checked={selectedIds.has(product.id)} onChange={() => toggleSelect(product.id)} disabled={editingRowId !== null} className="rounded border-gray-300 dark:border-slate-600 text-brand focus:ring-brand/20 disabled:opacity-40" />
+                          </td>
+                          {/* Row number */}
+                          <td className="px-3 py-3 w-8">
+                            <span className="text-xs text-gray-400 dark:text-slate-500 font-mono select-none">{rowNum}</span>
+                          </td>
+                          <td className="px-3 py-3">
+                            <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
+                              {product.image
+                                ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                                : <i className="fa-solid fa-box text-gray-300 dark:text-slate-600 text-[11px]" />}
                             </div>
-                          ) : (
-                            <>
-                              <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 group-hover:text-brand dark:group-hover:text-gray-200 transition-colors leading-tight">{product.name}</p>
-                              <p className="text-[10px] text-gray-400 dark:text-slate-500 font-mono mt-0.5">{product.sku}</p>
-                            </>
-                          )}
-                        </td>
-                        {visibleCols.map(col => isEditing ? renderEditCell(col.key) : renderCell(product, col.key))}
+                          </td>
+                          <td className="px-3 py-3 min-w-[160px]">
+                            {isEditing ? (
+                              <div className="flex flex-col gap-0.5">
+                                <input type="text" value={editingRowVals.name} onChange={e => updateEditVal('name', e.target.value)}
+                                  className="text-sm font-semibold text-gray-900 dark:text-slate-100 bg-transparent border-b border-gray-300 dark:border-slate-600 focus:border-gray-500 dark:focus:border-slate-400 outline-none py-0.5 w-full" />
+                                <p className="text-[10px] text-gray-400 dark:text-slate-500 font-mono">{product.sku}</p>
+                              </div>
+                            ) : (
+                              <>
+                                <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 group-hover:text-brand dark:group-hover:text-gray-200 transition-colors leading-tight">{product.name}</p>
+                                <p className="text-[10px] text-gray-400 dark:text-slate-500 font-mono mt-0.5">{product.sku}</p>
+                              </>
+                            )}
+                          </td>
+                          {visibleCols.map(col => isEditing ? renderEditCell(col.key) : renderCell(product, col.key))}
 
-                        {/* Action buttons */}
-                        <td className="px-3 py-3" onClick={e => e.stopPropagation()}>
-                          {isEditing ? (
-                            <div className="flex items-center gap-1">
-                              <button onClick={saveEdit} className="w-7 h-7 flex items-center justify-center rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 hover:opacity-80 transition">
-                                <i className="fa-solid fa-check text-[10px]" />
-                              </button>
-                              <button onClick={cancelEdit} className="w-7 h-7 flex items-center justify-center rounded-xl border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition">
-                                <i className="fa-solid fa-xmark text-[10px]" />
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="flex items-center gap-0.5">
-                              {/* Edit */}
-                              <button
-                                onClick={e => startEdit(e, product)}
-                                disabled={editingRowId !== null}
-                                title="Edit"
-                                className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-0"
-                              >
-                                <i className="fa-solid fa-pen text-[10px]" />
-                              </button>
-                              {/* Draft */}
-                              <button
-                                onClick={e => handleDraftRow(product, e)}
-                                disabled={editingRowId !== null}
-                                title="Mark as Draft"
-                                className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors disabled:opacity-0"
-                              >
-                                <i className="fa-solid fa-file-pen text-[10px]" />
-                              </button>
-                              {/* Delete */}
-                              <button
-                                onClick={e => handleDeleteProduct(product, e)}
-                                disabled={editingRowId !== null}
-                                title="Delete"
-                                className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-0"
-                              >
-                                <i className="fa-solid fa-trash text-[10px]" />
-                              </button>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                          {/* Action buttons */}
+                          <td className="px-3 py-3" onClick={e => e.stopPropagation()}>
+                            {isEditing ? (
+                              <div className="flex items-center gap-1">
+                                <button onClick={saveEdit} className="w-7 h-7 flex items-center justify-center rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 hover:opacity-80 transition">
+                                  <i className="fa-solid fa-check text-[10px]" />
+                                </button>
+                                <button onClick={cancelEdit} className="w-7 h-7 flex items-center justify-center rounded-xl border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition">
+                                  <i className="fa-solid fa-xmark text-[10px]" />
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-0.5">
+                                {/* Edit */}
+                                <button
+                                  onClick={e => startEdit(e, product)}
+                                  disabled={editingRowId !== null}
+                                  title="Edit"
+                                  className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-0"
+                                >
+                                  <i className="fa-solid fa-pen text-[10px]" />
+                                </button>
+                                {/* Draft */}
+                                <button
+                                  onClick={e => handleDraftRow(product, e)}
+                                  disabled={editingRowId !== null}
+                                  title="Mark as Draft"
+                                  className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors disabled:opacity-0"
+                                >
+                                  <i className="fa-solid fa-file-pen text-[10px]" />
+                                </button>
+                                {/* Delete */}
+                                <button
+                                  onClick={e => handleDeleteProduct(product, e)}
+                                  disabled={editingRowId !== null}
+                                  title="Delete"
+                                  className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-0"
+                                >
+                                  <i className="fa-solid fa-trash text-[10px]" />
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             {/* Pagination */}

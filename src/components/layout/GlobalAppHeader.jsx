@@ -320,6 +320,7 @@ const GlobalAppHeader = ({
   centerElement = null,
   darkMode = false,
   onMenuClick,
+  hideMobileSearchIcon = false,
 }) => {
   const location = useLocation();
   const {
@@ -594,7 +595,7 @@ const GlobalAppHeader = ({
           <img src={darkMode ? white_latest : dark_latest} alt="Realify" className="h-[2.5rem] w-auto max-w-[100px] object-contain" />
         </div>
         <div className="relative flex items-center gap-3 justify-self-end">
-          {renderSearchExpandToggle()}
+          {!hideMobileSearchIcon && renderSearchExpandToggle()}
           {renderNotificationButton()}
           {profileButton}
         </div>

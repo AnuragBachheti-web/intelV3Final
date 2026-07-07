@@ -48,11 +48,11 @@ const FilterPanel = ({ filters, style }) => {
 
   return (
     <div
-      className="fixed bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl z-[9999] sm:w-[580px] overflow-hidden"
+      className="fixed bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl z-[9999] sm:w-[580px] overflow-hidden flex flex-col"
       style={style}
     >
       {/* MOBILE-only header — title + active-filter count badge + close */}
-      <div className="sm:hidden flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-800">
+      <div className="sm:hidden flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-800">
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold text-gray-900 dark:text-slate-100">Filters</span>
           {activeFilterTypeCount > 0 && (
@@ -69,11 +69,13 @@ const FilterPanel = ({ filters, style }) => {
         </button>
       </div>
 
-      <div className="flex flex-col sm:flex-row max-h-[70vh] sm:max-h-[300px] sm:min-h-[300px] overflow-y-auto sm:overflow-hidden">
+      <div className="flex flex-col sm:flex-row flex-1 min-h-0 sm:flex-none sm:max-h-[300px] sm:min-h-[300px] overflow-y-auto sm:overflow-hidden">
         <div className="flex flex-row sm:flex-col gap-1 overflow-x-auto scrollbar-hide sm:overflow-visible border-b sm:border-b-0 sm:border-r border-gray-100 dark:border-slate-800 p-3 sm:w-[155px] sm:flex-shrink-0">
           {SECTIONS.map(sec => (
             <button key={sec.key} onClick={() => setV2Section(sec.key)}
-              className={`flex items-center gap-2 flex-shrink-0 sm:w-full text-left px-2.5 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${v2Section === sec.key ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+              className={`flex items-center gap-2 flex-shrink-0 sm:w-full text-left ${
+                sec.key === 'date' || sec.key === 'product' ? 'px-3' : 'px-2'
+              } sm:px-2.5 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${v2Section === sec.key ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
                 }`}
             >
               <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${v2Section === sec.key ? 'border-white dark:border-gray-900' : 'border-gray-300 dark:border-slate-600'}`}>
@@ -125,13 +127,14 @@ const FilterPanel = ({ filters, style }) => {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-row gap-2">
                   <MiniCalendar
                     year={calViewYear} month={calViewMonth} showPrev showNext={false}
                     onPrev={prevCalMonth} onNext={nextCalMonth}
                     rangeStart={pendingRangeStart} rangeEnd={pendingRangeEnd} hoverDay={hoverDay}
                     onDateClick={handleDateClick} onDateHover={onDateHover} onDateLeave={() => setHoverDay(null)}
                   />
+                  <div className="w-px bg-gray-100 dark:bg-slate-800 self-stretch flex-shrink-0" />
                   <MiniCalendar
                     year={calRightY} month={calRightM} showPrev={false} showNext
                     onPrev={prevCalMonth} onNext={nextCalMonth}
@@ -391,7 +394,7 @@ const FilterPanel = ({ filters, style }) => {
           )}
         </div>
       </div>
-      <div className="px-4 pb-4 pt-3 flex justify-end gap-2 border-t border-gray-100 dark:border-slate-800">
+      <div className="flex-shrink-0 px-4 pb-4 pt-3 flex justify-end gap-2 border-t border-gray-100 dark:border-slate-800">
         <button onClick={() => setV2FilterOpen(false)} className="px-5 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition">Cancel</button>
         <button onClick={handleApplyV2Filter} className="px-5 py-2 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition">Update</button>
       </div>

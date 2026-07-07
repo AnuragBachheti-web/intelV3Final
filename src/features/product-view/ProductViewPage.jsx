@@ -122,7 +122,7 @@ const ProductFilterPanel = ({ pendingDate, setPendingDate, customRange, setCusto
           <p className="text-xs font-bold text-gray-800 dark:text-slate-100">{MONTHS[month]} {year}</p>
           {!isLeft ? <button onClick={goNext} className="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-500 transition"><i className="fa-solid fa-chevron-right text-[9px]"/></button> : <span/>}
         </div>
-        <div className="grid grid-cols-7 mb-1">{WEEKDAYS.map(d => <div key={d} className="text-[9px] text-center text-gray-400 font-semibold py-1">{d}</div>)}</div>
+        <div className="grid grid-cols-7 mb-1">{WEEKDAYS.map(d => <div key={d} className="text-[8px] sm:text-[9px] text-center text-gray-400 font-semibold py-1">{d}</div>)}</div>
         <div className="grid grid-cols-7">
           {cells.map((date, i) => {
             if (!date) return <div key={`e${i}`}/>;
@@ -134,7 +134,7 @@ const ProductFilterPanel = ({ pendingDate, setPendingDate, customRange, setCusto
               <button key={date.getTime()} onClick={() => handleDayClick(date)}
                 onMouseEnter={() => customRange.start && !customRange.end && setHoverDate(date)}
                 onMouseLeave={() => setHoverDate(null)}
-                className={`w-8 h-8 mx-auto flex items-center justify-center text-[11px] font-medium rounded-lg transition-colors ${
+                className={`w-6 h-6 sm:w-8 sm:h-8 mx-auto flex items-center justify-center text-[10px] sm:text-[11px] font-medium rounded-lg transition-colors ${
                   isStart || isEnd ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 font-bold'
                   : isIn ? 'bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200'
                   : isToday ? 'ring-1 ring-inset ring-gray-400 text-gray-900 dark:text-slate-100'
@@ -166,8 +166,8 @@ const ProductFilterPanel = ({ pendingDate, setPendingDate, customRange, setCusto
   const canUpdate = pendingDate || (customRange.start && customRange.end);
 
   return (
-    <div className="absolute top-full mt-2 right-0 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl z-[9999] w-[460px] overflow-hidden">
-      <div className="flex flex-col p-4 gap-3" style={{ minHeight: 320 }}>
+    <div className="fixed inset-x-4 top-20 bottom-4 sm:absolute sm:inset-x-auto sm:top-full sm:bottom-auto sm:mt-2 sm:right-0 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl z-[9999] sm:w-[460px] overflow-hidden flex flex-col">
+      <div className="flex-1 min-h-0 overflow-y-auto sm:flex-none flex flex-col p-4 gap-3" style={{ minHeight: 320 }}>
         {/* Quick presets */}
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs font-semibold text-gray-400 dark:text-slate-500">Quick Filters</span>
@@ -179,7 +179,7 @@ const ProductFilterPanel = ({ pendingDate, setPendingDate, customRange, setCusto
           ))}
         </div>
         {/* Dual calendar */}
-        <div className="flex gap-4 flex-1">
+        <div className="flex gap-2 sm:gap-4 flex-1">
           {renderMonth(calViewMonth.year, calViewMonth.month, true)}
           <div className="w-px bg-gray-100 dark:bg-slate-800 self-stretch flex-shrink-0"/>
           {renderMonth(nextCal.year, nextCal.month, false)}
@@ -197,7 +197,7 @@ const ProductFilterPanel = ({ pendingDate, setPendingDate, customRange, setCusto
           )}
         </div>
       </div>
-      <div className="px-4 pb-4 pt-3 flex justify-end gap-2 border-t border-gray-100 dark:border-slate-800">
+      <div className="flex-shrink-0 px-4 pb-4 pt-3 flex justify-end gap-2 border-t border-gray-100 dark:border-slate-800">
         <button onClick={onClose} className="px-5 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition">Cancel</button>
         <button onClick={onUpdate} disabled={!canUpdate} className="px-5 py-2 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition disabled:opacity-40 disabled:cursor-not-allowed">Update</button>
       </div>
@@ -338,11 +338,11 @@ const ProductViewPage = () => {
       subtitle="Product Analysis"
       showTabs={false}
     >
-      {/* 70 / 30 split — main content left, watchlist right */}
-      <div className="grid grid-cols-10 gap-5 items-start">
+      {/* 70 / 30 split on desktop — main content left, watchlist right. Mobile: single column, no watchlist. */}
+      <div className="flex flex-col sm:grid sm:grid-cols-10 gap-5 items-start">
 
         {/* Left 70% — product info + actions */}
-        <div className="col-span-7 flex flex-col gap-5">
+        <div className="sm:col-span-7 flex flex-col gap-5">
 
           {/* Channel tabs + back button (left) + filter (right) */}
           <div className="flex items-center gap-1 border-b border-gray-200 dark:border-slate-800 -mt-1">
@@ -408,10 +408,10 @@ const ProductViewPage = () => {
 
           {/* Product info card */}
           <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
-            <div className="flex gap-5">
+            <div className="flex flex-col sm:flex-row gap-5">
 
               {/* Product image */}
-              <div className="w-44 h-44 bg-gray-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center flex-shrink-0 border border-gray-100 dark:border-slate-700 overflow-hidden">
+              <div className="w-full h-44 sm:w-44 sm:h-44 bg-gray-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center flex-shrink-0 border border-gray-100 dark:border-slate-700 overflow-hidden">
                 {activeProduct.image ? (
                   <img src={activeProduct.image} alt={activeProduct.name} className="max-h-full max-w-full object-contain p-2" />
                 ) : (
@@ -518,9 +518,9 @@ const ProductViewPage = () => {
                 <i className="fa-regular fa-calendar text-[10px]" /> Last 7 Days
               </span>
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               {/* Stat cards */}
-              <div className="flex flex-col gap-2 w-[200px] flex-shrink-0">
+              <div className="flex flex-col gap-2 w-full sm:w-[200px] sm:flex-shrink-0">
                 {PERF_STATS.map(stat => (
                   <button
                     key={stat.key}
@@ -654,8 +654,8 @@ const ProductViewPage = () => {
           </div>
         </div>
 
-        {/* Right 30% — Watchlist */}
-        <div className="col-span-3">
+        {/* Right 30% — Watchlist, desktop only */}
+        <div className="hidden sm:block sm:col-span-3">
           <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden sticky top-4">
             <div className="px-4 py-3 border-b border-gray-100 dark:border-slate-800">
               <h3 className="text-sm font-bold text-gray-900 dark:text-slate-100">Watchlist</h3>

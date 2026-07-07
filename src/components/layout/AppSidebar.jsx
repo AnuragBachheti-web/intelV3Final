@@ -206,7 +206,7 @@ const HistorySectionContent = () => {
       {fixedTooltip && (
         <div
           style={{ position: 'fixed', top: fixedTooltip.top, left: fixedTooltip.left, transform: 'translateY(-50%)', zIndex: 99999 }}
-          className="px-2.5 py-2 bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-200 text-[10px] rounded-lg shadow-xl border border-gray-200 dark:border-slate-700 whitespace-normal w-52 leading-relaxed pointer-events-none"
+          className="hidden md:block px-2.5 py-2 bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-200 text-[10px] rounded-lg shadow-xl border border-gray-200 dark:border-slate-700 whitespace-normal w-52 leading-relaxed pointer-events-none"
         >
           {fixedTooltip.label}
           <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-white dark:border-r-slate-900" />
@@ -280,7 +280,7 @@ const ServicesItem = ({ isCollapsed, isServicesActive, isProductsActive, isActio
           id="services-flyout"
           ref={flyoutRef}
           style={{ position: 'fixed', top: flyoutPos.top, left: flyoutPos.left, zIndex: 99999 }}
-          className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1 min-w-[140px]"
+          className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1  min-w-[120px] md:min-w-[140px]"
         >
           <Link to="/products" onClick={() => setShowFlyout(false)}
             className={`flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium transition-colors ${isProductsActive
@@ -317,7 +317,7 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
   useEffect(() => {
     if (mobileOpen) onMobileClose?.();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  }, [location.key]);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -367,7 +367,7 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
   const mobileDrawer = mobileOpen && (
     <>
       <div className="md:hidden fixed inset-0 bg-black/40 z-[9998]" onClick={onMobileClose} />
-      <div className="md:hidden fixed inset-y-0 left-0 w-[280px] max-w-[85vw] bg-white dark:bg-[#030712] z-[9999] flex flex-col shadow-2xl">
+      <div className="md:hidden fixed inset-y-0 left-0 w-[66vw] bg-white dark:bg-[#030712] z-[9999] flex flex-col shadow-2xl">
         {settingsSubOpen ? (
           <>
             {/* Settings sub-list header: back to main menu, or close the drawer entirely */}
@@ -531,7 +531,7 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
     return (
       <>
         <div
-          style={{ width: isSidebarCollapsed ? 56 : 220, transition: t(['width']), willChange: 'width' }}
+          style={{ width: isSidebarCollapsed ? 56 : 200, transition: t(['width']), willChange: 'width' }}
           className="hidden md:flex flex-shrink-0 flex-col h-full bg-white dark:bg-[#030712] transition-colors duration-300 border-r border-gray-200 dark:border-slate-800 overflow-visible relative z-10"
         >
           {/* Logo row */}
@@ -594,7 +594,7 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
   return (
     <div
       id="sidebar"
-      style={{ width: isSidebarCollapsed ? 48 : 220, transition: t(['width']), willChange: 'width' }}
+      style={{ width: isSidebarCollapsed ? 48 : 200, transition: t(['width']), willChange: 'width' }}
       className="hidden md:flex fixed left-4 top-4 h-[calc(100vh-2rem)] bg-[#FEFEFF] dark:bg-[#030712] border border-gray-200 dark:border-slate-800 rounded-2xl flex-col z-[99999] transition-colors duration-300 shadow-sm overflow-visible"
     >
       {/* Header: logo + collapse/expand button */}
