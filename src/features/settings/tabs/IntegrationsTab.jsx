@@ -62,7 +62,7 @@ const ConnectForm = ({ platform, onClose, onConnected }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[9999] flex items-start sm:items-center justify-center px-4 py-8 sm:px-0 sm:py-0 overflow-y-auto bg-black/40 backdrop-blur-sm">
       <div className="bg-white border border-gray-200 rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
         {/* Header */}
         <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-100">

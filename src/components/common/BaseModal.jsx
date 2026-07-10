@@ -6,7 +6,7 @@ const BaseModal = ({ isOpen, onClose, children }) => {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-[99999] flex items-start sm:items-center justify-center px-4 py-8 sm:p-4 overflow-y-auto bg-black/50 backdrop-blur-sm"
       onClick={onClose}
     >
       {children}

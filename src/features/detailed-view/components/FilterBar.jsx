@@ -13,18 +13,25 @@ const FilterBar = ({ filters }) => {
     v2ChanLabel,
   } = filters;
 
+  const appliedFilterCount = [appliedDate !== null, appliedCats.length > 0, appliedChans.length > 0, appliedProducts.length > 0].filter(Boolean).length;
+
   return (
     <div className="relative flex items-center gap-2" ref={v2FilterRef}>
       <button
         ref={filterBtnRef}
         onClick={handleOpenV2Filter}
-        className={`flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
+        className={`relative flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
           ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
           : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
           }`}
       >
         <i className="fa-solid fa-sliders text-[11px]" />
         Filters
+        {appliedFilterCount > 0 && (
+          <span className="sm:hidden absolute -top-1.5 -right-1.5 w-4 h-4 flex items-center justify-center bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-[9px] font-bold rounded-full border-2 border-white dark:border-slate-950">
+            {appliedFilterCount}
+          </span>
+        )}
       </button>
 
       {/* Applied-filter chips — desktop only; mobile shows a count in the panel header instead */}

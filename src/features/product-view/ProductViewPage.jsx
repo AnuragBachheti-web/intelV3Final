@@ -547,7 +547,7 @@ const ProductViewPage = () => {
               </div>
 
               {/* Trend chart */}
-              <div className="flex-1 min-w-0">
+              <div className="w-full h-[260px] sm:h-auto sm:flex-1 min-w-0">
                 {(() => {
                   const stat = PERF_STATS.find(s => s.key === activePerfStat);
                   const data = TREND_DATA[activePerfStat];

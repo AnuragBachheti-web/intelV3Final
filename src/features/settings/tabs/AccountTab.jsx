@@ -30,7 +30,7 @@ const AccountTab = ({ onInputChange }) => {
       <div className="p-6 space-y-6">
         {/* Profile Photo */}
         <div className="flex items-center gap-6 pb-6 border-b border-gray-100 dark:border-slate-800">
-          <div className="w-20 h-20 rounded-2xl bg-slate-800 dark:bg-slate-700 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 shadow-lg">
+          <div className="w-24 h-24 rounded-2xl bg-slate-800 dark:bg-slate-700 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 shadow-lg">
             R
           </div>
           <div>

@@ -38,7 +38,7 @@ const IntelFilterPanel = ({ filters, style }) => {
   const mobileChanList = v2ChanGrid
     .filter(([v]) => v !== 'all-chans')
     .filter(([, lbl]) => lbl.toLowerCase().includes(channelSearch.toLowerCase()));
-  const activeFilterTypeCount = [pendingCats.length > 0, pendingChans.length > 0, pendingProducts.length > 0].filter(Boolean).length;
+  const activeFilterTypeCount = [pendingDate !== null, pendingCats.length > 0, pendingChans.length > 0, pendingProducts.length > 0].filter(Boolean).length;
   const CATEGORY_ICONS = { electronics: 'fa-tv', apparel: 'fa-shirt', 'home-garden': 'fa-house', 'pet-suppliers': 'fa-paw', all: 'fa-table-cells' };
 
   return (
@@ -204,18 +204,18 @@ const IntelFilterPanel = ({ filters, style }) => {
                           key={val}
                           onClick={() => togglePendingCat(val)}
                           className={`relative flex items-center gap-2.5 px-3 py-3 rounded-xl border-2 text-left transition-all ${val === 'all' ? 'col-span-2' : ''} ${
-                            isSel ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-slate-700'
+                            isSel ? 'border-gray-900 bg-gray-50 dark:border-slate-100 dark:bg-slate-800' : 'border-gray-200 dark:border-slate-700'
                           }`}
                         >
                           <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                            isSel ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400'
+                            isSel ? 'bg-gray-900 text-white dark:bg-slate-100 dark:text-gray-900' : 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400'
                           }`}>
                             <i className={`fa-solid ${CATEGORY_ICONS[val] || 'fa-tag'} text-sm`} />
                           </div>
                           <span className="text-xs font-semibold text-gray-800 dark:text-slate-200">{lbl}</span>
                           {isSel && (
-                            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900">
-                              <i className="fa-solid fa-check text-[7px] text-white" />
+                            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-gray-900 dark:bg-slate-100 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900">
+                              <i className="fa-solid fa-check text-[7px] text-white dark:text-gray-900" />
                             </span>
                           )}
                         </button>

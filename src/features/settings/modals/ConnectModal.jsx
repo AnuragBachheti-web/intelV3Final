@@ -14,15 +14,15 @@ const ConnectModal = ({ platform, onClose }) => {
   if (!platform) return null;
 
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
-      <motion.div 
+    <div className="fixed inset-0 z-[99999] flex items-start sm:items-center justify-center px-4 py-8 sm:p-4 overflow-y-auto">
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
       ></motion.div>
-      
+
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}

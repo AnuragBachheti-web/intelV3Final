@@ -73,6 +73,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [appliedCats, setAppliedCats] = useState([]);
   const [appliedChans, setAppliedChans] = useState([]);
   const [appliedProducts, setAppliedProducts] = useState([]);
+  const appliedFilterCount = [appliedDate !== null, appliedCats.length > 0, appliedChans.length > 0, appliedProducts.length > 0].filter(Boolean).length;
   const [chanDropOpen, setChanDropOpen] = useState(false);
   const [pendingRangeStart, setPendingRangeStart] = useState(null);
   const [pendingRangeEnd, setPendingRangeEnd] = useState(null);
@@ -224,16 +225,21 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   ) : null;
 
   const compactFilterElement = isScrolled ? (
-    <div className="flex items-center gap-1.5" ref={compactFilterRef}>
+    <div className="relative flex items-center gap-1.5" ref={compactFilterRef}>
       <button
         onClick={handleOpenV2Filter}
-        className={`flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
+        className={`relative flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
             ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
             : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
           }`}
       >
         <i className="fa-solid fa-sliders text-[11px]" />
         Filters
+        {appliedFilterCount > 0 && (
+          <span className="sm:hidden absolute -top-1.5 -right-1.5 w-4 h-4 flex items-center justify-center bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-[9px] font-bold rounded-full border-2 border-white dark:border-slate-950">
+            {appliedFilterCount}
+          </span>
+        )}
       </button>
     </div>
   ) : null;
@@ -388,13 +394,18 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           <button
             ref={mobileFilterBtnRef}
             onClick={handleOpenV2Filter}
-            className={`flex-shrink-0 flex items-center gap-1.5 px-3 h-8 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
+            className={`relative flex-shrink-0 flex items-center gap-1.5 px-3 h-8 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
                 ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
                 : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
               }`}
           >
             <i className="fa-solid fa-sliders text-[11px]" />
             Filters
+            {appliedFilterCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-4 h-4 flex items-center justify-center bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-[9px] font-bold rounded-full border-2 border-white dark:border-slate-950">
+                {appliedFilterCount}
+              </span>
+            )}
           </button>
         </div>
 
