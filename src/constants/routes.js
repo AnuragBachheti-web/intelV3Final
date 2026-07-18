@@ -21,6 +21,7 @@ export const ROUTES = {
   // HUBS:                 "/hubs",
   DETAILED_VIEW:        "/detailed-view/:intelType",
   PRODUCT_VIEW:         "/product-view",
+  COMPARISON:           "/comparison",
   PRIVACY_POLICY:       "/privacy-policy",
   TERMS_OF_SERVICE:     "/terms-of-service",
   NOTIFICATIONS:        "/notifications",

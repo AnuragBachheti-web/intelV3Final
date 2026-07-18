@@ -18,6 +18,7 @@ const SettingsPage           = lazy(() => import("./features/settings/SettingsPa
 const HubsPage               = lazy(() => import("./features/hubs"));
 const DetailedViewPage       = lazy(() => import("./features/detailed-view/DetailedViewPage"));
 const ProductViewPage        = lazy(() => import("./features/product-view/ProductViewPage"));
+const ComparisonPage         = lazy(() => import("./features/comparison/ComparisonPage"));
 const IntelPage            = lazy(() => import("./features/intel"));
 const IntelInsightDetailPage = lazy(() => import("./features/intel/pages/IntelInsightDetailPage"));
 const IntelSimulationPage  = lazy(() => import("./features/intel/pages/IntelSimulationPage"));
@@ -72,6 +73,7 @@ function App() {
             {/* <Route path="/hubs"                       element={<HubsPage />} /> */}
             <Route path={ROUTES.DETAILED_VIEW}        element={<DetailedViewPage />} />
             <Route path={ROUTES.PRODUCT_VIEW}         element={<ProductViewPage />} />
+            <Route path={ROUTES.COMPARISON}           element={<ComparisonPage />} />
             <Route path={ROUTES.NOTIFICATIONS}        element={<NotificationsPage />} />
             <Route path="/products"                   element={<ProductsListPage />} />
             <Route path={ROUTES.ACTION_LOG}           element={<ActionLogPage />} />
