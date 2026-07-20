@@ -216,26 +216,61 @@ const HistorySectionContent = () => {
   );
 };
 
-/* ── Services item (Products + Actions flyout) ── */
+/* ── Hubs item (Products + Actions) ──
+   Expanded sidebar: slides open as an inline accordion below the button.
+   Collapsed sidebar: opens a flyout to the right (no room to expand below). */
 const ServicesItem = ({ isCollapsed, isServicesActive, isProductsActive, isActionLogActive }) => {
-  const [showFlyout, setShowFlyout] = useState(false);
+  const [open, setOpen] = useState(false);
   const [flyoutPos, setFlyoutPos] = useState(null);
   const [tooltip, setTooltip] = useState(null);
   const btnRef = useRef(null);
   const flyoutRef = useRef(null);
 
+  // Collapse the inline accordion whenever the sidebar collapses, so it doesn't
+  // linger as a stray flyout on the next expand.
+  useEffect(() => {
+    if (isCollapsed) setOpen(false);
+  }, [isCollapsed]);
+
   const handleClick = () => {
-    if (!btnRef.current) return;
-    const r = btnRef.current.getBoundingClientRect();
-    if (showFlyout) {
-      setShowFlyout(false);
+    if (isCollapsed) {
+      if (!btnRef.current) return;
+      const r = btnRef.current.getBoundingClientRect();
+      if (open) {
+        setOpen(false);
+      } else {
+        setFlyoutPos({ top: r.top, left: r.right + 8 });
+        setOpen(true);
+      }
     } else {
-      setFlyoutPos({ top: r.top, left: r.right + 8 });
-      setShowFlyout(true);
+      setOpen(o => !o);
     }
   };
 
-  useClickOutside(flyoutRef, showFlyout, () => setShowFlyout(false), btnRef);
+  useClickOutside(flyoutRef, isCollapsed && open, () => setOpen(false), btnRef);
+
+  const subItems = (
+    <>
+      <Link to="/products" onClick={() => setOpen(false)}
+        className={`flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium transition-colors ${isProductsActive
+          ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100'
+          : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+          }`}>
+        <i className="fa-solid fa-box text-[11px] flex-shrink-0" />
+        Products
+      </Link>
+      <Link to="/action-log" onClick={() => setOpen(false)}
+        className={`flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium transition-colors ${isActionLogActive
+          ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100'
+          : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+          }`}>
+        <i className="fa-solid fa-clock-rotate-left text-[11px] flex-shrink-0" />
+        Actions
+      </Link>
+    </>
+  );
+
+  const inlineOpen = !isCollapsed && open;
 
   return (
     <>
@@ -260,44 +295,42 @@ const ServicesItem = ({ isCollapsed, isServicesActive, isProductsActive, isActio
         </div>
         {!isCollapsed && (
           <>
-            <span className="ml-2 text-xs font-normal whitespace-nowrap flex-1 text-left">Pages</span>
-            <i className={`fa-solid fa-chevron-right text-[9px] text-gray-400 dark:text-slate-500 flex-shrink-0 transition-transform duration-200 ${showFlyout ? 'rotate-90' : ''}`} />
+            <span className="ml-2 text-xs font-normal whitespace-nowrap flex-1 text-left">Hubs</span>
+            <i className={`fa-solid fa-chevron-down text-[9px] text-gray-400 dark:text-slate-500 flex-shrink-0 transition-transform duration-200 ${inlineOpen ? 'rotate-180' : ''}`} />
           </>
         )}
       </button>
 
-      {isCollapsed && tooltip && !showFlyout && ReactDOM.createPortal(
+      {/* Inline slide-down accordion (expanded sidebar) */}
+      {!isCollapsed && (
+        <div
+          className="overflow-hidden transition-all duration-200 ease-in-out"
+          style={{ maxHeight: inlineOpen ? 120 : 0, opacity: inlineOpen ? 1 : 0 }}
+        >
+          <div className="pl-3">
+            {subItems}
+          </div>
+        </div>
+      )}
+
+      {isCollapsed && tooltip && !open && ReactDOM.createPortal(
         <div style={{ position: 'fixed', top: tooltip.top, left: tooltip.left, transform: 'translateY(-50%)', zIndex: 99999 }}
           className="px-2 py-1 bg-slate-900 text-white text-[10px] rounded shadow-xl border border-slate-800 whitespace-nowrap pointer-events-none">
-          Pages
+          Hubs
           <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-1.5 h-1.5 bg-slate-900 rotate-45" />
         </div>,
         document.body
       )}
 
-      {showFlyout && flyoutPos && ReactDOM.createPortal(
+      {/* Flyout (collapsed sidebar) */}
+      {isCollapsed && open && flyoutPos && ReactDOM.createPortal(
         <div
           id="services-flyout"
           ref={flyoutRef}
           style={{ position: 'fixed', top: flyoutPos.top, left: flyoutPos.left, zIndex: 99999 }}
           className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1  min-w-[120px] md:min-w-[140px]"
         >
-          <Link to="/products" onClick={() => setShowFlyout(false)}
-            className={`flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium transition-colors ${isProductsActive
-              ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100'
-              : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
-              }`}>
-            <i className="fa-solid fa-box text-[11px] flex-shrink-0" />
-            Products
-          </Link>
-          <Link to="/action-log" onClick={() => setShowFlyout(false)}
-            className={`flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium transition-colors ${isActionLogActive
-              ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100'
-              : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
-              }`}>
-            <i className="fa-solid fa-clock-rotate-left text-[11px] flex-shrink-0" />
-            Actions
-          </Link>
+          {subItems}
         </div>,
         document.body
       )}
