@@ -47,11 +47,13 @@ export function useHeaderScroll(toolbar = { compressed: 64, expanded: 84 }, scro
   const rafId = useRef(null);
   const lastScrollY = useRef(0);
   const location = useLocation();
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const publishLayout = useCallback(
     (p) => {
       const root = document.documentElement;
       root.style.setProperty('--header-collapse-progress', String(p));
+      root.classList.toggle('header-is-compressed', p > 0.02);
       const secondaryH = readSecondaryHeight();
       const toolbarVisible = visibleToolbarHeight(toolbar, p);
       root.style.setProperty('--header-toolbar-visible', `${toolbarVisible}px`);
@@ -85,6 +87,7 @@ export function useHeaderScroll(toolbar = { compressed: 64, expanded: 84 }, scro
     if (isAnimatingRef.current) return;
 
     const scrollY = scrollElRef?.current?.scrollTop ?? window.scrollY;
+    setIsScrolled(scrollY > 0);
     const scrollDiff = scrollY - lastScrollY.current;
 
     // Auto-expand smoothly when scrolled back to top
@@ -156,7 +159,7 @@ export function useHeaderScroll(toolbar = { compressed: 64, expanded: 84 }, scro
       scrollElRef.current.scrollTop = 0;
     }
     setTimeout(() => resetHeader(), 0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, scrollElRef]);
 
   useEffect(() => {
@@ -177,7 +180,7 @@ export function useHeaderScroll(toolbar = { compressed: 64, expanded: 84 }, scro
       if (rafId.current != null) cancelAnimationFrame(rafId.current);
       if (animFrameRef.current != null) cancelAnimationFrame(animFrameRef.current);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollElRef]);
 
   useEffect(
@@ -234,6 +237,7 @@ export function useHeaderScroll(toolbar = { compressed: 64, expanded: 84 }, scro
   return {
     progress: uiProgress,
     isCompressed,
+    isScrolled,
     isForceExpanded,
     forceExpand,
   };

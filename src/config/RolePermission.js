@@ -17,6 +17,9 @@ export const rolePermissions = {
     ROUTES.SCREENER,              // /research  (+ /research/actions/*)
     ROUTES.SETTINGS,              // /settings
     "/products",
+    ROUTES.CATALOGUE,             // /catalogue
+    ROUTES.AGENTS,                // /agents
+    ROUTES.INTEGRATIONS,          // /integrations
     "/action-log",
     ROUTES.NOTIFICATIONS,         // /notifications
     ROUTES.CONNECT_MARKETPLACES,  // /connect-marketplaces

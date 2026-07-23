@@ -62,10 +62,10 @@ const DetailedViewPage = () => {
     setLastIntelTab(intelType);
   }, [intelType]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [selectedKpiIndices, setSelectedKpiIndices] = useState(location.state?.selectedKpiIndices || [0, 1, 2, 3, 4, 5]);
+  const [selectedKpiIndices, setSelectedKpiIndices] = useState(location.state?.selectedKpiIndices || [0, 1, 2, 3, 4]);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
   const kpiDetailModal = useModalToggle();
-  const statsData = intelType === 'cash' ? cashStats : (STATS_DATA[intelType] || STATS_DATA.sales);
+  const statsData = STATS_DATA.sales;
   const pageTitle = PAGE_TITLES[intelType] || 'Sales';
   const backRoute = location.state?.from || BACK_ROUTES[intelType] || '/intel';
 
@@ -100,6 +100,7 @@ const DetailedViewPage = () => {
       title="Intelligence"
       subtitle={`${pageTitle} — Detailed View`}
       showTabs={false}
+      showAIPrompt={false}
       filters={null}
       showSearch={true}
       searchCollapsed={isScrolled}
@@ -108,41 +109,13 @@ const DetailedViewPage = () => {
     >
       <StickyKpiStrip kpiIsSticky={kpiIsSticky} statsData={statsData} onDashboardClick={() => navigate(backRoute)} />
 
-      {/* Tab nav (left) + Filter button (right) — mobile shows Filters above the tabs, desktop unchanged */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 border-b border-gray-100 dark:border-slate-800 mb-5 pb-2 sm:pb-0">
-        <div className="order-2 sm:order-none">
-          <DetailViewTabNav intelType={intelType} onTabClick={goToTab} />
-        </div>
-        <div className="order-1 sm:order-none">
-          <FilterBar filters={filters} />
-        </div>
+      {/* Filters row (top right) */}
+      <div className="flex items-center justify-end mb-3">
+        <FilterBar filters={filters} />
       </div>
 
-      {/* Toggle row — Customize KPIs (left) + Dashboard toggle (right) */}
-      <div className="flex items-center justify-between mt-0 mb-3">
-        <button
-          onClick={() => setIsKpiSelectorOpen(true)}
-          className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300 transition-colors"
-        >
-          <span className="w-5 h-5 rounded-md bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center">
-            <i className="fa-solid fa-plus text-[8px]" />
-          </span>
-          Customise KPIs
-        </button>
-        <div className="hidden md:flex items-center gap-2">
-          <span className="text-xs text-gray-400 dark:text-slate-500 font-medium">AI View</span>
-          <button
-            onClick={() => navigate(backRoute)}
-            className="relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full bg-gray-900 dark:bg-slate-100 transition-colors hover:opacity-80"
-          >
-            <span className="inline-block h-3.5 w-3.5 transform rounded-full bg-white dark:bg-gray-900 transition-transform translate-x-4" />
-          </button>
-          <span className="text-xs font-semibold text-gray-900 dark:text-slate-100">Dashboard View</span>
-        </div>
-      </div>
-
-      {/* KPI cards — 6 StatCards matching AI View style */}
-      <div ref={kpiSectionRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3 mb-4">
+      {/* KPI cards — 5 StatCards matching AI View style */}
+      <div ref={kpiSectionRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3 mb-4">
         {selectedKpiIndices.map(idx => {
           const stat = statsData[idx] || statsData[0];
           return (
@@ -157,6 +130,24 @@ const DetailedViewPage = () => {
             />
           );
         })}
+      </div>
+
+      {/* Tab nav (left) + Dashboard View toggle (right) */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 border-b border-gray-100 dark:border-slate-800 mb-5 pb-2 sm:pb-0">
+        <div className="order-2 sm:order-none">
+          <DetailViewTabNav intelType={intelType} onTabClick={goToTab} />
+        </div>
+
+        {/* Dashboard toggle */}
+        <div className="hidden md:flex items-center gap-2 ml-auto order-1 sm:order-none">
+          <span className="text-xs font-semibold text-gray-900 dark:text-slate-100">Dashboard View</span>
+          <button
+            onClick={() => navigate(backRoute)}
+            className="relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full bg-gray-900 dark:bg-slate-100 transition-colors hover:opacity-80"
+          >
+            <span className="inline-block h-3.5 w-3.5 transform rounded-full bg-white dark:bg-gray-900 transition-transform translate-x-4" />
+          </button>
+        </div>
       </div>
 
       {/* Main dashboard content */}

@@ -52,21 +52,19 @@ const HistorySectionContent = () => {
   const [historyVisible, setHistoryVisible] = useState(true);
   const [activeMenuId, setActiveMenuId] = useState(null);
   const [fixedTooltip, setFixedTooltip] = useState(null);
-  const [historySearch, setHistorySearch] = useState('');
   const groupByRef = useRef(null);
   const pinnedIds = usePinnedChatsStore(s => s.pinnedIds);
   const togglePinned = usePinnedChatsStore(s => s.togglePinned);
 
   useClickOutside(groupByRef, groupByOpen, () => setGroupByOpen(false));
 
-  // Any outside click also closes the per-item 3-dot context menu (no single ref to check).
   useEffect(() => {
     const handler = () => setActiveMenuId(null);
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const visibleHistory = RECENT_HISTORY.filter(h => !historySearch || h.label.toLowerCase().includes(historySearch.toLowerCase()));
+  const visibleHistory = RECENT_HISTORY;
   const pinnedItems = visibleHistory.filter(h => pinnedIds.includes(h.id));
   const recentItems = visibleHistory.filter(h => !pinnedIds.includes(h.id));
 
@@ -131,18 +129,6 @@ const HistorySectionContent = () => {
   return (
     <>
       <div className="w-full mt-2 mb-1 px-1">
-        {/* Search bar */}
-        <div className="relative mb-1.5 px-0.5">
-          <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-[9px] pointer-events-none" />
-          <input
-            type="text"
-            value={historySearch}
-            onChange={(e) => setHistorySearch(e.target.value)}
-            placeholder="Search..."
-            className="w-full pl-7 pr-3 py-1.5 text-[11px] bg-gray-50 dark:bg-slate-800/60 border border-gray-100 dark:border-slate-800 rounded-lg text-gray-700 dark:text-slate-300 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-gray-300 dark:focus:border-slate-600 transition-colors"
-          />
-        </div>
-
         {/* Pinned list */}
         {pinnedItems.length > 0 && (
           <div className="mb-2">
@@ -251,14 +237,6 @@ const ServicesItem = ({ isCollapsed, isServicesActive, isProductsActive, isActio
 
   const subItems = (
     <>
-      <Link to="/products" onClick={() => setOpen(false)}
-        className={`flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium transition-colors ${isProductsActive
-          ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100'
-          : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
-          }`}>
-        <i className="fa-solid fa-box text-[11px] flex-shrink-0" />
-        Products
-      </Link>
       <Link to="/action-log" onClick={() => setOpen(false)}
         className={`flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium transition-colors ${isActionLogActive
           ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100'
@@ -379,20 +357,26 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
   // Role permissions are checked against the base path, not the tab-specific one.
   const intelPermissionKey = dashboardView ? '/detailed-view' : ROUTES.INTEL_FULL;
 
+  const isCatalogueActive = location.pathname === '/catalogue' || location.pathname === '/products';
+  const isAgentsActive = location.pathname === '/agents';
+  const isIntegrationsActive = location.pathname === '/integrations';
+
   const navItems = [
     { name: 'New', icon: 'fa-plus', href: ROUTES.NEW_ANALYSIS, active: isNewAnalysisActive },
-    { name: 'History', icon: 'fa-clock-rotate-left', href: ROUTES.HISTORY, active: isHistoryActive },
     { name: 'Intel', icon: 'fa-chart-line', href: intelHref, permissionKey: intelPermissionKey, active: isIntelFullActive },
+    { name: 'Catalogue', icon: 'fa-box', href: ROUTES.CATALOGUE || '/catalogue', permissionKey: ROUTES.CATALOGUE || '/catalogue', active: isCatalogueActive },
+    { name: 'Agents', icon: 'fa-robot', href: ROUTES.AGENTS || '/agents', permissionKey: ROUTES.AGENTS || '/agents', active: isAgentsActive },
     { name: 'Research', icon: 'fa-chart-column', href: ROUTES.SCREENER, active: isScreenerActive },
+    { name: 'Integrations', icon: 'fa-plug', href: ROUTES.INTEGRATIONS || '/integrations', permissionKey: ROUTES.INTEGRATIONS || '/integrations', active: isIntegrationsActive },
   ];
   const role = localStorage.getItem("userRole") || "admin";
   const allowedRoutes = rolePermissions[role] || [];
   const filteredNavItems = navItems.filter(item => allowedRoutes.includes(item.permissionKey || item.href));
-  const isProductsActive = location.pathname === '/products';
+  const isProductsActive = location.pathname === '/products' || location.pathname === '/catalogue';
   const isActionLogActive = location.pathname === '/action-log';
-  const showProducts = allowedRoutes.includes("/products");
+  const showProducts = false; // Moved to Catalogue
   const showActionLog = allowedRoutes.includes("/action-log");
-  const _productsItem = { name: 'Products', icon: 'fa-box', href: '/products', active: isProductsActive };
+  const _productsItem = { name: 'Products', icon: 'fa-box', href: '/catalogue', active: isCatalogueActive };
   const _actionLogItem = { name: 'Action Log', icon: 'fa-clock-rotate-left', href: '/action-log', active: isActionLogActive };
   const settingsItem = { name: 'Settings', icon: 'fa-gear', href: ROUTES.SETTINGS, active: isSettingsActive };
 
@@ -507,7 +491,6 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
                 </div>
                 <span className="ml-2 text-xs font-normal whitespace-nowrap">Settings</span>
               </button>
-              <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} isCollapsed={false} small={true} />
 
               {/* AI VIew Toggle */}
               <button
@@ -615,7 +598,6 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
               />
             )}
             <SidebarItem item={settingsItem} isCollapsed={isSidebarCollapsed} small={true} />
-            <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} isCollapsed={isSidebarCollapsed} small={true} />
           </div>
         </div>
         {mobileDrawer}
@@ -675,14 +657,13 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
         {!isSidebarCollapsed && isConnected && <HistorySectionContent />}
       </nav>
 
-      {/* Bottom: Services + Settings + dark mode */}
+      {/* Bottom: Services + Settings */}
       <div className="pb-4 pt-2 flex flex-col gap-1 border-t border-gray-100 dark:border-slate-800 w-full px-2">
         {(showProducts || showActionLog) && (
           <ServicesItem isCollapsed={isSidebarCollapsed} isServicesActive={isProductsActive || isActionLogActive} isProductsActive={isProductsActive} isActionLogActive={isActionLogActive}
           />
         )}
         <SidebarItem item={settingsItem} isCollapsed={isSidebarCollapsed} small={true} />
-        <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} isCollapsed={isSidebarCollapsed} small={true} />
       </div>
     </div>
   );

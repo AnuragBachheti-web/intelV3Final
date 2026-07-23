@@ -203,4 +203,16 @@
   .page-header-expand-btn.is-visible {
     pointer-events: auto;
   }
+
+  /* Header Greeting Block — opacity driven directly by CSS class on scroll */
+  .header-greeting-block {
+    opacity: 1;
+    transition: opacity 0.15s ease, visibility 0.15s ease;
+  }
+  .header-is-compressed .header-greeting-block {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    display: none !important;
+  }
 }

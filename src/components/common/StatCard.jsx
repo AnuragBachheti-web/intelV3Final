@@ -97,12 +97,12 @@ const StatCard = ({
                   className={`text-[10px] sm:text-[13px] font-medium flex items-center mt-0.5 ${isPositive ? 'text-[#22c55e]' : 'text-red-500'
                     }`}
                 >
-              {change}
+                  {change}
                   <i
                     className={`fa-solid ${isPositive ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'
                       } ml-1 text-[9px] sm:text-[10px]`}
                   />
-            </span>
+                </span>
               </div>
             </div>
           </div>

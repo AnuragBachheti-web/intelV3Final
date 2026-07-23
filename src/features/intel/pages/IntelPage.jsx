@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import StatCard from '../../../components/common/StatCard';
@@ -18,6 +18,57 @@ import {
   INTEL_TABS,
   STATS_BY_TAB,
 } from '../shared/data/intelData';
+import RealifyBrief from "../shared/components/common/RealifyBrief";
+import BriefHeaderControls from "../shared/components/common/BriefHeaderControls";
+import { REALIFY_BRIEF } from "../shared/data/realifyBriefData";
+
+const CompactHeaderSearch = ({ searchQuery, setSearchQuery }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const inputRef = useRef(null);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isOpen]);
+
+  useClickOutside(containerRef, isOpen, () => setIsOpen(false));
+
+  if (!isOpen) {
+    return (
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        className="w-8 h-8 flex items-center justify-center rounded-xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all shadow-2xs cursor-pointer"
+        title="Search"
+      >
+        <i className="fa-solid fa-magnifying-glass text-xs" />
+      </button>
+    );
+  }
+
+  return (
+    <div ref={containerRef} className="relative flex items-center animate-in fade-in zoom-in-95 duration-200">
+      <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-xs pointer-events-none" />
+      <input
+        ref={inputRef}
+        type="text"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Search..."
+        className="w-40 sm:w-56 pl-8 pr-7 py-1 h-8 text-xs bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 outline-none focus:border-gray-300 dark:focus:border-slate-600 transition-all shadow-2xs"
+      />
+      <button
+        type="button"
+        onClick={() => setIsOpen(false)}
+        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 text-xs p-1"
+      >
+        <i className="fa-solid fa-xmark text-[10px]" />
+      </button>
+    </div>
+  );
+};
 
 const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const location = useLocation();
@@ -33,7 +84,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
 
   const [loading, setLoading] = useState(true);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
-  const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3, 4, 5]);
+  const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3, 4]);
   const kpiDetailModal = useModalToggle();
 
   // Insights section 1
@@ -198,26 +249,45 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     fetchIntel();
   }, []);
 
-  const activeStats = STATS_BY_TAB[activeIntelTab] || STATS_BY_TAB.sales;
+  const activeStats = STATS_BY_TAB.sales;
 
   const handleStepClick = (stepId) => {
     navigate(`/intel/insight/sales/${stepId}`);
   };
 
-  // Compact header center — Intel tabs + single filter icon, shown when scrolled
-  const compactHeaderCenter = isScrolled ? (
-    <div className="flex items-center gap-0.5">
+  const [showStickyTabs, setShowStickyTabs] = useState(false);
+  const originalTabsRef = useRef(null);
+
+  useEffect(() => {
+    const scrollEl = document.querySelector('.dashboard-main-content');
+    const targetEl = originalTabsRef.current;
+    if (!scrollEl || !targetEl) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowStickyTabs(!entry.isIntersecting);
+      },
+      { root: scrollEl, threshold: 0.1 }
+    );
+
+    observer.observe(targetEl);
+    return () => observer.disconnect();
+  }, []);
+
+  // Compact header center — Intel tabs shown ONLY when original tabs scroll out of view
+  const compactHeaderCenter = showStickyTabs ? (
+    <div className="flex items-center gap-0.5 animate-in fade-in duration-200">
       {INTEL_TABS.map(tab => (
         <button
           key={tab.key}
           onClick={() => { navigate((fullWidthInsights ? V2_FULL_TAB_TO_ROUTE : TAB_TO_ROUTE)[tab.key]); setStepOffset(0); }}
-          className={`px-3 h-[56px] text-[11px] font-medium transition-colors whitespace-nowrap flex items-center gap-1 border-b-2
+          className={`px-3 h-[56px] text-xs font-medium transition-colors whitespace-nowrap flex items-center gap-1 border-b-2
             ${activeIntelTab === tab.key
-              ? 'border-gray-900 dark:border-slate-300 text-gray-900 dark:text-slate-100 font-semibold'
+              ? 'border-gray-900 dark:border-slate-300 text-gray-900 dark:text-slate-100 font-bold'
               : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
             }`}
         >
-          <i className={`fa-solid ${tab.icon} text-[9px]`} />
+          <i className={`fa-solid ${tab.icon} text-[10px]`} />
           {tab.label}
         </button>
       ))}
@@ -225,23 +295,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   ) : null;
 
   const compactFilterElement = isScrolled ? (
-    <div className="relative flex items-center gap-1.5" ref={compactFilterRef}>
-      <button
-        onClick={handleOpenV2Filter}
-        className={`relative flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
-            ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
-            : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
-          }`}
-      >
-        <i className="fa-solid fa-sliders text-[11px]" />
-        Filters
-        {appliedFilterCount > 0 && (
-          <span className="sm:hidden absolute -top-1.5 -right-1.5 w-4 h-4 flex items-center justify-center bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-[9px] font-bold rounded-full border-2 border-white dark:border-slate-950">
-            {appliedFilterCount}
-          </span>
-        )}
-      </button>
-    </div>
+    <CompactHeaderSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
   ) : null;
 
   /* ── V2 filter helpers ── */
@@ -327,12 +381,16 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     setChannel(next.length === 1 ? next[0] : 'all');
   };
 
+  const briefData =
+    REALIFY_BRIEF[activeIntelTab] || REALIFY_BRIEF.sales;
+
   return (
     <DashboardLayout
       title="Intelligence"
       subtitle="Real-time sales analytics"
       showSearch={true}
       showTabs={false}
+      showAIPrompt={false}
       aiPromptFullWidth={true}
       searchCollapsed={isScrolled}
       headerCenterElement={compactHeaderCenter}
@@ -350,13 +408,13 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         }}
       >
         <div className="flex items-center gap-2 py-3 min-w-0">
-          <div className="flex-1 flex items-center gap-2 overflow-x-auto custom-scrollbar">
+          <div className="flex-1 grid grid-cols-5 gap-2">
             {selectedKpiIndices.map(idx => {
               const stat = activeStats[idx] || activeStats[0];
               return (
                 <div
                   key={idx}
-                  className="flex-shrink-0 flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-slate-800/60 border border-gray-100 dark:border-slate-700 rounded-xl"
+                  className="w-full flex items-center justify-center px-3 py-2 bg-gray-50 dark:bg-slate-800/60 border border-gray-100 dark:border-slate-700 rounded-xl"
                 >
                   <div>
                     <p className="text-[9px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide leading-tight mb-0.5">{stat.title}</p>
@@ -371,7 +429,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
               );
             })}
           </div>
-          <div className="hidden md:flex flex-shrink-0 items-center gap-2">
+          <div className="hidden md:flex flex-shrink-0 items-center justify-center gap-2 self-center my-auto">
             <span className="text-[10px] text-gray-500 dark:text-slate-400 font-medium whitespace-nowrap">AI View</span>
             <button
               onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { from: '/intel' } })}
@@ -395,8 +453,8 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
             ref={mobileFilterBtnRef}
             onClick={handleOpenV2Filter}
             className={`relative flex-shrink-0 flex items-center gap-1.5 px-3 h-8 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
-                ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
-                : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
+              ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
+              : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
               }`}
           >
             <i className="fa-solid fa-sliders text-[11px]" />
@@ -421,8 +479,45 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           />
         </div>
 
-        {/* Intel tabs (left) + Filter dropdowns (right) */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between -mt-2 pb-0 sm:pb-4 gap-2 sm:gap-0">
+        {/* Realify Brief (Top Banner) + Search Bar (left) & Channel / Date Controls (right) */}
+        <div className="w-full space-y-2">
+          <RealifyBrief data={briefData} />
+          <div className="flex items-center justify-between gap-3 w-full">
+            <div className="relative w-[38%] sm:w-[32%] min-w-[170px] max-w-[320px]">
+              <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-xs pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search..."
+                className="w-full pl-8 pr-3 py-1.5 h-8 text-xs bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 outline-none focus:border-gray-300 dark:focus:border-slate-600 transition-all shadow-2xs"
+              />
+            </div>
+            <BriefHeaderControls />
+          </div>
+        </div>
+
+        {/* 5 stat cards */}
+        <div ref={kpiSectionRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
+          {selectedKpiIndices.map(idx => {
+            const stat = activeStats[idx] || activeStats[0];
+            return (
+              <StatCard
+                key={idx}
+                title={stat.title}
+                value={stat.value}
+                change={stat.change}
+                trend={stat.trend}
+                isPositive={stat.isPositive}
+                loading={loading}
+                onClick={() => kpiDetailModal.open(stat)}
+              />
+            );
+          })}
+        </div>
+
+        {/* Intel tabs (left) + AI / Dashboard View toggle (right) */}
+        <div ref={originalTabsRef} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 border-b border-gray-100 dark:border-slate-800 pt-4">
           <div className="flex items-center gap-0.5 overflow-x-auto scrollbar-hide sm:overflow-visible">
             {INTEL_TABS.map(tab => (
               <button
@@ -439,154 +534,12 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
               </button>
             ))}
           </div>
-          {/* V2 filter — search icon + filter icon + chips + panel */}
-          <div className="relative flex items-center gap-2" ref={v2FilterRef}>
 
-            {/* Filter button — hidden on mobile, replaced by the heading-row Filters button above */}
-            <button
-              ref={filterBtnRef}
-              onClick={handleOpenV2Filter}
-              className={`hidden sm:flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${v2FilterOpen
-                  ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
-                  : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
-                }`}
-            >
-              <i className="fa-solid fa-sliders text-[11px]" />
-              Filters
-            </button>
-
-            {/* Applied-filter chips — desktop only; mobile shows a count in the panel header instead */}
-            <div className="hidden sm:flex items-center gap-2">
-
-            {/* Date chip — visible only when a date filter is applied */}
-            {appliedDate !== null && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-full text-xs font-medium text-gray-700 dark:text-slate-300 shadow-sm">
-                {v2DateLabel(appliedDate)}
-                <button
-                  onClick={() => { setAppliedDate(null); setDateRange(null); }}
-                  className="text-gray-400 hover:text-gray-700 dark:hover:text-slate-200 ml-0.5 transition"
-                >
-                  <i className="fa-solid fa-xmark text-[9px]" />
-                </button>
-              </span>
-            )}
-
-            {/* Category chips — only if specific categories selected */}
-            {appliedCats.length === 1 && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-full text-xs font-medium text-gray-700 dark:text-slate-300 shadow-sm">
-                {v2CatLabel(appliedCats[0])}
-                <button
-                  onClick={() => { setAppliedCats([]); setCategory('all'); }}
-                  className="text-gray-400 hover:text-gray-700 dark:hover:text-slate-200 ml-0.5 transition"
-                >
-                  <i className="fa-solid fa-xmark text-[9px]" />
-                </button>
-              </span>
-            )}
-            {appliedCats.length > 1 && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-full text-xs font-medium text-gray-700 dark:text-slate-300 shadow-sm">
-                {appliedCats.length} Categories
-                <button
-                  onClick={() => { setAppliedCats([]); setCategory('all'); }}
-                  className="text-gray-400 hover:text-gray-700 dark:hover:text-slate-200 ml-0.5 transition"
-                >
-                  <i className="fa-solid fa-xmark text-[9px]" />
-                </button>
-              </span>
-            )}
-
-            {/* Channel chip — single name or "Channels ▾" dropdown */}
-            {appliedChans.length === 1 && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-full text-xs font-medium text-gray-700 dark:text-slate-300 shadow-sm">
-                {v2ChanLabel(appliedChans[0])}
-                <button
-                  onClick={() => removeAppliedChan(appliedChans[0])}
-                  className="text-gray-400 hover:text-gray-700 dark:hover:text-slate-200 ml-0.5 transition"
-                >
-                  <i className="fa-solid fa-xmark text-[9px]" />
-                </button>
-              </span>
-            )}
-            {appliedChans.length > 1 && (
-              <div className="relative" ref={chanDropRef}>
-                <button
-                  onClick={() => setChanDropOpen(o => !o)}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-full text-xs font-medium text-gray-700 dark:text-slate-300 shadow-sm hover:border-gray-300 dark:hover:border-slate-600 transition"
-                >
-                  Channels
-                  <i className={`fa-solid fa-chevron-down text-[8px] transition-transform duration-200 ${chanDropOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {chanDropOpen && (
-                  <div className="absolute top-full mt-1 right-0 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-50 py-1.5 min-w-[160px]">
-                    {appliedChans.map(ch => (
-                      <div key={ch} className="flex items-center justify-between gap-3 px-3 py-1.5 hover:bg-gray-50 dark:hover:bg-slate-800 transition">
-                        <span className="text-xs font-medium text-gray-700 dark:text-slate-300 flex-1 min-w-0">{v2ChanLabel(ch)}</span>
-                        <button onClick={() => removeAppliedChan(ch)} className="text-gray-400 hover:text-red-500 transition flex-shrink-0">
-                          <i className="fa-solid fa-xmark text-[9px]" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Product chip — count only, since names would be too long to list */}
-            {appliedProducts.length > 0 && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-full text-xs font-medium text-gray-700 dark:text-slate-300 shadow-sm">
-                {appliedProducts.length} Product{appliedProducts.length > 1 ? 's' : ''}
-                <button
-                  onClick={() => { setAppliedProducts([]); setProducts([]); }}
-                  className="text-gray-400 hover:text-gray-700 dark:hover:text-slate-200 ml-0.5 transition"
-                >
-                  <i className="fa-solid fa-xmark text-[9px]" />
-                </button>
-              </span>
-            )}
-
-            </div>
-
-            {/* Filter panel — vertical sidebar + content (fixed so it works from both header and content) */}
-            {v2FilterOpen && (
-              <IntelFilterPanel
-                filters={{
-                  v2Section, setV2Section,
-                  pendingDate, setPendingDate, pendingCats, setPendingCats, pendingChans, setPendingChans,
-                  pendingProducts, setPendingProducts, togglePendingProduct,
-                  pendingRangeStart, pendingRangeEnd, hoverDay, setHoverDay,
-                  setPendingRangeStart, setPendingRangeEnd,
-                  calViewYear, calViewMonth, calRightM, calRightY,
-                  prevCalMonth, nextCalMonth, handleDateClick,
-                  togglePendingCat, togglePendingChan,
-                  v2ChanGrid, v2ChanLabel,
-                  setAppliedDate, setAppliedCats, setAppliedChans, setAppliedProducts,
-                  setDateRange, setCategory, setChannel, setProducts,
-                  setV2FilterOpen, handleApplyV2Filter,
-                }}
-                style={{ top: filterPanelPos.top, left: filterPanelPos.left, right: filterPanelPos.right, bottom: filterPanelPos.bottom }}
-              />
-            )}
-
-          </div>
-        </div>
-
-        {/* Customise KPIs (left) + Dashboard View toggle (right) */}
-        <div className="flex items-center justify-between -mt-2">
-          <button
-            onClick={() => setIsKpiSelectorOpen(true)}
-            className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 transition-colors"
-          >
-            <span className="w-5 h-5 rounded-md bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center">
-              <i className="fa-solid fa-plus text-[8px]" />
+          {/* Dashboard View toggle (right) */}
+          <div className="hidden md:flex items-center gap-2 ml-auto">
+            <span className="text-[11px] font-medium text-gray-500 dark:text-slate-400">
+              Dashboard View
             </span>
-            Customise KPIs
-          </button>
-          {/* Hidden on mobile, visible from md and above */}
-          <div className="hidden md:flex items-center gap-2">
-            <span className="text-[11px] text-gray-500 dark:text-slate-400 font-medium">
-              AI View
-            </span>
-
             <button
               onClick={() =>
                 navigate(`/detailed-view/${activeIntelTab}`, {
@@ -597,30 +550,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
             >
               <span className="inline-block h-3.5 w-3.5 transform rounded-full bg-white dark:bg-gray-900 transition-transform translate-x-0.5" />
             </button>
-
-            <span className="text-[11px] font-medium text-gray-500 dark:text-slate-400">
-              Dashboard View
-            </span>
           </div>
-        </div>
-
-        {/* 6 stat cards */}
-        <div ref={kpiSectionRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-4 -mt-2">
-          {selectedKpiIndices.map(idx => {
-            const stat = activeStats[idx] || activeStats[0];
-            return (
-              <StatCard
-                key={idx}
-                title={stat.title}
-                value={stat.value}
-                change={stat.change}
-                trend={stat.trend}
-                isPositive={stat.isPositive}
-                loading={loading}
-                onClick={() => kpiDetailModal.open(stat)}
-              />
-            );
-          })}
         </div>
 
         {/* Insights section 1 */}

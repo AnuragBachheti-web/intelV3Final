@@ -1,10 +1,11 @@
-﻿import React, { useRef, useLayoutEffect, useMemo, useState, useEffect } from 'react';
+import React, { useRef, useLayoutEffect, useMemo, useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useFilterStore } from '../../store/useFilterStore';
 import { useHeaderScroll, notifyHeaderMeasured } from '../../hooks/useHeaderScroll';
 import { useSimulationStore } from '../../store/useSimulationStore';
 import useClickOutside from '../../hooks/useClickOutside';
 import SelectInput from '../ui/SelectInput';
+import RulesDrawer from '../common/RulesDrawer';
 import white_latest from '../../assets/white_latest.png';
 import dark_latest from '../../assets/dark_latest.png';
 
@@ -25,8 +26,8 @@ const QUICK_DATE_OPTS = [
   { label: 'Last 30 Days', value: 'last-30-days' },
   { label: 'Last 90 Days', value: 'last-90-days' },
 ];
-const MONTHS_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DAY_ABBR = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+const MONTHS_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const DAY_ABBR = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
 const FilterPopover = ({ dateRange, setDateRange, category, setCategory, channel, setChannel, onPendingCountChange }) => {
   const now = new Date();
@@ -199,11 +200,10 @@ const FilterPopover = ({ dateRange, setDateRange, category, setCategory, channel
         ref={btnRef}
         onClick={toggleOpen}
         title="Filters"
-        className={`relative w-8 h-8 flex items-center justify-center rounded-xl border shadow-sm transition-all active:scale-95 ${
-          open
-            ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-200 text-white dark:text-gray-900'
-            : 'bg-gray-50 dark:bg-slate-800/60 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700'
-        }`}
+        className={`relative w-8 h-8 flex items-center justify-center rounded-xl border shadow-sm transition-all active:scale-95 ${open
+          ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-200 text-white dark:text-gray-900'
+          : 'bg-gray-50 dark:bg-slate-800/60 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700'
+          }`}
       >
         <i className="fa-solid fa-sliders text-xs" />
       </button>
@@ -221,15 +221,13 @@ const FilterPopover = ({ dateRange, setDateRange, category, setCategory, channel
                 <button
                   key={nav.id}
                   onClick={() => setActiveNav(nav.id)}
-                  className={`flex items-center gap-2.5 w-full px-3 py-2.5 rounded-xl text-left transition-colors ${
-                    activeNav === nav.id
-                      ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900'
-                      : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800/40'
-                  }`}
+                  className={`flex items-center gap-2.5 w-full px-3 py-2.5 rounded-xl text-left transition-colors ${activeNav === nav.id
+                    ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900'
+                    : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800/40'
+                    }`}
                 >
-                  <div className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                    activeNav === nav.id ? 'border-white dark:border-gray-900 bg-white dark:bg-gray-900' : 'border-gray-300 dark:border-slate-600'
-                  }`}>
+                  <div className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${activeNav === nav.id ? 'border-white dark:border-gray-900 bg-white dark:bg-gray-900' : 'border-gray-300 dark:border-slate-600'
+                    }`}>
                     {activeNav === nav.id && <div className="w-1 h-1 bg-gray-900 dark:bg-slate-100 rounded-full" />}
                   </div>
                   <span className="text-[12px] font-medium truncate">{nav.label}</span>
@@ -247,11 +245,10 @@ const FilterPopover = ({ dateRange, setDateRange, category, setCategory, channel
                       <button
                         key={opt.value}
                         onClick={() => { setPendingDate(opt.value); setRangeStart(null); setRangeEnd(null); }}
-                        className={`px-3 py-1 rounded-full text-[11px] border transition-colors ${
-                          pendingDate === opt.value
-                            ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100 font-semibold'
-                            : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:border-gray-300 dark:hover:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-800/40'
-                        }`}
+                        className={`px-3 py-1 rounded-full text-[11px] border transition-colors ${pendingDate === opt.value
+                          ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100 font-semibold'
+                          : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:border-gray-300 dark:hover:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-800/40'
+                          }`}
                       >
                         {opt.label}
                       </button>
@@ -293,13 +290,13 @@ const FilterPopover = ({ dateRange, setDateRange, category, setCategory, channel
 const TOOLBAR = { compressed: 64, expanded: 84 };
 
 const TOOLBAR_MARKETPLACE_PLATFORMS = [
-  { id: 'amazon',  icon: 'fa-amazon',  color: 'text-orange-500' },
-  { id: 'shopify', icon: 'fa-shopify',  color: 'text-green-500'  },
+  { id: 'amazon', icon: 'fa-amazon', color: 'text-orange-500' },
+  { id: 'shopify', icon: 'fa-shopify', color: 'text-green-500' },
 ];
 const FULL_MARKETPLACE_PLATFORMS = [
-  { id: 'amazon',  icon: 'fa-amazon',       color: 'text-orange-500' },
-  { id: 'shopify', icon: 'fa-shopify',       color: 'text-green-500'  },
-  { id: 'walmart', icon: 'fa-cart-shopping', color: 'text-blue-400'   },
+  { id: 'amazon', icon: 'fa-amazon', color: 'text-orange-500' },
+  { id: 'shopify', icon: 'fa-shopify', color: 'text-green-500' },
+  { id: 'walmart', icon: 'fa-cart-shopping', color: 'text-blue-400' },
 ];
 
 const GlobalAppHeader = ({
@@ -322,6 +319,35 @@ const GlobalAppHeader = ({
   onMenuClick,
   hideMobileSearchIcon = false,
 }) => {
+  const [rulesOpen, setRulesOpen] = useState(false);
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  };
+
+  const username = localStorage.getItem('username') || 'anurag101';
+  const activeShop = localStorage.getItem('active_shop') || shopProfile?.shop_name || 'sdfsdf';
+  const platformDomain = localStorage.getItem('active_platform_domain') || 'amazon.in';
+  const currentDateFormatted = new Date().toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  }).toUpperCase();
+
+  const rulesButton = (
+    <button
+      onClick={() => setRulesOpen(true)}
+      className="flex items-center gap-1.5 px-3.5 py-1 bg-white dark:bg-slate-900 border border-[#dcd6cd] dark:border-slate-700 text-gray-900 dark:text-slate-100 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-full text-xs font-semibold transition-all shadow-xs"
+      title="Detectors & thresholds"
+    >
+      <i className="fa-solid fa-gear text-xs text-gray-700 dark:text-slate-300" />
+      <span>Rules</span>
+    </button>
+  );
   const location = useLocation();
   const {
     searchQuery, setSearchQuery,
@@ -331,7 +357,7 @@ const GlobalAppHeader = ({
   } = useFilterStore();
 
   const secondaryRef = useRef(null);
-  const { isCompressed, forceExpand } = useHeaderScroll(TOOLBAR, scrollRef);
+  const { isCompressed, isScrolled, forceExpand } = useHeaderScroll(TOOLBAR, scrollRef);
   const [searchExpanded, setSearchExpanded] = useState(false);
   const [filterPreviewCount, setFilterPreviewCount] = useState(0);
   const searchInputRef = useRef(null);
@@ -364,11 +390,11 @@ const GlobalAppHeader = ({
   }, []);
 
   const defaultTabs = useMemo(() => [
-    { path: '/sales',     label: 'Sales',     icon: 'fa-dollar-sign'     },
-    { path: '/margin',    label: 'Margin',    icon: 'fa-chart-line'      },
-    { path: '/inventory', label: 'Inventory', icon: 'fa-boxes'           },
-    { path: '/ads',       label: 'Ads',       icon: 'fa-bullhorn'        },
-    { path: '/cash',      label: 'Cash',      icon: 'fa-money-bill-wave' },
+    { path: '/sales', label: 'Sales', icon: 'fa-dollar-sign' },
+    { path: '/margin', label: 'Margin', icon: 'fa-chart-line' },
+    { path: '/inventory', label: 'Inventory', icon: 'fa-boxes' },
+    { path: '/ads', label: 'Ads', icon: 'fa-bullhorn' },
+    { path: '/cash', label: 'Cash', icon: 'fa-money-bill-wave' },
   ], []);
 
   const activeTabs = tabs || defaultTabs;
@@ -432,11 +458,10 @@ const GlobalAppHeader = ({
               window.location.reload();
             }}
             title={`${p.id.charAt(0).toUpperCase() + p.id.slice(1)} ${isActive ? '(Active)' : '(Connect)'}`}
-            className={`relative w-7 h-7 rounded-lg flex items-center justify-center transition-all active:scale-90 ${
-              isActive
-                ? 'bg-white dark:bg-slate-900 shadow-sm'
-                : 'opacity-35 grayscale hover:opacity-80 hover:grayscale-0'
-            }`}
+            className={`relative w-7 h-7 rounded-lg flex items-center justify-center transition-all active:scale-90 ${isActive
+              ? 'bg-white dark:bg-slate-900 shadow-sm'
+              : 'opacity-35 grayscale hover:opacity-80 hover:grayscale-0'
+              }`}
           >
             <i className={`fa-brands ${p.icon} ${p.color} text-sm`} />
             {isActive && (
@@ -543,11 +568,11 @@ const GlobalAppHeader = ({
       {[
         {
           value: dateRange, onChange: setDateRange,
-          options: [['all','All'],['last-7-days','Last 7 Days'],['last-30-days','Last 30 Days'],['last-90-days','Last 90 Days'],['ytd','Year to Date']],
+          options: [['all', 'All'], ['last-7-days', 'Last 7 Days'], ['last-30-days', 'Last 30 Days'], ['last-90-days', 'Last 90 Days'], ['ytd', 'Year to Date']],
         },
         {
           value: category, onChange: setCategory,
-          options: [['all','All Categories'],['electronics','Electronics'],['home-garden','Home & Garden'],['apparel','Apparel']],
+          options: [['all', 'All Categories'], ['electronics', 'Electronics'], ['home-garden', 'Home & Garden'], ['apparel', 'Apparel']],
         },
       ].map((sel, i) => (
         <SelectInput
@@ -578,87 +603,91 @@ const GlobalAppHeader = ({
   if (renderOnly === 'toolbar') {
     return (
       <>
-      {/* MOBILE top bar — hamburger, logo, search/notifications/profile (ss1) */}
-      <div className="sm:hidden grid grid-cols-3 items-center px-4 h-[56px] border-b border-black/[0.05]">
-        <div className="justify-self-start">
-          {onMenuClick && (
-            <button
-              onClick={onMenuClick}
-              className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-600 dark:text-slate-300 active:scale-95 transition-transform"
-              title="Menu"
-            >
-              <i className="fa-solid fa-bars text-base" />
-            </button>
-          )}
-        </div>
-        <div className="justify-self-center">
-          <img src={darkMode ? white_latest : dark_latest} alt="Realify" className="h-[2.5rem] w-auto max-w-[100px] object-contain" />
-        </div>
-        <div className="relative flex items-center gap-3 justify-self-end">
-          {!hideMobileSearchIcon && renderSearchExpandToggle()}
-          {renderNotificationButton()}
-          {profileButton}
-        </div>
-      </div>
-
-      <div className="hidden sm:flex items-center px-4 sm:px-6 gap-4 h-[56px] relative border-b border-black/[0.05]">
-        {/* LEFT — page title + subtitle */}
-        {title && (
-          <div className="shrink-0 min-w-0">
-            <h2 className="font-bold text-gray-900 dark:text-slate-100 text-[18px] leading-tight tracking-tight whitespace-nowrap">
-              {title}
-            </h2>
-            {subtitle && (
-              <p className="text-[10px] text-gray-400 dark:text-slate-500 mt-0.5 whitespace-nowrap hidden sm:block">
-                {subtitle}
-              </p>
+        {/* MOBILE top bar — hamburger, logo, search/notifications/profile (ss1) */}
+        <div className="sm:hidden grid grid-cols-3 items-center px-4 h-[56px] border-b border-black/[0.05]">
+          <div className="justify-self-start">
+            {onMenuClick && (
+              <button
+                onClick={onMenuClick}
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-600 dark:text-slate-300 active:scale-95 transition-transform"
+                title="Menu"
+              >
+                <i className="fa-solid fa-bars text-base" />
+              </button>
             )}
           </div>
-        )}
+          <div className="justify-self-center">
+            <img src={darkMode ? white_latest : dark_latest} alt="Realify" className="h-[2.5rem] w-auto max-w-[100px] object-contain" />
+          </div>
+          <div className="relative flex items-center gap-3 justify-self-end">
+            {!hideMobileSearchIcon && renderSearchExpandToggle()}
+            {renderNotificationButton()}
+            {profileButton}
+          </div>
+        </div>
 
-        {/* CENTER — absolutely centered on full header width for true centering */}
-        {centerElement && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="pointer-events-auto flex items-center">
-              {centerElement}
+        <div className="hidden sm:flex items-center px-4 sm:px-6 gap-4 h-[56px] relative border-b border-black/[0.05]">
+          {/* LEFT — page title + subtitle */}
+          {title && (
+            <div className="shrink-0 min-w-0">
+              <h2 className="font-bold text-gray-900 dark:text-slate-100 text-[18px] leading-tight tracking-tight whitespace-nowrap">
+                {title}
+              </h2>
+              {subtitle && (
+                <p className="text-[10px] text-gray-400 dark:text-slate-500 mt-0.5 whitespace-nowrap hidden sm:block">
+                  {subtitle}
+                </p>
+              )}
             </div>
-          </div>
-        )}
-        {/* Flex spacer always present to push right section to edge */}
-        <div className="flex-1" />
+          )}
 
-        {/* RIGHT — search bar + icons */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Search bar — fixed-width container prevents layout shift when expanding */}
-          <div className={`hidden sm:flex items-center flex-shrink-0 ${!searchCollapsed ? 'w-56 lg:w-72' : 'relative'}`}>
-            {!searchCollapsed ? (
-              <div className="relative group w-full flex items-center">
-                <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-xs group-focus-within:text-brand dark:group-focus-within:text-gray-400 transition-colors pointer-events-none" />
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  placeholder="Search products, SKUs, or customers..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-[7px] text-xs bg-transparent text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 outline-none transition-all"
-                />
+          {/* CENTER — absolutely centered on full header width for true centering */}
+          {centerElement && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="pointer-events-auto flex items-center">
+                {centerElement}
               </div>
-            ) : (
-              renderSearchExpandToggle()
+            </div>
+          )}
+          {/* Flex spacer always present to push right section to edge */}
+          <div className="flex-1" />
+
+          {/* RIGHT — Dynamic User Greeting + Rules Button + Actions */}
+          <div className="flex items-center gap-3 shrink-0">
+            {!isScrolled && !isCompressed && (
+              <div className="header-greeting-block hidden md:flex flex-col items-end text-right px-1 transition-opacity duration-200">
+                <p className="text-xs font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-none">
+                  {getGreeting()}, <span className="font-semibold">{username}</span>
+                </p>
+                <p className="text-[10px] font-medium text-gray-400 dark:text-slate-500 leading-tight mt-0.5">
+                  {activeShop}
+                </p>
+                <div className="flex items-center gap-1.5 text-[8px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">
+                  <span>{currentDateFormatted}</span>
+                  <span>•</span>
+                  <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-extrabold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    LIVE
+                  </span>
+                  <span>•</span>
+                  <span>{platformDomain}</span>
+                </div>
+              </div>
             )}
+
+            {rulesButton}
+
+            {customRightElement}
+
+            {simulationRing}
+
+            {refreshButton}
+            {renderNotificationButton()}
+            {profileButton}
           </div>
-
-          {customRightElement}
-
-          {simulationRing}
-
-          {renderMarketplaceToggles(TOOLBAR_MARKETPLACE_PLATFORMS)}
-
-          {refreshButton}
-          {renderNotificationButton()}
-          {profileButton}
         </div>
-      </div>
+
+        <RulesDrawer isOpen={rulesOpen} onClose={() => setRulesOpen(false)} />
       </>
     );
   }
@@ -709,30 +738,40 @@ const GlobalAppHeader = ({
           </div>
         )}
 
-        {/* CENTER — search (fades out) and compact tabs (fade in, absolute overlay) */}
-        <div className="flex-1 relative min-w-0 max-w-md mx-auto">
-          {showSearch && (
-            <div className={`page-header-search relative group${!isCompressed ? ' is-active' : ''}`}>
-              <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-xs group-focus-within:text-brand dark:group-focus-within:text-gray-400 transition-colors pointer-events-none" />
-              <input
-                type="text"
-                placeholder="Search products, SKUs, or customers..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-[7px] text-xs text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 outline-none transition-all"
-              />
+        {/* CENTER — Sticky page header tabs (when scrolled) */}
+        <div className="flex-1 flex flex-col items-center justify-center text-center shrink-0 min-w-0">
+          {centerElement ? (
+            <div className="flex items-center justify-center font-bold text-sm sm:text-base">
+              {centerElement}
             </div>
-          )}
-
-          {showTabs && (
-            <div className={`page-header-compact-tabs absolute inset-0 flex items-center justify-center gap-0.5${isCompressed ? ' is-visible' : ''}`}>
-              {activeTabs.map((tab) => renderTab(tab, 'compact'))}
-            </div>
-          )}
+          ) : null}
         </div>
 
-        {/* RIGHT — marketplace toggles, refresh, notifications, profile, expand */}
+        {/* RIGHT — greeting block, rules button, refresh, notifications, profile, expand */}
         <div className="flex items-center gap-2 shrink-0 ml-auto">
+          {!isScrolled && !isCompressed && (
+            <div className="header-greeting-block hidden md:flex flex-col items-end text-right px-1 transition-opacity duration-200">
+              <p className="text-xs font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-none">
+                {getGreeting()}, <span className="font-semibold">{username}</span>
+              </p>
+              <p className="text-[10px] font-medium text-gray-400 dark:text-slate-500 leading-tight mt-0.5">
+                {activeShop}
+              </p>
+              <div className="flex items-center gap-1.5 text-[8px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">
+                <span>{currentDateFormatted}</span>
+                <span>•</span>
+                <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-extrabold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  LIVE
+                </span>
+                <span>•</span>
+                <span>{platformDomain}</span>
+              </div>
+            </div>
+          )}
+
+          {rulesButton}
+
           {customRightElement}
 
           {isCompressed && (
@@ -745,8 +784,6 @@ const GlobalAppHeader = ({
           )}
 
           {simulationRing}
-
-          {renderMarketplaceToggles(FULL_MARKETPLACE_PLATFORMS)}
 
           {refreshButton}
 
@@ -778,6 +815,8 @@ const GlobalAppHeader = ({
           {filterBar}
         </div>
       </div>
+
+      <RulesDrawer isOpen={rulesOpen} onClose={() => setRulesOpen(false)} />
     </div>
   );
 };

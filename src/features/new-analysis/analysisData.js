@@ -1,6 +1,6 @@
 export const analysisCategories = [
   {
-    title: 'Market Analysis',
+    title: 'Performance summary',
     icon: 'fa-chart-pie',
     color: 'bg-blue-50 dark:bg-blue-900/30 text-cb-700',
     desc: 'Analyze recent trends in the tech sector and generate a comprehensive report.',
@@ -13,7 +13,7 @@ export const analysisCategories = [
     ],
   },
   {
-    title: 'Competitor Research',
+    title: 'Competition',
     icon: 'fa-users',
     color: 'bg-indigo-50 dark:bg-indigo-900/30 text-cb-600',
     desc: 'Compare pricing strategies of top 3 competitors in our industry space.',
@@ -26,7 +26,7 @@ export const analysisCategories = [
     ],
   },
   {
-    title: 'Financial Modeling',
+    title: 'Products',
     icon: 'fa-file-invoice-dollar',
     color: 'bg-blue-50 dark:bg-blue-900/30 text-cb-500',
     desc: 'Create a 3-year revenue projection based on current growth metrics.',
@@ -39,7 +39,7 @@ export const analysisCategories = [
     ],
   },
   {
-    title: 'Data Extraction',
+    title: 'Channels',
     icon: 'fa-magnifying-glass-chart',
     color: 'bg-indigo-50 dark:bg-indigo-900/30 text-cb-800',
     desc: 'Extract key metrics from the uploaded Q3 earnings call transcript.',

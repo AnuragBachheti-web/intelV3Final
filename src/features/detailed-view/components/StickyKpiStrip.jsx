@@ -13,7 +13,7 @@ const StickyKpiStrip = ({ kpiIsSticky, statsData, onDashboardClick }) => (
     }}
   >
     <div className="flex items-center gap-2 py-3 min-w-0">
-      <div className="flex-1 flex items-center gap-2 overflow-x-auto custom-scrollbar">
+      <div className="flex-1 grid grid-cols-5 gap-2">
         {statsData.map((stat, idx) => (
           <div key={idx} className="flex-shrink-0 flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-slate-800/60 border border-gray-100 dark:border-slate-700 rounded-xl">
             <div>
@@ -26,7 +26,7 @@ const StickyKpiStrip = ({ kpiIsSticky, statsData, onDashboardClick }) => (
           </div>
         ))}
       </div>
-      <div className="hidden md:flex flex-shrink-0 items-center gap-2">
+      <div className="hidden md:flex flex-shrink-0 items-center justify-center gap-2 self-center my-auto">
         <span className="text-[10px] text-gray-400 dark:text-slate-500 font-medium whitespace-nowrap">AI View</span>
         <button
           onClick={onDashboardClick}

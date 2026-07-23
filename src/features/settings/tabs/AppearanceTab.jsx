@@ -1,80 +1,126 @@
-﻿import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const AppearanceTab = () => {
+  const [currentTheme, setCurrentTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+
+  const handleThemeChange = (theme) => {
+    setCurrentTheme(theme);
+    localStorage.setItem('theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+      document.body.style.backgroundColor = '#0c101a';
+    } else if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+      document.body.style.backgroundColor = '#ffffff';
+    } else if (theme === 'custom') {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        document.body.classList.add('dark');
+        document.body.style.backgroundColor = '#0c101a';
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.body.classList.remove('dark');
+        document.body.style.backgroundColor = '#ffffff';
+      }
+    }
+    window.dispatchEvent(new Event('themeChange'));
+  };
+
   return (
     <>
       <div className="p-6 border-b border-gray-100 dark:border-slate-800">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Appearance</h3>
-        <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Customize the interface theme and layout</p>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Appearance Settings</h3>
+        <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Customize the interface theme and visual preferences</p>
       </div>
 
-      <div className="p-8 space-y-12">
+      <div className="p-8 space-y-10">
         {/* Theme Selection */}
         <section>
-          <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 mb-6">Theme</h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 mb-4">Interface Theme</h4>
+          <div className="grid grid-cols-3 gap-4 sm:gap-6">
             {/* Dark Theme */}
-            <label className="cursor-pointer group">
-              <input type="radio" name="theme" value="dark" className="hidden peer" defaultChecked />
-              <div className="p-4 border-2 border-gray-100 dark:border-slate-800 rounded-2xl peer-checked:border-brand dark:border-gray-500 transition-all hover:border-gray-200">
-                <div className="aspect-[16/6] bg-[#0f172a] rounded-xl mb-4 relative overflow-hidden border border-slate-700">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-1 bg-blue-500 rounded-full"></div>
+            <div
+              onClick={() => handleThemeChange('dark')}
+              className={`cursor-pointer p-4 border-2 rounded-2xl transition-all ${
+                currentTheme === 'dark'
+                  ? 'border-blue-600 bg-blue-50/20 dark:border-blue-500 dark:bg-blue-900/20 shadow-sm'
+                  : 'border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700'
+              }`}
+            >
+              <div className="aspect-[16/7] bg-[#0c101a] rounded-xl mb-3 relative overflow-hidden border border-slate-800 p-2 flex flex-col justify-between">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-slate-700"></div>
+                  <div className="w-10 h-1.5 rounded-full bg-slate-800"></div>
                 </div>
-                <div className="text-center">
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">Dark</p>
-                  <p className="text-[10px] text-gray-400 font-bold tracking-wider mt-0.5">Default</p>
-                </div>
+                <div className="w-full h-3 rounded bg-blue-500/20 border border-blue-500/40"></div>
               </div>
-            </label>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-bold text-gray-900 dark:text-slate-100">Dark</p>
+                  <p className="text-[11px] text-gray-500 dark:text-slate-400">Sleek dark interface</p>
+                </div>
+                {currentTheme === 'dark' && (
+                  <i className="fa-solid fa-circle-check text-blue-600 dark:text-blue-400 text-sm"></i>
+                )}
+              </div>
+            </div>
 
             {/* Light Theme */}
-            <label className="cursor-pointer group">
-              <input type="radio" name="theme" value="light" className="hidden peer" />
-              <div className="p-4 border-2 border-gray-100 dark:border-slate-800 rounded-2xl peer-checked:border-brand dark:border-gray-500 transition-all hover:border-gray-200">
-                <div className="aspect-[16/6] bg-[#f1f5f9] rounded-xl mb-4 relative overflow-hidden border border-gray-200">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-1 bg-brand rounded-full dark:bg-gray-500"></div>
+            <div
+              onClick={() => handleThemeChange('light')}
+              className={`cursor-pointer p-4 border-2 rounded-2xl transition-all ${
+                currentTheme === 'light'
+                  ? 'border-blue-600 bg-blue-50/20 dark:border-blue-500 dark:bg-blue-900/20 shadow-sm'
+                  : 'border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700'
+              }`}
+            >
+              <div className="aspect-[16/7] bg-white rounded-xl mb-3 relative overflow-hidden border border-gray-200 p-2 flex flex-col justify-between">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-gray-200"></div>
+                  <div className="w-10 h-1.5 rounded-full bg-gray-100"></div>
                 </div>
-                <div className="text-center">
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">Light</p>
-                </div>
+                <div className="w-full h-3 rounded bg-blue-100 border border-blue-200"></div>
               </div>
-            </label>
-
-            {/* System Theme */}
-            <label className="cursor-pointer group">
-              <input type="radio" name="theme" value="system" className="hidden peer" />
-              <div className="p-4 border-2 border-gray-100 dark:border-slate-800 rounded-2xl peer-checked:border-brand dark:border-gray-500 transition-all hover:border-gray-200">
-                <div className="aspect-[16/6] bg-gradient-to-r from-[#0f172a] to-[#f1f5f9] rounded-xl mb-4 border border-gray-200 dark:border-slate-700"></div>
-                <div className="text-center">
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">System</p>
-                </div>
-              </div>
-            </label>
-          </div>
-        </section>
-
-        {/* Default Home */}
-        <section>
-          <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 mb-6">Default Home</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <label className="cursor-pointer group">
-              <input type="radio" name="home" value="triage" className="hidden peer" defaultChecked />
-              <div className="p-8 border-2 border-gray-100 dark:border-slate-800 rounded-2xl peer-checked:border-brand dark:border-gray-500 transition-all hover:border-gray-200 flex flex-col items-center justify-center gap-3">
-                <i className="fa-solid fa-bolt text-blue-600 text-xl"></i>
-                <p className="text-sm font-bold text-gray-900 dark:text-white">Triage</p>
-              </div>
-            </label>
-
-            <label className="cursor-pointer group">
-              <input type="radio" name="home" value="dashboard" className="hidden peer" />
-              <div className="p-8 border-2 border-gray-100 dark:border-slate-800 rounded-2xl peer-checked:border-brand dark:border-gray-500 transition-all hover:border-gray-200 flex flex-col items-center justify-center gap-3">
-                <i className="fa-solid fa-table-cells-large text-gray-400 text-xl"></i>
+              <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-bold text-gray-900 dark:text-white text-center">Dashboard</p>
-                  <p className="text-[10px] text-gray-400 font-bold text-center">S9+</p>
+                  <p className="text-sm font-bold text-gray-900 dark:text-slate-100">Light</p>
+                  <p className="text-[11px] text-gray-500 dark:text-slate-400">Clean light interface</p>
                 </div>
+                {currentTheme === 'light' && (
+                  <i className="fa-solid fa-circle-check text-blue-600 dark:text-blue-400 text-sm"></i>
+                )}
               </div>
-            </label>
+            </div>
+
+            {/* Custom Theme */}
+            <div
+              onClick={() => handleThemeChange('custom')}
+              className={`cursor-pointer p-4 border-2 rounded-2xl transition-all ${
+                currentTheme === 'custom'
+                  ? 'border-blue-600 bg-blue-50/20 dark:border-blue-500 dark:bg-blue-900/20 shadow-sm'
+                  : 'border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700'
+              }`}
+            >
+              <div className="aspect-[16/7] bg-gradient-to-r from-[#0c101a] to-white rounded-xl mb-3 relative overflow-hidden border border-gray-200 dark:border-slate-700 p-2 flex flex-col justify-between">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <div className="w-10 h-1.5 rounded-full bg-blue-400/50"></div>
+                </div>
+                <div className="w-full h-3 rounded bg-indigo-500/20 border border-indigo-400/40"></div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-bold text-gray-900 dark:text-slate-100">Custom Theme</p>
+                  <p className="text-[11px] text-gray-500 dark:text-slate-400">Adapts to system preferences</p>
+                </div>
+                {currentTheme === 'custom' && (
+                  <i className="fa-solid fa-circle-check text-blue-600 dark:text-blue-400 text-sm"></i>
+                )}
+              </div>
+            </div>
           </div>
         </section>
       </div>

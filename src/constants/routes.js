@@ -26,4 +26,7 @@ export const ROUTES = {
   TERMS_OF_SERVICE:     "/terms-of-service",
   NOTIFICATIONS:        "/notifications",
   ACTION_LOG:           "/action-log",
+  CATALOGUE:            "/catalogue",
+  AGENTS:               "/agents",
+  INTEGRATIONS:         "/integrations",
 };

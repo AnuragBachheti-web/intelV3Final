@@ -2,11 +2,11 @@
 
 export const STATS_DATA = {
   sales: [
-    { title: 'Total Revenue', value: '$124,500', change: '12.4%', isPositive: true },
-    { title: 'Units Sold', value: '2,180', change: '8.1%', isPositive: true },
-    { title: 'Total Orders', value: '412', change: '6.3%', isPositive: true },
-    { title: 'Avg Order Value', value: '$302', change: '4.2%', isPositive: true },
-    { title: 'Buy Box %', value: '87.4%', change: '-2.1%', isPositive: false },
+    { title: 'Revenue', value: '$124,500', change: '12.4%', isPositive: true },
+    { title: 'Margin', value: '34.2%', change: '8.4%', isPositive: true },
+    { title: 'Cash Received', value: '$48,200', change: '6.8%', isPositive: true },
+    { title: 'Inventory Value', value: '$85,400', change: '4.2%', isPositive: true },
+    { title: 'AD-Spend', value: '$14,200', change: '3.1%', isPositive: true },
     { title: 'ROAS', value: '4.2x', change: '+0.3x', isPositive: true },
     { title: 'Channel Mix', value: '3.8%', change: '-0.5%', isPositive: false },
     { title: 'Repeat Customers', value: '28%', change: '+4.8%', isPositive: true },
@@ -84,11 +84,11 @@ export const CHANNEL_MIX_DATA = [
 ];
 
 export const DETAIL_VIEW_TABS = [
-  { key: 'sales', label: 'Sales', icon: 'fa-dollar-sign' },
-  { key: 'margin', label: 'Margin', icon: 'fa-chart-line' },
-  { key: 'inventory', label: 'Inventory', icon: 'fa-boxes' },
-  { key: 'ads', label: 'Ads', icon: 'fa-bullhorn' },
-  { key: 'cash', label: 'Cash', icon: 'fa-money-bill-wave' },
+  { key: 'sales',     label: 'Revenue',         icon: 'fa-dollar-sign'     },
+  { key: 'margin',    label: 'Margin',          icon: 'fa-chart-line'      },
+  { key: 'cash',      label: 'Cash Received',   icon: 'fa-money-bill-wave' },
+  { key: 'inventory', label: 'Inventory Value', icon: 'fa-boxes'           },
+  { key: 'ads',       label: 'AD-Spend',        icon: 'fa-bullhorn'        },
 ];
 
 // ─── Filter option arrays — never change, defined once at module level ────────

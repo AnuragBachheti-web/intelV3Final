@@ -24,6 +24,8 @@ const IntelInsightDetailPage = lazy(() => import("./features/intel/pages/IntelIn
 const IntelSimulationPage  = lazy(() => import("./features/intel/pages/IntelSimulationPage"));
 const IntelRollbackPage    = lazy(() => import("./features/intel/pages/IntelRollbackPage"));
 const ProductsListPage       = lazy(() => import("./features/products/ProductsListPage"));
+const AgentsPage             = lazy(() => import("./features/agents/AgentsPage"));
+const IntegrationsPage       = lazy(() => import("./features/integrations/IntegrationsPage"));
 const NotificationsPage      = lazy(() => import("./features/notifications/NotificationsPage"));
 const ActionLogPage          = lazy(() => import("./features/action-log/ActionLogPage"));
 const PrivacyPolicy          = lazy(() => import("./features/onboarding/pages/PrivacyPolicy"));
@@ -76,6 +78,9 @@ function App() {
             <Route path={ROUTES.COMPARISON}           element={<ComparisonPage />} />
             <Route path={ROUTES.NOTIFICATIONS}        element={<NotificationsPage />} />
             <Route path="/products"                   element={<ProductsListPage />} />
+            <Route path={ROUTES.CATALOGUE}            element={<ProductsListPage />} />
+            <Route path={ROUTES.AGENTS}               element={<AgentsPage />} />
+            <Route path={ROUTES.INTEGRATIONS}         element={<IntegrationsPage />} />
             <Route path={ROUTES.ACTION_LOG}           element={<ActionLogPage />} />
 
             <Route path={ROUTES.LOGIN}                element={<InviteLoginPage />} />
