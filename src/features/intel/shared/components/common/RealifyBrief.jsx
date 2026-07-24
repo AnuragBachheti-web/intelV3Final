@@ -45,11 +45,10 @@ const RealifyBrief = () => {
                 key={s.id}
                 onClick={() => setActiveSlide(idx)}
                 title={`Slide ${idx + 1}`}
-                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                  activeSlide === idx
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${activeSlide === idx
                     ? 'w-5 bg-gray-900 dark:bg-slate-100'
                     : 'w-2 bg-[#e9dfd2] dark:bg-slate-700 hover:bg-gray-400 dark:hover:bg-slate-600'
-                }`}
+                  }`}
               />
             ))}
           </div>

@@ -12,9 +12,9 @@ export const STATS_BY_TAB = {
   sales: [
     { title: 'Revenue', value: '$124,500', change: '12.4%', trend: 'up', isPositive: true },
     { title: 'Margin', value: '34.2%', change: '8.4%', trend: 'up', isPositive: true },
-    { title: 'Cash Received', value: '$48,200', change: '6.8%', trend: 'up', isPositive: true },
-    { title: 'Inventory Value', value: '$85,400', change: '4.2%', trend: 'up', isPositive: true },
-    { title: 'AD-Spend', value: '$14,200', change: '3.1%', trend: 'up', isPositive: true },
+    { title: 'Cash', value: '$48,200', change: '6.8%', trend: 'up', isPositive: true },
+    { title: 'Inventory', value: '$85,400', change: '4.2%', trend: 'up', isPositive: true },
+    { title: 'ADs', value: '$14,200', change: '3.1%', trend: 'up', isPositive: true },
     { title: 'ROAS', value: '4.2x', change: '+0.3x', trend: 'up', isPositive: true },
     { title: 'Return Rate', value: '3.2%', change: '-0.4%', trend: 'down', isPositive: true },
     { title: 'New Customers', value: '287', change: '+12.3%', trend: 'up', isPositive: true },

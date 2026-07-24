@@ -360,11 +360,12 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
   const isCatalogueActive = location.pathname === '/catalogue' || location.pathname === '/products';
   const isAgentsActive = location.pathname === '/agents';
   const isIntegrationsActive = location.pathname === '/integrations';
+  const isProfitAdsActive = location.pathname === '/profit-ads';
 
   const navItems = [
     { name: 'New', icon: 'fa-plus', href: ROUTES.NEW_ANALYSIS, active: isNewAnalysisActive },
     { name: 'Intel', icon: 'fa-chart-line', href: intelHref, permissionKey: intelPermissionKey, active: isIntelFullActive },
-    { name: 'Catalogue', icon: 'fa-box', href: ROUTES.CATALOGUE || '/catalogue', permissionKey: ROUTES.CATALOGUE || '/catalogue', active: isCatalogueActive },
+    { name: 'Profit & Ads', icon: 'fa-chart-pie', href: '/profit-ads', permissionKey: '/profit-ads', active: isProfitAdsActive },
     { name: 'Agents', icon: 'fa-robot', href: ROUTES.AGENTS || '/agents', permissionKey: ROUTES.AGENTS || '/agents', active: isAgentsActive },
     { name: 'Research', icon: 'fa-chart-column', href: ROUTES.SCREENER, active: isScreenerActive },
     { name: 'Integrations', icon: 'fa-plug', href: ROUTES.INTEGRATIONS || '/integrations', permissionKey: ROUTES.INTEGRATIONS || '/integrations', active: isIntegrationsActive },
@@ -374,10 +375,8 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
   const filteredNavItems = navItems.filter(item => allowedRoutes.includes(item.permissionKey || item.href));
   const isProductsActive = location.pathname === '/products' || location.pathname === '/catalogue';
   const isActionLogActive = location.pathname === '/action-log';
-  const showProducts = false; // Moved to Catalogue
-  const showActionLog = allowedRoutes.includes("/action-log");
-  const _productsItem = { name: 'Products', icon: 'fa-box', href: '/catalogue', active: isCatalogueActive };
-  const _actionLogItem = { name: 'Action Log', icon: 'fa-clock-rotate-left', href: '/action-log', active: isActionLogActive };
+  const catalogueItem = { name: 'Catalog', icon: 'fa-box', href: '/catalogue', active: isCatalogueActive };
+  const actionsItem = { name: 'Actions', icon: 'fa-clock-rotate-left', href: '/action-log', active: isActionLogActive };
   const settingsItem = { name: 'Settings', icon: 'fa-gear', href: ROUTES.SETTINGS, active: isSettingsActive };
 
   /* ── Mobile drawer (ss2 layout) — opened via the header hamburger button ── */
@@ -472,12 +471,10 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
               {isConnected && <HistorySectionContent />}
             </div>
 
-            {/* Bottom: Services + Settings + dark mode + AI View + profile — does not scroll */}
+            {/* Bottom: Catalog + Actions + Settings */}
             <div className="flex-shrink-0 pb-4 pt-2 flex flex-col gap-1 border-t border-gray-100 dark:border-slate-800 w-full px-2">
-              {(showProducts || showActionLog) && (
-                <ServicesItem isCollapsed={false} isServicesActive={isProductsActive || isActionLogActive} isProductsActive={isProductsActive} isActionLogActive={isActionLogActive}
-                />
-              )}
+              <SidebarItem item={catalogueItem} isCollapsed={false} small={true} />
+              <SidebarItem item={actionsItem} isCollapsed={false} small={true} />
               <button
                 onClick={() => setSettingsSubOpen(true)}
                 className={`flex items-center group relative w-full rounded-lg transition-colors justify-start px-2 py-1.5 ${
@@ -591,12 +588,10 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
             {!isSidebarCollapsed && isConnected && <HistorySectionContent />}
           </nav>
 
-          {/* Bottom: Services + Settings + dark mode */}
+          {/* Bottom: Catalog + Actions + Settings */}
           <div className="pb-4 pt-2 flex flex-col gap-1 border-t border-gray-100 dark:border-slate-800 w-full px-2">
-            {(showProducts || showActionLog) && (
-              <ServicesItem isCollapsed={isSidebarCollapsed} isServicesActive={isProductsActive || isActionLogActive} isProductsActive={isProductsActive} isActionLogActive={isActionLogActive}
-              />
-            )}
+            <SidebarItem item={catalogueItem} isCollapsed={isSidebarCollapsed} small={true} />
+            <SidebarItem item={actionsItem} isCollapsed={isSidebarCollapsed} small={true} />
             <SidebarItem item={settingsItem} isCollapsed={isSidebarCollapsed} small={true} />
           </div>
         </div>
@@ -657,12 +652,10 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
         {!isSidebarCollapsed && isConnected && <HistorySectionContent />}
       </nav>
 
-      {/* Bottom: Services + Settings */}
+      {/* Bottom: Catalog + Actions + Settings */}
       <div className="pb-4 pt-2 flex flex-col gap-1 border-t border-gray-100 dark:border-slate-800 w-full px-2">
-        {(showProducts || showActionLog) && (
-          <ServicesItem isCollapsed={isSidebarCollapsed} isServicesActive={isProductsActive || isActionLogActive} isProductsActive={isProductsActive} isActionLogActive={isActionLogActive}
-          />
-        )}
+        <SidebarItem item={catalogueItem} isCollapsed={isSidebarCollapsed} small={true} />
+        <SidebarItem item={actionsItem} isCollapsed={isSidebarCollapsed} small={true} />
         <SidebarItem item={settingsItem} isCollapsed={isSidebarCollapsed} small={true} />
       </div>
     </div>

@@ -5,7 +5,7 @@ import { DETAIL_VIEW_TABS } from '../detailedViewData';
 // full-size tab row and (compact=true) as the condensed sticky-header nav.
 const DetailViewTabNav = ({ intelType, onTabClick, compact = false }) => (
   <div className="flex items-center gap-0.5 overflow-x-auto scrollbar-hide">
-    {DETAIL_VIEW_TABS.map(tab => (
+    {/* {DETAIL_VIEW_TABS.map(tab => (
       <button
         key={tab.key}
         onClick={() => onTabClick(tab.key)}
@@ -17,7 +17,7 @@ const DetailViewTabNav = ({ intelType, onTabClick, compact = false }) => (
         <i className={`fa-solid ${tab.icon} ${compact ? 'text-[11px]' : 'text-xs'}`} />
         {tab.label}
       </button>
-    ))}
+    ))} */}
   </div>
 );
 

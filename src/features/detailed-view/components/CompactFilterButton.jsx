@@ -7,7 +7,7 @@ const CompactFilterButton = ({ filters }) => {
   const appliedFilterCount = [appliedDate !== null, appliedCats.length > 0, appliedChans.length > 0, appliedProducts.length > 0].filter(Boolean).length;
   return (
     <div className="relative" ref={compactFilterRef}>
-      <button
+      {/* <button
         onClick={handleOpenV2Filter}
         className={`relative w-8 h-8 flex items-center justify-center rounded-xl border transition-all ${
           v2FilterOpen
@@ -21,7 +21,7 @@ const CompactFilterButton = ({ filters }) => {
             {appliedFilterCount}
           </span>
         )}
-      </button>
+      </button> */}
     </div>
   );
 };

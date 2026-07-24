@@ -13,13 +13,11 @@ const CategoryTab = ({ cat, idx, activeSuggestion, setActiveSuggestion }) => {
   return (
     <button
       onClick={() => setActiveSuggestion(activeSuggestion === idx ? null : idx)}
-      className={`flex items-center justify-start gap-2 sm:gap-2.5 px-3 sm:px-3.5 py-2.5 border rounded-2xl text-xs sm:text-sm font-semibold transition-all ${
-        idx === 0 ? 'flex-[1.4] min-w-0' : 'flex-1 min-w-0'
-      } ${
-        activeSuggestion === idx
+      className={`flex items-center justify-start gap-2 sm:gap-2.5 px-3 sm:px-3.5 py-2.5 border rounded-2xl text-xs sm:text-sm font-semibold transition-all ${idx === 0 ? 'flex-[1.4] min-w-0' : 'flex-1 min-w-0'
+        } ${activeSuggestion === idx
           ? 'bg-brand text-white border-brand dark:bg-gray-600 dark:border-gray-600'
           : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-600 dark:text-slate-300'
-      }`}
+        }`}
     >
       <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 ${activeSuggestion === idx ? 'bg-white/20' : cat.color}`}>
         <i className={`fa-solid ${cat.icon} text-[10px] text-black dark:text-white`}></i>
@@ -39,7 +37,7 @@ const NewAnalysisPage = () => {
   const { user } = useAuthStore();
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
-  const userName = user?.name || 'User';
+  const userName = user?.name || localStorage.getItem('user_name') || 'Rohit';
 
   const toggleDropdown = (id) => {
     setActiveDropdown(activeDropdown === id ? null : id);
@@ -141,7 +139,7 @@ const NewAnalysisPage = () => {
             {/* Prompt footer */}
             <div className="flex justify-between items-center px-2 -mt-3">
               <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wide">Realify is AI & can make mistakes.</span>
-              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wide">100% tokens available</span>
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wide">100% usage available</span>
             </div>
 
             {/* Category Tab Buttons */}

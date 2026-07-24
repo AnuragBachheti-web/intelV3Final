@@ -3,14 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import StatCard from '../../../components/common/StatCard';
 import KPISelectorModal from '../../../components/common/KPISelectorModal';
-import KPIDetailModal from '../../../components/common/KPIDetailModal';
 import { useFilterStore } from '../../../store/useFilterStore';
 import { useViewModeStore } from '../../../store/useViewModeStore';
 import apiClient from '../../../api/client';
 import { quickToRange, v2DateLabel, v2CatLabel } from '../../detailed-view/detailedViewUtils';
 import useClickOutside from '../../../hooks/useClickOutside';
 import useProductNavigation from '../../../hooks/useProductNavigation';
-import useModalToggle from '../../../hooks/useModalToggle';
+
 import InsightsPanel from '../shared/components/InsightsPanel';
 import IntelFilterPanel from '../shared/components/IntelFilterPanel';
 import { TAB_TO_ROUTE, V2_FULL_TAB_TO_ROUTE, ROUTE_TO_TAB } from '../shared/data/intelUiData';
@@ -22,53 +21,15 @@ import RealifyBrief from "../shared/components/common/RealifyBrief";
 import BriefHeaderControls from "../shared/components/common/BriefHeaderControls";
 import { REALIFY_BRIEF } from "../shared/data/realifyBriefData";
 
-const CompactHeaderSearch = ({ searchQuery, setSearchQuery }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const inputRef = useRef(null);
-  const containerRef = useRef(null);
 
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isOpen]);
-
-  useClickOutside(containerRef, isOpen, () => setIsOpen(false));
-
-  if (!isOpen) {
-    return (
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="w-8 h-8 flex items-center justify-center rounded-xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all shadow-2xs cursor-pointer"
-        title="Search"
-      >
-        <i className="fa-solid fa-magnifying-glass text-xs" />
-      </button>
-    );
-  }
-
-  return (
-    <div ref={containerRef} className="relative flex items-center animate-in fade-in zoom-in-95 duration-200">
-      <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-xs pointer-events-none" />
-      <input
-        ref={inputRef}
-        type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Search..."
-        className="w-40 sm:w-56 pl-8 pr-7 py-1 h-8 text-xs bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 outline-none focus:border-gray-300 dark:focus:border-slate-600 transition-all shadow-2xs"
-      />
-      <button
-        type="button"
-        onClick={() => setIsOpen(false)}
-        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 text-xs p-1"
-      >
-        <i className="fa-solid fa-xmark text-[10px]" />
-      </button>
-    </div>
-  );
-};
+const KPI_FAMILY_PILLS = [
+  { key: 'all', label: 'All families' },
+  { key: 'competitive', label: 'Competitive' },
+  { key: 'demand', label: 'Demand' },
+  { key: 'opportunity', label: 'Opportunity' },
+  { key: 'news', label: 'News' },
+  { key: 'risk', label: 'Risk' },
+];
 
 const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const location = useLocation();
@@ -85,13 +46,16 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [loading, setLoading] = useState(true);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
   const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3, 4]);
-  const kpiDetailModal = useModalToggle();
+  // Multi-select KPI state — Revenue (idx 0) is default
+  const [activeKpiIds, setActiveKpiIds] = useState([0]);
+  const [activeKpiFamily, setActiveKpiFamily] = useState('all');
 
   // Insights section 1
   const [activeInsightTab, setActiveInsightTab] = useState('Overall');
   const [itemViewMode, setItemViewMode] = useState('list');
   const [stepOffset, setStepOffset] = useState(0);
   const [restoreItemSubTab, setRestoreItemSubTab] = useState(null);
+  // no kpiDetailModal needed
 
   // Insights section 2
   const [activeInsightTab2, setActiveInsightTab2] = useState('Overall');
@@ -274,29 +238,10 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     return () => observer.disconnect();
   }, []);
 
-  // Compact header center — Intel tabs shown ONLY when original tabs scroll out of view
-  const compactHeaderCenter = showStickyTabs ? (
-    <div className="flex items-center gap-0.5 animate-in fade-in duration-200">
-      {INTEL_TABS.map(tab => (
-        <button
-          key={tab.key}
-          onClick={() => { navigate((fullWidthInsights ? V2_FULL_TAB_TO_ROUTE : TAB_TO_ROUTE)[tab.key]); setStepOffset(0); }}
-          className={`px-3 h-[56px] text-xs font-medium transition-colors whitespace-nowrap flex items-center gap-1 border-b-2
-            ${activeIntelTab === tab.key
-              ? 'border-gray-900 dark:border-slate-300 text-gray-900 dark:text-slate-100 font-bold'
-              : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
-            }`}
-        >
-          <i className={`fa-solid ${tab.icon} text-[10px]`} />
-          {tab.label}
-        </button>
-      ))}
-    </div>
-  ) : null;
+  // Compact header center — null (tabs removed)
+  const compactHeaderCenter = null;
 
-  const compactFilterElement = isScrolled ? (
-    <CompactHeaderSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-  ) : null;
+  const compactFilterElement = null; // search bar removed
 
   /* ── V2 filter helpers ── */
   const v2ChanList = channelOptions.filter(([v]) => v !== 'all');
@@ -388,14 +333,14 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     <DashboardLayout
       title="Intelligence"
       subtitle="Real-time sales analytics"
-      showSearch={true}
+      showSearch={false}
       showTabs={false}
       showAIPrompt={false}
       aiPromptFullWidth={true}
-      searchCollapsed={isScrolled}
+      searchCollapsed={false}
       headerCenterElement={compactHeaderCenter}
-      customRightElement={compactFilterElement}
-      hideMobileSearchIcon={!isScrolled}
+      customRightElement={null}
+      hideMobileSearchIcon={true}
     >
       {/* Sticky compact KPI strip — smoothly slides in when KPI section scrolls out of view */}
       <div
@@ -430,14 +375,13 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
             })}
           </div>
           <div className="hidden md:flex flex-shrink-0 items-center justify-center gap-2 self-center my-auto">
-            <span className="text-[10px] text-gray-500 dark:text-slate-400 font-medium whitespace-nowrap">AI View</span>
+            <span className="text-[10px] font-medium text-gray-500 dark:text-slate-400 whitespace-nowrap">Dashboard</span>
             <button
               onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { from: '/intel' } })}
               className="relative inline-flex h-4 w-7 flex-shrink-0 items-center rounded-full bg-gray-300 dark:bg-slate-600 transition-colors hover:bg-gray-400 dark:hover:bg-slate-500"
             >
               <span className="inline-block h-3 w-3 transform rounded-full bg-white dark:bg-gray-900 transition-transform translate-x-0.5" />
             </button>
-            <span className="text-[10px] font-medium text-gray-500 dark:text-slate-400 whitespace-nowrap">Dashboard</span>
           </div>
         </div>
       </div>
@@ -467,89 +411,56 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           </button>
         </div>
 
-        {/* MOBILE-only: search bar — sits between the heading/filters row and the tabs row */}
-        <div className="sm:hidden relative">
-          <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-xs pointer-events-none" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search products, SKUs, or customers..."
-            className="w-full pl-9 pr-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 outline-none focus:border-gray-300 dark:focus:border-slate-600 transition-colors"
-          />
-        </div>
 
-        {/* Realify Brief (Top Banner) + Search Bar (left) & Channel / Date Controls (right) */}
+        {/* Realify Brief (Top Banner) + Channel / Date Controls */}
         <div className="w-full space-y-2">
           <RealifyBrief data={briefData} />
           <div className="flex items-center justify-between gap-3 w-full">
-            <div className="relative w-[38%] sm:w-[32%] min-w-[170px] max-w-[320px]">
-              <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-xs pointer-events-none" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search..."
-                className="w-full pl-8 pr-3 py-1.5 h-8 text-xs bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-gray-700 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-500 outline-none focus:border-gray-300 dark:focus:border-slate-600 transition-all shadow-2xs"
-              />
-            </div>
-            <BriefHeaderControls />
-          </div>
-        </div>
-
-        {/* 5 stat cards */}
-        <div ref={kpiSectionRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
-          {selectedKpiIndices.map(idx => {
-            const stat = activeStats[idx] || activeStats[0];
-            return (
-              <StatCard
-                key={idx}
-                title={stat.title}
-                value={stat.value}
-                change={stat.change}
-                trend={stat.trend}
-                isPositive={stat.isPositive}
-                loading={loading}
-                onClick={() => kpiDetailModal.open(stat)}
-              />
-            );
-          })}
-        </div>
-
-        {/* Intel tabs (left) + AI / Dashboard View toggle (right) */}
-        <div ref={originalTabsRef} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 border-b border-gray-100 dark:border-slate-800 pt-4">
-          <div className="flex items-center gap-0.5 overflow-x-auto scrollbar-hide sm:overflow-visible">
-            {INTEL_TABS.map(tab => (
+            {/* Dashboard View toggle */}
+            <div className="hidden md:flex items-center gap-2">
+              <span className="text-[10px] font-medium text-gray-500 dark:text-slate-400 whitespace-nowrap">Dashboard</span>
               <button
-                key={tab.key}
-                onClick={() => { navigate((fullWidthInsights ? V2_FULL_TAB_TO_ROUTE : TAB_TO_ROUTE)[tab.key]); setStepOffset(0); }}
-                className={`px-4 py-1.5 text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-1.5 border-b-2 -mb-px
-                  ${activeIntelTab === tab.key
-                    ? 'border-gray-900 dark:border-slate-300 text-gray-900 dark:text-slate-100 font-semibold'
-                    : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
-                  }`}
+                onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { from: '/intel' } })}
+                className="relative inline-flex h-4 w-7 flex-shrink-0 items-center rounded-full bg-gray-300 dark:bg-slate-600 transition-colors hover:bg-gray-400 dark:hover:bg-slate-500"
               >
-                <i className={`fa-solid ${tab.icon} text-[11px]`} />
-                {tab.label}
+                <span className="inline-block h-3 w-3 transform rounded-full bg-white dark:bg-gray-900 transition-transform translate-x-0.5" />
               </button>
-            ))}
+            </div>
+            <div className="ml-auto">
+              <BriefHeaderControls />
+            </div>
           </div>
+        </div>
 
-          {/* Dashboard View toggle (right) */}
-          <div className="hidden md:flex items-center gap-2 ml-auto">
-            <span className="text-[11px] font-medium text-gray-500 dark:text-slate-400">
-              Dashboard View
-            </span>
-            <button
-              onClick={() =>
-                navigate(`/detailed-view/${activeIntelTab}`, {
-                  state: { selectedKpiIndices, from: '/intel' },
-                })
-              }
-              className="relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full bg-gray-300 dark:bg-slate-600 transition-colors hover:bg-gray-400 dark:hover:bg-slate-500"
-            >
-              <span className="inline-block h-3.5 w-3.5 transform rounded-full bg-white dark:bg-gray-900 transition-transform translate-x-0.5" />
-            </button>
+        {/* 5 KPI stat cards — multi-selectable, Revenue is default */}
+        <div ref={kpiSectionRef} className="space-y-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
+            {selectedKpiIndices.map(idx => {
+              const stat = activeStats[idx] || activeStats[0];
+              const isSelected = activeKpiIds.includes(idx);
+              return (
+                <StatCard
+                  key={idx}
+                  title={stat.title}
+                  value={stat.value}
+                  change={stat.change}
+                  trend={stat.trend}
+                  isPositive={stat.isPositive}
+                  loading={loading}
+                  isSelected={isSelected}
+                  onClick={() => {
+                    setActiveKpiIds(prev => {
+                      if (prev.includes(idx)) {
+                        // Don't deselect if it's the only one selected — default back to revenue (0)
+                        const next = prev.filter(i => i !== idx);
+                        return next.length === 0 ? [0] : next;
+                      }
+                      return [...prev, idx];
+                    });
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
 
@@ -596,14 +507,6 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         allKpis={activeStats}
         selectedIndices={selectedKpiIndices}
         onSave={(indices) => { setSelectedKpiIndices(indices); }}
-      />
-
-      <KPIDetailModal
-        isOpen={kpiDetailModal.isOpen}
-        onClose={kpiDetailModal.close}
-        stat={kpiDetailModal.data}
-        filterContext={{ dateRange: appliedDate, categories: appliedCats, channels: appliedChans, products: appliedProducts }}
-        tab={activeIntelTab}
       />
     </DashboardLayout>
   );

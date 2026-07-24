@@ -34,16 +34,16 @@ const InsightsPanel = ({
   const navigate = useNavigate();
 
   // Compute total visible cards count
-  const visibleCardsCount = INSIGHT_CARDS_DATA.filter(card => 
+  const visibleCardsCount = INSIGHT_CARDS_DATA.filter(card =>
     matchesFilter(card.sectionKey, activeFamilyFilter)
   ).length;
 
   return (
-    <div className="rounded-2xl bg-white dark:bg-[#030712] p-4 sm:p-5 border border-gray-200 dark:border-slate-800 space-y-5">
+    <div className="rounded-2xl bg-white dark:bg-[#030712] p-4 sm:p-5 border border-gray-200 dark:border-slate-800 space-y-5 mt-4">
 
       {/* Header Section (SS2, SS3, SS4) */}
       <div className="space-y-3 pb-3 border-b border-gray-100 dark:border-slate-800">
-        
+
         {/* Title row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-baseline gap-2">
@@ -61,22 +61,20 @@ const InsightsPanel = ({
               <>
                 <button
                   onClick={() => setItemViewMode('list')}
-                  className={`w-7 h-7 flex items-center justify-center rounded-lg border transition-colors ${
-                    itemViewMode === 'list'
-                      ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
-                      : 'border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500 hover:border-gray-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900'
-                  }`}
+                  className={`w-7 h-7 flex items-center justify-center rounded-lg border transition-colors ${itemViewMode === 'list'
+                    ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
+                    : 'border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500 hover:border-gray-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900'
+                    }`}
                   title="List view"
                 >
                   <i className="fa-solid fa-list text-xs" />
                 </button>
                 <button
                   onClick={() => setItemViewMode('grid')}
-                  className={`w-7 h-7 flex items-center justify-center rounded-lg border transition-colors ${
-                    itemViewMode === 'grid'
-                      ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
-                      : 'border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500 hover:border-gray-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900'
-                  }`}
+                  className={`w-7 h-7 flex items-center justify-center rounded-lg border transition-colors ${itemViewMode === 'grid'
+                    ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
+                    : 'border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500 hover:border-gray-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900'
+                    }`}
                   title="Grid view"
                 >
                   <i className="fa-solid fa-grip text-xs" />
@@ -96,11 +94,10 @@ const InsightsPanel = ({
                 <button
                   key={filter.key}
                   onClick={() => setActiveFamilyFilter(filter.key)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5 ${
-                    isActive
-                      ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 font-bold shadow-xs'
-                      : 'bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
-                  }`}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5 ${isActive
+                    ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 font-bold shadow-xs'
+                    : 'bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+                    }`}
                 >
                   {filter.dotColor && (
                     <span className={`w-2 h-2 rounded-full ${filter.dotColor}`} />
@@ -115,14 +112,12 @@ const InsightsPanel = ({
           <div className="flex items-center gap-2 flex-shrink-0 self-end md:self-auto">
             <button
               onClick={() => setNewSinceYesterday(o => !o)}
-              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors ${
-                newSinceYesterday ? 'bg-indigo-600' : 'bg-gray-300 dark:bg-slate-700'
-              }`}
+              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors ${newSinceYesterday ? 'bg-indigo-600' : 'bg-gray-300 dark:bg-slate-700'
+                }`}
             >
               <span
-                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
-                  newSinceYesterday ? 'translate-x-4' : 'translate-x-0.5'
-                }`}
+                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${newSinceYesterday ? 'translate-x-4' : 'translate-x-0.5'
+                  }`}
               />
             </button>
             <span className="text-xs font-medium text-gray-500 dark:text-slate-400">

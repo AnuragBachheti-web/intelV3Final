@@ -3,7 +3,6 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import StatCard from '../../components/common/StatCard';
 import KPISelectorModal from '../../components/common/KPISelectorModal';
-import KPIDetailModal from '../../components/common/KPIDetailModal';
 import BaseAreaChart from '../../components/common/charts/BaseAreaChart';
 import { revenueTrendData } from '../intel/sales/salesData';
 
@@ -12,12 +11,12 @@ import ChannelMixWidget from './components/ChannelMixWidget';
 import SectionHeading from './components/SectionHeading';
 import StickyKpiStrip from './components/StickyKpiStrip';
 import DetailViewTabNav from './components/DetailViewTabNav';
-import FilterBar from './components/FilterBar';
-import CompactFilterButton from './components/CompactFilterButton';
-import useDetailedViewFilters from './hooks/useDetailedViewFilters';
+
+import RealifyBrief from '../intel/shared/components/common/RealifyBrief';
+import BriefHeaderControls from '../intel/shared/components/common/BriefHeaderControls';
+import { REALIFY_BRIEF } from '../intel/shared/data/realifyBriefData';
 import { useViewModeStore } from '../../store/useViewModeStore';
-import useModalToggle from '../../hooks/useModalToggle';
-import { STATS_DATA, PAGE_TITLES, BACK_ROUTES } from './detailedViewData';
+import { STATS_DATA, PAGE_TITLES, BACK_ROUTES, DETAIL_VIEW_TABS } from './detailedViewData';
 
 import SalesTables from './tabs/SalesTables';
 import MarginDashboardGrid from './tabs/MarginDashboardGrid';
@@ -52,8 +51,6 @@ const DetailedViewPage = () => {
   const [kpiIsSticky, setKpiIsSticky] = useState(false);
   const kpiSectionRef = useRef(null);
 
-  const filters = useDetailedViewFilters(isScrolled);
-
   // Remember that Dashboard View (this page) is the active view + which tab, so
   // navigating away and back to Intel (e.g. via the sidebar) restores it.
   const { setDashboardView, setLastIntelTab } = useViewModeStore();
@@ -64,10 +61,11 @@ const DetailedViewPage = () => {
 
   const [selectedKpiIndices, setSelectedKpiIndices] = useState(location.state?.selectedKpiIndices || [0, 1, 2, 3, 4]);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
-  const kpiDetailModal = useModalToggle();
   const statsData = STATS_DATA.sales;
   const pageTitle = PAGE_TITLES[intelType] || 'Sales';
   const backRoute = location.state?.from || BACK_ROUTES[intelType] || '/intel';
+
+  const briefData = REALIFY_BRIEF[intelType] || REALIFY_BRIEF.sales;
 
   const TablesComponent = TABLES_MAP[intelType] || SalesTables;
 
@@ -104,20 +102,25 @@ const DetailedViewPage = () => {
       filters={null}
       showSearch={true}
       searchCollapsed={isScrolled}
-      headerCenterElement={isScrolled ? <DetailViewTabNav intelType={intelType} onTabClick={goToTab} compact /> : null}
-      customRightElement={isScrolled ? <CompactFilterButton filters={filters} /> : null}
+      customRightElement={null}
     >
       <StickyKpiStrip kpiIsSticky={kpiIsSticky} statsData={statsData} onDashboardClick={() => navigate(backRoute)} />
 
-      {/* Filters row (top right) */}
-      <div className="flex items-center justify-end mb-3">
-        <FilterBar filters={filters} />
+      {/* Realify Brief and Filters */}
+      <div className="flex flex-col space-y-4 mb-4">
+        <RealifyBrief data={briefData} />
+        <div className="flex items-center justify-end">
+          <BriefHeaderControls />
+        </div>
       </div>
 
-      {/* KPI cards — 5 StatCards matching AI View style */}
+      {/* KPI cards — 5 StatC View style */}
       <div ref={kpiSectionRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3 mb-4">
         {selectedKpiIndices.map(idx => {
           const stat = statsData[idx] || statsData[0];
+          const matchedTab = DETAIL_VIEW_TABS.find(t => t.label === stat.title || (t.label === 'Revenue' && stat.title === 'Revenue'));
+          const isSelected = matchedTab ? matchedTab.key === intelType : false;
+
           return (
             <StatCard
               key={idx}
@@ -126,7 +129,8 @@ const DetailedViewPage = () => {
               change={stat.change}
               isPositive={stat.isPositive}
               subtext={stat.subtext}
-              onClick={() => kpiDetailModal.open(stat)}
+              isSelected={isSelected}
+              onClick={matchedTab ? () => goToTab(matchedTab.key) : undefined}
             />
           );
         })}
@@ -233,21 +237,12 @@ const DetailedViewPage = () => {
         {intelType === 'margin' ? <MarginDashboardGrid /> : <TablesComponent />}
       </div>
 
-      {/* Full-width Cash Flow table (below grid so all columns are visible) */}
       {intelType === 'cash' && (
         <div className="mt-6">
           <SectionHeading title="Cash Flow" />
           <CashFlowTable />
         </div>
       )}
-
-      <KPIDetailModal
-        isOpen={kpiDetailModal.isOpen}
-        onClose={kpiDetailModal.close}
-        stat={kpiDetailModal.data}
-        filterContext={{ dateRange: filters.appliedDate, categories: filters.appliedCats, channels: filters.appliedChans }}
-        tab={intelType}
-      />
 
       <KPISelectorModal
         isOpen={isKpiSelectorOpen}

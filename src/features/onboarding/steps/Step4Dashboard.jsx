@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
+import { useOnboardingStore } from "../store/useOnboardingStore";
 
 function Step4Dashboard() {
   const navigate = useNavigate();
+  const { setStep } = useOnboardingStore();
   const [showToast, setShowToast] = useState(true);
   const [showForgot, setShowForgot] = useState(false);
   const [forgotSent, setForgotSent] = useState(false);
@@ -14,7 +16,7 @@ function Step4Dashboard() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleSignIn = () => navigate(ROUTES.SALES);
+  const handleSignIn = () => setStep(5);
 
   return (
     <div className="max-w-lg mx-auto anim-fade-in mt-20">

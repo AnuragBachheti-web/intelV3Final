@@ -4,25 +4,27 @@ import DashboardLayout from '../../components/layout/DashboardLayout';
 import MarketplaceSyncBanner from '../../components/common/MarketplaceSyncBanner';
 import useClickOutside from '../../hooks/useClickOutside';
 import useProductNavigation from '../../hooks/useProductNavigation';
+import BriefHeaderControls from '../intel/shared/components/common/BriefHeaderControls';
+import ProductDetailModal from './components/ProductDetailModal';
 
 const CHANNEL_TABS = ['Amazon', 'Shopify', 'Walmart'];
 
 const ALL_PRODUCTS = [
-  { id: 1,  name: 'Premium Wireless Headphones', sku: 'WH-PRO-2024',  status: 'Active',   price: '$149.99', vendor: 'Realify Audio',  image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/829ed95905-98415edd6aab0bba6e05.png', category: 'Electronics', inventory: 47,  velocity: '23/day',  intelLabel: 'Price Drop Alert',   intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2024-01-15'), updatedAt: new Date('2026-06-10') },
-  { id: 2,  name: 'Security Camera',              sku: 'SC-HOME-V2',   status: 'Active',   price: '$89.99',  vendor: 'SecureTech',     image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/a92a4ffb64-d9b6565e03e56b627c33.png', category: 'Electronics', inventory: 12,  velocity: '8/day',   intelLabel: 'Stockout Risk',      intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2024-03-02'), updatedAt: new Date('2026-06-15') },
-  { id: 3,  name: 'Essential T-Shirt',            sku: 'AP-TEE-001',   status: 'Active',   price: '$24.99',  vendor: 'StyleBasics',    image: null, category: 'Apparel',     inventory: 452, velocity: '112/day', intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-11-08'), updatedAt: new Date('2026-05-20') },
-  { id: 4,  name: 'Minimalist Watch',             sku: 'WT-MIN-04',    status: 'Active',   price: '$199.99', vendor: 'TimeCraft',      image: null, category: 'Apparel',     inventory: 5,   velocity: '4/day',   intelLabel: 'Competitor Move',    intelColor: 'text-orange-600 dark:text-orange-400', createdAt: new Date('2024-06-20'), updatedAt: new Date('2026-06-16') },
-  { id: 5,  name: 'Organic Pet Food 15lb',        sku: 'PF-ORG-15LB',  status: 'Active',   price: '$44.99',  vendor: 'PetNaturals',    image: null, category: 'Pet',         inventory: 218, velocity: '14/day',  intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-09-14'), updatedAt: new Date('2026-04-30') },
-  { id: 6,  name: 'Smart Speaker Mini',           sku: 'SM-SPK-003',   status: 'Active',   price: '$69.99',  vendor: 'AudioLabs',      image: null, category: 'Electronics', inventory: 89,  velocity: '6/day',   intelLabel: 'Opportunity',        intelColor: 'text-green-600 dark:text-green-400', createdAt: new Date('2024-02-28'), updatedAt: new Date('2026-06-01') },
-  { id: 7,  name: 'Ergonomic Office Chair',       sku: 'FN-CHR-001',   status: 'Active',   price: '$349.99', vendor: 'WorkForce Co.',  image: null, category: 'Furniture',   inventory: 34,  velocity: '3/day',   intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-07-11'), updatedAt: new Date('2026-03-18') },
-  { id: 8,  name: 'USB-C Hub 7-in-1',            sku: 'TEC-USB-007',  status: 'Active',   price: '$49.99',  vendor: 'TechConnect',    image: null, category: 'Electronics', inventory: 156, velocity: '18/day',  intelLabel: 'Opportunity',        intelColor: 'text-green-600 dark:text-green-400', createdAt: new Date('2024-04-05'), updatedAt: new Date('2026-06-14') },
-  { id: 9,  name: 'Wireless Earbuds Pro',         sku: 'AUD-EAR-PRO',  status: 'Active',   price: '$129.99', vendor: 'Realify Audio',  image: null, category: 'Electronics', inventory: 203, velocity: '8/day',   intelLabel: 'Price Drop Alert',   intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2024-05-19'), updatedAt: new Date('2026-06-17') },
-  { id: 10, name: 'Yoga Mat Premium',             sku: 'FT-YOG-002',   status: 'Active',   price: '$59.99',  vendor: 'FitLife',        image: null, category: 'Fitness',     inventory: 78,  velocity: '5/day',   intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-12-22'), updatedAt: new Date('2026-02-09') },
-  { id: 11, name: 'Bamboo Phone Stand',           sku: 'ACC-STD-012',  status: 'Active',   price: '$19.99',  vendor: 'EcoDesk',        image: null, category: 'Accessories', inventory: 310, velocity: '22/day',  intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2024-07-30'), updatedAt: new Date('2026-05-05') },
-  { id: 12, name: 'Office Desk Lamp',             sku: 'LGT-DSK-011',  status: 'Archived', price: '$79.99',  vendor: 'BrightSpace',    image: null, category: 'Furniture',   inventory: 0,   velocity: '0/day',   intelLabel: 'Listing Suppressed', intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2023-05-03'), updatedAt: new Date('2025-11-27') },
-  { id: 13, name: 'Portable Charger 20K',         sku: 'TEC-CHG-009',  status: 'Active',   price: '$39.99',  vendor: 'TechConnect',    image: null, category: 'Electronics', inventory: 187, velocity: '11/day',  intelLabel: 'Overstock',          intelColor: 'text-amber-600 dark:text-amber-400', createdAt: new Date('2024-08-12'), updatedAt: new Date('2026-06-12') },
-  { id: 14, name: 'Ergonomic Desk Organizer',     sku: 'HOME-ORG-006', status: 'Active',   price: '$34.99',  vendor: 'HomeGrid',       image: null, category: 'Home',        inventory: 22,  velocity: '9/day',   intelLabel: 'Stockout Risk',      intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2024-09-25'), updatedAt: new Date('2026-06-13') },
-  { id: 15, name: 'Cotton Tote Bag',              sku: 'APP-TOT-003',  status: 'Draft',    price: '$14.99',  vendor: 'StyleBasics',    image: null, category: 'Apparel',     inventory: 640, velocity: '28/day',  intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-10-17'), updatedAt: new Date('2026-04-22') },
+  { id: 1,  name: 'Premium Wireless Headphones', sku: 'WH-PRO-2024',  status: 'Active',   price: '₹149', cogs: '₹80', margin: '46.3%', returns: '2.1%', bb: '98%', salesTrend: 'up', category: 'Electronics', inventory: 47,  velocity: '23/day',  intelLabel: 'Price Drop Alert',   intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2024-01-15'), updatedAt: new Date('2026-06-10') },
+  { id: 2,  name: 'Security Camera',              sku: 'SC-HOME-V2',   status: 'Active',   price: '₹89',  cogs: '₹40', margin: '55.1%', returns: '1.2%', bb: '95%', salesTrend: 'up', category: 'Electronics', inventory: 12,  velocity: '8/day',   intelLabel: 'Stockout Risk',      intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2024-03-02'), updatedAt: new Date('2026-06-15') },
+  { id: 3,  name: 'Essential T-Shirt',            sku: 'AP-TEE-001',   status: 'Active',   price: '₹24',  cogs: '₹10', margin: '58.3%', returns: '5.4%', bb: '99%', salesTrend: 'down', category: 'Apparel',     inventory: 452, velocity: '112/day', intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-11-08'), updatedAt: new Date('2026-05-20') },
+  { id: 4,  name: 'Minimalist Watch',             sku: 'WT-MIN-04',    status: 'Active',   price: '₹199', cogs: '₹60', margin: '69.8%', returns: '0.8%', bb: '100%', salesTrend: 'up', category: 'Apparel',     inventory: 5,   velocity: '4/day',   intelLabel: 'Competitor Move',    intelColor: 'text-orange-600 dark:text-orange-400', createdAt: new Date('2024-06-20'), updatedAt: new Date('2026-06-16') },
+  { id: 5,  name: 'Organic Pet Food 15lb',        sku: 'PF-ORG-15LB',  status: 'Active',   price: '₹44',  cogs: '₹25', margin: '43.2%', returns: '0.5%', bb: '92%', salesTrend: 'up', category: 'Pet',         inventory: 218, velocity: '14/day',  intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-09-14'), updatedAt: new Date('2026-04-30') },
+  { id: 6,  name: 'Smart Speaker Mini',           sku: 'SM-SPK-003',   status: 'Active',   price: '₹69',  cogs: '₹35', margin: '49.3%', returns: '3.2%', bb: '88%', salesTrend: 'up', category: 'Electronics', inventory: 89,  velocity: '6/day',   intelLabel: 'Opportunity',        intelColor: 'text-green-600 dark:text-green-400', createdAt: new Date('2024-02-28'), updatedAt: new Date('2026-06-01') },
+  { id: 7,  name: 'Ergonomic Office Chair',       sku: 'FN-CHR-001',   status: 'Active',   price: '₹349', cogs: '₹150', margin: '57.0%', returns: '4.1%', bb: '90%', salesTrend: 'down', category: 'Furniture',   inventory: 34,  velocity: '3/day',   intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-07-11'), updatedAt: new Date('2026-03-18') },
+  { id: 8,  name: 'USB-C Hub 7-in-1',            sku: 'TEC-USB-007',  status: 'Active',   price: '₹49',  cogs: '₹15', margin: '69.4%', returns: '1.8%', bb: '96%', salesTrend: 'up', category: 'Electronics', inventory: 156, velocity: '18/day',  intelLabel: 'Opportunity',        intelColor: 'text-green-600 dark:text-green-400', createdAt: new Date('2024-04-05'), updatedAt: new Date('2026-06-14') },
+  { id: 9,  name: 'Wireless Earbuds Pro',         sku: 'AUD-EAR-PRO',  status: 'Active',   price: '₹129', cogs: '₹40', margin: '69.0%', returns: '6.2%', bb: '85%', salesTrend: 'down', category: 'Electronics', inventory: 203, velocity: '8/day',   intelLabel: 'Price Drop Alert',   intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2024-05-19'), updatedAt: new Date('2026-06-17') },
+  { id: 10, name: 'Yoga Mat Premium',             sku: 'FT-YOG-002',   status: 'Active',   price: '₹59',  cogs: '₹12', margin: '79.7%', returns: '0.9%', bb: '99%', salesTrend: 'up', category: 'Fitness',     inventory: 78,  velocity: '5/day',   intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-12-22'), updatedAt: new Date('2026-02-09') },
+  { id: 11, name: 'Bamboo Phone Stand',           sku: 'ACC-STD-012',  status: 'Active',   price: '₹19',  cogs: '₹4', margin: '78.9%', returns: '0.2%', bb: '100%', salesTrend: 'up', category: 'Accessories', inventory: 310, velocity: '22/day',  intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2024-07-30'), updatedAt: new Date('2026-05-05') },
+  { id: 12, name: 'Autofy 100% Waterproof (Tested) Bike Cover ...', sku: 'VKAMCOVER0072',  status: 'Active',   price: '₹451',  cogs: '₹247', margin: '10.1%', returns: '0.1%', bb: '98%', salesTrend: 'up', category: 'Automotive', inventory: 1138,   velocity: '1138',   intelLabel: 'Listing Suppressed', intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2023-05-03'), updatedAt: new Date('2025-11-27') },
+  { id: 13, name: 'Autofy 100% Waterproof (Tested) Scooter Bik...', sku: 'VKAMCOVER0071',  status: 'Active',   price: '₹426',  cogs: '₹247', margin: '15.7%', returns: '0.1%', bb: '98%', salesTrend: 'up', category: 'Automotive', inventory: 928, velocity: '928',  intelLabel: 'Overstock',          intelColor: 'text-amber-600 dark:text-amber-400', createdAt: new Date('2024-08-12'), updatedAt: new Date('2026-06-12') },
+  { id: 14, name: 'Ergonomic Desk Organizer',     sku: 'HOME-ORG-006', status: 'Active',   price: '₹34',  cogs: '₹15', margin: '55.9%', returns: '1.5%', bb: '94%', salesTrend: 'up', category: 'Home',        inventory: 22,  velocity: '9/day',   intelLabel: 'Stockout Risk',      intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2024-09-25'), updatedAt: new Date('2026-06-13') },
+  { id: 15, name: 'Cotton Tote Bag',              sku: 'APP-TOT-003',  status: 'Draft',    price: '₹14',  cogs: '₹4', margin: '71.4%', returns: '2.8%', bb: '91%', salesTrend: 'down', category: 'Apparel',     inventory: 640, velocity: '28/day',  intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-10-17'), updatedAt: new Date('2026-04-22') },
 ];
 
 const PAGE_SIZE = 10;
@@ -381,6 +383,7 @@ const ProductsListPage = () => {
   const [editItems, setEditItems]           = useState([]);
   const [editingRowId, setEditingRowId]     = useState(null);
   const [editingRowVals, setEditingRowVals] = useState({});
+  const [selectedProductForModal, setSelectedProductForModal] = useState(null);
 
   // Product data state (mutable for delete/draft)
   const [productsData, setProductsData]         = useState(ALL_PRODUCTS);
@@ -513,15 +516,7 @@ const ProductsListPage = () => {
   };
 
   const handleProductClick = (product) => {
-    const watchlistItem = findWatchlistItem(product.name);
-    goToProduct({
-      name: product.name, sku: product.sku, price: product.price,
-      image: product.image || watchlistItem?.image || null,
-      description: `${product.name} is a key product driving your sales performance.`,
-      kpiGroups: [{ label: 'Sales', color: 'text-blue-600 dark:text-blue-400', bgColor: 'bg-blue-50 dark:bg-blue-900/10', kpis: [{ label: 'Total Revenue', value: '$24,800' }, { label: 'Units Sold', value: String(product.inventory) }, { label: 'Avg Price', value: product.price || '—' }, { label: 'Buy Box %', value: '92%' }] }],
-      insights: NO_SPECIFIC_INSIGHTS,
-      watchlistItem: watchlistItem || buildFallbackWatchlistItem(product.name, product.sku, { stock: String(product.inventory), velocity: product.velocity, subtext: '' }),
-    }, '/products');
+    setSelectedProductForModal(product);
   };
 
   const startEdit = (e, product) => {
@@ -630,390 +625,130 @@ const ProductsListPage = () => {
     <DashboardLayout title="Products" subtitle="All your product listings" showTabs={false} showAIPrompt={false}>
       <div className="flex flex-col gap-4">
 
-        {/* Channel tabs with bin icon */}
-        <div className="flex items-center gap-0.5 border-b border-gray-200 dark:border-slate-800 -mt-1">
-          <button
-            onClick={() => navigate('/intel', { state: { restoreInsightTab: 'Item' } })}
-            className="flex items-center justify-center text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-200 transition-colors flex-shrink-0 mr-2 pb-px"
-          >
-            <i className="fa-solid fa-arrow-left text-sm" />
-          </button>
-          {visibleChannelTabs.map(tab => (
-            <button key={tab} onClick={() => { setActiveTab(tab); setPage(1); }}
-              className={`px-5 py-2.5 text-xs font-medium border-b-2 -mb-px transition-colors whitespace-nowrap ${activeTab === tab ? 'text-gray-900 dark:text-slate-100 border-gray-900 dark:border-slate-200 font-semibold' : 'text-gray-400 dark:text-slate-500 border-transparent hover:text-gray-700 dark:hover:text-slate-300'}`}>
-              {tab}
-            </button>
-          ))}
-          {/* Bin icon on the right */}
-          <button
-            onClick={() => setShowBin(true)}
-            className="ml-auto flex items-center gap-1.5 pb-2.5 px-2 text-gray-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 transition-colors relative"
-            title="Bin"
-          >
-            <span className="fa-stack" style={{fontSize:'0.5rem',lineHeight:'1'}}>
-              <i className="fa-solid fa-trash-can fa-stack-2x" />
-              <i className="fa-solid fa-recycle fa-stack-1x fa-inverse" style={{fontSize:'0.6em'}} />
-            </span>
-            {deletedProducts.length > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center px-0.5">
-                {deletedProducts.length}
-              </span>
-            )}
-          </button>
+        {/* Toolbar */}
+        <div className="flex items-center justify-between gap-3">
+          {/* Left: Search input */}
+          <div className="relative">
+            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-sm pointer-events-none" />
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search products…"
+              className="pl-9 pr-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-gray-700 dark:text-slate-300 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-gray-400 dark:focus:border-slate-500 w-64 transition-all shadow-sm"
+            />
+          </div>
+
+          {/* Right controls: channel + date filters */}
+          <div className="flex items-center justify-end gap-3">
+            <BriefHeaderControls />
+          </div>
         </div>
 
-        {showBin ? (
-          <BinView items={deletedProducts} onBack={() => setShowBin(false)} onRestore={handleRestoreProduct} onRestoreMany={handleRestoreMany} />
-        ) : editMode ? (
-          <ProductEditView
-            items={editItems}
-            onBack={() => { setEditMode(false); setSelectedIds(new Set()); }}
-            onGoToMarketplace={() => {}}
-          />
-        ) : (
-          <>
-            {/* Toolbar */}
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                {/* <h3 className="text-base font-bold text-gray-900 dark:text-slate-100 flex-shrink-0">Product Listing</h3> */}
-                {selectedIds.size > 1 && (
-                  <>
-                    <button onClick={handleEditClick} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition-all shadow-sm">
-                      <i className="fa-solid fa-pen text-[10px]" />
-                      Bulk Edit ({selectedIds.size})
-                    </button>
-                    <button
-                      onClick={handleBulkDelete}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 text-red-600 dark:text-red-400 text-xs font-bold hover:bg-red-100 dark:hover:bg-red-900/40 transition-all shadow-sm"
+        {/* Table */}
+        <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[900px]">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-slate-800">
+                  <th className="px-4 py-3 w-8">
+                    <input type="checkbox" checked={pageProducts.length > 0 && selectedIds.size === pageProducts.length} onChange={toggleAll} className="rounded border-gray-300 dark:border-slate-600 text-brand focus:ring-brand/20" />
+                  </th>
+                  <th className="px-3 py-3 w-8"></th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">SKU</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Title</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Price</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">COGS</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Margin %</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">U/Month</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Return</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">BB</th>
+                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Sales Trend</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50 dark:divide-slate-800/60">
+                {pageProducts.length === 0 ? (
+                  <tr><td colSpan="11" className="px-4 py-12 text-center text-sm text-gray-400 dark:text-slate-500">No products match your search.</td></tr>
+                ) : pageProducts.map((product) => {
+                  return (
+                    <tr
+                      key={product.id}
+                      onClick={() => handleProductClick(product)}
+                      className="transition-colors hover:bg-gray-50/80 dark:hover:bg-slate-800/30 cursor-pointer group"
                     >
-                      <i className="fa-solid fa-trash text-[10px]" />
-                      {selectedIds.size}
-                    </button>
-                  </>
-                )}
-              </div>
-
-              {/* Right controls: search + filters */}
-              <div className="flex items-center gap-2">
-
-                {/* Search input */}
-                <div className="relative">
-                  <i className="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-[10px] pointer-events-none" />
-                  <input
-                    type="text"
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    placeholder="Search products…"
-                    className="pl-7 pr-3 py-1.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-gray-700 dark:text-slate-300 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-gray-400 dark:focus:border-slate-500 w-44 transition-all"
-                  />
-                </div>
-
-                {/* ── View Controls: single Filters button ── */}
-                <div className="relative" ref={viewPanelRef}>
-                  <button onClick={() => viewPanelOpen ? setViewPanelOpen(false) : openViewPanel('filters')}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${viewPanelOpen || filterCategory !== 'All' || sortBy !== null || cols.some(c => !c.visible)
-                      ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100'
-                      : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
-                      }`}>
-                    <i className="fa-solid fa-sliders text-[10px]" /> Filters
-                    {(filterCategory !== 'All' || sortBy !== null || cols.some(c => !c.visible)) &&
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />}
-                  </button>
-
-                  {/* ── Two-column panel ── */}
-                  {viewPanelOpen && (
-                    <div className="absolute top-full mt-2 right-0 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl z-[9999] w-[340px] overflow-hidden flex flex-col">
-
-                      {/* Left tabs + right content */}
-                      <div className="flex" style={{ minHeight: 220 }}>
-
-                        {/* Left sidebar */}
-                        <div className="w-[110px] flex-shrink-0 border-r border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/40 p-2 flex flex-col gap-0.5">
-                          {[
-                            { key: 'filters', label: 'Filters', icon: 'fa-sliders', badge: filterCategory !== 'All' },
-                            { key: 'sort', label: 'Sort', icon: 'fa-sort', badge: !!pendingSortBy },
-                            { key: 'columns', label: 'Columns', icon: 'fa-table-columns', badge: pendingCols.some(c => !c.visible) },
-                          ].map(tab => (
-                            <button key={tab.key} onClick={() => setViewPanelTab(tab.key)}
-                              className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-left transition-colors ${viewPanelTab === tab.key
-                                ? 'bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 font-semibold shadow-sm'
-                                : 'text-gray-500 dark:text-slate-400 hover:bg-white/70 dark:hover:bg-slate-900/50 hover:text-gray-700 dark:hover:text-slate-200 font-medium'
-                                }`}>
-                              <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${viewPanelTab === tab.key ? 'border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
-                                }`}>
-                                {viewPanelTab === tab.key && <span className="w-1.5 h-1.5 rounded-full bg-gray-900 dark:bg-slate-100" />}
-                              </span>
-                              <span className="truncate">{tab.label}</span>
-                              {tab.badge && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />}
-                            </button>
-                          ))}
-                        </div>
-
-                        {/* Right content */}
-                        <div className="flex-1 p-3.5 overflow-y-auto">
-
-                          {/* Filters tab */}
-                          {viewPanelTab === 'filters' && (
-                            <div>
-                              <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-2.5">Category</p>
-                              <div className="flex flex-wrap gap-1.5">
-                                {CATEGORIES.map(cat => (
-                                  <button key={cat} onClick={() => setPendingCategory(cat)}
-                                    className={`px-2.5 py-1 rounded-lg border text-[11px] font-medium transition-all ${pendingCategory === cat
-                                      ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100'
-                                      : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
-                                      }`}>
-                                    {cat}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Sort tab */}
-                          {viewPanelTab === 'sort' && (
-                            <div>
-                              <div className="flex items-center justify-between mb-2.5">
-                                <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">Sort by</p>
-                                {pendingSortBy && (
-                                  <button onClick={() => { setPendingSortBy(null); setPendingSortDir('asc'); }}
-                                    className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 transition-colors">
-                                    Clear
-                                  </button>
-                                )}
-                              </div>
-                              <div className="flex flex-col gap-0.5">
-                                {SORT_OPTIONS.map(opt => (
-                                  <button key={opt.key}
-                                    onClick={() => { if (pendingSortBy === opt.key) setPendingSortDir(d => d === 'asc' ? 'desc' : 'asc'); else { setPendingSortBy(opt.key); setPendingSortDir('asc'); } }}
-                                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${pendingSortBy === opt.key
-                                      ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100 font-semibold'
-                                      : 'text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 font-medium'
-                                      }`}>
-                                    <div className="flex items-center gap-2">
-                                      <span className={`w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${pendingSortBy === opt.key ? 'border-gray-900 dark:border-slate-100' : 'border-gray-300 dark:border-slate-600'
-                                        }`}>
-                                        {pendingSortBy === opt.key && <span className="w-1.5 h-1.5 rounded-full bg-gray-900 dark:bg-slate-100" />}
-                                      </span>
-                                      {opt.label}
-                                    </div>
-                                    {pendingSortBy === opt.key && (
-                                      <i className={`fa-solid ${pendingSortDir === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down'} text-[10px] text-gray-500 dark:text-slate-400`} />
-                                    )}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Columns tab */}
-                          {viewPanelTab === 'columns' && (
-                            <div>
-                              <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-2.5">Visible Columns</p>
-                              <div className="flex flex-col gap-0.5">
-                                {pendingCols.map(col => (
-                                  <div key={col.key} className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
-                                    <span className="text-xs font-medium text-gray-600 dark:text-slate-300">{col.label}</span>
-                                    <button onClick={() => togglePendingColVisible(col.key)} className="flex-shrink-0 p-0.5">
-                                      <div className={`w-8 h-4 rounded-full transition-colors flex items-center px-0.5 ${col.visible ? 'bg-gray-900 dark:bg-slate-100' : 'bg-gray-200 dark:bg-slate-700'}`}>
-                                        <span className={`w-3 h-3 rounded-full bg-white dark:bg-gray-900 transition-transform ${col.visible ? 'translate-x-4' : 'translate-x-0'}`} />
-                                      </div>
-                                    </button>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                        </div>
-                      </div>
-
-                      {/* Footer */}
-                      <div className="px-4 py-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between gap-2">
-                        <button onClick={resetViewPanel}
-                          className="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
-                          Reset
-                        </button>
-                        <button onClick={applyViewPanel}
-                          className="px-5 py-2 rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 text-xs font-bold hover:bg-gray-700 dark:hover:bg-slate-200 transition-colors">
-                          Apply
-                        </button>
-                      </div>
-
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Edit banner for inline row editing */}
-            {editingRowId !== null && (
-              // <EditBanner onGoToMarketplace={() => { }} />
-              <MarketplaceSyncBanner onGoToMarketplace={() => { }} />
-            )}
-
-            {/* Table */}
-            <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[640px] lg:min-w-0">
-                  <thead>
-                    <tr className="border-b border-gray-100 dark:border-slate-800">
-                      <th className="px-4 py-3 w-8">
-                        <input type="checkbox" checked={pageProducts.length > 0 && selectedIds.size === pageProducts.length} onChange={toggleAll} className="rounded border-gray-300 dark:border-slate-600 text-brand focus:ring-brand/20" />
-                      </th>
-                      <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-8">#</th>
-                      <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left w-12">Image</th>
-                      <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Product</th>
-                      {visibleCols.map(col => (
-                        <th key={col.key} className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">{col.label}</th>
-                      ))}
-                      <th className="px-3 py-3 w-24"></th>
+                      <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
+                        <input type="checkbox" checked={selectedIds.has(product.id)} onChange={() => toggleSelect(product.id)} className="rounded border-gray-300 dark:border-slate-600 text-brand focus:ring-brand/20 disabled:opacity-40" />
+                      </td>
+                      <td className="px-3 py-3">
+                        <span className={`w-2 h-2 rounded-full inline-block ${product.status === 'Active' ? 'bg-green-500' : product.status === 'Archived' ? 'bg-red-500' : 'bg-gray-400'}`}></span>
+                      </td>
+                      <td className="px-3 py-3 text-xs text-gray-500 dark:text-slate-400 font-mono">
+                        {product.sku}
+                      </td>
+                      <td className="px-3 py-3">
+                        <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 group-hover:text-brand dark:group-hover:text-gray-200 transition-colors leading-tight truncate max-w-[200px]" title={product.name}>
+                          {product.name}
+                        </p>
+                      </td>
+                      <td className="px-3 py-3 text-xs font-semibold text-gray-700 dark:text-slate-300">{product.price}</td>
+                      <td className="px-3 py-3 text-xs text-gray-600 dark:text-slate-400">{product.cogs}</td>
+                      <td className="px-3 py-3 text-xs font-medium text-gray-700 dark:text-slate-300">{product.margin}</td>
+                      <td className="px-3 py-3 text-xs text-gray-600 dark:text-slate-400">{product.velocity}</td>
+                      <td className="px-3 py-3 text-xs text-gray-600 dark:text-slate-400">{product.returns}</td>
+                      <td className="px-3 py-3 text-xs text-gray-600 dark:text-slate-400">{product.bb}</td>
+                      <td className="px-3 py-3">
+                        {product.salesTrend === 'up' ? (
+                          <div className="h-6 w-12 flex items-end gap-[1px]">
+                            <div className="w-1.5 bg-green-500/40 rounded-t-sm h-[30%]"></div>
+                            <div className="w-1.5 bg-green-500/60 rounded-t-sm h-[50%]"></div>
+                            <div className="w-1.5 bg-green-500/80 rounded-t-sm h-[70%]"></div>
+                            <div className="w-1.5 bg-green-500 rounded-t-sm h-full"></div>
+                          </div>
+                        ) : (
+                          <div className="h-6 w-12 flex items-end gap-[1px]">
+                            <div className="w-1.5 bg-red-500 rounded-t-sm h-full"></div>
+                            <div className="w-1.5 bg-red-500/80 rounded-t-sm h-[70%]"></div>
+                            <div className="w-1.5 bg-red-500/60 rounded-t-sm h-[50%]"></div>
+                            <div className="w-1.5 bg-red-500/40 rounded-t-sm h-[30%]"></div>
+                          </div>
+                        )}
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-50 dark:divide-slate-800/60">
-                    {pageProducts.length === 0 ? (
-                      <tr><td colSpan={5 + visibleCols.length} className="px-4 py-12 text-center text-sm text-gray-400 dark:text-slate-500">No products match your search.</td></tr>
-                    ) : (editingRowId !== null
-                      ? pageProducts.filter(p => p.id === editingRowId)
-                      : pageProducts
-                    ).map((product) => {
-                      const isEditing = editingRowId === product.id;
-                      const isDisabled = false;
-                      const rowNum = pageProducts.findIndex(p => p.id === product.id) + (page - 1) * PAGE_SIZE + 1;
-                      return (
-                        <tr
-                          key={product.id}
-                          onClick={!isEditing && !isDisabled ? () => handleProductClick(product) : undefined}
-                          className={`transition-colors ${isEditing ? 'bg-gray-50/80 dark:bg-slate-800/30' : isDisabled ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/30 cursor-pointer group'}`}
-                        >
-                          <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
-                            <input type="checkbox" checked={selectedIds.has(product.id)} onChange={() => toggleSelect(product.id)} disabled={editingRowId !== null} className="rounded border-gray-300 dark:border-slate-600 text-brand focus:ring-brand/20 disabled:opacity-40" />
-                          </td>
-                          {/* Row number */}
-                          <td className="px-3 py-3 w-8">
-                            <span className="text-xs text-gray-400 dark:text-slate-500 font-mono select-none">{rowNum}</span>
-                          </td>
-                          <td className="px-3 py-3">
-                            <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
-                              {product.image
-                                ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-                                : <i className="fa-solid fa-box text-gray-300 dark:text-slate-600 text-[11px]" />}
-                            </div>
-                          </td>
-                          <td className="px-3 py-3 min-w-[160px]">
-                            {isEditing ? (
-                              <div className="flex flex-col gap-0.5">
-                                <input type="text" value={editingRowVals.name} onChange={e => updateEditVal('name', e.target.value)}
-                                  className="text-sm font-semibold text-gray-900 dark:text-slate-100 bg-transparent border-b border-gray-300 dark:border-slate-600 focus:border-gray-500 dark:focus:border-slate-400 outline-none py-0.5 w-full" />
-                                <p className="text-[10px] text-gray-400 dark:text-slate-500 font-mono">{product.sku}</p>
-                              </div>
-                            ) : (
-                              <>
-                                <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 group-hover:text-brand dark:group-hover:text-gray-200 transition-colors leading-tight">{product.name}</p>
-                                <p className="text-[10px] text-gray-400 dark:text-slate-500 font-mono mt-0.5">{product.sku}</p>
-                              </>
-                            )}
-                          </td>
-                          {visibleCols.map(col => isEditing ? renderEditCell(col.key) : renderCell(product, col.key))}
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-                          {/* Action buttons */}
-                          <td className="px-3 py-3" onClick={e => e.stopPropagation()}>
-                            {isEditing ? (
-                              <div className="flex items-center gap-1">
-                                <button onClick={saveEdit} className="w-7 h-7 flex items-center justify-center rounded-xl bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 hover:opacity-80 transition">
-                                  <i className="fa-solid fa-check text-[10px]" />
-                                </button>
-                                <button onClick={cancelEdit} className="w-7 h-7 flex items-center justify-center rounded-xl border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition">
-                                  <i className="fa-solid fa-xmark text-[10px]" />
-                                </button>
-                              </div>
-                            ) : (
-                              <div className="flex items-center gap-0.5">
-                                {/* Edit */}
-                                <button
-                                  onClick={e => startEdit(e, product)}
-                                  disabled={editingRowId !== null}
-                                  title="Edit"
-                                  className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-0"
-                                >
-                                  <i className="fa-solid fa-pen text-[10px]" />
-                                </button>
-                                {/* Draft */}
-                                <button
-                                  onClick={e => handleDraftRow(product, e)}
-                                  disabled={editingRowId !== null}
-                                  title="Mark as Draft"
-                                  className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors disabled:opacity-0"
-                                >
-                                  <i className="fa-solid fa-file-pen text-[10px]" />
-                                </button>
-                                {/* Delete */}
-                                <button
-                                  onClick={e => handleDeleteProduct(product, e)}
-                                  disabled={editingRowId !== null}
-                                  title="Delete"
-                                  className="w-7 h-7 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-0"
-                                >
-                                  <i className="fa-solid fa-trash text-[10px]" />
-                                </button>
-                              </div>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Pagination */}
-            <div className="flex items-center justify-between px-1">
-              <p className="text-xs text-gray-500 dark:text-slate-400">
-                Showing {Math.min((page - 1) * PAGE_SIZE + 1, sortedFiltered.length)}–{Math.min(page * PAGE_SIZE, sortedFiltered.length)} of {sortedFiltered.length} products
-              </p>
-              <div className="flex items-center gap-2">
-                <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                  className={`px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all ${page === 1 ? 'border-gray-100 dark:border-slate-800 text-gray-300 dark:text-slate-600 cursor-default' : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 bg-white dark:bg-slate-900'}`}>
-                  Previous
+        {/* Pagination */}
+        <div className="flex items-center justify-between px-1">
+          <p className="text-xs text-gray-500 dark:text-slate-400">
+            Showing {Math.min((page - 1) * PAGE_SIZE + 1, sortedFiltered.length)}–{Math.min(page * PAGE_SIZE, sortedFiltered.length)} of {sortedFiltered.length} products
+          </p>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
+              className={`px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all ${page === 1 ? 'border-gray-100 dark:border-slate-800 text-gray-300 dark:text-slate-600 cursor-default' : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 bg-white dark:bg-slate-900'}`}>
+              Previous
+            </button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map(p => (
+                <button key={p} onClick={() => setPage(p)}
+                  className={`w-7 h-7 rounded-lg text-xs font-semibold transition-all ${page === p ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900' : 'text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800'}`}>
+                  {p}
                 </button>
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map(p => (
-                    <button key={p} onClick={() => setPage(p)}
-                      className={`w-7 h-7 rounded-lg text-xs font-semibold transition-all ${page === p ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900' : 'text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800'}`}>
-                      {p}
-                    </button>
-                  ))}
-                  {totalPages > 5 && <span className="text-xs text-gray-400">…</span>}
-                </div>
-                <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages || totalPages === 0}
-                  className={`px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all ${page === totalPages || totalPages === 0 ? 'border-gray-100 dark:border-slate-800 text-gray-300 dark:text-slate-600 cursor-default' : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 bg-white dark:bg-slate-900'}`}>
-                  Next
-                </button>
-              </div>
+              ))}
+              {totalPages > 5 && <span className="text-xs text-gray-400">…</span>}
             </div>
-          </>
-        )}
-
-        {/* Delete Confirm Modal */}
-        {deleteConfirmProduct && (
-          <DeleteConfirmModal
-            product={deleteConfirmProduct}
-            onConfirm={confirmDelete}
-            onCancel={() => setDeleteConfirmProduct(null)}
-          />
-        )}
-
-        {/* Bulk Delete Confirm Modal */}
-        {bulkDeletePending && (
-          <BulkDeleteConfirmModal
-            count={selectedIds.size}
-            onConfirm={confirmBulkDelete}
-            onCancel={() => setBulkDeletePending(false)}
-          />
-        )}
+            <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages || totalPages === 0}
+              className={`px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all ${page === totalPages || totalPages === 0 ? 'border-gray-100 dark:border-slate-800 text-gray-300 dark:text-slate-600 cursor-default' : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 bg-white dark:bg-slate-900'}`}>
+              Next
+            </button>
+          </div>
+        </div>
 
       </div>
+      <ProductDetailModal isOpen={!!selectedProductForModal} onClose={() => setSelectedProductForModal(null)} product={selectedProductForModal} />
     </DashboardLayout>
   );
 };

@@ -18,7 +18,8 @@ const StatCard = ({
   color = 'blue', // for iconic type
   loading = false,
   onClick,
-  showIcon = true
+  showIcon = true,
+  isSelected = false
 }) => {
   const { addAiReference } = useAIStore();
 
@@ -68,7 +69,7 @@ const StatCard = ({
     return (
       <div
         onClick={onClick}
-        className={`bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all relative h-[86px] sm:h-40 flex flex-col justify-between group ${onClick ? 'cursor-pointer' : ''}`}
+        className={`bg-white dark:bg-slate-900 border ${isSelected ? 'border-gray-900 ring-1 ring-gray-900 dark:border-slate-100 dark:ring-slate-100 shadow-md' : 'border-gray-200 dark:border-slate-800 shadow-sm'} rounded-2xl overflow-hidden hover:shadow-md transition-all relative h-[86px] sm:h-40 flex flex-col justify-between group ${(onClick || isSelected) ? 'cursor-pointer' : ''}`}
       >
 
         {/* AI Reference Icon */}

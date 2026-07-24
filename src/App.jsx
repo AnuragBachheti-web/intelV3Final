@@ -28,6 +28,7 @@ const AgentsPage             = lazy(() => import("./features/agents/AgentsPage")
 const IntegrationsPage       = lazy(() => import("./features/integrations/IntegrationsPage"));
 const NotificationsPage      = lazy(() => import("./features/notifications/NotificationsPage"));
 const ActionLogPage          = lazy(() => import("./features/action-log/ActionLogPage"));
+const ProfitAdsPage          = lazy(() => import("./features/profit-ads/ProfitAdsPage"));
 const PrivacyPolicy          = lazy(() => import("./features/onboarding/pages/PrivacyPolicy"));
 const TermsOfService         = lazy(() => import("./features/onboarding/pages/TermsOfService"));
 const InviteLoginPage        = lazy(() => import("./features/auth/InviteLoginPage"));
@@ -82,6 +83,7 @@ function App() {
             <Route path={ROUTES.AGENTS}               element={<AgentsPage />} />
             <Route path={ROUTES.INTEGRATIONS}         element={<IntegrationsPage />} />
             <Route path={ROUTES.ACTION_LOG}           element={<ActionLogPage />} />
+            <Route path="/profit-ads"                  element={<ProfitAdsPage />} />
 
             <Route path={ROUTES.LOGIN}                element={<InviteLoginPage />} />
             <Route path={ROUTES.UNAUTHORIZED}         element={<Unauthorized />} />

@@ -8,6 +8,7 @@ import SelectInput from '../ui/SelectInput';
 import RulesDrawer from '../common/RulesDrawer';
 import white_latest from '../../assets/white_latest.png';
 import dark_latest from '../../assets/dark_latest.png';
+import ProfileDrawer from './ProfileDrawer';
 
 const CHANNEL_OPTS = [
   ['all', 'All Channels'],
@@ -319,7 +320,8 @@ const GlobalAppHeader = ({
   onMenuClick,
   hideMobileSearchIcon = false,
 }) => {
-  const [rulesOpen, setRulesOpen] = useState(false);
+  const [rulesDrawerOpen, setRulesDrawerOpen] = useState(false);
+  const [profileDrawerOpen, setProfileDrawerOpen] = useState(false);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -340,7 +342,7 @@ const GlobalAppHeader = ({
 
   const rulesButton = (
     <button
-      onClick={() => setRulesOpen(true)}
+      onClick={() => setRulesDrawerOpen(true)}
       className="flex items-center gap-1.5 px-3.5 py-1 bg-white dark:bg-slate-900 border border-[#dcd6cd] dark:border-slate-700 text-gray-900 dark:text-slate-100 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-full text-xs font-semibold transition-all shadow-xs"
       title="Detectors & thresholds"
     >
@@ -436,7 +438,6 @@ const GlobalAppHeader = ({
     );
   };
 
-  // Shared pieces duplicated across the 'toolbar' and default render branches.
   const renderMarketplaceToggles = (platforms) => (
     <div className="flex items-center gap-1 px-2 py-1.5 bg-gray-50 dark:bg-slate-800/60 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
       {platforms.map((p) => {
@@ -518,16 +519,13 @@ const GlobalAppHeader = ({
   );
 
   const profileButton = (
-    <button
-      className="w-8 h-8 flex items-center justify-center group active:scale-95 transition-all"
-      title={shopProfile?.name || 'Profile'}
-    >
-      <i className="fa-solid fa-circle-user text-lg text-gray-400 dark:text-slate-500 group-hover:text-gray-600 dark:group-hover:text-slate-300 transition-colors" />
+    <button onClick={() => setProfileDrawerOpen(true)} className="relative group p-0">
+      <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800 group-hover:ring-2 group-hover:ring-gray-400 dark:group-hover:ring-slate-500 transition-all flex items-center justify-center">
+        <i className="fa-solid fa-user text-gray-400 dark:text-slate-500 text-sm" />
+      </div>
     </button>
   );
 
-  // Collapsed search icon that expands into a floating input — shared by the desktop
-  // toolbar's searchCollapsed state and the mobile top bar (ss1).
   const renderSearchExpandToggle = () => (
     <>
       <button
@@ -656,7 +654,7 @@ const GlobalAppHeader = ({
           <div className="flex items-center gap-3 shrink-0">
             {!isScrolled && !isCompressed && (
               <div className="header-greeting-block hidden md:flex flex-col items-end text-right px-1 transition-opacity duration-200">
-                <p className="text-xs font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-none">
+                <p className="text-[15px] font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-none">
                   {getGreeting()}, <span className="font-semibold">{username}</span>
                 </p>
                 <p className="text-[10px] font-medium text-gray-400 dark:text-slate-500 leading-tight mt-0.5">
@@ -687,7 +685,7 @@ const GlobalAppHeader = ({
           </div>
         </div>
 
-        <RulesDrawer isOpen={rulesOpen} onClose={() => setRulesOpen(false)} />
+        <RulesDrawer isOpen={rulesDrawerOpen} onClose={() => setRulesDrawerOpen(false)} />
       </>
     );
   }
@@ -816,7 +814,8 @@ const GlobalAppHeader = ({
         </div>
       </div>
 
-      <RulesDrawer isOpen={rulesOpen} onClose={() => setRulesOpen(false)} />
+      <RulesDrawer isOpen={rulesDrawerOpen} onClose={() => setRulesDrawerOpen(false)} />
+      <ProfileDrawer isOpen={profileDrawerOpen} onClose={() => setProfileDrawerOpen(false)} />
     </div>
   );
 };

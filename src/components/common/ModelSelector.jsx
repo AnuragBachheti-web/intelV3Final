@@ -4,9 +4,10 @@ import useClickOutside from '../../hooks/useClickOutside';
 import { useNavigate } from 'react-router-dom';
 
 const MODELS = [
-  { id: 'base',       label: 'Base',       locked: false, icon: 'fa-solid fa-star',     tagline: 'Great for everyday research' },
-  { id: 'pro',        label: 'Pro',        locked: true,  icon: 'fa-solid fa-bolt',      tagline: 'Deeper insights & priority speed' },
-  { id: 'enterprise', label: 'Enterprise', locked: true,  icon: 'fa-solid fa-building',  tagline: 'Custom limits, SSO & dedicated support' },
+  { id: 'base', label: 'Starter', locked: false, icon: 'fa-solid fa-star', tagline: 'Great for everyday research' },
+  { id: 'pro', label: 'Pro', locked: true, icon: 'fa-solid fa-bolt', tagline: 'Deeper insights & priority speed' },
+  { id: 'pro_plus', label: 'Pro+', locked: true, icon: 'fa-solid fa-building', tagline: 'Advanced limits & dedicated support' },
+  { id: 'custom', label: 'Custom', locked: true, icon: 'fa-solid fa-cogs', tagline: 'Tailored solutions for your business' },
 ];
 
 const ModelSelector = ({ variant = 'default' }) => {
@@ -61,13 +62,13 @@ const ModelSelector = ({ variant = 'default' }) => {
               <i className="fa-solid fa-arrow-left text-sm"></i>
             </button>
 
-            <span> {selected.label} </span>
+            <span className="text-[13px]"> {selected.label} </span>
           </>
         ) : (
           <>
             <span className={`${isCompact ? 'hidden sm:inline' : ''} text-gray-400 dark:text-slate-500 font-medium`}>Model</span>
             <span className={`${isCompact ? 'hidden sm:inline' : ''} text-gray-300 dark:text-slate-600 mx-0.5`}>|</span>
-            <span className="text-gray-700 dark:text-slate-200 font-semibold">{selected.label}</span>
+            <span className="text-[13px] text-gray-700 dark:text-slate-200 font-medium">{selected.label}</span>
           </>
         )}
         <i className={`fa-solid fa-chevron-down ${isTopbar ? 'text-[10px] text-gray-400 dark:text-slate-500' : 'text-[8px]'}`}></i>
@@ -126,7 +127,7 @@ const ModelSelector = ({ variant = 'default' }) => {
         <div
           ref={dropdownRef}
           style={{ position: 'fixed', bottom: dropdownPos.bottom, left: dropdownPos.left, zIndex: 99999 }}
-          className="w-56 bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-slate-700 rounded-xl shadow-2xl py-1.5"
+          className="w-[13rem] bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-slate-700 rounded-xl shadow-2xl py-1.5"
         >
           {/* Section label */}
           <div className="px-4 pt-1.5 pb-2">
@@ -147,11 +148,11 @@ const ModelSelector = ({ variant = 'default' }) => {
                       navigate('/settings?tab=subscription');
                     }
                   }}
-                  className={`w-full text-left px-4 py-2.5 text-sm flex items-center justify-between transition-colors ${isSelected
-                      ? 'bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-slate-100'
-                      : model.locked
-                        ? 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700/60 cursor-pointer'
-                        : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700/60 cursor-pointer'
+                  className={`w-full text-left px-4 py-1.5 text-sm flex items-center justify-between transition-colors ${isSelected
+                    ? 'bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-slate-100'
+                    : model.locked
+                      ? 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700/60 cursor-pointer'
+                      : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700/60 cursor-pointer'
                     }`}
                 >
                   <span className={`font-medium ${isSelected ? 'text-gray-900 dark:text-slate-100' : ''}`}>

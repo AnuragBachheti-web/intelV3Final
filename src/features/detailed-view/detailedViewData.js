@@ -84,11 +84,11 @@ export const CHANNEL_MIX_DATA = [
 ];
 
 export const DETAIL_VIEW_TABS = [
-  { key: 'sales',     label: 'Revenue',         icon: 'fa-dollar-sign'     },
-  { key: 'margin',    label: 'Margin',          icon: 'fa-chart-line'      },
-  { key: 'cash',      label: 'Cash Received',   icon: 'fa-money-bill-wave' },
-  { key: 'inventory', label: 'Inventory Value', icon: 'fa-boxes'           },
-  { key: 'ads',       label: 'AD-Spend',        icon: 'fa-bullhorn'        },
+  { key: 'sales', label: 'Revenue', icon: 'fa-dollar-sign' },
+  { key: 'margin', label: 'Margin', icon: 'fa-chart-line' },
+  { key: 'cash', label: 'Cash Received', icon: 'fa-money-bill-wave' },
+  { key: 'inventory', label: 'Inventory Value', icon: 'fa-boxes' },
+  { key: 'ads', label: 'AD-Spend', icon: 'fa-bullhorn' },
 ];
 
 // ─── Filter option arrays — never change, defined once at module level ────────

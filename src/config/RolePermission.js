@@ -21,6 +21,7 @@ export const rolePermissions = {
     ROUTES.AGENTS,                // /agents
     ROUTES.INTEGRATIONS,          // /integrations
     "/action-log",
+    "/profit-ads",
     ROUTES.NOTIFICATIONS,         // /notifications
     ROUTES.CONNECT_MARKETPLACES,  // /connect-marketplaces
     ROUTES.PRODUCT_VIEW,          // /product-view

@@ -122,7 +122,7 @@ const SalesTables = () => {
       </div>
 
       {/* ── Units Sold + Total Orders side by side ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      {/* <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <div className="min-w-0">
           <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800">
@@ -181,10 +181,10 @@ const SalesTables = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* ── AOV table ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      {/* <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <div className="min-w-0">
           <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800">
@@ -209,7 +209,7 @@ const SalesTables = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* ── Movers Overview (full width combined) ── */}
       <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden">
