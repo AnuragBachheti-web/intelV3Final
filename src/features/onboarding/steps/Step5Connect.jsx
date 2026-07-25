@@ -186,13 +186,7 @@ function Step5Connect() {
     </div>
 
     {/* Footer */}
-    <div className="sticky bottom-0 bg-white/80 backdrop-blur-md pb-4 pt-4 mt-auto border-t border-gray-100 flex items-center justify-between z-10 -mx-6 px-6 md:-mx-10 md:px-10">
-      <button
-        onClick={() => setStep(4)}
-        className="text-sm text-gray-400 hover:text-gray-700 transition font-medium"
-      >
-        Skip for now
-      </button>
+    <div className="sticky bottom-0 bg-white/80 backdrop-blur-md pb-4 pt-4 mt-auto border-t border-gray-100 flex items-center justify-end z-10 -mx-6 px-6 md:-mx-10 md:px-10">
       <button
         onClick={() => navigate(ROUTES.SALES)}
         className="flex items-center gap-2 px-10 py-3 bg-gray-900 text-white font-semibold rounded-xl hover:bg-gray-800 transition text-sm shadow-md hover:shadow-lg"

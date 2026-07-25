@@ -56,6 +56,8 @@ export const INSIGHT_CARDS_DATA = [
       exposureMo: '₹20.2L',
     },
     amazonUrl: 'https://amazon.in',
+    actionType: 'investigate',
+    actionLabel: 'Investigate'
   },
 
   // 2. Pricing & Buy Box
@@ -85,6 +87,8 @@ export const INSIGHT_CARDS_DATA = [
       exposureMo: '$559/day',
     },
     amazonUrl: 'https://amazon.in',
+    actionType: 'reprice',
+    actionLabel: 'Reprice / check eligibility'
   },
 
   // 3. Demand
@@ -114,6 +118,8 @@ export const INSIGHT_CARDS_DATA = [
       exposureMo: '$12.4K',
     },
     amazonUrl: 'https://amazon.in',
+    actionType: 'plan_capture',
+    actionLabel: 'Plan capture'
   },
 
   // 4. Opportunity

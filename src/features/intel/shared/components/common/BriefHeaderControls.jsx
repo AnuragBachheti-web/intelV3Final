@@ -132,7 +132,7 @@ const CalendarPicker = ({ selectedDate, onSelectDate, onClose, alignRight = fals
   );
 };
 
-const BriefHeaderControls = () => {
+const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive }) => {
   // Channel state
   const [channelOpen, setChannelOpen] = useState(false);
   const [selectedChannels, setSelectedChannels] = useState(['shopify', 'amazon']);
@@ -414,6 +414,32 @@ const BriefHeaderControls = () => {
           </div>
         )}
       </div>
+
+      {/* ── Dashboard View Toggle ── */}
+      {onDashboardToggle && (
+        <>
+          <div className="h-4 w-px bg-gray-200 dark:bg-slate-700 hidden md:block mx-1"></div>
+          <div className="hidden md:flex items-center gap-2">
+            <span className="text-xs font-semibold text-gray-900 dark:text-slate-100 whitespace-nowrap">
+              Dashboard View
+            </span>
+            <button
+              onClick={onDashboardToggle}
+              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors ${
+                isDashboardViewActive
+                  ? 'bg-gray-900 dark:bg-slate-100 hover:opacity-80'
+                  : 'bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500'
+              }`}
+            >
+              <span
+                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white dark:bg-gray-900 transition-transform ${
+                  isDashboardViewActive ? 'translate-x-4' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+        </>
+      )}
 
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 const RulesDrawer = ({ isOpen, onClose }) => {
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [rules, setRules] = useState({
     netMargin: { enabled: true, val: 15, surface: 'Watch' },
     returnRate: { enabled: true, val: 8, surface: 'Act' },
@@ -307,7 +308,53 @@ const RulesDrawer = ({ isOpen, onClose }) => {
           </div>
 
         </div>
+
+        {/* Footer Apply Button */}
+        <div className="p-4 border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 mt-auto flex-shrink-0">
+          <button
+            onClick={() => setShowSuccessModal(true)}
+            className="w-full py-3.5 bg-[#1C1C1E] hover:bg-black text-white text-[13px] font-bold rounded-xl transition-colors"
+          >
+            Apply changes & rebuild feed
+          </button>
+        </div>
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-[999999] flex items-center justify-center">
+          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setShowSuccessModal(false)} />
+          <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md shadow-2xl relative z-10 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-[#E5E0D8]">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-[#1C1C1E] rounded-xl flex items-center justify-center shrink-0">
+                  <i className="fa-solid fa-check text-white"></i>
+                </div>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Rules applied ✔</h2>
+              </div>
+            </div>
+            
+            <div className="p-6 pb-8 bg-gray-50/50 dark:bg-slate-800/20">
+              <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 tracking-widest uppercase mb-3">What this does & why</p>
+              <p className="text-[15px] text-gray-700 dark:text-slate-300 leading-relaxed">
+                Your rule changes are live and the feed has been rebuilt — 12 insights now active.
+              </p>
+            </div>
+            
+            <div className="p-4 border-t border-[#E5E0D8] flex justify-end">
+              <button 
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  onClose();
+                }}
+                className="px-6 py-2 border border-[#E5E0D8] rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

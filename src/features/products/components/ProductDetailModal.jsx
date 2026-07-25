@@ -1,18 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import StandardModal from '../../../components/common/StandardModal';
 
 const ProductDetailModal = ({ isOpen, onClose, product }) => {
-  // Prevent body scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
   if (!isOpen || !product) return null;
 
   // Mock data specifically tailored for the reference design screenshots
@@ -40,18 +29,9 @@ const ProductDetailModal = ({ isOpen, onClose, product }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6" onClick={onClose}>
-      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"></div>
-      
-      <div 
-        className="relative bg-white dark:bg-slate-900 w-full max-w-[700px] max-h-[95vh] rounded-[16px] shadow-2xl flex flex-col overflow-hidden"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-8">
-          
-          {/* Header */}
-          <div className="flex items-start justify-between mb-4">
+    <StandardModal isOpen={isOpen} onClose={onClose} maxWidth="max-w-[850px]">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 tracking-wide uppercase">
               {product.sku || 'SKU-UNKNOWN'}
             </h2>
@@ -168,8 +148,9 @@ const ProductDetailModal = ({ isOpen, onClose, product }) => {
                   <div className="relative inline-block w-40">
                     <select className="w-full appearance-none bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-md py-1.5 pl-3 pr-8 text-[13px] font-bold text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
                       <option value="launch">launch</option>
-                      <option value="mature">mature</option>
-                      <option value="decline">decline</option>
+                      <option value="clearance">clearance</option>
+                      <option value="seasonal">seasonal</option>
+                      <option value="discontinued">discontinued</option>
                     </select>
                     <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none"></i>
                   </div>
@@ -178,8 +159,9 @@ const ProductDetailModal = ({ isOpen, onClose, product }) => {
                   <p className="text-[9px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">OPTIMIZE FOR</p>
                   <div className="relative inline-block w-40">
                     <select className="w-full appearance-none bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-md py-1.5 pl-3 pr-8 text-[13px] font-bold text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
-                      <option value="none">—</option>
-                      <option value="profit">Profitability</option>
+                      <option value="none">&mdash;</option>
+                      <option value="cash_flow">Cash Flow</option>
+                      <option value="margin">Margin</option>
                       <option value="growth">Growth</option>
                     </select>
                     <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none"></i>
@@ -190,9 +172,7 @@ const ProductDetailModal = ({ isOpen, onClose, product }) => {
 
           </div>
           
-        </div>
-      </div>
-    </div>
+    </StandardModal>
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const InsightCard = ({ card, onSimulate, onReprice }) => {
+const InsightCard = ({ card, onSimulate, onReprice, onDismiss, onPlanCapture }) => {
   const [expanded, setExpanded] = useState(false);
   const [showResearch, setShowResearch] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -10,7 +10,7 @@ const InsightCard = ({ card, onSimulate, onReprice }) => {
 
   return (
     <div className="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-5 shadow-xs transition-all duration-300">
-      
+
       {/* Top Header: SKU / Rule Tag (left), Badges + Expand Arrow (right) */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2 flex-wrap">
@@ -59,11 +59,10 @@ const InsightCard = ({ card, onSimulate, onReprice }) => {
               {[1, 2, 3, 4].map(dot => (
                 <span
                   key={dot}
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    dot <= card.confidenceLevel
-                      ? 'bg-gray-800 dark:bg-slate-200'
-                      : 'bg-gray-200 dark:bg-slate-700'
-                  }`}
+                  className={`w-1.5 h-1.5 rounded-full ${dot <= card.confidenceLevel
+                    ? 'bg-gray-800 dark:bg-slate-200'
+                    : 'bg-gray-200 dark:bg-slate-700'
+                    }`}
                 />
               ))}
             </div>
@@ -121,21 +120,23 @@ const InsightCard = ({ card, onSimulate, onReprice }) => {
               </div>
             </div>
 
-            <button
-              onClick={() => setShowResearch(r => !r)}
-              className="mt-3 px-4 py-2 bg-black dark:bg-slate-100 text-white dark:text-gray-900 rounded-xl font-bold text-xs flex items-center gap-2 hover:bg-gray-800 dark:hover:bg-slate-200 transition-colors shadow-xs"
-            >
-              <i className="fa-solid fa-magnifying-glass text-xs" />
-              <span>{showResearch ? 'Hide Research' : 'Research further'}</span>
-            </button>
+            {card.actionType !== 'investigate' && (
+              <button
+                onClick={() => setShowResearch(r => !r)}
+                className="mt-3 px-4 py-2 bg-black dark:bg-slate-100 text-white dark:text-gray-900 rounded-xl font-bold text-xs flex items-center gap-2 hover:bg-gray-800 dark:hover:bg-slate-200 transition-colors shadow-xs"
+              >
+                <i className="fa-solid fa-magnifying-glass text-xs" />
+                <span>{showResearch ? 'Hide Research' : 'Research further'}</span>
+              </button>
+            )}
           </div>
 
           {/* Research Further Deep-Dive Section (SS2 - Requirement 2) */}
           {showResearch && (
             <div className="space-y-4 pt-2 animate-in fade-in slide-in-from-top-2 duration-300">
-              
+
               {/* 1. Price - 30 Days Line Chart Card */}
-              <div className="p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl space-y-2">
+              {/* <div className="p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl space-y-2">
                 <div className="flex items-center justify-between text-[10px] font-mono text-gray-400 dark:text-slate-500 uppercase tracking-wider">
                   <span>PRICE – 30 DAYS</span>
                   <span className="text-xs font-bold text-gray-700 dark:text-slate-300">+0.7%</span>
@@ -151,10 +152,10 @@ const InsightCard = ({ card, onSimulate, onReprice }) => {
                     />
                   </svg>
                 </div>
-              </div>
+              </div> */}
 
               {/* 2. BSR - 30 Days (Lower = Better) Line Chart Card */}
-              <div className="p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl space-y-2">
+              {/* <div className="p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl space-y-2">
                 <div className="flex items-center justify-between text-[10px] font-mono text-gray-400 dark:text-slate-500 uppercase tracking-wider">
                   <span>BSR – 30 DAYS (LOWER = BETTER)</span>
                   <span className="text-xs font-bold text-gray-700 dark:text-slate-300">#14,277</span>
@@ -170,7 +171,7 @@ const InsightCard = ({ card, onSimulate, onReprice }) => {
                     />
                   </svg>
                 </div>
-              </div>
+              </div> */}
 
               {/* 3. Realify's Read - What To Do Box */}
               <div className="p-4 bg-[#eff4f9] dark:bg-slate-800/60 rounded-xl border border-blue-100 dark:border-slate-800 space-y-1">
@@ -225,7 +226,7 @@ const InsightCard = ({ card, onSimulate, onReprice }) => {
             View on Amazon
           </a>
           <button
-            onClick={() => setDismissed(true)}
+            onClick={onDismiss || (() => setDismissed(true))}
             className="px-3 py-1.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition-colors"
           >
             Dismiss
@@ -236,12 +237,36 @@ const InsightCard = ({ card, onSimulate, onReprice }) => {
           >
             Simulate
           </button>
-          <button
-            onClick={onReprice}
-            className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors shadow-xs"
-          >
-            Reprice
-          </button>
+
+          {(!card.actionType || card.actionType === 'reprice') && (
+            <button
+              onClick={onReprice}
+              className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors shadow-xs"
+            >
+              {card.actionLabel || 'Reprice / check eligibility'}
+            </button>
+          )}
+
+          {card.actionType === 'investigate' && (
+            <button
+              onClick={() => {
+                setExpanded(true);
+                setShowResearch(true);
+              }}
+              className="px-4 py-1.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-colors shadow-xs"
+            >
+              {card.actionLabel}
+            </button>
+          )}
+
+          {card.actionType === 'plan_capture' && (
+            <button
+              onClick={onPlanCapture}
+              className="px-4 py-1.5 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-xs font-bold transition-colors shadow-xs"
+            >
+              {card.actionLabel}
+            </button>
+          )}
         </div>
       </div>
 

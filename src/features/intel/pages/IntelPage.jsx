@@ -20,6 +20,10 @@ import {
 import RealifyBrief from "../shared/components/common/RealifyBrief";
 import BriefHeaderControls from "../shared/components/common/BriefHeaderControls";
 import { REALIFY_BRIEF } from "../shared/data/realifyBriefData";
+import SimulateModal from '../shared/components/SimulateModal';
+import DismissModal from '../shared/components/DismissModal';
+import RepriceModal from '../shared/components/RepriceModal';
+import CaseReportModal from '../shared/components/CaseReportModal';
 
 
 const KPI_FAMILY_PILLS = [
@@ -55,7 +59,12 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [itemViewMode, setItemViewMode] = useState('list');
   const [stepOffset, setStepOffset] = useState(0);
   const [restoreItemSubTab, setRestoreItemSubTab] = useState(null);
-  // no kpiDetailModal needed
+  
+  const [isSimulateModalOpen, setIsSimulateModalOpen] = useState(false);
+  const [simulateSku, setSimulateSku] = useState(null);
+  const [isDismissModalOpen, setIsDismissModalOpen] = useState(false);
+  const [isRepriceModalOpen, setIsRepriceModalOpen] = useState(false);
+  const [isCaseReportModalOpen, setIsCaseReportModalOpen] = useState(false);
 
   // Insights section 2
   const [activeInsightTab2, setActiveInsightTab2] = useState('Overall');
@@ -415,20 +424,17 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         {/* Realify Brief (Top Banner) + Channel / Date Controls */}
         <div className="w-full space-y-2">
           <RealifyBrief data={briefData} />
-          <div className="flex items-center justify-between gap-3 w-full">
-            {/* Dashboard View toggle */}
-            <div className="hidden md:flex items-center gap-2">
-              <span className="text-[10px] font-medium text-gray-500 dark:text-slate-400 whitespace-nowrap">Dashboard</span>
-              <button
-                onClick={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { from: '/intel' } })}
-                className="relative inline-flex h-4 w-7 flex-shrink-0 items-center rounded-full bg-gray-300 dark:bg-slate-600 transition-colors hover:bg-gray-400 dark:hover:bg-slate-500"
-              >
-                <span className="inline-block h-3 w-3 transform rounded-full bg-white dark:bg-gray-900 transition-transform translate-x-0.5" />
-              </button>
-            </div>
-            <div className="ml-auto">
-              <BriefHeaderControls />
-            </div>
+
+          <div className="flex items-center justify-end gap-3 w-full pt-4">
+            {/* Channel & Date Filters & Dashboard Toggle */}
+            <BriefHeaderControls
+              isDashboardViewActive={false}
+              onDashboardToggle={() =>
+                navigate(`/detailed-view/${activeIntelTab}`, {
+                  state: { from: '/intel' },
+                })
+              }
+            />
           </div>
         </div>
 
@@ -481,6 +487,13 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           noSidePanel={fullWidthInsights}
           initialItemSubTab={restoreItemSubTab}
           sourceRoute={location.pathname}
+          onOpenSimulateModal={(insight) => {
+            setSimulateSku(insight?.sku || 'AFWCLEANER0004');
+            setIsSimulateModalOpen(true);
+          }}
+          onOpenDismissModal={() => setIsDismissModalOpen(true)}
+          onOpenRepriceModal={() => setIsRepriceModalOpen(true)}
+          onOpenPlanCaptureModal={() => setIsCaseReportModalOpen(true)}
         />
 
         {/* Insights section 2 — carousel mode (commented out) */}
@@ -507,6 +520,23 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         allKpis={activeStats}
         selectedIndices={selectedKpiIndices}
         onSave={(indices) => { setSelectedKpiIndices(indices); }}
+      />
+      <SimulateModal
+        isOpen={isSimulateModalOpen}
+        onClose={() => setIsSimulateModalOpen(false)}
+        sku={simulateSku}
+      />
+      <DismissModal
+        isOpen={isDismissModalOpen}
+        onClose={() => setIsDismissModalOpen(false)}
+      />
+      <RepriceModal
+        isOpen={isRepriceModalOpen}
+        onClose={() => setIsRepriceModalOpen(false)}
+      />
+      <CaseReportModal
+        isOpen={isCaseReportModalOpen}
+        onClose={() => setIsCaseReportModalOpen(false)}
       />
     </DashboardLayout>
   );

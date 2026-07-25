@@ -6,52 +6,54 @@ import useClickOutside from '../../hooks/useClickOutside';
 import useProductNavigation from '../../hooks/useProductNavigation';
 import BriefHeaderControls from '../intel/shared/components/common/BriefHeaderControls';
 import ProductDetailModal from './components/ProductDetailModal';
+import RealifyBrief from '../intel/shared/components/common/RealifyBrief';
+import { REALIFY_BRIEF } from '../intel/shared/data/realifyBriefData';
 
 const CHANNEL_TABS = ['Amazon', 'Shopify', 'Walmart'];
 
 const ALL_PRODUCTS = [
-  { id: 1,  name: 'Premium Wireless Headphones', sku: 'WH-PRO-2024',  status: 'Active',   price: '₹149', cogs: '₹80', margin: '46.3%', returns: '2.1%', bb: '98%', salesTrend: 'up', category: 'Electronics', inventory: 47,  velocity: '23/day',  intelLabel: 'Price Drop Alert',   intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2024-01-15'), updatedAt: new Date('2026-06-10') },
-  { id: 2,  name: 'Security Camera',              sku: 'SC-HOME-V2',   status: 'Active',   price: '₹89',  cogs: '₹40', margin: '55.1%', returns: '1.2%', bb: '95%', salesTrend: 'up', category: 'Electronics', inventory: 12,  velocity: '8/day',   intelLabel: 'Stockout Risk',      intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2024-03-02'), updatedAt: new Date('2026-06-15') },
-  { id: 3,  name: 'Essential T-Shirt',            sku: 'AP-TEE-001',   status: 'Active',   price: '₹24',  cogs: '₹10', margin: '58.3%', returns: '5.4%', bb: '99%', salesTrend: 'down', category: 'Apparel',     inventory: 452, velocity: '112/day', intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-11-08'), updatedAt: new Date('2026-05-20') },
-  { id: 4,  name: 'Minimalist Watch',             sku: 'WT-MIN-04',    status: 'Active',   price: '₹199', cogs: '₹60', margin: '69.8%', returns: '0.8%', bb: '100%', salesTrend: 'up', category: 'Apparel',     inventory: 5,   velocity: '4/day',   intelLabel: 'Competitor Move',    intelColor: 'text-orange-600 dark:text-orange-400', createdAt: new Date('2024-06-20'), updatedAt: new Date('2026-06-16') },
-  { id: 5,  name: 'Organic Pet Food 15lb',        sku: 'PF-ORG-15LB',  status: 'Active',   price: '₹44',  cogs: '₹25', margin: '43.2%', returns: '0.5%', bb: '92%', salesTrend: 'up', category: 'Pet',         inventory: 218, velocity: '14/day',  intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-09-14'), updatedAt: new Date('2026-04-30') },
-  { id: 6,  name: 'Smart Speaker Mini',           sku: 'SM-SPK-003',   status: 'Active',   price: '₹69',  cogs: '₹35', margin: '49.3%', returns: '3.2%', bb: '88%', salesTrend: 'up', category: 'Electronics', inventory: 89,  velocity: '6/day',   intelLabel: 'Opportunity',        intelColor: 'text-green-600 dark:text-green-400', createdAt: new Date('2024-02-28'), updatedAt: new Date('2026-06-01') },
-  { id: 7,  name: 'Ergonomic Office Chair',       sku: 'FN-CHR-001',   status: 'Active',   price: '₹349', cogs: '₹150', margin: '57.0%', returns: '4.1%', bb: '90%', salesTrend: 'down', category: 'Furniture',   inventory: 34,  velocity: '3/day',   intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-07-11'), updatedAt: new Date('2026-03-18') },
-  { id: 8,  name: 'USB-C Hub 7-in-1',            sku: 'TEC-USB-007',  status: 'Active',   price: '₹49',  cogs: '₹15', margin: '69.4%', returns: '1.8%', bb: '96%', salesTrend: 'up', category: 'Electronics', inventory: 156, velocity: '18/day',  intelLabel: 'Opportunity',        intelColor: 'text-green-600 dark:text-green-400', createdAt: new Date('2024-04-05'), updatedAt: new Date('2026-06-14') },
-  { id: 9,  name: 'Wireless Earbuds Pro',         sku: 'AUD-EAR-PRO',  status: 'Active',   price: '₹129', cogs: '₹40', margin: '69.0%', returns: '6.2%', bb: '85%', salesTrend: 'down', category: 'Electronics', inventory: 203, velocity: '8/day',   intelLabel: 'Price Drop Alert',   intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2024-05-19'), updatedAt: new Date('2026-06-17') },
-  { id: 10, name: 'Yoga Mat Premium',             sku: 'FT-YOG-002',   status: 'Active',   price: '₹59',  cogs: '₹12', margin: '79.7%', returns: '0.9%', bb: '99%', salesTrend: 'up', category: 'Fitness',     inventory: 78,  velocity: '5/day',   intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-12-22'), updatedAt: new Date('2026-02-09') },
-  { id: 11, name: 'Bamboo Phone Stand',           sku: 'ACC-STD-012',  status: 'Active',   price: '₹19',  cogs: '₹4', margin: '78.9%', returns: '0.2%', bb: '100%', salesTrend: 'up', category: 'Accessories', inventory: 310, velocity: '22/day',  intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2024-07-30'), updatedAt: new Date('2026-05-05') },
-  { id: 12, name: 'Autofy 100% Waterproof (Tested) Bike Cover ...', sku: 'VKAMCOVER0072',  status: 'Active',   price: '₹451',  cogs: '₹247', margin: '10.1%', returns: '0.1%', bb: '98%', salesTrend: 'up', category: 'Automotive', inventory: 1138,   velocity: '1138',   intelLabel: 'Listing Suppressed', intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2023-05-03'), updatedAt: new Date('2025-11-27') },
-  { id: 13, name: 'Autofy 100% Waterproof (Tested) Scooter Bik...', sku: 'VKAMCOVER0071',  status: 'Active',   price: '₹426',  cogs: '₹247', margin: '15.7%', returns: '0.1%', bb: '98%', salesTrend: 'up', category: 'Automotive', inventory: 928, velocity: '928',  intelLabel: 'Overstock',          intelColor: 'text-amber-600 dark:text-amber-400', createdAt: new Date('2024-08-12'), updatedAt: new Date('2026-06-12') },
-  { id: 14, name: 'Ergonomic Desk Organizer',     sku: 'HOME-ORG-006', status: 'Active',   price: '₹34',  cogs: '₹15', margin: '55.9%', returns: '1.5%', bb: '94%', salesTrend: 'up', category: 'Home',        inventory: 22,  velocity: '9/day',   intelLabel: 'Stockout Risk',      intelColor: 'text-red-600 dark:text-red-400',     createdAt: new Date('2024-09-25'), updatedAt: new Date('2026-06-13') },
-  { id: 15, name: 'Cotton Tote Bag',              sku: 'APP-TOT-003',  status: 'Draft',    price: '₹14',  cogs: '₹4', margin: '71.4%', returns: '2.8%', bb: '91%', salesTrend: 'down', category: 'Apparel',     inventory: 640, velocity: '28/day',  intelLabel: 'Stable',             intelColor: 'text-gray-500 dark:text-slate-400',  createdAt: new Date('2023-10-17'), updatedAt: new Date('2026-04-22') },
+  { id: 1, name: 'Premium Wireless Headphones', sku: 'WH-PRO-2024', status: 'Active', price: '₹149', cogs: '₹80', margin: '46.3%', returns: '2.1%', bb: '98%', salesTrend: 'up', category: 'Electronics', inventory: 47, velocity: '23/day', intelLabel: 'Price Drop Alert', intelColor: 'text-red-600 dark:text-red-400', createdAt: new Date('2024-01-15'), updatedAt: new Date('2026-06-10') },
+  { id: 2, name: 'Security Camera', sku: 'SC-HOME-V2', status: 'Active', price: '₹89', cogs: '₹40', margin: '55.1%', returns: '1.2%', bb: '95%', salesTrend: 'up', category: 'Electronics', inventory: 12, velocity: '8/day', intelLabel: 'Stockout Risk', intelColor: 'text-red-600 dark:text-red-400', createdAt: new Date('2024-03-02'), updatedAt: new Date('2026-06-15') },
+  { id: 3, name: 'Essential T-Shirt', sku: 'AP-TEE-001', status: 'Active', price: '₹24', cogs: '₹10', margin: '58.3%', returns: '5.4%', bb: '99%', salesTrend: 'down', category: 'Apparel', inventory: 452, velocity: '112/day', intelLabel: 'Stable', intelColor: 'text-gray-500 dark:text-slate-400', createdAt: new Date('2023-11-08'), updatedAt: new Date('2026-05-20') },
+  { id: 4, name: 'Minimalist Watch', sku: 'WT-MIN-04', status: 'Active', price: '₹199', cogs: '₹60', margin: '69.8%', returns: '0.8%', bb: '100%', salesTrend: 'up', category: 'Apparel', inventory: 5, velocity: '4/day', intelLabel: 'Competitor Move', intelColor: 'text-orange-600 dark:text-orange-400', createdAt: new Date('2024-06-20'), updatedAt: new Date('2026-06-16') },
+  { id: 5, name: 'Organic Pet Food 15lb', sku: 'PF-ORG-15LB', status: 'Active', price: '₹44', cogs: '₹25', margin: '43.2%', returns: '0.5%', bb: '92%', salesTrend: 'up', category: 'Pet', inventory: 218, velocity: '14/day', intelLabel: 'Stable', intelColor: 'text-gray-500 dark:text-slate-400', createdAt: new Date('2023-09-14'), updatedAt: new Date('2026-04-30') },
+  { id: 6, name: 'Smart Speaker Mini', sku: 'SM-SPK-003', status: 'Active', price: '₹69', cogs: '₹35', margin: '49.3%', returns: '3.2%', bb: '88%', salesTrend: 'up', category: 'Electronics', inventory: 89, velocity: '6/day', intelLabel: 'Opportunity', intelColor: 'text-green-600 dark:text-green-400', createdAt: new Date('2024-02-28'), updatedAt: new Date('2026-06-01') },
+  { id: 7, name: 'Ergonomic Office Chair', sku: 'FN-CHR-001', status: 'Active', price: '₹349', cogs: '₹150', margin: '57.0%', returns: '4.1%', bb: '90%', salesTrend: 'down', category: 'Furniture', inventory: 34, velocity: '3/day', intelLabel: 'Stable', intelColor: 'text-gray-500 dark:text-slate-400', createdAt: new Date('2023-07-11'), updatedAt: new Date('2026-03-18') },
+  { id: 8, name: 'USB-C Hub 7-in-1', sku: 'TEC-USB-007', status: 'Active', price: '₹49', cogs: '₹15', margin: '69.4%', returns: '1.8%', bb: '96%', salesTrend: 'up', category: 'Electronics', inventory: 156, velocity: '18/day', intelLabel: 'Opportunity', intelColor: 'text-green-600 dark:text-green-400', createdAt: new Date('2024-04-05'), updatedAt: new Date('2026-06-14') },
+  { id: 9, name: 'Wireless Earbuds Pro', sku: 'AUD-EAR-PRO', status: 'Active', price: '₹129', cogs: '₹40', margin: '69.0%', returns: '6.2%', bb: '85%', salesTrend: 'down', category: 'Electronics', inventory: 203, velocity: '8/day', intelLabel: 'Price Drop Alert', intelColor: 'text-red-600 dark:text-red-400', createdAt: new Date('2024-05-19'), updatedAt: new Date('2026-06-17') },
+  { id: 10, name: 'Yoga Mat Premium', sku: 'FT-YOG-002', status: 'Active', price: '₹59', cogs: '₹12', margin: '79.7%', returns: '0.9%', bb: '99%', salesTrend: 'up', category: 'Fitness', inventory: 78, velocity: '5/day', intelLabel: 'Stable', intelColor: 'text-gray-500 dark:text-slate-400', createdAt: new Date('2023-12-22'), updatedAt: new Date('2026-02-09') },
+  { id: 11, name: 'Bamboo Phone Stand', sku: 'ACC-STD-012', status: 'Active', price: '₹19', cogs: '₹4', margin: '78.9%', returns: '0.2%', bb: '100%', salesTrend: 'up', category: 'Accessories', inventory: 310, velocity: '22/day', intelLabel: 'Stable', intelColor: 'text-gray-500 dark:text-slate-400', createdAt: new Date('2024-07-30'), updatedAt: new Date('2026-05-05') },
+  { id: 12, name: 'Autofy 100% Waterproof (Tested) Bike Cover ...', sku: 'VKAMCOVER0072', status: 'Active', price: '₹451', cogs: '₹247', margin: '10.1%', returns: '0.1%', bb: '98%', salesTrend: 'up', category: 'Automotive', inventory: 1138, velocity: '1138', intelLabel: 'Listing Suppressed', intelColor: 'text-red-600 dark:text-red-400', createdAt: new Date('2023-05-03'), updatedAt: new Date('2025-11-27') },
+  { id: 13, name: 'Autofy 100% Waterproof (Tested) Scooter Bik...', sku: 'VKAMCOVER0071', status: 'Active', price: '₹426', cogs: '₹247', margin: '15.7%', returns: '0.1%', bb: '98%', salesTrend: 'up', category: 'Automotive', inventory: 928, velocity: '928', intelLabel: 'Overstock', intelColor: 'text-amber-600 dark:text-amber-400', createdAt: new Date('2024-08-12'), updatedAt: new Date('2026-06-12') },
+  { id: 14, name: 'Ergonomic Desk Organizer', sku: 'HOME-ORG-006', status: 'Active', price: '₹34', cogs: '₹15', margin: '55.9%', returns: '1.5%', bb: '94%', salesTrend: 'up', category: 'Home', inventory: 22, velocity: '9/day', intelLabel: 'Stockout Risk', intelColor: 'text-red-600 dark:text-red-400', createdAt: new Date('2024-09-25'), updatedAt: new Date('2026-06-13') },
+  { id: 15, name: 'Cotton Tote Bag', sku: 'APP-TOT-003', status: 'Draft', price: '₹14', cogs: '₹4', margin: '71.4%', returns: '2.8%', bb: '91%', salesTrend: 'down', category: 'Apparel', inventory: 640, velocity: '28/day', intelLabel: 'Stable', intelColor: 'text-gray-500 dark:text-slate-400', createdAt: new Date('2023-10-17'), updatedAt: new Date('2026-04-22') },
 ];
 
 const PAGE_SIZE = 10;
 const CATEGORIES = ['All', 'Electronics', 'Apparel', 'Pet', 'Fitness', 'Furniture', 'Home', 'Accessories'];
 
 const SORT_OPTIONS = [
-  { key: 'name',      label: 'Product Name' },
-  { key: 'category',  label: 'Category'     },
-  { key: 'inventory', label: 'Inventory'    },
-  { key: 'velocity',  label: 'Velocity'     },
-  { key: 'intel',     label: 'Intel'        },
+  { key: 'name', label: 'Product Name' },
+  { key: 'category', label: 'Category' },
+  { key: 'inventory', label: 'Inventory' },
+  { key: 'velocity', label: 'Velocity' },
+  { key: 'intel', label: 'Intel' },
 ];
 
 const DEFAULT_COLS = [
-  { key: 'status',    label: 'Status',    visible: true  },
-  { key: 'price',     label: 'Price',     visible: true  },
-  { key: 'category',  label: 'Category',  visible: true  },
-  { key: 'inventory', label: 'Inventory', visible: true  },
-  { key: 'velocity',  label: 'Velocity',  visible: true  },
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'price', label: 'Price', visible: true },
+  { key: 'category', label: 'Category', visible: true },
+  { key: 'inventory', label: 'Inventory', visible: true },
+  { key: 'velocity', label: 'Velocity', visible: true },
 ];
 
 const STATUS_OPTIONS = ['Active', 'Archived', 'Draft', 'Unlisted'];
 const STATUS_STYLES = {
-  Active:   { pill: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',  dot: 'bg-green-500' },
-  Draft:    { pill: 'bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400',   dot: 'bg-amber-400' },
-  Archived: { pill: 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400',       dot: 'bg-gray-400'  },
-  Unlisted: { pill: 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400',           dot: 'bg-red-400'   },
+  Active: { pill: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400', dot: 'bg-green-500' },
+  Draft: { pill: 'bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400', dot: 'bg-amber-400' },
+  Archived: { pill: 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400', dot: 'bg-gray-400' },
+  Unlisted: { pill: 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400', dot: 'bg-red-400' },
 };
 
 // ─── Bulk Delete Confirm Modal ────────────────────────────────────────────────
@@ -176,9 +178,9 @@ const BinView = ({ items, onBack, onRestore, onRestoreMany }) => {
       {items.length === 0 ? (
         <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm flex flex-col items-center justify-center py-16 gap-3">
           <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center">
-            <span className="fa-stack" style={{fontSize:'0.75rem',lineHeight:'1'}}>
+            <span className="fa-stack" style={{ fontSize: '0.75rem', lineHeight: '1' }}>
               <i className="fa-solid fa-trash-can fa-stack-2x text-gray-400 dark:text-slate-500" />
-              <i className="fa-solid fa-recycle fa-stack-1x fa-inverse" style={{fontSize:'0.55em'}} />
+              <i className="fa-solid fa-recycle fa-stack-1x fa-inverse" style={{ fontSize: '0.55em' }} />
             </span>
           </div>
           <p className="text-sm text-gray-400 dark:text-slate-500">Recycle Bin is empty</p>
@@ -371,34 +373,34 @@ const ProductsListPage = () => {
     [activePlatforms]
   );
 
-  const [activeTab, setActiveTab]           = useState(visibleChannelTabs[0] || 'Amazon');
-  const [search, setSearch]                 = useState('');
+  const [activeTab, setActiveTab] = useState(visibleChannelTabs[0] || 'Amazon');
+  const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
-  const [selectedIds, setSelectedIds]       = useState(new Set());
-  const [page, setPage]                     = useState(1);
-  const [sortBy, setSortBy]                 = useState(null);
-  const [sortDir, setSortDir]               = useState('asc');
-  const [cols, setCols]                     = useState(DEFAULT_COLS);
-  const [editMode, setEditMode]             = useState(false);
-  const [editItems, setEditItems]           = useState([]);
-  const [editingRowId, setEditingRowId]     = useState(null);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState(null);
+  const [sortDir, setSortDir] = useState('asc');
+  const [cols, setCols] = useState(DEFAULT_COLS);
+  const [editMode, setEditMode] = useState(false);
+  const [editItems, setEditItems] = useState([]);
+  const [editingRowId, setEditingRowId] = useState(null);
   const [editingRowVals, setEditingRowVals] = useState({});
   const [selectedProductForModal, setSelectedProductForModal] = useState(null);
 
   // Product data state (mutable for delete/draft)
-  const [productsData, setProductsData]         = useState(ALL_PRODUCTS);
-  const [deletedProducts, setDeletedProducts]   = useState([]);
+  const [productsData, setProductsData] = useState(ALL_PRODUCTS);
+  const [deletedProducts, setDeletedProducts] = useState([]);
   const [deleteConfirmProduct, setDeleteConfirmProduct] = useState(null);
-  const [showBin, setShowBin]                   = useState(false);
+  const [showBin, setShowBin] = useState(false);
   const [bulkDeletePending, setBulkDeletePending] = useState(false);
 
   /* ── Unified View Controls panel ── */
-  const [viewPanelOpen, setViewPanelOpen]     = useState(false);
-  const [viewPanelTab, setViewPanelTab]       = useState('filters');
+  const [viewPanelOpen, setViewPanelOpen] = useState(false);
+  const [viewPanelTab, setViewPanelTab] = useState('filters');
   const [pendingCategory, setPendingCategory] = useState('All');
-  const [pendingSortBy, setPendingSortBy]     = useState(null);
-  const [pendingSortDir, setPendingSortDir]   = useState('asc');
-  const [pendingCols, setPendingCols]         = useState(DEFAULT_COLS);
+  const [pendingSortBy, setPendingSortBy] = useState(null);
+  const [pendingSortDir, setPendingSortDir] = useState('asc');
+  const [pendingCols, setPendingCols] = useState(DEFAULT_COLS);
   const viewPanelRef = useRef(null);
 
   const openViewPanel = (tab = 'filters') => {
@@ -442,18 +444,30 @@ const ProductsListPage = () => {
     if (!sortBy) return filtered;
     return [...filtered].sort((a, b) => {
       let aVal, bVal;
-      if (sortBy === 'name')           { aVal = a.name.toLowerCase();      bVal = b.name.toLowerCase(); }
-      else if (sortBy === 'category')  { aVal = a.category.toLowerCase();  bVal = b.category.toLowerCase(); }
-      else if (sortBy === 'inventory') { aVal = a.inventory;               bVal = b.inventory; }
-      else if (sortBy === 'velocity')  { aVal = parseInt(a.velocity) || 0; bVal = parseInt(b.velocity) || 0; }
-      else if (sortBy === 'intel')     { aVal = a.intelLabel.toLowerCase(); bVal = b.intelLabel.toLowerCase(); }
+      
+      const parseNum = (val) => {
+        if (typeof val === 'number') return val;
+        if (!val) return 0;
+        return parseFloat(val.toString().replace(/[^0-9.-]+/g,"")) || 0;
+      };
+
+      if (sortBy === 'name') { aVal = a.name.toLowerCase(); bVal = b.name.toLowerCase(); }
+      else if (sortBy === 'category') { aVal = a.category.toLowerCase(); bVal = b.category.toLowerCase(); }
+      else if (sortBy === 'inventory') { aVal = a.inventory; bVal = b.inventory; }
+      else if (sortBy === 'velocity') { aVal = parseInt(a.velocity) || 0; bVal = parseInt(b.velocity) || 0; }
+      else if (sortBy === 'intel') { aVal = a.intelLabel.toLowerCase(); bVal = b.intelLabel.toLowerCase(); }
+      else if (['price', 'cogs', 'margin', 'returns', 'bb'].includes(sortBy)) {
+        aVal = parseNum(a[sortBy]);
+        bVal = parseNum(b[sortBy]);
+      }
+      
       if (aVal < bVal) return sortDir === 'asc' ? -1 : 1;
       if (aVal > bVal) return sortDir === 'asc' ? 1 : -1;
       return 0;
     });
   }, [filtered, sortBy, sortDir]);
 
-  const totalPages   = Math.ceil(sortedFiltered.length / PAGE_SIZE);
+  const totalPages = Math.ceil(sortedFiltered.length / PAGE_SIZE);
   const pageProducts = sortedFiltered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const toggleSelect = (id) => setSelectedIds(prev => {
@@ -619,28 +633,75 @@ const ProductsListPage = () => {
     }
   };
 
-  const visibleCols  = cols.filter(c => c.visible);
+  const visibleCols = cols.filter(c => c.visible);
+
+  const renderSortableHeader = (label, sortKey) => {
+    const isActive = sortBy === sortKey;
+    const isAsc = sortDir === 'asc';
+    return (
+      <th 
+        className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left cursor-pointer hover:text-gray-600 dark:hover:text-slate-300 transition-colors select-none"
+        onClick={() => {
+          if (isActive) {
+            setSortDir(isAsc ? 'desc' : 'asc');
+          } else {
+            setSortBy(sortKey);
+            setSortDir('desc');
+          }
+        }}
+      >
+        <div className="flex items-center gap-1.5">
+          {label}
+          <div className="flex items-center">
+            {isActive ? (
+              <i className={`fa-solid fa-arrow-${isAsc ? 'up' : 'down'} text-[9px] text-brand`} />
+            ) : (
+              <i className="fa-solid fa-arrows-up-down text-[9px] opacity-40 hover:opacity-70 transition-opacity" />
+            )}
+          </div>
+        </div>
+      </th>
+    );
+  };
 
   return (
-    <DashboardLayout title="Products" subtitle="All your product listings" showTabs={false} showAIPrompt={false}>
+    <DashboardLayout
+      title="Product Catalog"
+      subtitle="1447 SKUs &middot; avg 5.3/7 fields filled &middot; 59 missing COGS"
+      showTabs={false}
+      showAIPrompt={false}
+    >
       <div className="flex flex-col gap-4">
 
+        {/* Realify Brief */}
+        <RealifyBrief data={REALIFY_BRIEF} />
+
         {/* Toolbar */}
-        <div className="flex items-center justify-between gap-3">
-          {/* Left: Search input */}
-          <div className="relative">
-            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-sm pointer-events-none" />
-            <input
-              type="text"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search products…"
-              className="pl-9 pr-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-gray-700 dark:text-slate-300 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-gray-400 dark:focus:border-slate-500 w-64 transition-all shadow-sm"
-            />
+        <div className="flex items-center justify-between gap-3 mt-4">
+          <div className="flex items-center gap-4">
+            {/* Left: Count */}
+            <div className="text-sm font-medium text-gray-700 dark:text-slate-300">
+              {sortedFiltered.length} SKUs
+            </div>
+
+            {/* Left: Search input */}
+            <div className="relative">
+              <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-sm pointer-events-none" />
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search products…"
+                className="pl-9 pr-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-gray-700 dark:text-slate-300 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-gray-400 dark:focus:border-slate-500 w-64 transition-all shadow-sm"
+              />
+            </div>
           </div>
 
-          {/* Right controls: channel + date filters */}
+          {/* Right controls: download csv, channel + date filters */}
           <div className="flex items-center justify-end gap-3">
+            <button className="px-4 py-2 bg-indigo-300 hover:bg-indigo-400 text-white rounded-xl text-[13px] font-bold transition-colors shadow-sm flex items-center gap-2">
+              <i className="fa-solid fa-download text-[11px]" /> Download CSV
+            </button>
             <BriefHeaderControls />
           </div>
         </div>
@@ -657,12 +718,12 @@ const ProductsListPage = () => {
                   <th className="px-3 py-3 w-8"></th>
                   <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">SKU</th>
                   <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Title</th>
-                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Price</th>
-                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">COGS</th>
-                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Margin %</th>
-                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">U/Month</th>
-                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Return</th>
-                  <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">BB</th>
+                  {renderSortableHeader('Price', 'price')}
+                  {renderSortableHeader('COGS', 'cogs')}
+                  {renderSortableHeader('Margin %', 'margin')}
+                  {renderSortableHeader('Unit/Mo', 'velocity')}
+                  {renderSortableHeader('Returns', 'returns')}
+                  {renderSortableHeader('Buy Box', 'bb')}
                   <th className="px-3 py-3 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider text-left">Sales Trend</th>
                 </tr>
               </thead>
@@ -698,19 +759,13 @@ const ProductsListPage = () => {
                       <td className="px-3 py-3 text-xs text-gray-600 dark:text-slate-400">{product.bb}</td>
                       <td className="px-3 py-3">
                         {product.salesTrend === 'up' ? (
-                          <div className="h-6 w-12 flex items-end gap-[1px]">
-                            <div className="w-1.5 bg-green-500/40 rounded-t-sm h-[30%]"></div>
-                            <div className="w-1.5 bg-green-500/60 rounded-t-sm h-[50%]"></div>
-                            <div className="w-1.5 bg-green-500/80 rounded-t-sm h-[70%]"></div>
-                            <div className="w-1.5 bg-green-500 rounded-t-sm h-full"></div>
-                          </div>
+                          <svg viewBox="0 0 40 20" className="w-10 h-5 overflow-visible">
+                            <polyline points="0,18 10,12 20,15 30,5 40,0" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
                         ) : (
-                          <div className="h-6 w-12 flex items-end gap-[1px]">
-                            <div className="w-1.5 bg-red-500 rounded-t-sm h-full"></div>
-                            <div className="w-1.5 bg-red-500/80 rounded-t-sm h-[70%]"></div>
-                            <div className="w-1.5 bg-red-500/60 rounded-t-sm h-[50%]"></div>
-                            <div className="w-1.5 bg-red-500/40 rounded-t-sm h-[30%]"></div>
-                          </div>
+                          <svg viewBox="0 0 40 20" className="w-10 h-5 overflow-visible">
+                            <polyline points="0,2 10,8 20,5 30,15 40,20" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
                         )}
                       </td>
                     </tr>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useOnboardingStore } from "../store/useOnboardingStore";
 import Sidebar from "./Sidebar";
 import Step1Auth from "../steps/Step1Auth";
@@ -191,6 +191,10 @@ function Step5Layout({ setStep, progress }) {
   const [openFAQs, setOpenFAQs] = useState({});
   const [jokeIdx, setJokeIdx] = useState(() => Math.floor(Math.random() * DAD_JOKES.length));
   const currentJoke = DAD_JOKES[jokeIdx];
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  const fromIntel = new URLSearchParams(location.search).get('fromIntel') === 'true';
 
   const toggleFAQ = (i) => setOpenFAQs(prev => ({ ...prev, [i]: !prev[i] }));
   const nextJoke = () => { setJokeIdx(i => (i + 1) % DAD_JOKES.length); };
@@ -277,8 +281,19 @@ function Step5Layout({ setStep, progress }) {
           </div>
         </div>
 
-        <div className="flex-1 min-w-0 bg-white overflow-y-auto custom-scrollbar px-6 py-8 md:px-10 border-r border-gray-200 flex justify-center">
-          <div className="w-full max-w-[520px]">
+        <div className="flex-1 min-w-0 bg-white overflow-y-auto custom-scrollbar px-6 py-8 md:px-10 border-r border-gray-200 flex flex-col items-center relative">
+          {fromIntel && (
+            <div className="absolute top-8 left-8">
+              <button
+                onClick={() => navigate('/intel')}
+                className="text-[14.5px] font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5"
+              >
+                &larr; Cancel &middot; back to dashboard
+              </button>
+            </div>
+          )}
+          
+          <div className="w-full max-w-[520px] mt-12">
             <Step5Connect />
           </div>
         </div>

@@ -28,6 +28,10 @@ const InsightsPanel = ({
   itemViewMode,
   setItemViewMode,
   intelTab = 'sales',
+  onOpenSimulateModal,
+  onOpenDismissModal,
+  onOpenRepriceModal,
+  onOpenPlanCaptureModal
 }) => {
   const [activeFamilyFilter, setActiveFamilyFilter] = useState('all');
   const [newSinceYesterday, setNewSinceYesterday] = useState(false);
@@ -163,8 +167,30 @@ const InsightsPanel = ({
                     <InsightCard
                       key={card.id}
                       card={card}
-                      onSimulate={() => navigate(`/intel/simulation/${intelTab}`)}
-                      onReprice={() => navigate(`/intel/insight/${intelTab}/0`)}
+                      onSimulate={() => {
+                        if (onOpenSimulateModal) {
+                          onOpenSimulateModal(card);
+                        } else {
+                          navigate(`/intel/simulation/${intelTab}`);
+                        }
+                      }}
+                      onReprice={() => {
+                        if (onOpenRepriceModal) {
+                          onOpenRepriceModal(card);
+                        } else {
+                          navigate(`/intel/insight/${intelTab}/0`);
+                        }
+                      }}
+                      onDismiss={() => {
+                        if (onOpenDismissModal) {
+                          onOpenDismissModal(card);
+                        }
+                      }}
+                      onPlanCapture={() => {
+                        if (onOpenPlanCaptureModal) {
+                          onOpenPlanCaptureModal(card);
+                        }
+                      }}
                     />
                   ))}
                 </div>

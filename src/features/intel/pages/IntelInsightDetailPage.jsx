@@ -9,6 +9,7 @@ import {
   ADS_INSIGHTS_DATA,
   CASH_INSIGHTS_DATA,
 } from '../shared/data/intelData';
+import SimulateModal from '../shared/components/SimulateModal';
 
 const INSIGHTS_BY_INTEL_TAB = {
   sales: INSIGHTS_DATA,
@@ -171,6 +172,8 @@ const IntelV2InsightDetailPage = () => {
 
   const [selectedStepId, setSelectedStepId] = useState(null);
   const [isCustomActionOpen, setIsCustomActionOpen] = useState(false);
+  const [isSimulateModalOpen, setIsSimulateModalOpen] = useState(false);
+  const [simulateSku, setSimulateSku] = useState(null);
 
   // First step selected by default; use initialStepId when arriving from product page
   const [prevLocationKey, setPrevLocationKey] = useState(location.key);
@@ -398,15 +401,10 @@ const IntelV2InsightDetailPage = () => {
                   <i className="fa-solid fa-bolt text-[11px]" /> Execute
                 </button>
                 <button
-                  onClick={() => navigate('/intel/simulate', {
-                    state: {
-                      insight,
-                      step: selectedStep,
-                      intelTab: stateIntelTab,
-                      backTo: location.pathname,
-                      backState: location.state,
-                    },
-                  })}
+                  onClick={() => {
+                    setSimulateSku(insight.sku || 'AFWCLEANER0004');
+                    setIsSimulateModalOpen(true);
+                  }}
                   className="w-full py-3 bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-slate-200 rounded-xl font-bold text-sm border border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
                 >
                   <i className="fa-solid fa-flask-vial text-[11px]" /> Simulate
@@ -475,15 +473,10 @@ const IntelV2InsightDetailPage = () => {
                 <i className="fa-solid fa-bolt text-[11px]" /> Execute
               </button>
               <button
-                onClick={() => navigate('/intel/simulate', {
-                  state: {
-                    insight,
-                    step: selectedStep,
-                    intelTab: stateIntelTab,
-                    backTo: location.pathname,
-                    backState: location.state,
-                  },
-                })}
+                onClick={() => {
+                  setSimulateSku(insight.sku || 'AFWCLEANER0004');
+                  setIsSimulateModalOpen(true);
+                }}
                 className="w-full py-3 bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-slate-200 rounded-xl font-bold text-sm border border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
               >
                 <i className="fa-solid fa-flask-vial text-[11px]" /> Simulate
@@ -527,6 +520,7 @@ const IntelV2InsightDetailPage = () => {
       </div>
 
       <CustomActionModal isOpen={isCustomActionOpen} onClose={() => setIsCustomActionOpen(false)} />
+      <SimulateModal isOpen={isSimulateModalOpen} onClose={() => setIsSimulateModalOpen(false)} sku={simulateSku} />
     </DashboardLayout>
   );
 };

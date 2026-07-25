@@ -1,9 +1,10 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import SettingsInnerSidebar from './components/SettingsInnerSidebar';
 import SaveBar from './components/SaveBar';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useUIStore } from '../../store/useUIStore';
 
 // Tabs
 import AccountTab from './tabs/AccountTab';
@@ -29,6 +30,12 @@ const SettingsPage = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'account');
   const [isDirty, setIsDirty] = useState(false);
+  const setSidebarCollapsed = useUIStore(state => state.setSidebarCollapsed);
+
+  // Collapse main sidebar when entering settings by default
+  useEffect(() => {
+    setSidebarCollapsed(true);
+  }, [setSidebarCollapsed]);
 
   // The mobile burger-drawer settings sub-list navigates via ?tab=, not the
   // desktop sidebar's setActiveTab calls — keep activeTab in sync when it does.
