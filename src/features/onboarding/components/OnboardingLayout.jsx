@@ -188,7 +188,7 @@ const DAD_JOKES = [
 ];
 
 function Step5Layout({ setStep, progress }) {
-  const [openFAQs, setOpenFAQs] = useState({});
+  const [_openFAQs, setOpenFAQs] = useState({});
   const [jokeIdx, setJokeIdx] = useState(() => Math.floor(Math.random() * DAD_JOKES.length));
   const currentJoke = DAD_JOKES[jokeIdx];
   const location = useLocation();
@@ -196,7 +196,7 @@ function Step5Layout({ setStep, progress }) {
   
   const fromIntel = new URLSearchParams(location.search).get('fromIntel') === 'true';
 
-  const toggleFAQ = (i) => setOpenFAQs(prev => ({ ...prev, [i]: !prev[i] }));
+  const _toggleFAQ = (i) => setOpenFAQs(prev => ({ ...prev, [i]: !prev[i] }));
   const nextJoke = () => { setJokeIdx(i => (i + 1) % DAD_JOKES.length); };
 
   useEffect(() => {

@@ -11,7 +11,7 @@ import { useExplainStore } from '../../store/useExplainStore';
 const ProfitAdsPage = () => {
   const briefData = REALIFY_BRIEF;
   const summary = PROFIT_ADS_SUMMARY;
-  const { explainMode, setExplainMode } = useExplainStore();
+  const { explainMode, setExplainMode: _setExplainMode } = useExplainStore();
   const [selectedCategory, setSelectedCategory] = useState('FIX ADS');
   const [activePanel, setActivePanel] = useState(null);
   const [selectedSku, setSelectedSku] = useState(null);

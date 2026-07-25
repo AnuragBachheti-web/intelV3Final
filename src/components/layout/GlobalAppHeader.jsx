@@ -313,7 +313,7 @@ const GlobalAppHeader = ({
   scrollRef,
   activeTabPath,
   tabsOnly = false,
-  showSearch = false,
+  _showSearch = false,
   renderOnly = null,
   searchCollapsed = false,
   centerElement = null,
@@ -451,7 +451,7 @@ const GlobalAppHeader = ({
     );
   };
 
-  const renderMarketplaceToggles = (platforms) => (
+  const _renderMarketplaceToggles = (platforms) => (
     <div className="flex items-center gap-1 px-2 py-1.5 bg-gray-50 dark:bg-slate-800/60 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
       {platforms.map((p) => {
         const activePlatforms = JSON.parse(localStorage.getItem('active_platforms') || '["shopify"]');

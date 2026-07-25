@@ -18,7 +18,7 @@ const ActionBtn = ({ icon, label, active = false, onClick }) => (
   </div>
 );
 
-const ChatDetailView = ({ chat, onBack }) => {
+const ChatDetailView = ({ chat, _onBack }) => {
   const [liked, setLiked] = useState(null);
   const [aiCopied, setAiCopied] = useState(false);
   const [userCopied, setUserCopied] = useState(false);

@@ -623,7 +623,7 @@ const renderTotalCell = (col, totals) => {
 };
 
 /* ── Main Modal ────────────────────────────────────────────────── */
-const KPIDetailModal = ({ isOpen, onClose, stat, filterContext = {}, tab: _tab = 'sales' }) => {
+const KPIDetailModal = ({ isOpen, onClose, stat, filterContext = {} }) => {
   if (!isOpen || !stat) return null;
 
   const periodLabel = PERIOD_LABELS[filterContext?.dateRange] || 'All Time';

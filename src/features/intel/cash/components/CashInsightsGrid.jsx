@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import React from 'react';
+import { formatCompactCurrency } from '../../../../utils/formatters';
 import { PieChart, Pie, Cell, ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import { upcomingDeposits, feesBreakdownData, workingCapitalTrendData } from '../cashData';
 
@@ -41,7 +42,7 @@ export const FeesBreakdownContent = () => (
       {feesBreakdownData.map((fee, idx) => (
         <div key={idx} className="p-3 bg-gray-50/50 dark:bg-slate-800/50 rounded-xl border border-gray-100/50 dark:border-slate-700/50 text-center">
           <p className="text-xs font-bold text-gray-400 tracking-tighter mb-0.5">{fee.name}</p>
-          <p className="text-sm font-bold text-gray-900 dark:text-slate-100">${(fee.value / 1000).toFixed(1)}k</p>
+          <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{formatCompactCurrency(fee.value, { decimals: 1 })}</p>
         </div>
       ))}
     </div>
@@ -139,7 +140,7 @@ const CashInsightsGrid = () => {
           {feesBreakdownData.map((fee, idx) => (
             <div key={idx} className="p-2 bg-gray-50/50 dark:bg-slate-800/50 rounded-xl border border-gray-100/50 dark:border-slate-700/50 text-center">
               <p className="text-[10px] font-bold text-gray-400 tracking-tighter mb-0.5">{fee.name}</p>
-              <p className="text-xs font-bold text-gray-900 dark:text-slate-100">${(fee.value / 1000).toFixed(1)}k</p>
+              <p className="text-xs font-bold text-gray-900 dark:text-slate-100">{formatCompactCurrency(fee.value, { decimals: 1 })}</p>
             </div>
           ))}
         </div>

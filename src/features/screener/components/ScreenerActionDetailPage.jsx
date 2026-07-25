@@ -41,7 +41,7 @@ const ScreenerActionDetailPage = () => {
           {/* Back + Custom Action row */}
           <div className="flex items-center justify-between mb-5">
             <button
-              onClick={() => navigate('/screener')}
+              onClick={() => navigate('/research')}
               className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200 transition-colors font-medium"
             >
               <i className="fa-solid fa-arrow-left text-xs"></i>

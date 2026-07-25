@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useState, useEffect, useRef } from 'react';
+import { formatCompactCurrency } from '../../utils/formatters';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import StatCard from '../../components/common/StatCard';
@@ -27,7 +28,6 @@ import CashPageTables from './tabs/CashPageTables';
 // Margin — used directly in the Row 1 "Bleeding Margin SKUs" panel
 import BleedingMarginTable from '../intel/margin/components/BleedingMarginTable';
 import CashFlowTable from '../intel/cash/components/CashFlowTable';
-import { cashStats } from '../intel/cash/cashData';
 
 // Inventory charts — lazy: only loaded when intelType === 'inventory'
 const InventoryTrendChart = lazy(() => import('../intel/inventory/components/InventoryTrendChart'));
@@ -172,8 +172,8 @@ const DetailedViewPage = () => {
                   <div className="p-3">
                     <BaseAreaChart
                       data={revenueTrendData}
-                      yAxisFormatter={v => `$${(v / 1000).toFixed(0)}k`}
-                      tooltipFormatter={(v, n) => [`$${(v / 1000).toFixed(0)}k`, n]}
+                      yAxisFormatter={v => formatCompactCurrency(v)}
+                      tooltipFormatter={(v, n) => [formatCompactCurrency(v), n]}
                       areas={[{ key: 'revenue', name: 'Revenue Trend', color: '#22c55e' }]}
                       height={308}
                     />

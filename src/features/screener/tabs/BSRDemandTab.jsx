@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { formatCompactCurrency } from '../../../utils/formatters';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -573,8 +574,8 @@ const BSRDemandTab = () => {
                           </defs>
                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
                           <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
-                          <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} tickFormatter={v => `$${(v / 1000).toFixed(0)}K`} />
-                          <RechartsTooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' }} formatter={v => [`$${(v / 1000).toFixed(1)}K`]} />
+                          <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} tickFormatter={v => formatCompactCurrency(v, { suffix: 'K' })} />
+                          <RechartsTooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' }} formatter={v => [formatCompactCurrency(v, { decimals: 1, suffix: 'K' })]} />
                           <Legend iconType="circle" />
                           <Area type="monotone" dataKey="forecast" name="Forecast" stroke="#3b82f6" fill="url(#forecastGrad)" strokeWidth={2} />
                           <Area type="monotone" dataKey="baseline" name="Baseline" stroke="#94a3b8" fill="url(#baselineGrad)" strokeWidth={2} strokeDasharray="5 5" />
@@ -712,8 +713,8 @@ const BSRDemandTab = () => {
                           </defs>
                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
                           <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
-                          <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} tickFormatter={v => `$${(v / 1000).toFixed(0)}K`} />
-                          <RechartsTooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' }} formatter={v => [`$${(v / 1000).toFixed(1)}K`]} />
+                          <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} tickFormatter={v => formatCompactCurrency(v, { suffix: 'K' })} />
+                          <RechartsTooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' }} formatter={v => [formatCompactCurrency(v, { decimals: 1, suffix: 'K' })]} />
                           <Area type="monotone" dataKey="forecast" name="Forecast" stroke="#10b981" fill="url(#demandForecastGrad)" strokeWidth={2} />
                         </AreaChart>
                       </ResponsiveContainer>
@@ -755,8 +756,8 @@ const BSRDemandTab = () => {
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
                             <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
-                            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} tickFormatter={v => `$${(v / 1000).toFixed(0)}K`} />
-                            <RechartsTooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' }} formatter={v => [`$${(v / 1000).toFixed(1)}K`]} />
+                            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} tickFormatter={v => formatCompactCurrency(v, { suffix: 'K' })} />
+                            <RechartsTooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '8px', color: 'var(--tooltip-text)' }} formatter={v => [formatCompactCurrency(v, { decimals: 1, suffix: 'K' })]} />
                             <Legend iconType="circle" />
                             <Area type="monotone" dataKey="forecast" name="Forecast" stroke="#8b5cf6" fill="url(#chartsForecastGrad)" strokeWidth={2} />
                             <Area type="monotone" dataKey="baseline" name="Baseline" stroke="#94a3b8" fill="transparent" strokeWidth={2} strokeDasharray="5 5" />
@@ -777,7 +778,6 @@ const BSRDemandTab = () => {
         onClose={kpiDetailModal.close}
         stat={kpiDetailModal.data}
         filterContext={{ dateRange }}
-        tab="sales"
       />
     </>
   );

@@ -362,8 +362,8 @@ const ProductEditView = ({ items, onBack, onGoToMarketplace }) => {
 
 // ─── Products List Page ───────────────────────────────────────────────────────
 const ProductsListPage = () => {
-  const navigate = useNavigate();
-  const { goToProduct, findWatchlistItem, buildFallbackWatchlistItem, NO_SPECIFIC_INSIGHTS } = useProductNavigation();
+  const _navigate = useNavigate();
+  const { goToProduct: _goToProduct, findWatchlistItem: _findWatchlistItem, buildFallbackWatchlistItem: _buildFallbackWatchlistItem, NO_SPECIFIC_INSIGHTS } = useProductNavigation();
   const activePlatforms = useMemo(
     () => JSON.parse(localStorage.getItem('active_platforms') || '["shopify"]'),
     []
@@ -373,7 +373,7 @@ const ProductsListPage = () => {
     [activePlatforms]
   );
 
-  const [activeTab, setActiveTab] = useState(visibleChannelTabs[0] || 'Amazon');
+  const [_activeTab, _setActiveTab] = useState(visibleChannelTabs[0] || 'Amazon');
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -381,8 +381,8 @@ const ProductsListPage = () => {
   const [sortBy, setSortBy] = useState(null);
   const [sortDir, setSortDir] = useState('asc');
   const [cols, setCols] = useState(DEFAULT_COLS);
-  const [editMode, setEditMode] = useState(false);
-  const [editItems, setEditItems] = useState([]);
+  const [_editMode, setEditMode] = useState(false);
+  const [_editItems, setEditItems] = useState([]);
   const [editingRowId, setEditingRowId] = useState(null);
   const [editingRowVals, setEditingRowVals] = useState({});
   const [selectedProductForModal, setSelectedProductForModal] = useState(null);
@@ -391,19 +391,19 @@ const ProductsListPage = () => {
   const [productsData, setProductsData] = useState(ALL_PRODUCTS);
   const [deletedProducts, setDeletedProducts] = useState([]);
   const [deleteConfirmProduct, setDeleteConfirmProduct] = useState(null);
-  const [showBin, setShowBin] = useState(false);
-  const [bulkDeletePending, setBulkDeletePending] = useState(false);
+  const [_showBin, _setShowBin] = useState(false);
+  const [_bulkDeletePending, setBulkDeletePending] = useState(false);
 
   /* ── Unified View Controls panel ── */
   const [viewPanelOpen, setViewPanelOpen] = useState(false);
-  const [viewPanelTab, setViewPanelTab] = useState('filters');
+  const [_viewPanelTab, setViewPanelTab] = useState('filters');
   const [pendingCategory, setPendingCategory] = useState('All');
   const [pendingSortBy, setPendingSortBy] = useState(null);
   const [pendingSortDir, setPendingSortDir] = useState('asc');
   const [pendingCols, setPendingCols] = useState(DEFAULT_COLS);
   const viewPanelRef = useRef(null);
 
-  const openViewPanel = (tab = 'filters') => {
+  const _openViewPanel = (tab = 'filters') => {
     setPendingCategory(filterCategory);
     setPendingSortBy(sortBy);
     setPendingSortDir(sortDir);
@@ -411,7 +411,7 @@ const ProductsListPage = () => {
     setViewPanelTab(tab);
     setViewPanelOpen(true);
   };
-  const applyViewPanel = () => {
+  const _applyViewPanel = () => {
     setFilterCategory(pendingCategory);
     setSortBy(pendingSortBy);
     setSortDir(pendingSortDir);
@@ -419,13 +419,13 @@ const ProductsListPage = () => {
     setPage(1);
     setViewPanelOpen(false);
   };
-  const resetViewPanel = () => {
+  const _resetViewPanel = () => {
     setPendingCategory('All');
     setPendingSortBy(null);
     setPendingSortDir('asc');
     setPendingCols(DEFAULT_COLS.map(c => ({ ...c })));
   };
-  const togglePendingColVisible = (key) =>
+  const _togglePendingColVisible = (key) =>
     setPendingCols(prev => prev.map(c => c.key === key ? { ...c, visible: !c.visible } : c));
 
   useClickOutside(viewPanelRef, viewPanelOpen, () => setViewPanelOpen(false));
@@ -481,16 +481,16 @@ const ProductsListPage = () => {
     else setSelectedIds(new Set(pageProducts.map(p => p.id)));
   };
 
-  const handleEditClick = () => {
+  const _handleEditClick = () => {
     setEditItems(sortedFiltered.filter(p => selectedIds.has(p.id)).map(p => ({ ...p })));
     setEditMode(true);
   };
 
-  const handleBulkDelete = () => {
+  const _handleBulkDelete = () => {
     setBulkDeletePending(true);
   };
 
-  const confirmBulkDelete = () => {
+  const _confirmBulkDelete = () => {
     const toDelete = productsData.filter(p => selectedIds.has(p.id));
     setProductsData(prev => prev.filter(p => !selectedIds.has(p.id)));
     setDeletedProducts(prev => [...prev, ...toDelete]);
@@ -498,33 +498,33 @@ const ProductsListPage = () => {
     setBulkDeletePending(false);
   };
 
-  const handleDeleteProduct = (product, e) => {
+  const _handleDeleteProduct = (product, e) => {
     e.stopPropagation();
     setDeleteConfirmProduct(product);
   };
 
-  const confirmDelete = () => {
+  const _confirmDelete = () => {
     setProductsData(prev => prev.filter(p => p.id !== deleteConfirmProduct.id));
     setDeletedProducts(prev => [...prev, deleteConfirmProduct]);
     setSelectedIds(prev => { const next = new Set(prev); next.delete(deleteConfirmProduct.id); return next; });
     setDeleteConfirmProduct(null);
   };
 
-  const handleRestoreProduct = (productId) => {
+  const _handleRestoreProduct = (productId) => {
     const product = deletedProducts.find(p => p.id === productId);
     if (!product) return;
     setDeletedProducts(prev => prev.filter(p => p.id !== productId));
     setProductsData(prev => [...prev, product]);
   };
 
-  const handleRestoreMany = (ids) => {
+  const _handleRestoreMany = (ids) => {
     const idSet = new Set(ids);
     const toRestore = deletedProducts.filter(p => idSet.has(p.id));
     setDeletedProducts(prev => prev.filter(p => !idSet.has(p.id)));
     setProductsData(prev => [...prev, ...toRestore]);
   };
 
-  const handleDraftRow = (product, e) => {
+  const _handleDraftRow = (product, e) => {
     e.stopPropagation();
     setProductsData(prev => prev.map(p => p.id === product.id ? { ...p, status: 'Draft' } : p));
   };
@@ -533,17 +533,17 @@ const ProductsListPage = () => {
     setSelectedProductForModal(product);
   };
 
-  const startEdit = (e, product) => {
+  const _startEdit = (e, product) => {
     e.stopPropagation();
     setEditingRowId(product.id);
     setEditingRowVals({ ...product });
   };
-  const cancelEdit = (e) => {
+  const _cancelEdit = (e) => {
     e.stopPropagation();
     setEditingRowId(null);
     setEditingRowVals({});
   };
-  const saveEdit = (e) => {
+  const _saveEdit = (e) => {
     e.stopPropagation();
     setProductsData(prev => prev.map(p => p.id === editingRowId ? { ...p, ...editingRowVals } : p));
     setEditingRowId(null);
@@ -552,7 +552,7 @@ const ProductsListPage = () => {
   const updateEditVal = (field, value) =>
     setEditingRowVals(prev => ({ ...prev, [field]: value }));
 
-  const renderEditCell = (colKey) => {
+  const _renderEditCell = (colKey) => {
     const curStatus = STATUS_STYLES[editingRowVals.status] || STATUS_STYLES.Active;
     switch (colKey) {
       case 'status': return (
@@ -633,7 +633,7 @@ const ProductsListPage = () => {
     }
   };
 
-  const visibleCols = cols.filter(c => c.visible);
+  const _visibleCols = cols.filter(c => c.visible);
 
   const renderSortableHeader = (label, sortKey) => {
     const isActive = sortBy === sortKey;

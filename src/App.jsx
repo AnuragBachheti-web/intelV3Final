@@ -83,6 +83,7 @@ function App() {
             <Route path={ROUTES.AGENTS}               element={<AgentsPage />} />
             <Route path={ROUTES.INTEGRATIONS}         element={<IntegrationsPage />} />
             <Route path={ROUTES.ACTION_LOG}           element={<ActionLogPage />} />
+            <Route path="/navigation"                 element={<Navigate to={ROUTES.ACTION_LOG} replace />} />
             <Route path="/profit-ads"                  element={<ProfitAdsPage />} />
 
             <Route path={ROUTES.LOGIN}                element={<InviteLoginPage />} />

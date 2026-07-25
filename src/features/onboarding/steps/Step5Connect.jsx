@@ -39,7 +39,7 @@ const SHOPIFY_REPORTS = [
 ];
 
 function Step5Connect() {
-  const { setStep } = useOnboardingStore();
+  const { setStep: _setStep } = useOnboardingStore();
   const navigate = useNavigate();
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef(null);

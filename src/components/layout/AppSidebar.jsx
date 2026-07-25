@@ -205,7 +205,7 @@ const HistorySectionContent = () => {
 /* ── Hubs item (Products + Actions) ──
    Expanded sidebar: slides open as an inline accordion below the button.
    Collapsed sidebar: opens a flyout to the right (no room to expand below). */
-const ServicesItem = ({ isCollapsed, isServicesActive, isProductsActive, isActionLogActive }) => {
+const ServicesItem = ({ isCollapsed, isServicesActive, _isProductsActive, isActionLogActive }) => {
   const [open, setOpen] = useState(false);
   const [flyoutPos, setFlyoutPos] = useState(null);
   const [tooltip, setTooltip] = useState(null);
@@ -215,6 +215,7 @@ const ServicesItem = ({ isCollapsed, isServicesActive, isProductsActive, isActio
   // Collapse the inline accordion whenever the sidebar collapses, so it doesn't
   // linger as a stray flyout on the next expand.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (isCollapsed) setOpen(false);
   }, [isCollapsed]);
 
@@ -316,7 +317,7 @@ const ServicesItem = ({ isCollapsed, isServicesActive, isProductsActive, isActio
   );
 };
 
-const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false, onMobileClose }) => {
+const AppSidebar = ({ darkMode, _setDarkMode, inline = false, mobileOpen = false, onMobileClose }) => {
   const { isSidebarCollapsed, toggleSidebar } = useUIStore();
   const { connectedStores } = useMarketplaceStore();
   const { dashboardView, lastIntelTab, setDashboardView } = useViewModeStore();
@@ -345,7 +346,7 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
   }, [mobileOpen]);
   const activeSettingsTab = new URLSearchParams(location.search).get('tab') || 'account';
 
-  const isHistoryActive = location.pathname === ROUTES.HISTORY;
+  const _isHistoryActive = location.pathname === ROUTES.HISTORY;
   const isScreenerActive = location.pathname.startsWith(ROUTES.SCREENER);
   const isNewAnalysisActive = location.pathname === ROUTES.NEW_ANALYSIS;
   const isSettingsActive = location.pathname === ROUTES.SETTINGS;
@@ -373,10 +374,10 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
   const role = localStorage.getItem("userRole") || "admin";
   const allowedRoutes = rolePermissions[role] || [];
   const filteredNavItems = navItems.filter(item => allowedRoutes.includes(item.permissionKey || item.href));
-  const isProductsActive = location.pathname === '/products' || location.pathname === '/catalogue';
+  const _isProductsActive = location.pathname === '/products' || location.pathname === '/catalogue';
   const isActionLogActive = location.pathname === '/action-log';
   const catalogueItem = { name: 'Catalog', icon: 'fa-box', href: '/catalogue', active: isCatalogueActive };
-  const actionsItem = { name: 'Actions', icon: 'fa-clock-rotate-left', href: '/action-log', active: isActionLogActive };
+  const _actionsItem = { name: 'Actions', icon: 'fa-clock-rotate-left', href: '/action-log', active: isActionLogActive };
   const settingsItem = { name: 'Settings', icon: 'fa-gear', href: ROUTES.SETTINGS, active: isSettingsActive };
 
   /* ── Mobile drawer (ss2 layout) — opened via the header hamburger button ── */
@@ -474,7 +475,6 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
             {/* Bottom: Catalog + Actions + Settings */}
             <div className="flex-shrink-0 pb-4 pt-2 flex flex-col gap-1 border-t border-gray-100 dark:border-slate-800 w-full px-2">
               <SidebarItem item={catalogueItem} isCollapsed={false} small={true} />
-              <SidebarItem item={actionsItem} isCollapsed={false} small={true} />
               <button
                 onClick={() => setSettingsSubOpen(true)}
                 className={`flex items-center group relative w-full rounded-lg transition-colors justify-start px-2 py-1.5 ${
@@ -591,7 +591,6 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
           {/* Bottom: Catalog + Actions + Settings */}
           <div className="pb-4 pt-2 flex flex-col gap-1 border-t border-gray-100 dark:border-slate-800 w-full px-2">
             <SidebarItem item={catalogueItem} isCollapsed={isSidebarCollapsed} small={true} />
-            <SidebarItem item={actionsItem} isCollapsed={isSidebarCollapsed} small={true} />
             <SidebarItem item={settingsItem} isCollapsed={isSidebarCollapsed} small={true} />
           </div>
         </div>
@@ -655,7 +654,6 @@ const AppSidebar = ({ darkMode, setDarkMode, inline = false, mobileOpen = false,
       {/* Bottom: Catalog + Actions + Settings */}
       <div className="pb-4 pt-2 flex flex-col gap-1 border-t border-gray-100 dark:border-slate-800 w-full px-2">
         <SidebarItem item={catalogueItem} isCollapsed={isSidebarCollapsed} small={true} />
-        <SidebarItem item={actionsItem} isCollapsed={isSidebarCollapsed} small={true} />
         <SidebarItem item={settingsItem} isCollapsed={isSidebarCollapsed} small={true} />
       </div>
     </div>

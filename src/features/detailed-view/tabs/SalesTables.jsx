@@ -2,8 +2,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import SectionHeading from '../components/SectionHeading';
 import { TD, TR, TableHead } from '../components/DenseTable';
 import {
-  salesTopMovers, salesBottomMovers, salesRevenueData, salesUnitsData,
-  salesOrdersData, salesAovData, CHAN_STYLE, SPARKLINE_DATA, CARD_COLORS,
+  salesTopMovers, salesBottomMovers, salesRevenueData,
+  CHAN_STYLE, SPARKLINE_DATA, CARD_COLORS,
 } from '../detailedViewData';
 import useProductNavigation from '../../../hooks/useProductNavigation';
 

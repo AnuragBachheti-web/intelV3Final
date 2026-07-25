@@ -89,7 +89,7 @@ const ProfitAdsModal = ({ isOpen, onClose, skuData }) => {
 
   if (!isOpen || !skuData) return null;
 
-  const data = MODAL_MOCK_DATA;
+  const _data = MODAL_MOCK_DATA;
   const activeRec = recommendationsData.find(r => r.id === activeRecId);
 
   // ACOS colors

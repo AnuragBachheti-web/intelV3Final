@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { formatCompactCurrency } from '../../utils/formatters';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import DashboardLayout from '../../components/layout/DashboardLayout';
@@ -571,7 +572,7 @@ const ProductViewPage = () => {
                               </linearGradient>
                             </defs>
                             <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: 'currentColor', fontSize: 10 }} className="text-gray-400 dark:text-slate-500" dy={6} />
-                            <YAxis axisLine={false} tickLine={false} tick={{ fill: 'currentColor', fontSize: 10 }} className="text-gray-400 dark:text-slate-500" tickFormatter={v => isRevenue ? `$${(v/1000).toFixed(0)}K` : v} width={40} />
+                            <YAxis axisLine={false} tickLine={false} tick={{ fill: 'currentColor', fontSize: 10 }} className="text-gray-400 dark:text-slate-500" tickFormatter={v => isRevenue ? formatCompactCurrency(v, { suffix: 'K' }) : v} width={40} />
                             <Tooltip
                               contentStyle={{ backgroundColor: '#ffffff', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '11px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
                               formatter={v => [isRevenue ? `$${v.toLocaleString()}` : v, stat?.label]}

@@ -5,7 +5,7 @@ import { ROUTES } from "../../../constants/routes";
 import { useOnboardingStore } from "../store/useOnboardingStore";
 
 function Step4Dashboard() {
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
   const { setStep } = useOnboardingStore();
   const [showToast, setShowToast] = useState(true);
   const [showForgot, setShowForgot] = useState(false);

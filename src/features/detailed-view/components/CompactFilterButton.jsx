@@ -3,8 +3,8 @@ import React from 'react';
 // Small icon-only filter trigger shown in the sticky/compact header once the
 // page has scrolled past the full <FilterBar>. Shares state via `filters`.
 const CompactFilterButton = ({ filters }) => {
-  const { v2FilterOpen, handleOpenV2Filter, compactFilterRef, appliedDate, appliedCats, appliedChans, appliedProducts } = filters;
-  const appliedFilterCount = [appliedDate !== null, appliedCats.length > 0, appliedChans.length > 0, appliedProducts.length > 0].filter(Boolean).length;
+  const { v2FilterOpen: _v2FilterOpen, handleOpenV2Filter: _handleOpenV2Filter, compactFilterRef, appliedDate, appliedCats, appliedChans, appliedProducts } = filters;
+  const _appliedFilterCount = [appliedDate !== null, appliedCats.length > 0, appliedChans.length > 0, appliedProducts.length > 0].filter(Boolean).length;
   return (
     <div className="relative" ref={compactFilterRef}>
       {/* <button

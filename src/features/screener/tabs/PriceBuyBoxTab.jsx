@@ -688,7 +688,6 @@ const PriceBuyBoxTab = () => {
         onClose={kpiDetailModal.close}
         stat={kpiDetailModal.data}
         filterContext={{ dateRange }}
-        tab="sales"
       />
     </>
   );

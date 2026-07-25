@@ -956,7 +956,6 @@ const MarketShareTab = () => {
         onClose={kpiDetailModal.close}
         stat={kpiDetailModal.data}
         filterContext={{ dateRange }}
-        tab="sales"
       />
     </>
   );

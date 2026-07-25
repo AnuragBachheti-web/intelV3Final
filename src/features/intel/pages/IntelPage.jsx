@@ -6,7 +6,7 @@ import KPISelectorModal from '../../../components/common/KPISelectorModal';
 import { useFilterStore } from '../../../store/useFilterStore';
 import { useViewModeStore } from '../../../store/useViewModeStore';
 import apiClient from '../../../api/client';
-import { quickToRange, v2DateLabel, v2CatLabel } from '../../detailed-view/detailedViewUtils';
+import { quickToRange } from '../../detailed-view/detailedViewUtils';
 import useClickOutside from '../../../hooks/useClickOutside';
 import useProductNavigation from '../../../hooks/useProductNavigation';
 
@@ -52,7 +52,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3, 4]);
   // Multi-select KPI state — Revenue (idx 0) is default
   const [activeKpiIds, setActiveKpiIds] = useState([0]);
-  const [activeKpiFamily, setActiveKpiFamily] = useState('all');
+  const [_activeKpiFamily, _setActiveKpiFamily] = useState('all');
 
   // Insights section 1
   const [activeInsightTab, setActiveInsightTab] = useState('Overall');
@@ -78,11 +78,11 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const kpiSectionRef = useRef(null);
   const compactFilterRef = useRef(null);
   const filterBtnRef = useRef(null);
-  const [filterPanelPos, setFilterPanelPos] = useState({ top: 64, right: 24 });
+  const [_filterPanelPos, setFilterPanelPos] = useState({ top: 64, right: 24 });
 
   /* ── V2 filter panel ── */
   const [v2FilterOpen, setV2FilterOpen] = useState(false);
-  const [v2Section, setV2Section] = useState('date');
+  const [_v2Section, setV2Section] = useState('date');
   const [pendingDate, setPendingDate] = useState(() => {
     const d = useFilterStore.getState().dateRange;
     return (d && d !== 'all') ? d : 'last-7-days';
@@ -101,14 +101,14 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [chanDropOpen, setChanDropOpen] = useState(false);
   const [pendingRangeStart, setPendingRangeStart] = useState(null);
   const [pendingRangeEnd, setPendingRangeEnd] = useState(null);
-  const [hoverDay, setHoverDay] = useState(null);
+  const [_hoverDay, _setHoverDay] = useState(null);
   const [calViewYear, setCalViewYear] = useState(() => new Date().getMonth() === 0 ? new Date().getFullYear() - 1 : new Date().getFullYear());
   const [calViewMonth, setCalViewMonth] = useState(() => new Date().getMonth() === 0 ? 11 : new Date().getMonth() - 1);
   const v2FilterRef = useRef(null);
   const chanDropRef = useRef(null);
   const mobileFilterBtnRef = useRef(null);
 
-  const { setDateRange, category, setCategory, setChannel, setProducts, searchQuery, setSearchQuery } = useFilterStore();
+  const { setDateRange, category, setCategory, setChannel, setProducts, searchQuery: _searchQuery, setSearchQuery: _setSearchQuery } = useFilterStore();
   const navigate = useNavigate();
   const { goToProduct, findWatchlistItem, buildFallbackWatchlistItem, buildAnalyticsKpiGroups } = useProductNavigation();
 
@@ -228,7 +228,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     navigate(`/intel/insight/sales/${stepId}`);
   };
 
-  const [showStickyTabs, setShowStickyTabs] = useState(false);
+  const [_showStickyTabs, setShowStickyTabs] = useState(false);
   const originalTabsRef = useRef(null);
 
   useEffect(() => {
@@ -250,22 +250,22 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   // Compact header center — null (tabs removed)
   const compactHeaderCenter = null;
 
-  const compactFilterElement = null; // search bar removed
+  const _compactFilterElement = null; // search bar removed
 
   /* ── V2 filter helpers ── */
   const v2ChanList = channelOptions.filter(([v]) => v !== 'all');
-  const v2ChanGrid = [...v2ChanList, ['all-chans', 'All Channels']];
-  const v2ChanLabel = (v) => channelOptions.find(([k]) => k === v)?.[1] || v;
+  const _v2ChanGrid = [...v2ChanList, ['all-chans', 'All Channels']];
+  const _v2ChanLabel = (v) => channelOptions.find(([k]) => k === v)?.[1] || v;
 
-  const prevCalMonth = () => {
+  const _prevCalMonth = () => {
     if (calViewMonth === 0) { setCalViewMonth(11); setCalViewYear(y => y - 1); }
     else setCalViewMonth(m => m - 1);
   };
-  const nextCalMonth = () => {
+  const _nextCalMonth = () => {
     if (calViewMonth === 11) { setCalViewMonth(0); setCalViewYear(y => y + 1); }
     else setCalViewMonth(m => m + 1);
   };
-  const handleDateClick = (date) => {
+  const _handleDateClick = (date) => {
     if (!pendingRangeStart || pendingRangeEnd) {
       setPendingRangeStart(date); setPendingRangeEnd(null); setPendingDate('custom');
     } else {
@@ -274,8 +274,8 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
       setPendingDate('custom');
     }
   };
-  const calRightM = (calViewMonth + 1) % 12;
-  const calRightY = calViewMonth === 11 ? calViewYear + 1 : calViewYear;
+  const _calRightM = (calViewMonth + 1) % 12;
+  const _calRightY = calViewMonth === 11 ? calViewYear + 1 : calViewYear;
 
   function handleOpenV2Filter() {
     // Compute where to anchor the panel (below whichever trigger button is visible)
@@ -310,7 +310,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     }
     setV2FilterOpen(true);
   }
-  const handleApplyV2Filter = () => {
+  const _handleApplyV2Filter = () => {
     setAppliedDate(pendingDate);
     setAppliedCats([...pendingCats]);
     setAppliedChans([...pendingChans]);
@@ -321,15 +321,15 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     setProducts([...pendingProducts]);
     setV2FilterOpen(false);
   };
-  const togglePendingCat = (cat) => {
+  const _togglePendingCat = (cat) => {
     if (cat === 'all') { setPendingCats([]); return; }
     setPendingCats(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
   };
-  const togglePendingChan = (ch) =>
+  const _togglePendingChan = (ch) =>
     setPendingChans(prev => prev.includes(ch) ? prev.filter(c => c !== ch) : [...prev, ch]);
-  const togglePendingProduct = (id) =>
+  const _togglePendingProduct = (id) =>
     setPendingProducts(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]);
-  const removeAppliedChan = (ch) => {
+  const _removeAppliedChan = (ch) => {
     const next = appliedChans.filter(c => c !== ch);
     setAppliedChans(next);
     setChannel(next.length === 1 ? next[0] : 'all');

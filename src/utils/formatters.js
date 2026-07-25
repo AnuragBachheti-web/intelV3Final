@@ -32,7 +32,10 @@ export const formatPercentage = (value, decimals = 1, locale = 'en-US') => {
   }).format(value);
 };
 
-export const formatCompactCurrency = (val) => `$${(val / 1000).toFixed(0)}k`;
+// Compact currency, e.g. $12k / $12.3K. Backward-compatible: called with no
+// options it returns the original `$12k` form (0 decimals, lowercase suffix).
+export const formatCompactCurrency = (val, { decimals = 0, suffix = 'k' } = {}) =>
+  `$${(val / 1000).toFixed(decimals)}${suffix}`;
 
 // Cuts text to the longest whole-word prefix that fits within maxChars — no
 // ellipsis, no partial trailing word (unlike CSS text-overflow: ellipsis).

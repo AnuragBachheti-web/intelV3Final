@@ -2,7 +2,7 @@
  * Dummy API to simulate exporting a CSV file.
  * Replace the contents of this function with the actual API call when ready.
  */
-export const downloadProfitAdsReport = async (filters = {}) => {
+export const downloadProfitAdsReport = async (_filters = {}) => {
   // Simulate network delay
   await new Promise((resolve) => setTimeout(resolve, 1500));
 

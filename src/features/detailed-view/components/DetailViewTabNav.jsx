@@ -3,7 +3,7 @@ import { DETAIL_VIEW_TABS } from '../detailedViewData';
 
 // Renders the sales/margin/inventory/ads/cash tab strip. Used both as the
 // full-size tab row and (compact=true) as the condensed sticky-header nav.
-const DetailViewTabNav = ({ intelType, onTabClick, compact = false }) => (
+const DetailViewTabNav = ({ _intelType, _onTabClick, _compact = false }) => (
   <div className="flex items-center gap-0.5 overflow-x-auto scrollbar-hide">
     {/* {DETAIL_VIEW_TABS.map(tab => (
       <button
