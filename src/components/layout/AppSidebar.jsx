@@ -365,7 +365,7 @@ const AppSidebar = ({ darkMode, _setDarkMode, inline = false, mobileOpen = false
 
   const navItems = [
     { name: 'New', icon: 'fa-plus', href: ROUTES.NEW_ANALYSIS, active: isNewAnalysisActive },
-    { name: 'Intel', icon: 'fa-chart-line', href: intelHref, permissionKey: intelPermissionKey, active: isIntelFullActive },
+    { name: 'Workspace', icon: 'fa-chart-line', href: intelHref, permissionKey: intelPermissionKey, active: isIntelFullActive },
     { name: 'Profit & Ads', icon: 'fa-chart-pie', href: '/profit-ads', permissionKey: '/profit-ads', active: isProfitAdsActive },
     { name: 'Agents', icon: 'fa-robot', href: ROUTES.AGENTS || '/agents', permissionKey: ROUTES.AGENTS || '/agents', active: isAgentsActive },
     { name: 'Research', icon: 'fa-chart-column', href: ROUTES.SCREENER, active: isScreenerActive },

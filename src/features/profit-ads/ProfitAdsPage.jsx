@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
-import RealifyBrief from '../intel/shared/components/common/RealifyBrief';
 import { REALIFY_BRIEF } from '../intel/shared/data/realifyBriefData';
 import { PROFIT_ADS_SUMMARY, SKU_LEDGER_DATA } from './data/profitAdsData';
 import ProfitAdsModal from './components/ProfitAdsModal';
@@ -45,8 +44,6 @@ const ProfitAdsPage = () => {
     >
       <div className="flex flex-col h-full relative" onClick={() => setActiveDropdown(null)}>
         <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 pt-0 pb-24">
-
-          <RealifyBrief data={briefData} />
 
           {/* Filters Row */}
           <div className="flex items-center justify-end gap-2 mt-4 mb-6">

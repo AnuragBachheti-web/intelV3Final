@@ -31,7 +31,9 @@ const InsightsPanel = ({
   onOpenSimulateModal,
   onOpenDismissModal,
   onOpenRepriceModal,
-  onOpenPlanCaptureModal
+  onOpenPlanCaptureModal,
+  onToggleInsightPanel,
+  expandedInsightId
 }) => {
   const [activeFamilyFilter, setActiveFamilyFilter] = useState('all');
   const [newSinceYesterday, setNewSinceYesterday] = useState(false);
@@ -191,6 +193,12 @@ const InsightsPanel = ({
                           onOpenPlanCaptureModal(card);
                         }
                       }}
+                      onToggleExpand={() => {
+                        if (onToggleInsightPanel) {
+                          onToggleInsightPanel(card);
+                        }
+                      }}
+                      isExpanded={expandedInsightId === card.id}
                     />
                   ))}
                 </div>

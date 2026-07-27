@@ -3,16 +3,10 @@
 export const REALIFY_BRIEF_SLIDES = [
   {
     id: 1,
-    title: "What's moving in your categories and the wider market — opportunities and threats beyond your own listings.",
-    subtitle: "Market signals now live in this feed — filter by category or family below.",
-    date: "WED • JUL 22",
-  },
-  {
-    id: 2,
-    title: "Competitor repricing detected on Top 3 SKUs — gross margin protection triggered.",
-    subtitle: "Automated repricing rules active for Amazon & Shopify channels. 12 SKUs monitoring.",
-    date: "WED • JUL 22",
-  },
+    title: "£482,750",
+    subtitle: "Recoverable across Sales, Margin, Inventory & Ads\n\nAcross 128 active SKUs • £431k confirmed • £52k estimated\n\n£895k revenue upside • £275k margin opportunity\n\n14 stock risks • 27 ad optimisations • 9 competitive threats\n\nFocus on the top 12 SKUs — they contribute 76% of the total opportunity.",
+    date: "TODAY",
+  }
 ];
 
 export const INSIGHTS_FEED_METRICS = {

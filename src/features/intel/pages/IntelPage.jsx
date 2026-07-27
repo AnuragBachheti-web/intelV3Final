@@ -21,6 +21,7 @@ import RealifyBrief from "../shared/components/common/RealifyBrief";
 import BriefHeaderControls from "../shared/components/common/BriefHeaderControls";
 import { REALIFY_BRIEF } from "../shared/data/realifyBriefData";
 import SimulateModal from '../shared/components/SimulateModal';
+import InsightDetailsPanel from '../shared/components/InsightDetailsPanel';
 import DismissModal from '../shared/components/DismissModal';
 import RepriceModal from '../shared/components/RepriceModal';
 import CaseReportModal from '../shared/components/CaseReportModal';
@@ -52,6 +53,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3, 4]);
   // Multi-select KPI state — Revenue (idx 0) is default
   const [activeKpiIds, setActiveKpiIds] = useState([0]);
+  const [activePillIndex, setActivePillIndex] = useState(1);
   const [_activeKpiFamily, _setActiveKpiFamily] = useState('all');
 
   // Insights section 1
@@ -61,7 +63,8 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [restoreItemSubTab, setRestoreItemSubTab] = useState(null);
   
   const [isSimulateModalOpen, setIsSimulateModalOpen] = useState(false);
-  const [simulateSku, setSimulateSku] = useState(null);
+  const [simulateInsight, setSimulateInsight] = useState(null);
+  const [expandedInsight, setExpandedInsight] = useState(null);
   const [isDismissModalOpen, setIsDismissModalOpen] = useState(false);
   const [isRepriceModalOpen, setIsRepriceModalOpen] = useState(false);
   const [isCaseReportModalOpen, setIsCaseReportModalOpen] = useState(false);
@@ -344,7 +347,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
       subtitle="Real-time sales analytics"
       showSearch={false}
       showTabs={false}
-      showAIPrompt={false}
+      showAIPrompt={true}
       aiPromptFullWidth={true}
       searchCollapsed={false}
       headerCenterElement={compactHeaderCenter}
@@ -440,61 +443,96 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
 
         {/* 5 KPI stat cards — multi-selectable, Revenue is default */}
         <div ref={kpiSectionRef} className="space-y-3">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4 items-start">
             {selectedKpiIndices.map(idx => {
               const stat = activeStats[idx] || activeStats[0];
               const isSelected = activeKpiIds.includes(idx);
               return (
-                <StatCard
-                  key={idx}
-                  title={stat.title}
-                  value={stat.value}
-                  change={stat.change}
-                  trend={stat.trend}
-                  isPositive={stat.isPositive}
-                  loading={loading}
-                  isSelected={isSelected}
-                  onClick={() => {
-                    setActiveKpiIds(prev => {
-                      if (prev.includes(idx)) {
-                        // Don't deselect if it's the only one selected — default back to revenue (0)
-                        const next = prev.filter(i => i !== idx);
-                        return next.length === 0 ? [0] : next;
-                      }
-                      return [...prev, idx];
-                    });
-                  }}
-                />
+                <div key={idx} className="flex flex-col gap-2">
+                  <StatCard
+                    title={stat.title}
+                    value={stat.value}
+                    change={stat.change}
+                    trend={stat.trend}
+                    isPositive={stat.isPositive}
+                    loading={loading}
+                    isSelected={isSelected}
+                    onClick={() => {
+                      setActiveKpiIds([idx]);
+                      setActivePillIndex(1);
+                    }}
+                  />
+                </div>
               );
             })}
           </div>
+
+          {/* Render pills in a single full-width row below the cards */}
+          {activeKpiIds.length > 0 && (
+            <div className="flex flex-row gap-3 mt-4 animate-in fade-in slide-in-from-top-1 duration-200 overflow-x-auto pb-1">
+              {[1, 2, 3, 4, 5].map(num => {
+                const stat = activeStats[activeKpiIds[0]] || activeStats[0];
+                return (
+                  <button
+                    key={num}
+                    onClick={() => setActivePillIndex(num)}
+                    className={`flex-1 whitespace-nowrap text-center px-4 py-2.5 text-xs font-semibold rounded-xl border transition-colors shadow-sm ${
+                      activePillIndex === num
+                        ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100'
+                        : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    {stat.title} Metric {num}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
-        {/* Insights section 1 */}
-        <InsightsPanel
-          activeInsightTab={activeInsightTab}
-          setActiveInsightTab={setActiveInsightTab}
-          itemViewMode={itemViewMode}
-          setItemViewMode={setItemViewMode}
-          stepOffset={stepOffset}
-          setStepOffset={setStepOffset}
-          onProductClick={openProductModal}
-          onStepClick={handleStepClick}
-          showDetailedView={true}
-          onDetailedView={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel' } })}
-          intelTab={activeIntelTab}
-          selectedCategory={category}
-          noSidePanel={fullWidthInsights}
-          initialItemSubTab={restoreItemSubTab}
-          sourceRoute={location.pathname}
-          onOpenSimulateModal={(insight) => {
-            setSimulateSku(insight?.sku || 'AFWCLEANER0004');
-            setIsSimulateModalOpen(true);
-          }}
-          onOpenDismissModal={() => setIsDismissModalOpen(true)}
-          onOpenRepriceModal={() => setIsRepriceModalOpen(true)}
-          onOpenPlanCaptureModal={() => setIsCaseReportModalOpen(true)}
-        />
+        {/* Insights section 1 with 70/30 split logic for expandedInsight */}
+        <div className="relative flex flex-col lg:flex-row w-full transition-all duration-300 gap-4">
+          <div className={`transition-all duration-300 ${expandedInsight ? 'lg:w-[70%]' : 'w-full'}`}>
+            <InsightsPanel
+              activeInsightTab={activeInsightTab}
+              setActiveInsightTab={setActiveInsightTab}
+              itemViewMode={itemViewMode}
+              setItemViewMode={setItemViewMode}
+              stepOffset={stepOffset}
+              setStepOffset={setStepOffset}
+              onProductClick={openProductModal}
+              onStepClick={handleStepClick}
+              showDetailedView={true}
+              onDetailedView={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel' } })}
+              intelTab={activeIntelTab}
+              selectedCategory={category}
+              noSidePanel={fullWidthInsights}
+              initialItemSubTab={restoreItemSubTab}
+              sourceRoute={location.pathname}
+              onOpenSimulateModal={(insight) => {
+                setSimulateInsight(insight);
+                setIsSimulateModalOpen(true);
+              }}
+              onToggleInsightPanel={(insight) => {
+                setExpandedInsight(prev => (prev?.id === insight?.id ? null : insight));
+              }}
+              expandedInsightId={expandedInsight?.id}
+              onOpenDismissModal={() => setIsDismissModalOpen(true)}
+              onOpenRepriceModal={() => setIsRepriceModalOpen(true)}
+              onOpenPlanCaptureModal={() => setIsCaseReportModalOpen(true)}
+            />
+          </div>
+
+          {/* Insight Details Side Panel (30%) */}
+          {expandedInsight && (
+            <div className="lg:w-[30%] w-full h-[800px] lg:h-auto animate-in slide-in-from-right duration-300">
+              <InsightDetailsPanel
+                insight={expandedInsight}
+                onClose={() => setExpandedInsight(null)}
+              />
+            </div>
+          )}
+        </div>
 
         {/* Insights section 2 — carousel mode (commented out) */}
         {false && ( // eslint-disable-line no-constant-binary-expression
@@ -524,7 +562,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
       <SimulateModal
         isOpen={isSimulateModalOpen}
         onClose={() => setIsSimulateModalOpen(false)}
-        sku={simulateSku}
+        sku={simulateInsight?.skuCode || simulateInsight?.sku || 'AFWCLEANER0004'}
       />
       <DismissModal
         isOpen={isDismissModalOpen}
