@@ -45,10 +45,10 @@ const InsightsPanel = ({
   ).length;
 
   return (
-    <div className="rounded-2xl bg-white dark:bg-[#030712] p-4 sm:p-5 border border-gray-200 dark:border-slate-800 space-y-5 mt-4">
+    <div className="rounded-2xl bg-white dark:bg-[#030712] p-4 sm:p-5 border border-gray-200 dark:border-slate-800 space-y-5 h-full flex flex-col min-h-0">
 
       {/* Header Section (SS2, SS3, SS4) */}
-      <div className="space-y-3 pb-3 border-b border-gray-100 dark:border-slate-800">
+      <div className="space-y-3 pb-3 border-b border-gray-100 dark:border-slate-800 shrink-0">
 
         {/* Title row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -135,7 +135,7 @@ const InsightsPanel = ({
       </div>
 
       {/* Insight Cards Grouped by Section Headings (SS3, SS4, SS5) */}
-      <div className="space-y-6">
+      <div className="space-y-6 flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar">
         {visibleCardsCount === 0 ? (
           <div className="py-8 text-center text-xs text-gray-400 dark:text-slate-500">
             No insights found for this filter.

@@ -3,8 +3,8 @@
 export const REALIFY_BRIEF_SLIDES = [
   {
     id: 1,
-    title: "£482,750",
-    subtitle: "Recoverable across Sales, Margin, Inventory & Ads\n\nAcross 128 active SKUs • £431k confirmed • £52k estimated\n\n£895k revenue upside • £275k margin opportunity\n\n14 stock risks • 27 ad optimisations • 9 competitive threats\n\nFocus on the top 12 SKUs — they contribute 76% of the total opportunity.",
+    title: "$482,750",
+    subtitle: "Recoverable across Sales, Margin, Inventory & Ads\n\nAcross 128 active SKUs • $431k confirmed • $52k estimated\n\n$895k revenue upside • $275k margin opportunity\n\n14 stock risks • 27 ad optimisations • 9 competitive threats\n\nFocus on the top 12 SKUs — they contribute 76% of the total opportunity.",
     date: "TODAY",
   }
 ];
@@ -43,7 +43,7 @@ export const INSIGHT_CARDS_DATA = [
     progressPct: 82,
     sourceOwn: 'OWN',
     sourceRule: 'RULE',
-    whyMattersText: "Autofy Storm 3 [4-in-1] Powerful & Fully Wireless Car Vacuum Cleaner Air Blower velocity is sitting at 22.5/day — well above your 15/day line. That puts a material ₹20.2L/mo of revenue in play on this SKU. Sales velocity drives rank, Buy Box eligibility and cash flow, so a dip here compounds across the account if left alone.",
+    whyMattersText: "Velocity is sitting at 22.5/day — well above your 15/day line. That puts a material ₹20.2L/mo of revenue in play on this SKU. Sales velocity drives rank, Buy Box eligibility and cash flow, so a dip here compounds across the account if left alone.",
     metrics: {
       velocity: '22.5',
       threshold: '15',

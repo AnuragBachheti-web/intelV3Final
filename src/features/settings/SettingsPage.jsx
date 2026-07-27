@@ -19,6 +19,8 @@ import BillingTab from './tabs/BillingTab';
 import NotificationsTab from './tabs/NotificationsTab';
 import PrivacyTab from './tabs/PrivacyTab';
 import AppearanceTab from './tabs/AppearanceTab';
+import RulesTab from './tabs/RulesTab';
+import ActivityTab from './tabs/ActivityTab';
 
 // Modals
 import InviteModal from './modals/InviteModal';
@@ -76,12 +78,14 @@ const SettingsPage = () => {
       case 'access': return <AccessTab onInputChange={handleInputChange} onOpenRoleModal={() => setModalState({ ...modalState, role: true })} />;
       case 'business-profile': return <BusinessProfileTab onInputChange={handleInputChange} />;
       case 'integrations': return <IntegrationsTab />;
+      case 'rules': return <RulesTab />;
       case 'guardrails': return <GuardrailsTab onInputChange={handleInputChange} />;
       case 'subscription': return <SubscriptionTab />;
       case 'billing': return <BillingTab onOpenPayment={() => setModalState({ ...modalState, payment: true })} />;
       case 'notifications': return <NotificationsTab onInputChange={handleInputChange} />;
       case 'privacy': return <PrivacyTab />;
       case 'appearance': return <AppearanceTab onInputChange={handleInputChange} />;
+      case 'activity': return <ActivityTab />;
       default: return <AccountTab onInputChange={handleInputChange} />;
     }
   };

@@ -9,7 +9,10 @@ const InsightCard = ({ card, onSimulate, onReprice, onDismiss, onPlanCapture, on
   if (dismissed) return null;
 
   return (
-    <div className="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-5 shadow-xs transition-all duration-300">
+    <div className={`rounded-2xl border bg-white dark:bg-slate-900/90 p-5 transition-all duration-300 ${isExpanded
+        ? 'border-blue-400 dark:border-blue-500 ring-2 ring-blue-100 dark:ring-blue-900/40 shadow-lg shadow-blue-100/60 dark:shadow-blue-900/20'
+        : 'border-gray-200 dark:border-slate-800 shadow-xs'
+      }`}>
 
       {/* Top Header: SKU / Rule Tag (left), Badges + Expand Arrow (right) */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
@@ -48,37 +51,8 @@ const InsightCard = ({ card, onSimulate, onReprice, onDismiss, onPlanCapture, on
         <strong className="font-bold">{card.headline}</strong> {card.headlineHighlight}
       </h4>
 
-      {/* Revenue Status Section */}
-      <div className="mt-4">
-        <div className="flex items-center justify-between text-[10px] font-mono text-gray-400 dark:text-slate-500 mb-1">
-          <span className="uppercase tracking-wider">YOUR MONTHLY REVENUE ON THIS SKU</span>
-          <div className="flex items-center gap-3">
-            <span className="font-bold text-gray-700 dark:text-slate-300">{card.monthlyRevenue}</span>
-            <span className="uppercase">CONFIDENCE • {card.confidenceLabel}</span>
-            <div className="flex gap-1 items-center">
-              {[1, 2, 3, 4].map(dot => (
-                <span
-                  key={dot}
-                  className={`w-1.5 h-1.5 rounded-full ${dot <= card.confidenceLevel
-                    ? 'bg-gray-800 dark:bg-slate-200'
-                    : 'bg-gray-200 dark:bg-slate-700'
-                    }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-        {/* Status progress bar */}
-        <div className="w-full h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-emerald-600 dark:bg-emerald-500 rounded-full transition-all duration-500"
-            style={{ width: `${card.progressPct}%` }}
-          />
-        </div>
-      </div>
-
       {/* Bottom Action Section */}
-      <div className="mt-4 pt-3 border-t border-gray-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="pt-3 border-t border-gray-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         {/* Source tags */}
         <div className="flex items-center gap-1.5 text-[9px] font-mono text-gray-400 dark:text-slate-500">
           <span>source</span>
@@ -92,20 +66,56 @@ const InsightCard = ({ card, onSimulate, onReprice, onDismiss, onPlanCapture, on
 
         {/* Action buttons */}
         <div className="flex items-center gap-2 flex-wrap self-end sm:self-auto">
-          <a
-            href={card.amazonUrl || "https://amazon.in"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-3 py-1.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition-colors"
-          >
-            View on Amazon
-          </a>
-          <button
-            onClick={onDismiss || (() => setDismissed(true))}
-            className="px-3 py-1.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition-colors"
-          >
-            Dismiss
-          </button>
+          <div className="flex items-center gap-1 flex-shrink-0">
+            {card.sectionKey === 'pricing_buybox' ? (
+              <>
+                <div className="relative group flex-shrink-0">
+                  <a
+                    href={card.amazonUrl || "https://amazon.in"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center w-[30px] h-[30px] text-gray-400 dark:text-slate-500 hover:text-gray-800 dark:hover:text-slate-300 transition-colors"
+                  >
+                    <i className="fa-brands fa-amazon text-[18px]"></i>
+                  </a>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-gray-800 dark:bg-slate-100 text-white dark:text-gray-900 text-[10px] font-bold rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-50">
+                    View on Amazon
+                  </div>
+                </div>
+                <div className="relative group flex-shrink-0">
+                  <a
+                    href={card.shopifyUrl || "https://shopify.com"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center w-[30px] h-[30px] text-gray-400 dark:text-slate-500 hover:text-gray-800 dark:hover:text-slate-300 transition-colors"
+                  >
+                    <i className="fa-brands fa-shopify text-[18px]"></i>
+                  </a>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-gray-800 dark:bg-slate-100 text-white dark:text-gray-900 text-[10px] font-bold rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-50">
+                    View on Shopify
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="relative group flex-shrink-0">
+                <a
+                  href={card.amazonUrl || "https://amazon.in"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-[30px] h-[30px] text-gray-400 dark:text-slate-500 hover:text-gray-800 dark:hover:text-slate-300 transition-colors"
+                >
+                  {(card.platform === 'shopify' || card.id % 3 === 0) ? (
+                    <i className="fa-brands fa-shopify text-[18px]"></i>
+                  ) : (
+                    <i className="fa-brands fa-amazon text-[18px]"></i>
+                  )}
+                </a>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-gray-800 dark:bg-slate-100 text-white dark:text-gray-900 text-[10px] font-bold rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-50">
+                  View on {(card.platform === 'shopify' || card.id % 3 === 0) ? 'Shopify' : 'Amazon'}
+                </div>
+              </div>
+            )}
+          </div>
           <button
             onClick={onSimulate}
             className="px-3 py-1.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition-colors"

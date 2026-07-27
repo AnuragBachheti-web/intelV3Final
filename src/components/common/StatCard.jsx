@@ -64,68 +64,46 @@ const StatCard = ({
     );
   }
 
-  // Metric Style (with sparkline)
+  // Metric Style (Redesigned matching ss3)
   if (type === 'metric') {
+    const bgClass = isPositive
+      ? 'bg-gradient-to-br from-emerald-50 to-white border-emerald-100 dark:from-emerald-900/20 dark:to-slate-900/20 dark:border-emerald-900/30'
+      : 'bg-gradient-to-br from-red-50 to-white border-red-100 dark:from-red-900/20 dark:to-slate-900/20 dark:border-red-900/30';
+    const valueColor = isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
+    const badgeBg = isPositive ? 'bg-emerald-100/50 text-emerald-600 dark:bg-emerald-900/30' : 'bg-red-100/50 text-red-600 dark:bg-red-900/30';
+
     return (
       <div
         onClick={onClick}
-        className={`bg-white dark:bg-slate-900 border ${isSelected ? 'border-gray-900 ring-1 ring-gray-900 dark:border-slate-100 dark:ring-slate-100 shadow-md' : 'border-gray-200 dark:border-slate-800 shadow-sm'} rounded-2xl overflow-hidden hover:shadow-md transition-all relative h-[86px] sm:h-40 flex flex-col justify-between group ${(onClick || isSelected) ? 'cursor-pointer' : ''}`}
+        className={`${bgClass} border rounded-2xl p-4 flex flex-col justify-between h-[110px] relative transition-all group hover:shadow-sm ${(onClick || isSelected) ? 'cursor-pointer ring-1 ring-black/5 dark:ring-white/5' : ''}`}
       >
-
         {/* AI Reference Icon */}
         <button
           onClick={handleRefClick}
-          className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20 w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-brand-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-700 shadow-sm transition-all opacity-0 group-hover:opacity-100"
+          className="absolute top-3 right-3 z-20 w-6 h-6 flex items-center justify-center rounded-full bg-white/50 dark:bg-slate-800/50 text-slate-400 hover:text-brand-600 dark:hover:text-blue-400 hover:bg-white shadow-sm transition-all opacity-0 group-hover:opacity-100"
           title="Attach as reference"
         >
-          <i className="fa-solid fa-paperclip text-[10px] sm:text-[12px]"></i>
+          <i className="fa-solid fa-paperclip text-[10px]"></i>
         </button>
 
-        <div className="p-2.5 sm:p-[1.1rem] pb-8 sm:pb-16 z-10 relative">
-          <p className="text-[10px] sm:text-[14px] text-gray-500 dark:text-slate-400 font-medium mb-0.5 sm:mb-1">{title}</p>
-          <div className="flex items-end justify-between">
-            <div>
-              <p className="text-[16px] sm:text-[22px] font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-none mb-0.5 sm:mb-1">{value}</p>
-              <div className="flex flex-col items-start">
-                <span
-                  className="text-[10px] sm:text-[13px] text-gray-500 dark:text-slate-400 truncate w-full"
-                  title={subtext || "from last week"}
-                >
-                  {subtext || "from last week"}
-                </span>
-
-                <span
-                  className={`text-[10px] sm:text-[13px] font-medium flex items-center mt-0.5 ${isPositive ? 'text-[#22c55e]' : 'text-red-500'
-                    }`}
-                >
-                  {change}
-                  <i
-                    className={`fa-solid ${isPositive ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'
-                      } ml-1 text-[9px] sm:text-[10px]`}
-                  />
-                </span>
-              </div>
-            </div>
+        <div className="flex justify-between items-end h-full w-full">
+          {/* Left Side: Title, Value, Subtext, Badge */}
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[14px] font-semibold text-gray-500 dark:text-slate-400">
+              {title}
+            </span>
+            <span className="text-[18px] font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-tight mt-1">
+              {value}
+            </span>
+            <span className="text-[12px] text-gray-400 dark:text-slate-500">
+              {subtext || "from last week"}
+            </span>
           </div>
-        </div>
-        <div className="absolute bottom-0 left-0 w-full h-8 sm:h-14 z-0 opacity-50 group-hover:opacity-80 transition-opacity">
-          <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="w-full h-full">
-            <path
-              d={isPositive ? "M0 30 L0 15 Q 15 0, 30 15 T 60 15 T 90 15 L 100 15 L 100 30 Z" : "M0 30 L0 20 Q 25 35, 50 20 T 100 25 L 100 30 Z"}
-              fill={isPositive ? "#dcfce7" : "#fee2e2"}
-              className="transition-colors duration-300 dark:fill-opacity-10"
-              style={{ opacity: sparkDrawn ? 1 : 0, transition: 'opacity 900ms ease-out 300ms' }}
-            />
-            <path
-              d={isPositive ? "M0 15 Q 15 0, 30 15 T 60 15 T 90 15 L 100 15" : "M0 20 Q 25 35, 50 20 T 100 25"}
-              fill="none"
-              stroke={isPositive ? "#22c55e" : "#ef4444"}
-              strokeWidth="0.5"
-              strokeDasharray={SPARKLINE_DRAW_LENGTH}
-              strokeDashoffset={sparkDrawn ? 0 : SPARKLINE_DRAW_LENGTH}
-              style={{ transition: 'stroke-dashoffset 2000ms ease-out' }}
-            />
-          </svg>
+
+          {/* Right Side: Percentage Change */}
+          <div className={`text-[15px] font-bold ${valueColor} pb-1`}>
+            {change}
+          </div>
         </div>
       </div>
     );

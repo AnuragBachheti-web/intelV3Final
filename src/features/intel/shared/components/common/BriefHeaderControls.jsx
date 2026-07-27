@@ -90,15 +90,14 @@ const CalendarPicker = ({ selectedDate, onSelectDate, onClose, alignRight = fals
                   onClose();
                 }
               }}
-              className={`h-7 w-7 mx-auto flex items-center justify-center rounded-lg font-medium transition-all ${
-                !item.currentMonth
+              className={`h-7 w-7 mx-auto flex items-center justify-center rounded-lg font-medium transition-all ${!item.currentMonth
                   ? 'text-gray-300 dark:text-slate-600 cursor-not-allowed'
                   : isSelected
-                  ? 'bg-blue-600 text-white font-bold shadow-xs'
-                  : isToday
-                  ? 'border border-blue-500 text-blue-600 dark:text-blue-400 font-bold'
-                  : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800'
-              }`}
+                    ? 'bg-blue-600 text-white font-bold shadow-xs'
+                    : isToday
+                      ? 'border border-blue-500 text-blue-600 dark:text-blue-400 font-bold'
+                      : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800'
+                }`}
             >
               {item.day}
             </button>
@@ -132,7 +131,7 @@ const CalendarPicker = ({ selectedDate, onSelectDate, onClose, alignRight = fals
   );
 };
 
-const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive }) => {
+const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive, isKpiVisible, onKpiToggle }) => {
   // Channel state
   const [channelOpen, setChannelOpen] = useState(false);
   const [selectedChannels, setSelectedChannels] = useState(['shopify', 'amazon']);
@@ -192,7 +191,7 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive }) => {
           <div className="w-5 h-5 rounded-md bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 flex items-center justify-center text-xs">
             <i className={`${singleChannel.icon} ${singleChannel.color}`} />
           </div>
-          <span className="text-xs font-semibold text-gray-900 dark:text-slate-100">{singleChannel.name}</span>
+          <span className="text-[14px] font-semibold text-gray-900 dark:text-slate-100">{singleChannel.name}</span>
           <i className="fa-solid fa-chevron-down text-[9px] text-gray-400" />
         </div>
       );
@@ -205,7 +204,7 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive }) => {
           <div className="w-5.5 h-5.5 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs">
             <i className="fa-solid fa-house text-[11px]" />
           </div>
-          <span className="text-xs font-bold text-gray-900 dark:text-slate-100">All stores ({total})</span>
+          <span className="text-[14px] font-bold text-gray-900 dark:text-slate-100">All stores ({total})</span>
           <i className="fa-solid fa-chevron-down text-[9px] text-gray-400" />
         </div>
       );
@@ -217,7 +216,7 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive }) => {
         <div className="w-5.5 h-5.5 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs">
           <i className="fa-solid fa-house text-[11px]" />
         </div>
-        <span className="text-xs font-bold text-gray-900 dark:text-slate-100">{count} stores selected</span>
+        <span className="text-[14px] font-bold text-gray-900 dark:text-slate-100">{count} stores selected</span>
         <i className="fa-solid fa-chevron-down text-[9px] text-gray-400" />
       </div>
     );
@@ -225,7 +224,7 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive }) => {
 
   return (
     <div className="flex items-center gap-2.5">
-      
+
       {/* ── Channel Dropdown (SS3 & SS4) ── */}
       <div className="relative" ref={channelPanelRef}>
         <button
@@ -238,18 +237,17 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive }) => {
 
         {/* Dropdown Content Popover */}
         {channelOpen && (
-          <div className="absolute right-0 top-full mt-1.5 w-60 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl shadow-2xl z-50 p-4 space-y-3 animate-in fade-in zoom-in-95 duration-200">
-            
+          <div className="absolute right-0 top-full mt-1.5 w-60 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl shadow-2xl z-[100] p-4 space-y-3 animate-in fade-in zoom-in-95 duration-200">
+
             {/* Header with SELECT ALL checkbox */}
             <div
               onClick={handleSelectAll}
               className="flex items-center gap-2 cursor-pointer select-none"
             >
-              <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
-                pendingSelected.length === AVAILABLE_CHANNELS.length
+              <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${pendingSelected.length === AVAILABLE_CHANNELS.length
                   ? 'bg-blue-600 border-blue-600 text-white'
                   : 'border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900'
-              }`}>
+                }`}>
                 {pendingSelected.length === AVAILABLE_CHANNELS.length && (
                   <i className="fa-solid fa-check text-[9px]" />
                 )}
@@ -271,11 +269,10 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive }) => {
                     onClick={() => handleTogglePending(ch.id)}
                     className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors"
                   >
-                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
-                      isChecked
+                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isChecked
                         ? 'bg-blue-600 border-blue-600 text-white'
                         : 'border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900'
-                    }`}>
+                      }`}>
                       {isChecked && <i className="fa-solid fa-check text-[9px]" />}
                     </div>
                     <span className="text-xs font-semibold text-gray-800 dark:text-slate-200">
@@ -308,7 +305,7 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive }) => {
             setDateOpen(o => !o);
             setActiveCalTarget(null);
           }}
-          className="flex items-center gap-1.5 h-8 px-3 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 rounded-full text-xs font-semibold text-gray-700 dark:text-slate-200 transition-colors border border-transparent shadow-xs"
+          className="flex items-center gap-1.5 h-8 px-3 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 rounded-full text-[14px] font-semibold text-gray-700 dark:text-slate-200 transition-colors border border-transparent shadow-xs"
         >
           <span>
             {selectedPreset === '7d' ? '7D' : selectedPreset === '60d' ? '60D' : '30D'}
@@ -317,7 +314,7 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive }) => {
         </button>
 
         {dateOpen && (
-          <div className="absolute right-0 top-full mt-1.5 w-72 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-xl z-50 p-4 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="absolute right-0 top-full mt-1.5 w-72 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-xl z-[100] p-4 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 mb-2">Preset Ranges</p>
               <div className="grid grid-cols-3 gap-2">
@@ -329,11 +326,10 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive }) => {
                       setDateOpen(false);
                       setActiveCalTarget(null);
                     }}
-                    className={`py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                      selectedPreset === preset
+                    className={`py-1.5 rounded-xl text-xs font-bold transition-colors ${selectedPreset === preset
                         ? 'bg-blue-600 text-white shadow-xs'
                         : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700'
-                    }`}
+                      }`}
                   >
                     {preset}
                   </button>
@@ -415,26 +411,48 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive }) => {
         )}
       </div>
 
+      {/* ── KPI Toggle ── */}
+      {onKpiToggle && (
+        <>
+          <div className="h-4 w-px bg-gray-200 dark:bg-slate-700 hidden md:block mx-1"></div>
+          <div className="hidden md:flex items-center gap-2">
+            <span className="text-[14px] font-semibold text-gray-900 dark:text-slate-100 whitespace-nowrap">
+              KPIs
+            </span>
+            <button
+              onClick={onKpiToggle}
+              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors ${isKpiVisible
+                  ? 'bg-gray-900 dark:bg-slate-100 hover:opacity-80'
+                  : 'bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500'
+                }`}
+            >
+              <span
+                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white dark:bg-gray-900 transition-transform ${isKpiVisible ? 'translate-x-4' : 'translate-x-1'
+                  }`}
+              />
+            </button>
+          </div>
+        </>
+      )}
+
       {/* ── Dashboard View Toggle ── */}
       {onDashboardToggle && (
         <>
           <div className="h-4 w-px bg-gray-200 dark:bg-slate-700 hidden md:block mx-1"></div>
           <div className="hidden md:flex items-center gap-2">
-            <span className="text-xs font-semibold text-gray-900 dark:text-slate-100 whitespace-nowrap">
+            <span className="text-[14px] font-semibold text-gray-900 dark:text-slate-100 whitespace-nowrap">
               Dashboard View
             </span>
             <button
               onClick={onDashboardToggle}
-              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors ${
-                isDashboardViewActive
+              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors ${isDashboardViewActive
                   ? 'bg-gray-900 dark:bg-slate-100 hover:opacity-80'
                   : 'bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500'
-              }`}
+                }`}
             >
               <span
-                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white dark:bg-gray-900 transition-transform ${
-                  isDashboardViewActive ? 'translate-x-4' : 'translate-x-1'
-                }`}
+                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white dark:bg-gray-900 transition-transform ${isDashboardViewActive ? 'translate-x-4' : 'translate-x-1'
+                  }`}
               />
             </button>
           </div>

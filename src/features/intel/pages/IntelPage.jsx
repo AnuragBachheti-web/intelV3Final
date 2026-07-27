@@ -51,17 +51,17 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [loading, setLoading] = useState(true);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
   const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3, 4]);
-  // Multi-select KPI state — Revenue (idx 0) is default
-  const [activeKpiIds, setActiveKpiIds] = useState([0]);
-  const [activePillIndex, setActivePillIndex] = useState(1);
-  const [_activeKpiFamily, _setActiveKpiFamily] = useState('all');
+
+  // KPI Pill State (Revenue, Margin, etc.)
+  const [activeKpiTab, setActiveKpiTab] = useState('sales');
+  const [isKpiVisible, setIsKpiVisible] = useState(false);
 
   // Insights section 1
   const [activeInsightTab, setActiveInsightTab] = useState('Overall');
   const [itemViewMode, setItemViewMode] = useState('list');
   const [stepOffset, setStepOffset] = useState(0);
   const [restoreItemSubTab, setRestoreItemSubTab] = useState(null);
-  
+
   const [isSimulateModalOpen, setIsSimulateModalOpen] = useState(false);
   const [simulateInsight, setSimulateInsight] = useState(null);
   const [expandedInsight, setExpandedInsight] = useState(null);
@@ -225,7 +225,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     fetchIntel();
   }, []);
 
-  const activeStats = STATS_BY_TAB.sales;
+  const activeStats = STATS_BY_TAB[activeKpiTab] || STATS_BY_TAB.sales;
 
   const handleStepClick = (stepId) => {
     navigate(`/intel/insight/sales/${stepId}`);
@@ -428,8 +428,40 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         <div className="w-full space-y-2">
           <RealifyBrief data={briefData} />
 
-          <div className="flex items-center justify-end gap-3 w-full pt-4">
-            {/* Channel & Date Filters & Dashboard Toggle */}
+        </div>
+
+        {/* KPI Pills & Filters Row.
+            Horizontal scroll lives on the pills only, so the row itself does
+            not clip the filter dropdowns that open downward over the KPI cards. */}
+        <div className="flex items-center justify-between gap-4 w-full">
+          {/* KPI Pills */}
+          <div className="flex flex-row gap-3 pb-2 px-1 overflow-x-auto min-w-0">
+            {isKpiVisible && ['sales', 'margin', 'cash', 'inventory', 'ads'].map(tabKey => {
+              const labelMap = { sales: 'Revenue', margin: 'Margin', cash: 'Cash', inventory: 'Inventory', ads: 'Ads' };
+              const isActive = activeKpiTab === tabKey;
+
+              // Dummy notification badges based on ss2
+              const notifications = { sales: 1, cash: 2 };
+              const notifCount = notifications[tabKey];
+
+              return (
+                <div key={tabKey} className="relative mt-2">
+                  <button
+                    onClick={() => setActiveKpiTab(tabKey)}
+                    className={`flex items-center justify-center gap-1.5 px-4 py-2 text-[14px] font-bold rounded-xl border transition-colors shadow-sm whitespace-nowrap ${isActive
+                      ? 'bg-[#1C1C1E] dark:bg-slate-100 text-white dark:text-gray-900 border-[#1C1C1E] dark:border-slate-100'
+                      : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'
+                      }`}
+                  >
+                    <span>{labelMap[tabKey]}</span>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center justify-end gap-3 flex-shrink-0">
+            {/* Channel & Date Filters, KPI Toggle & Dashboard Toggle */}
             <BriefHeaderControls
               isDashboardViewActive={false}
               onDashboardToggle={() =>
@@ -437,62 +469,47 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                   state: { from: '/intel' },
                 })
               }
+              isKpiVisible={isKpiVisible}
+              onKpiToggle={() => setIsKpiVisible(prev => !prev)}
             />
           </div>
         </div>
 
-        {/* 5 KPI stat cards — multi-selectable, Revenue is default */}
-        <div ref={kpiSectionRef} className="space-y-3">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4 items-start">
-            {selectedKpiIndices.map(idx => {
-              const stat = activeStats[idx] || activeStats[0];
-              const isSelected = activeKpiIds.includes(idx);
-              return (
-                <div key={idx} className="flex flex-col gap-2">
-                  <StatCard
-                    title={stat.title}
-                    value={stat.value}
-                    change={stat.change}
-                    trend={stat.trend}
-                    isPositive={stat.isPositive}
-                    loading={loading}
-                    isSelected={isSelected}
-                    onClick={() => {
-                      setActiveKpiIds([idx]);
-                      setActivePillIndex(1);
-                    }}
-                  />
+        {/* Conditionally render KPI Pills and Cards */}
+        {isKpiVisible && (
+          <>
+            {/* KPI Pills Row */}
+            <div className="flex flex-row gap-3  overflow-x-auto px-1">
+              <div ref={kpiSectionRef} className="space-y-3 w-full">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4 items-start">
+                  {selectedKpiIndices.map(idx => {
+                    const stat = activeStats[idx] || activeStats[0];
+                    return (
+                      <div key={idx} className="flex flex-col gap-2">
+                        <StatCard
+                          title={stat.title}
+                          value={stat.value}
+                          change={stat.change}
+                          trend={stat.trend}
+                          isPositive={stat.isPositive}
+                          loading={loading}
+                          showIcon={false}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
-          </div>
-
-          {/* Render pills in a single full-width row below the cards */}
-          {activeKpiIds.length > 0 && (
-            <div className="flex flex-row gap-3 mt-4 animate-in fade-in slide-in-from-top-1 duration-200 overflow-x-auto pb-1">
-              {[1, 2, 3, 4, 5].map(num => {
-                const stat = activeStats[activeKpiIds[0]] || activeStats[0];
-                return (
-                  <button
-                    key={num}
-                    onClick={() => setActivePillIndex(num)}
-                    className={`flex-1 whitespace-nowrap text-center px-4 py-2.5 text-xs font-semibold rounded-xl border transition-colors shadow-sm ${
-                      activePillIndex === num
-                        ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900 dark:border-slate-100'
-                        : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'
-                    }`}
-                  >
-                    {stat.title} Metric {num}
-                  </button>
-                );
-              })}
+              </div>
             </div>
-          )}
-        </div>
+          </>
+        )}
 
-        {/* Insights section 1 with 70/30 split logic for expandedInsight */}
-        <div className="relative flex flex-col lg:flex-row w-full transition-all duration-300 gap-4">
-          <div className={`transition-all duration-300 ${expandedInsight ? 'lg:w-[70%]' : 'w-full'}`}>
+        {/* Insights section 1 with 70/30 split logic for expandedInsight.
+            When a detail panel is open, the row becomes a bounded-height flex
+            box so both columns share the exact same height (top + bottom edges
+            aligned) and each scrolls its own content independently. */}
+        <div className={`relative flex flex-col lg:flex-row lg:items-stretch w-full gap-4 transition-all duration-300 ${expandedInsight ? 'lg:sticky lg:top-14 lg:h-[calc(100vh-10rem)]' : ''}`}>
+          <div className={`flex flex-col min-h-0 transition-all duration-300 ${expandedInsight ? 'lg:w-[70%] lg:h-full' : 'w-full'}`}>
             <InsightsPanel
               activeInsightTab={activeInsightTab}
               setActiveInsightTab={setActiveInsightTab}
@@ -525,7 +542,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
 
           {/* Insight Details Side Panel (30%) */}
           {expandedInsight && (
-            <div className="lg:w-[30%] w-full h-[800px] lg:h-auto animate-in slide-in-from-right duration-300">
+            <div className="lg:w-[30%] w-full lg:h-full flex flex-col min-h-0 animate-in slide-in-from-right duration-300">
               <InsightDetailsPanel
                 insight={expandedInsight}
                 onClose={() => setExpandedInsight(null)}
@@ -560,9 +577,10 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         onSave={(indices) => { setSelectedKpiIndices(indices); }}
       />
       <SimulateModal
+        key={simulateInsight?.id || 'default'}
         isOpen={isSimulateModalOpen}
         onClose={() => setIsSimulateModalOpen(false)}
-        sku={simulateInsight?.skuCode || simulateInsight?.sku || 'AFWCLEANER0004'}
+        insight={simulateInsight}
       />
       <DismissModal
         isOpen={isDismissModalOpen}

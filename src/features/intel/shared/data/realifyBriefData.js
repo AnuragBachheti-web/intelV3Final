@@ -1,49 +1,58 @@
+// Dummy data for "The Realify Brief" banner (Intel workspace).
+// Each tab provides three headline stats + a short narrative description.
+
+const makeStats = (opportunity, skus, risk) => [
+  { key: 'opportunity', label: 'OPPORTUNITY PROJECTED', value: opportunity, icon: 'fa-arrow-trend-up', tone: 'emerald' },
+  { key: 'skus', label: 'NO. OF AFFECTED SKUS', value: skus, icon: 'fa-clock', tone: 'blue' },
+  { key: 'risk', label: 'BUSINESS AT RISK', value: risk, icon: 'fa-triangle-exclamation', tone: 'rose' },
+];
+
 export const REALIFY_BRIEF = {
   sales: {
-    title:
-      "What's moving in your categories and the wider market — opportunities and threats beyond your own listings.",
-    subtitle:
-      "Market signals now live in this feed — filter by category or family below.",
-    date: "WED • JUL 22"
+    stats: makeStats('$895,000', '14', '$52,000'),
+    description: [
+      'Autofy clocked ₹18.4L in revenue this month, up 12% MoM, driven largely by mounting accessories, but margin slipped 2.1pp as ad spend outpaced returns.',
+      'Three SKUs are flagged at risk, with AF-CABLE-USB losing Buy Box ground to a competitor who undercut price by ₹28.',
+    ],
   },
 
   margin: {
-    title:
-      "Margin pressure is emerging across multiple categories as competitors adjust pricing.",
-    subtitle:
-      "Watch categories where profitability is falling faster than sales.",
-    date: "WED • JUL 22"
+    stats: makeStats('$412,000', '9', '$68,500'),
+    description: [
+      'Blended margin is down 2.1pp MoM as fees and ad spend rose faster than net revenue across your top categories.',
+      'Nine SKUs are bleeding margin; the largest single drag is fulfilment fee creep on standard-tier items.',
+    ],
   },
 
   inventory: {
-    title:
-      "Inventory risk is increasing across your monitored categories.",
-    subtitle:
-      "Identify stockouts, overstock and replenishment opportunities before competitors.",
-    date: "WED • JUL 22"
+    stats: makeStats('$326,000', '11', '$74,200'),
+    description: [
+      'Cover has thinned across fast-movers, with 11 SKUs projected to stock out inside 14 days on current velocity.',
+      'A timely transfer to FBA protects organic rank and avoids the stockout penalty on your highest-velocity listing.',
+    ],
   },
 
   marketing: {
-    title:
-      "Advertising efficiency is shifting across your portfolio.",
-    subtitle:
-      "Track CPC, ROAS and share of voice across the wider market.",
-    date: "WED • JUL 22"
+    stats: makeStats('$268,000', '7', '$41,300'),
+    description: [
+      'TACoS drifted above target on seven campaigns as broad-match keywords absorbed budget with weak conversion.',
+      'Reallocating spend to top-converting exact matches recovers efficiency without sacrificing share of voice.',
+    ],
   },
 
   customers: {
-    title:
-      "Customer demand patterns are evolving across your product families.",
-    subtitle:
-      "Monitor buying behaviour and category trends outside your own listings.",
-    date: "WED • JUL 22"
+    stats: makeStats('$351,000', '10', '$38,900'),
+    description: [
+      'Demand patterns are shifting toward bundled accessories, lifting basket size but concentrating revenue on fewer SKUs.',
+      'Ten product families show changing buying behaviour worth watching before it moves category share.',
+    ],
   },
 
   products: {
-    title:
-      "Products gaining momentum across the market deserve attention.",
-    subtitle:
-      "Spot emerging winners before they impact your category share.",
-    date: "WED • JUL 22"
-  }
+    stats: makeStats('$477,000', '12', '$45,600'),
+    description: [
+      'A cluster of emerging winners is gaining velocity ahead of the wider category, opening a near-term assortment gap.',
+      'Twelve SKUs are trending up fast enough to warrant re-stocking and listing investment this cycle.',
+    ],
+  },
 };

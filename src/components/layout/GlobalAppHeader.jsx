@@ -5,8 +5,6 @@ import { useHeaderScroll, notifyHeaderMeasured } from '../../hooks/useHeaderScro
 import { useSimulationStore } from '../../store/useSimulationStore';
 import useClickOutside from '../../hooks/useClickOutside';
 import SelectInput from '../ui/SelectInput';
-import RulesDrawer from '../common/RulesDrawer';
-import ActivityDrawer from '../common/ActivityDrawer';
 import white_latest from '../../assets/white_latest.png';
 import dark_latest from '../../assets/dark_latest.png';
 import ProfileDrawer from './ProfileDrawer';
@@ -321,9 +319,7 @@ const GlobalAppHeader = ({
   onMenuClick,
   hideMobileSearchIcon = false,
 }) => {
-  const [rulesDrawerOpen, setRulesDrawerOpen] = useState(false);
   const [profileDrawerOpen, setProfileDrawerOpen] = useState(false);
-  const [activityDrawerOpen, setActivityDrawerOpen] = useState(false);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -342,27 +338,6 @@ const GlobalAppHeader = ({
     year: 'numeric'
   }).toUpperCase();
 
-  const rulesButton = (
-    <button
-      onClick={() => setRulesDrawerOpen(true)}
-      className="flex items-center gap-1.5 px-3.5 py-1 bg-white dark:bg-slate-900 border border-[#dcd6cd] dark:border-slate-700 text-gray-900 dark:text-slate-100 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-full text-xs font-semibold transition-all shadow-xs"
-      title="Detectors & thresholds"
-    >
-      <i className="fa-solid fa-gear text-xs text-gray-700 dark:text-slate-300" />
-      <span>Rules</span>
-    </button>
-  );
-
-  const activityButton = (
-    <button
-      onClick={() => setActivityDrawerOpen(true)}
-      className="flex items-center gap-1.5 px-3.5 py-1 bg-white dark:bg-slate-900 border border-[#dcd6cd] dark:border-slate-700 text-gray-900 dark:text-slate-100 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-full text-xs font-semibold transition-all shadow-xs"
-      title="Activity"
-    >
-      <i className="fa-solid fa-bolt text-xs text-gray-700 dark:text-slate-300" />
-      <span>Activity</span>
-    </button>
-  );
   const location = useLocation();
   const {
     searchQuery, setSearchQuery,
@@ -663,7 +638,7 @@ const GlobalAppHeader = ({
           {/* Flex spacer always present to push right section to edge */}
           <div className="flex-1" />
 
-          {/* RIGHT — Dynamic User Greeting + Rules Button + Actions */}
+          {/* RIGHT — Dynamic User Greeting + Actions */}
           <div className="flex items-center gap-3 shrink-0">
             {!isScrolled && !isCompressed && (
               <div className="header-greeting-block hidden md:flex flex-col items-end text-right px-1 transition-opacity duration-200">
@@ -686,9 +661,6 @@ const GlobalAppHeader = ({
               </div>
             )}
 
-            {rulesButton}
-            {activityButton}
-
             {customRightElement}
 
             {simulationRing}
@@ -698,9 +670,6 @@ const GlobalAppHeader = ({
             {profileButton}
           </div>
         </div>
-
-        <RulesDrawer isOpen={rulesDrawerOpen} onClose={() => setRulesDrawerOpen(false)} />
-        <ActivityDrawer isOpen={activityDrawerOpen} onClose={() => setActivityDrawerOpen(false)} />
         <ProfileDrawer isOpen={profileDrawerOpen} onClose={() => setProfileDrawerOpen(false)} />
       </>
     );
@@ -785,7 +754,6 @@ const GlobalAppHeader = ({
           )}
 
           {rulesButton}
-          {activityButton}
 
           {customRightElement}
 
@@ -830,9 +798,6 @@ const GlobalAppHeader = ({
           {filterBar}
         </div>
       </div>
-
-      <RulesDrawer isOpen={rulesDrawerOpen} onClose={() => setRulesDrawerOpen(false)} />
-      <ActivityDrawer isOpen={activityDrawerOpen} onClose={() => setActivityDrawerOpen(false)} />
       <ProfileDrawer isOpen={profileDrawerOpen} onClose={() => setProfileDrawerOpen(false)} />
     </div>
   );
