@@ -94,7 +94,7 @@ const ActivityDrawer = ({ isOpen, onClose }) => {
               <div key={log.id} className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-4 shadow-sm">
                 <div className="flex items-start justify-between mb-2">
                   <h3 className="text-sm font-bold text-gray-900 dark:text-slate-100">{log.type}</h3>
-                  <span className="text-[10px] text-gray-400 dark:text-slate-500 font-mono tracking-wide">{log.time}</span>
+                  <span className="text-[10px] text-gray-400 dark:text-slate-500 font-sans tracking-wide">{log.time}</span>
                 </div>
                 <p className="text-[13px] text-gray-800 dark:text-slate-200 font-medium mb-3">
                   {log.title}

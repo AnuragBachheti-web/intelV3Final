@@ -44,7 +44,7 @@ export const RecommendationItem = ({ id, type, title, description, time, stats, 
           <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 text-[9px] rounded-md font-bold uppercase tracking-wider">{type}</span>
         </div>
         <h4 className="font-bold text-gray-900 dark:text-slate-100 text-xs leading-snug">{title}</h4>
-        <div className="flex items-center justify-between text-[9px] text-gray-400 dark:text-slate-500 font-mono">
+        <div className="flex items-center justify-between text-[9px] text-gray-400 dark:text-slate-500 font-sans">
           <span>#REC-{id}</span>
           <span>{time}</span>
         </div>
@@ -74,7 +74,7 @@ export const RecommendationItem = ({ id, type, title, description, time, stats, 
             <i className={`${icon} ${iconColor} text-[10px]`}></i>
           </div>
           {!hideMetadata && <span className="px-2 py-0.5 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-350 text-[9px] rounded-lg font-bold uppercase tracking-wider flex-shrink-0">{type}</span>}
-          {!hideMetadata && <span className="text-[10px] text-gray-500 dark:text-slate-455 font-mono flex-shrink-0">#REC-{id}</span>}
+          {!hideMetadata && <span className="text-[10px] text-gray-500 dark:text-slate-455 font-sans flex-shrink-0">#REC-{id}</span>}
           {!hideMetadata && <span className="text-[10px] text-gray-400 dark:text-slate-600 flex-shrink-0">·</span>}
           {!hideMetadata && <span className="text-[10px] text-gray-400 dark:text-slate-500 flex-shrink-0">{time}</span>}
           <h4 className="font-semibold text-gray-900 dark:text-slate-100 text-xs truncate flex-1 min-w-0">{title}</h4>
@@ -101,7 +101,7 @@ export const RecommendationItem = ({ id, type, title, description, time, stats, 
           <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md ${BADGE_COLORS[type] || 'bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-300'}`}>
             {type}
           </span>
-          <span className="text-[10px] text-gray-400 dark:text-slate-500 font-mono">#REC-{id}</span>
+          <span className="text-[10px] text-gray-400 dark:text-slate-500 font-sans">#REC-{id}</span>
         </div>
         <span className="text-[10px] text-gray-400 dark:text-slate-500 flex-shrink-0">{time}</span>
       </div>

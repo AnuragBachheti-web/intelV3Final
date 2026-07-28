@@ -47,7 +47,7 @@ const PrivacyPolicy = () => {
               ].map(([href, num, title]) => (
                 <li key={num} className="m-0 p-0">
                   <a href={href} className="flex items-baseline gap-2.5 py-1 text-sm text-gray-600 hover:text-blue-600 no-underline transition-colors">
-                    <span className="font-mono text-xs text-gray-400 flex-shrink-0 w-5">{num}</span>
+                    <span className="font-sans text-xs text-gray-400 flex-shrink-0 w-5">{num}</span>
                     {title}
                   </a>
                 </li>

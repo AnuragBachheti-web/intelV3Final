@@ -51,7 +51,7 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
       className="inline-flex items-center justify-center w-[15px] h-[15px] rounded-full border border-gray-900 dark:border-slate-300 text-gray-900 dark:text-slate-300 bg-transparent hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors align-middle shrink-0"
       aria-label="Show the math behind this number"
     >
-      <span className="text-[9px] font-serif italic leading-none">i</span>
+      <span className="text-[9px] font-sans italic leading-none">i</span>
     </button>
   );
 
@@ -74,16 +74,16 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
             <div>
               <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 mb-3">
                 <i className="fa-solid fa-sparkles text-[11px]" />
-                {/* <span className="text-[11px] font-mono font-bold uppercase tracking-[0.18em]">
+                {/* <span className="text-[11px] font-sans font-bold uppercase tracking-[0.18em]">
                   {baseInputs.signalLabel}
                 </span> */}
               </div>
-              <h2 className="text-[20px] leading-tight font-bold text-gray-900 dark:text-white font-serif max-w-[760px]">
+              <h2 className="text-[20px] leading-tight font-bold text-gray-900 dark:text-white font-sans max-w-[760px]">
                 {baseInputs.title}
               </h2>
             </div>
             <div className="flex-shrink-0 flex items-center gap-3">
-              <span className="px-3.5 py-1.5 rounded-full border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 text-[12px] font-mono whitespace-nowrap">
+              <span className="px-3.5 py-1.5 rounded-full border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 text-[12px] font-sans whitespace-nowrap">
                 {baseInputs.badge}
               </span>
               <button
@@ -107,7 +107,7 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
                 /* Formula panel (SS2) replaces the derived-number card */
                 <div className="rounded-xl border border-amber-200 dark:border-amber-900/40 overflow-hidden shadow-sm">
                   <div className="flex items-center justify-between px-5 py-3 bg-amber-50 dark:bg-amber-900/20 border-b border-amber-100 dark:border-amber-900/40">
-                    <span className="text-[12px] font-mono font-bold uppercase tracking-[0.14em] text-blue-700 dark:text-blue-300">
+                    <span className="text-[12px] font-sans font-bold uppercase tracking-[0.14em] text-blue-700 dark:text-blue-300">
                       L1 · Deterministic: how this number is derived
                     </span>
                     <button
@@ -122,7 +122,7 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
                     <dl className="flex flex-col">
                       <div className="flex items-start gap-6 py-2">
                         <dt className="w-40 shrink-0 text-[13px] text-gray-500 dark:text-slate-400">Formula</dt>
-                        <dd className="flex-1 rounded-md border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-3 py-2 text-[13px] font-mono text-gray-800 dark:text-slate-200">
+                        <dd className="flex-1 rounded-md border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-3 py-2 text-[13px] font-sans text-gray-800 dark:text-slate-200">
                           {formula.expression}
                         </dd>
                       </div>
@@ -131,7 +131,7 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
                           <dt className="w-40 shrink-0 text-[13px] text-gray-500 dark:text-slate-400">{row.label}</dt>
                           <dd className={`flex-1 text-[15px] font-bold flex items-center gap-2 ${row.highlight ? 'text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-white'}`}>
                             {row.badge && (
-                              <span className="px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 text-[10px] font-mono font-bold">
+                              <span className="px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 text-[10px] font-sans font-bold">
                                 {row.badge}
                               </span>
                             )}
@@ -148,7 +148,7 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
               ) : (
                 /* Contribution card (SS1) */
                 <div className="rounded-xl border border-gray-200 dark:border-slate-700 bg-[#faf9f7] dark:bg-slate-800/40 p-5">
-                  <p className="text-[11px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em] mb-3">
+                  <p className="text-[11px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em] mb-3">
                     Contribution from capturing the gap / mo
                   </p>
                   <div className="flex items-end justify-between gap-6">
@@ -165,11 +165,11 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
                     </div>
                     <div className="flex items-center gap-8 shrink-0">
                       <div>
-                        <div className="text-[10px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">Do-nothing D90</div>
+                        <div className="text-[10px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">Do-nothing D90</div>
                         <div className="text-[17px] font-bold text-gray-800 dark:text-slate-200">{sim.contribution.doNothingD90}</div>
                       </div>
                       <div className="pl-8 border-l border-gray-200 dark:border-slate-700">
-                        <div className="text-[10px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">Do-this D90</div>
+                        <div className="text-[10px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">Do-this D90</div>
                         <div className="text-[17px] font-bold text-blue-600 dark:text-blue-400">{sim.contribution.doThisD90}</div>
                       </div>
                     </div>
@@ -182,7 +182,7 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
                 <>
                   {/* Intervention */}
                   <div>
-                    <p className="text-[11px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em] mb-2">
+                    <p className="text-[11px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em] mb-2">
                       Intervention
                     </p>
                     <p className="text-[14px] text-gray-700 dark:text-slate-300 leading-relaxed">
@@ -192,18 +192,18 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
 
                   {/* Projection table */}
                   <div>
-                    <p className="text-[11px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em] mb-3">
+                    <p className="text-[11px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em] mb-3">
                       30 / 60 / 90 projection: click any number for its math
                     </p>
                     <div className="rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
                       <table className="w-full text-left">
                         <thead className="bg-gray-50/70 dark:bg-slate-800/60">
                           <tr>
-                            <th className="px-4 py-2.5 text-[10px] font-mono font-bold text-gray-400 uppercase tracking-wider">Metric</th>
-                            <th className="px-4 py-2.5 text-[10px] font-mono font-bold text-gray-400 uppercase tracking-wider text-right">Now</th>
-                            <th className="px-4 py-2.5 text-[10px] font-mono font-bold text-gray-400 uppercase tracking-wider text-right">D-Nothing</th>
+                            <th className="px-4 py-2.5 text-[10px] font-sans font-bold text-gray-400 uppercase tracking-wider">Metric</th>
+                            <th className="px-4 py-2.5 text-[10px] font-sans font-bold text-gray-400 uppercase tracking-wider text-right">Now</th>
+                            <th className="px-4 py-2.5 text-[10px] font-sans font-bold text-gray-400 uppercase tracking-wider text-right">D-Nothing</th>
                             {sim.projection.cells.map((c) => (
-                              <th key={c.key} className="px-4 py-2.5 text-[10px] font-mono font-bold text-gray-400 uppercase tracking-wider text-right">{c.label}</th>
+                              <th key={c.key} className="px-4 py-2.5 text-[10px] font-sans font-bold text-gray-400 uppercase tracking-wider text-right">{c.label}</th>
                             ))}
                           </tr>
                         </thead>
@@ -236,7 +236,7 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
             <div className="flex flex-col gap-6">
               {/* What could go wrong */}
               <div>
-                <p className="text-[11px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em] mb-3">
+                <p className="text-[11px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em] mb-3">
                   What could go wrong
                 </p>
                 <div className="flex flex-col divide-y divide-gray-100 dark:divide-slate-800">
@@ -254,7 +254,7 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
               {/* Assumptions */}
               <div className="rounded-xl border border-gray-200 dark:border-slate-700 bg-[#faf9f7] dark:bg-slate-800/40 p-5">
                 <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
-                  <p className="text-[11px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em]">
+                  <p className="text-[11px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em]">
                     Assumptions
                   </p>
                   {/* <div className="flex items-center gap-2">
@@ -296,7 +296,7 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
                     { label: 'RAMP_DAYS', value: rampDays, setter: setRampDays },
                   ].map((field) => (
                     <div key={field.label}>
-                      <label className="block text-[10px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">
+                      <label className="block text-[10px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">
                         {field.label}
                       </label>
                       <input
@@ -330,14 +330,14 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
             <div className="lg:col-span-2 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
               <div className="flex items-center gap-2 px-5 py-3 bg-gray-50/70 dark:bg-slate-800/60 border-b border-gray-100 dark:border-slate-800">
                 <i className="fa-regular fa-clock text-gray-400 text-[12px]" />
-                <span className="text-[11px] font-mono font-bold text-gray-500 dark:text-slate-400 uppercase tracking-[0.14em]">
+                <span className="text-[11px] font-sans font-bold text-gray-500 dark:text-slate-400 uppercase tracking-[0.14em]">
                   Monitoring plan: what to watch, by when, and the tripwire that means revert
                 </span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 dark:divide-slate-800">
                 {baseInputs.monitoring.days.map((day) => (
                   <div key={day} className="p-5">
-                    <span className="inline-block px-2.5 py-1 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[10px] font-mono font-bold uppercase tracking-wider mb-3">
+                    <span className="inline-block px-2.5 py-1 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[10px] font-sans font-bold uppercase tracking-wider mb-3">
                       Day {day}
                     </span>
                     <p className="text-[13px] text-gray-800 dark:text-slate-200 mb-2">

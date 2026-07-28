@@ -213,7 +213,7 @@ const BinView = ({ items, onBack, onRestore, onRestoreMany }) => {
                       <td className="px-4 py-3 w-8">
                         <input type="checkbox" checked={selectedIds.has(product.id)} onChange={() => toggleSelect(product.id)} className="rounded border-gray-300 dark:border-slate-600" />
                       </td>
-                      <td className="px-4 py-3 text-xs text-gray-400 dark:text-slate-500 font-mono w-10">{idx + 1}</td>
+                      <td className="px-4 py-3 text-xs text-gray-400 dark:text-slate-500 font-sans w-10">{idx + 1}</td>
                       <td className="px-3 py-3">
                         <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
                           {product.image
@@ -223,7 +223,7 @@ const BinView = ({ items, onBack, onRestore, onRestoreMany }) => {
                       </td>
                       <td className="px-3 py-3 min-w-[160px]">
                         <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 leading-tight">{product.name}</p>
-                        <p className="text-[10px] text-gray-400 dark:text-slate-500 font-mono mt-0.5">{product.sku}</p>
+                        <p className="text-[10px] text-gray-400 dark:text-slate-500 font-sans mt-0.5">{product.sku}</p>
                       </td>
                       <td className="px-3 py-3">
                         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${ss.pill}`}>
@@ -743,7 +743,7 @@ const ProductsListPage = () => {
                       <td className="px-3 py-3">
                         <span className={`w-2 h-2 rounded-full inline-block ${product.status === 'Active' ? 'bg-green-500' : product.status === 'Archived' ? 'bg-red-500' : 'bg-gray-400'}`}></span>
                       </td>
-                      <td className="px-3 py-3 text-xs text-gray-500 dark:text-slate-400 font-mono">
+                      <td className="px-3 py-3 text-xs text-gray-500 dark:text-slate-400 font-sans">
                         {product.sku}
                       </td>
                       <td className="px-3 py-3">

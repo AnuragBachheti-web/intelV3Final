@@ -9,7 +9,7 @@ const makeStats = (opportunity, skus, risk) => [
 
 export const REALIFY_BRIEF = {
   sales: {
-    stats: makeStats('$895,000', '14', '$52,000'),
+    stats: makeStats('$89.5K', '14', '$52K'),
     description: [
       'Autofy clocked ₹18.4L in revenue this month, up 12% MoM, driven largely by mounting accessories, but margin slipped 2.1pp as ad spend outpaced returns.',
       'Three SKUs are flagged at risk, with AF-CABLE-USB losing Buy Box ground to a competitor who undercut price by ₹28.',

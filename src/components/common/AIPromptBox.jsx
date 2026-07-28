@@ -34,7 +34,8 @@ const AIPromptBox = ({ placeholder = "Ask Realify...", sidebarActive = true, ful
     <motion.div
       initial={false}
       animate={{
-        left: isMobile || !sidebarActive ? 16 : (isSidebarCollapsed ? 105 : 269),
+        left: isMobile || !sidebarActive ? 16 : (isSidebarCollapsed ? 126 : 270),
+        right: isMobile ? 16 : 70,
       }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       className="fixed bottom-0 right-4 sm:right-[49px] z-50 pb-4 pointer-events-none"
@@ -42,7 +43,7 @@ const AIPromptBox = ({ placeholder = "Ask Realify...", sidebarActive = true, ful
       <div className="pointer-events-auto">
         {/* Outer Container */}
         <div className="bg-white/95 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-gray-200 dark:border-slate-800 dark:bg-slate-900/95 rounded-2xl p-3 sm:p-4 transition-colors">
-          
+
           {/* Reference Tag Section (If active) */}
           <AnimatePresence>
             {aiReferences.length > 0 && (
@@ -58,7 +59,7 @@ const AIPromptBox = ({ placeholder = "Ask Realify...", sidebarActive = true, ful
                     <span className="text-xs font-medium text-blue-700 dark:text-blue-300">
                       {ref.title}
                     </span>
-                    <button 
+                    <button
                       onClick={() => removeAiReference(ref.id)}
                       className="ml-1 text-blue-400 hover:text-blue-600 dark:hover:text-blue-200 transition-colors"
                     >
@@ -110,9 +111,8 @@ const AIPromptBox = ({ placeholder = "Ask Realify...", sidebarActive = true, ful
               {/* Submit Button */}
               <button
                 onClick={handleSubmit}
-                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all flex-shrink-0 ${
-                  aiPromptValue.trim() || aiReferences.length > 0 ? 'bg-brand hover:bg-brand-hover text-white dark:bg-gray-600 dark:hover:bg-gray-500' : 'bg-slate-200 dark:bg-slate-700 text-slate-400'
-                }`}
+                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all flex-shrink-0 ${aiPromptValue.trim() || aiReferences.length > 0 ? 'bg-brand hover:bg-brand-hover text-white dark:bg-gray-600 dark:hover:bg-gray-500' : 'bg-slate-200 dark:bg-slate-700 text-slate-400'
+                  }`}
               >
                 <i className="fa-solid fa-arrow-up"></i>
               </button>

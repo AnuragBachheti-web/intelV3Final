@@ -217,7 +217,7 @@ const ComparisonPage = () => {
                             <i className={`fa-solid ${col.product.icon} text-gray-500 dark:text-slate-400 text-sm`} />
                           </div>
                           <span className="text-xs font-bold text-gray-900 dark:text-slate-100">{col.product.name}</span>
-                          <span className="text-[10px] text-gray-400 dark:text-slate-500 font-mono">{col.raw.trim().toUpperCase()}</span>
+                          <span className="text-[10px] text-gray-400 dark:text-slate-500 font-sans">{col.raw.trim().toUpperCase()}</span>
                         </div>
                       </th>
                     ))}

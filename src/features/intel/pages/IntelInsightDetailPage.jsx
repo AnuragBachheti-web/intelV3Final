@@ -243,7 +243,7 @@ const IntelV2InsightDetailPage = () => {
                   <i className="fa-solid fa-circle-check text-[9px]" /> EXECUTED
                 </span>
               )}
-              <span className="text-xs text-gray-400 dark:text-slate-500 font-mono">#{recId}</span>
+              <span className="text-xs text-gray-400 dark:text-slate-500 font-sans">#{recId}</span>
               <span className="text-gray-300 dark:text-slate-700">·</span>
               <span className="text-xs text-gray-500 dark:text-slate-400">{insight.time}</span>
             </div>
@@ -291,7 +291,7 @@ const IntelV2InsightDetailPage = () => {
                           <span className={`px-2 py-0.5 text-[9px] font-bold uppercase rounded-md ${sMeta.bg} ${sMeta.color}`}>
                             {sLabel}
                           </span>
-                          <span className="text-[9px] text-gray-400 dark:text-slate-500 font-mono">
+                          <span className="text-[9px] text-gray-400 dark:text-slate-500 font-sans">
                             #REC-{8000 + currentIndex * 100 + (typeof selectedStep.id === 'number' ? selectedStep.id * 47 : 71)}
                           </span>
                           <span className="text-gray-300 dark:text-slate-700">·</span>

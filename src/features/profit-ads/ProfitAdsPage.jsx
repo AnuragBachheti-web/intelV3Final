@@ -86,7 +86,7 @@ const ProfitAdsPage = () => {
               )}
             </div>
 
-            <button className="px-3 py-1.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-md text-xs font-semibold text-gray-500 dark:text-slate-400 font-mono">
+            <button className="px-3 py-1.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-md text-xs font-semibold text-gray-500 dark:text-slate-400 font-sans">
               2026-03-01 to 2026-06-30
             </button>
           </div>
@@ -263,7 +263,7 @@ const ProfitAdsPage = () => {
                       >
                         <td className="px-6 py-5">
                           <p className="text-sm font-bold text-gray-900 dark:text-slate-100 mb-1 tracking-tight truncate pr-4" title={sku.title}>{sku.title}</p>
-                          <p className="text-[10px] font-mono text-gray-400 dark:text-slate-500 tracking-wider">
+                          <p className="text-[10px] font-sans text-gray-400 dark:text-slate-500 tracking-wider">
                             {sku.sku} · {sku.campaignCount} campaign{sku.campaignCount !== 1 ? 's' : ''} · {sku.category}
                           </p>
                         </td>

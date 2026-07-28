@@ -18,7 +18,7 @@ const SimulatePanel = ({ isOpen, onClose, insight }) => {
       {/* Header Block */}
       <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-800 sticky top-0 bg-white dark:bg-slate-900 z-10 flex flex-col gap-3">
         <div className="flex items-start justify-between gap-2">
-          <h2 className="text-[15px] font-bold text-gray-900 dark:text-white font-serif leading-snug">
+          <h2 className="text-[15px] font-bold text-gray-900 dark:text-white font-sans leading-snug">
             Simulate • {sku}
           </h2>
           <button
@@ -38,7 +38,7 @@ const SimulatePanel = ({ isOpen, onClose, insight }) => {
         {/* Error State */}
         {!data.canSimulate && (
           <div className="py-2">
-            <p className="text-[11px] font-mono text-gray-400 uppercase tracking-widest mb-4">
+            <p className="text-[11px] font-sans text-gray-400 uppercase tracking-widest mb-4">
               CAN'T SIMULATE
             </p>
             <p className="text-[13px] text-gray-700 dark:text-slate-300">
@@ -95,9 +95,9 @@ const SimulatePanel = ({ isOpen, onClose, insight }) => {
                 <table className="w-full text-left min-w-[300px]">
                   <thead>
                     <tr>
-                      <th className="py-2 text-[9px] font-mono font-bold text-gray-400 uppercase tracking-wider">METRIC</th>
-                      <th className="py-2 text-[9px] font-mono font-bold text-gray-400 uppercase tracking-wider text-right">NOW</th>
-                      <th className="py-2 text-[9px] font-mono font-bold text-gray-400 uppercase tracking-wider text-right">D90</th>
+                      <th className="py-2 text-[9px] font-sans font-bold text-gray-400 uppercase tracking-wider">METRIC</th>
+                      <th className="py-2 text-[9px] font-sans font-bold text-gray-400 uppercase tracking-wider text-right">NOW</th>
+                      <th className="py-2 text-[9px] font-sans font-bold text-gray-400 uppercase tracking-wider text-right">D90</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
@@ -130,7 +130,7 @@ const SimulatePanel = ({ isOpen, onClose, insight }) => {
 
             {/* Assumptions */}
             <div>
-              <p className="text-[9px] font-mono text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-3">
+              <p className="text-[9px] font-sans text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-3">
                 ASSUMPTIONS
               </p>
               <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -141,7 +141,7 @@ const SimulatePanel = ({ isOpen, onClose, insight }) => {
               
               <div className="flex items-center justify-between gap-3 bg-white dark:bg-slate-800 p-3 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
                 <div>
-                  <div className="text-[10px] font-mono text-gray-500 uppercase font-bold">SHOCK_PCT</div>
+                  <div className="text-[10px] font-sans text-gray-500 uppercase font-bold">SHOCK_PCT</div>
                   <div className="text-[9px] text-gray-400 italic mt-0.5 leading-tight">
                     Hypothetical drop in this SKU's sales.
                   </div>

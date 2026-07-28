@@ -138,7 +138,7 @@ const ProfitAdsModal = ({ isOpen, onClose, skuData }) => {
           <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100 tracking-tight mb-1">
             {skuData.title}
           </h2>
-          <p className="text-[10px] text-gray-500 dark:text-slate-400 font-mono tracking-wide">
+          <p className="text-[10px] text-gray-500 dark:text-slate-400 font-sans tracking-wide">
             {skuData.sku} · {recommendationsData.length} campaign{recommendationsData.length !== 1 ? 's' : ''}
           </p>
         </div>
@@ -200,7 +200,7 @@ const ProfitAdsModal = ({ isOpen, onClose, skuData }) => {
                   </span>
                 </div>
                 <h3 className="text-[15px] font-bold text-gray-900 dark:text-slate-100 mb-1">{rec.title}</h3>
-                <p className="text-[10px] text-gray-400 dark:text-slate-500 font-mono mb-2">{rec.breadcrumbs}</p>
+                <p className="text-[10px] text-gray-400 dark:text-slate-500 font-sans mb-2">{rec.breadcrumbs}</p>
                 <p className="text-lg font-bold text-emerald-600 dark:text-emerald-500 tracking-tight mb-3">{rec.gain}</p>
                 <p className="text-[13px] text-gray-700 dark:text-slate-300 leading-relaxed">
                   {rec.desc}
@@ -304,7 +304,7 @@ const ProfitAdsModal = ({ isOpen, onClose, skuData }) => {
                 <p className="text-[14px] font-bold text-gray-900 dark:text-slate-100 mb-2">
                   Preview: instruction only
                 </p>
-                <p className="text-[13px] text-gray-700 dark:text-slate-300 mb-3 font-mono">
+                <p className="text-[13px] text-gray-700 dark:text-slate-300 mb-3 font-sans">
                   update bid: {bidChange}% on {activeRec?.title}
                 </p>
               </div>

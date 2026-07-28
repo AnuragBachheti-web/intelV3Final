@@ -41,7 +41,7 @@ const ActivityTab = () => {
   return (
     <div className="max-w-4xl">
       <div className="mb-6 border-b border-gray-200 dark:border-slate-700">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white font-serif mb-4">Activity</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white font-sans mb-4">Activity</h2>
         
         {/* Tabs */}
         <div className="flex items-center gap-6">
@@ -70,7 +70,7 @@ const ActivityTab = () => {
             <div key={log.id} className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-5 shadow-sm transition-all hover:shadow-md">
               <div className="flex items-start justify-between mb-2.5">
                 <h3 className="text-sm font-bold text-gray-900 dark:text-slate-100">{log.type}</h3>
-                <span className="text-[11px] text-gray-400 dark:text-slate-500 font-mono tracking-wide bg-gray-50 dark:bg-slate-900 px-2 py-0.5 rounded border border-gray-100 dark:border-slate-700/50">{log.time}</span>
+                <span className="text-[11px] text-gray-400 dark:text-slate-500 font-sans tracking-wide bg-gray-50 dark:bg-slate-900 px-2 py-0.5 rounded border border-gray-100 dark:border-slate-700/50">{log.time}</span>
               </div>
               <p className="text-[14px] text-gray-800 dark:text-slate-200 font-bold mb-3">
                 {log.title}
@@ -82,7 +82,7 @@ const ActivityTab = () => {
                 {log.labels.map((label, idx) => (
                   <span 
                     key={idx} 
-                    className="px-2 py-1 bg-gray-100 dark:bg-slate-900 text-gray-600 dark:text-slate-400 text-[10px] font-bold font-mono tracking-wider rounded border border-gray-200/60 dark:border-slate-700/60 uppercase"
+                    className="px-2 py-1 bg-gray-100 dark:bg-slate-900 text-gray-600 dark:text-slate-400 text-[10px] font-bold font-sans tracking-wider rounded border border-gray-200/60 dark:border-slate-700/60 uppercase"
                   >
                     {label}
                   </span>

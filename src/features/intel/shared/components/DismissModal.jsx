@@ -15,10 +15,10 @@ const DismissModal = ({ isOpen, onClose }) => {
               <i className="fa-solid fa-xmark text-lg" />
             </div>
             <div>
-              <h2 className="text-[19px] font-bold text-gray-900 dark:text-white font-serif leading-snug">
+              <h2 className="text-[19px] font-bold text-gray-900 dark:text-white font-sans leading-snug">
                 Dismissed.
               </h2>
-              <p className="text-[12px] font-mono text-gray-400 mt-1">
+              <p className="text-[12px] font-sans text-gray-400 mt-1">
                 internal
               </p>
             </div>
@@ -26,7 +26,7 @@ const DismissModal = ({ isOpen, onClose }) => {
         </div>
 
         <div className="px-6 py-5">
-          <p className="text-[10px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-3">
+          <p className="text-[10px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-3">
             WHAT THIS DOES & WHY
           </p>
           <p className="text-[14px] text-gray-700 dark:text-slate-300 leading-relaxed mb-6">

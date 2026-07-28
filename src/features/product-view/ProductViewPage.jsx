@@ -57,7 +57,7 @@ const CompactWatchlistCard = ({ title, sku, stock, velocity, image, status }) =>
             </span>
           )}
         </div>
-        <p className="text-[9px] text-gray-500 dark:text-slate-400 mt-0.5 font-mono">SKU: {sku}</p>
+        <p className="text-[9px] text-gray-500 dark:text-slate-400 mt-0.5 font-sans">SKU: {sku}</p>
       </div>
     </div>
     <div className="grid grid-cols-2 gap-2">
@@ -499,7 +499,7 @@ const ProductViewPage = () => {
                     <p className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-1">
                       {displayPrice}
                     </p>
-                    <p className="text-[11px] text-gray-500 dark:text-slate-400 mb-3 font-mono">
+                    <p className="text-[11px] text-gray-500 dark:text-slate-400 mb-3 font-sans">
                       SKU: {activeProduct.sku || activeProduct.watchlistItem?.sku || 'WH-PRO-2024'} · Realify Audio · Added Mar 14, 2026
                     </p>
                     <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">

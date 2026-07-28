@@ -368,7 +368,7 @@ const ActionLogPage = () => {
                     <td className="px-5 py-4 max-w-[160px]">
                       <div className="text-xs font-semibold text-gray-700 dark:text-slate-300 truncate">{item.itemName}</div>
                       {item.sku && (
-                        <span className="text-[10px] font-mono bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 px-1.5 py-0.5 rounded mt-0.5 inline-block">{item.sku}</span>
+                        <span className="text-[10px] font-sans bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 px-1.5 py-0.5 rounded mt-0.5 inline-block">{item.sku}</span>
                       )}
                     </td>
                     {/* Module */}

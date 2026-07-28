@@ -30,23 +30,23 @@ const TermsOfService = () => {
             <h2 className="text-lg font-bold mt-0 border-none mb-4 uppercase text-black">Contents</h2>
             <div className="grid md:grid-cols-2 gap-x-8 gap-y-1 text-sm">
               <ul className="list-none pl-0 space-y-1">
-                <li><a className="text-blue-600 hover:underline" href="#tos-s1"><span className="font-mono text-xs text-gray-400 mr-2">01</span>Acceptance</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s2"><span className="font-mono text-xs text-gray-400 mr-2">02</span>Definitions</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s3"><span className="font-mono text-xs text-gray-400 mr-2">03</span>License</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s4"><span className="font-mono text-xs text-gray-400 mr-2">04</span>Connected Platforms &amp; AI</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s5"><span className="font-mono text-xs text-gray-400 mr-2">05</span>Fees &amp; Payment</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s6"><span className="font-mono text-xs text-gray-400 mr-2">06</span>Confidentiality</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s7"><span className="font-mono text-xs text-gray-400 mr-2">07</span>Intellectual Property</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s8"><span className="font-mono text-xs text-gray-400 mr-2">08</span>Warranties &amp; Disclaimers</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s1"><span className="font-sans text-xs text-gray-400 mr-2">01</span>Acceptance</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s2"><span className="font-sans text-xs text-gray-400 mr-2">02</span>Definitions</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s3"><span className="font-sans text-xs text-gray-400 mr-2">03</span>License</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s4"><span className="font-sans text-xs text-gray-400 mr-2">04</span>Connected Platforms &amp; AI</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s5"><span className="font-sans text-xs text-gray-400 mr-2">05</span>Fees &amp; Payment</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s6"><span className="font-sans text-xs text-gray-400 mr-2">06</span>Confidentiality</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s7"><span className="font-sans text-xs text-gray-400 mr-2">07</span>Intellectual Property</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s8"><span className="font-sans text-xs text-gray-400 mr-2">08</span>Warranties &amp; Disclaimers</a></li>
               </ul>
               <ul className="list-none pl-0 space-y-1">
-                <li><a className="text-blue-600 hover:underline" href="#tos-s9"><span className="font-mono text-xs text-gray-400 mr-2">09</span>Limitation of Liability</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s10"><span className="font-mono text-xs text-gray-400 mr-2">10</span>Indemnification</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s11"><span className="font-mono text-xs text-gray-400 mr-2">11</span>Term &amp; Termination</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s12"><span className="font-mono text-xs text-gray-400 mr-2">12</span>Export Controls &amp; DMCA</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s13"><span className="font-mono text-xs text-gray-400 mr-2">13</span>Dispute Resolution</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s14"><span className="font-mono text-xs text-gray-400 mr-2">14</span>Service Level Agreement</a></li>
-                <li><a className="text-blue-600 hover:underline" href="#tos-s15"><span className="font-mono text-xs text-gray-400 mr-2">15</span>General</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s9"><span className="font-sans text-xs text-gray-400 mr-2">09</span>Limitation of Liability</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s10"><span className="font-sans text-xs text-gray-400 mr-2">10</span>Indemnification</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s11"><span className="font-sans text-xs text-gray-400 mr-2">11</span>Term &amp; Termination</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s12"><span className="font-sans text-xs text-gray-400 mr-2">12</span>Export Controls &amp; DMCA</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s13"><span className="font-sans text-xs text-gray-400 mr-2">13</span>Dispute Resolution</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s14"><span className="font-sans text-xs text-gray-400 mr-2">14</span>Service Level Agreement</a></li>
+                <li><a className="text-blue-600 hover:underline" href="#tos-s15"><span className="font-sans text-xs text-gray-400 mr-2">15</span>General</a></li>
               </ul>
             </div>
           </section>
@@ -64,35 +64,35 @@ const TermsOfService = () => {
             <h2>§ 02 Definitions</h2>
             <div className="divide-y divide-gray-200">
               <div className="flex gap-5 py-3 text-sm">
-                <span className="font-mono text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Services"</span>
+                <span className="font-sans text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Services"</span>
                 <span className="text-gray-600">The Realify platform, including the AI Pricing, Inventory, Demand Forecasting, Listing Intelligence, Screener, Advertising, and Profitability Agents, the Conductor orchestration system, plus all APIs, dashboards, analytics, automation, integrations, and support.</span>
               </div>
               <div className="flex gap-5 py-3 text-sm">
-                <span className="font-mono text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Customer Data"</span>
+                <span className="font-sans text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Customer Data"</span>
                 <span className="text-gray-600">All data you upload, submit, or make available through the Services, including data retrieved from Connected Platforms on your behalf.</span>
               </div>
               <div className="flex gap-5 py-3 text-sm">
-                <span className="font-mono text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Amazon Information"</span>
+                <span className="font-sans text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Amazon Information"</span>
                 <span className="text-gray-600">Data accessed through the Amazon Selling Partner API on your behalf, as defined in Amazon's SP-API Developer Agreement.</span>
               </div>
               <div className="flex gap-5 py-3 text-sm">
-                <span className="font-mono text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Connected Platforms"</span>
+                <span className="font-sans text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Connected Platforms"</span>
                 <span className="text-gray-600">Third-party services you authorize Realify to access, including Amazon SP-API, Amazon Advertising API, Shopify, WooCommerce, Magento, Walmart, eBay, Etsy, TikTok Shop, Google Ads, Meta Ads, Klaviyo, Stripe, Recharge, Gorgias, Zendesk, and Postscript.</span>
               </div>
               <div className="flex gap-5 py-3 text-sm">
-                <span className="font-mono text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Automated Actions"</span>
+                <span className="font-sans text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Automated Actions"</span>
                 <span className="text-gray-600">Operations the Services execute on a Connected Platform without a contemporaneous manual instruction, such as price updates, bid changes, budget adjustments, and inventory modifications.</span>
               </div>
               <div className="flex gap-5 py-3 text-sm">
-                <span className="font-mono text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Integration Credentials"</span>
+                <span className="font-sans text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Integration Credentials"</span>
                 <span className="text-gray-600">OAuth tokens, API keys, access tokens, and similar credentials used to connect a Connected Platform.</span>
               </div>
               <div className="flex gap-5 py-3 text-sm">
-                <span className="font-mono text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Authorized Users"</span>
+                <span className="font-sans text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Authorized Users"</span>
                 <span className="text-gray-600">Your employees, contractors, and agents whom you permit to access the Services under your account.</span>
               </div>
               <div className="flex gap-5 py-3 text-sm">
-                <span className="font-mono text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Order Form"</span>
+                <span className="font-sans text-xs text-blue-600 font-medium w-44 flex-shrink-0 pt-0.5">"Order Form"</span>
                 <span className="text-gray-600">A written or electronic order or subscription agreement that references these Terms.</span>
               </div>
             </div>
@@ -200,7 +200,7 @@ const TermsOfService = () => {
           <section id="tos-s8">
             <h2>§ 08 Warranties and Disclaimers</h2>
             <p>Each party warrants it has authority to enter these Terms.</p>
-            <div className="bg-gray-50 border border-gray-200 border-l-4 border-l-gray-400 rounded-r-md p-4 my-4 font-mono text-xs text-gray-600 leading-relaxed">
+            <div className="bg-gray-50 border border-gray-200 border-l-4 border-l-gray-400 rounded-r-md p-4 my-4 font-sans text-xs text-gray-600 leading-relaxed">
               THE SERVICES ARE PROVIDED "AS IS." REALIFY DISCLAIMS ALL WARRANTIES, EXPRESS, IMPLIED, OR STATUTORY, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. REALIFY DOES NOT WARRANT THAT THE SERVICES WILL BE UNINTERRUPTED, ERROR-FREE, OR SECURE; THAT CONNECTED PLATFORM APIS WILL BE AVAILABLE; THAT AUTOMATED ACTIONS WILL PRODUCE ANY PARTICULAR RESULT; OR THAT AI OUTPUTS WILL BE ACCURATE OR PROFITABLE.
             </div>
           </section>
@@ -208,7 +208,7 @@ const TermsOfService = () => {
           {/* § 09 Limitation of Liability */}
           <section id="tos-s9">
             <h2>§ 09 Limitation of Liability</h2>
-            <div className="bg-gray-50 border border-gray-200 border-l-4 border-l-gray-400 rounded-r-md p-4 my-4 font-mono text-xs text-gray-600 leading-relaxed">
+            <div className="bg-gray-50 border border-gray-200 border-l-4 border-l-gray-400 rounded-r-md p-4 my-4 font-sans text-xs text-gray-600 leading-relaxed">
               TO THE MAXIMUM EXTENT PERMITTED BY LAW, NEITHER PARTY IS LIABLE FOR INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFITS, REVENUES, OR DATA. REALIFY'S TOTAL CUMULATIVE LIABILITY ARISING OUT OF OR RELATED TO THESE TERMS WILL NOT EXCEED THE TOTAL FEES PAID BY YOU TO REALIFY IN THE 12 MONTHS IMMEDIATELY PRECEDING THE CLAIM.
             </div>
             <p style={{ marginTop: '12px' }}>Exceptions: payment obligations, indemnification, gross negligence or willful misconduct, and confidentiality breaches.</p>
@@ -249,7 +249,7 @@ const TermsOfService = () => {
             <h3>Mandatory Arbitration</h3>
             <p>All Disputes must be resolved by binding arbitration — not litigation in court. Read this section carefully.</p>
             <p>All disputes arising from these Terms or the Services are resolved by binding arbitration under AAA Commercial Arbitration Rules, by a single arbitrator in San Francisco, CA (or by videoconference).</p>
-            <div className="bg-gray-50 border border-gray-200 border-l-4 border-l-gray-400 rounded-r-md p-4 my-4 font-mono text-xs text-gray-600 leading-relaxed">
+            <div className="bg-gray-50 border border-gray-200 border-l-4 border-l-gray-400 rounded-r-md p-4 my-4 font-sans text-xs text-gray-600 leading-relaxed">
               CLASS AND COLLECTIVE ACTIONS ARE WAIVED — ALL DISPUTES ARE ARBITRATED INDIVIDUALLY.
             </div>
             <p>Opt-out: email <a className="text-blue-600 hover:underline" href="mailto:legal@realify.ai">legal@realify.ai</a> with subject "Arbitration Opt-Out" within 30 days of first acceptance, including your name, company, and email. Either party may seek injunctive relief in court to protect IP or Confidential Information. Governing law: California, without conflict-of-law principles. For opted-out or non-arbitrable matters: exclusive jurisdiction of state and federal courts in San Francisco County, California.</p>

@@ -86,7 +86,7 @@ const BillingTab = ({ onOpenPayment }) => {
                 {invoices.map((inv, i) => (
                   <tr key={i} className="border-b border-gray-50 dark:border-slate-800/50 last:border-0 hover:bg-gray-50/50 dark:hover:bg-slate-800/20 transition-colors">
                     <td className="py-4 px-2 text-gray-700 dark:text-slate-300 font-medium">{inv.date}</td>
-                    <td className="py-4 px-2 text-gray-500 dark:text-slate-500 font-mono text-xs">{inv.id}</td>
+                    <td className="py-4 px-2 text-gray-500 dark:text-slate-500 font-sans text-xs">{inv.id}</td>
                     <td className="py-4 px-2 font-bold text-gray-900 dark:text-slate-100">{inv.amount}</td>
                     <td className="py-4 px-2">
                       <span className="px-2 py-0.5 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded text-[10px] font-bold">Paid</span>

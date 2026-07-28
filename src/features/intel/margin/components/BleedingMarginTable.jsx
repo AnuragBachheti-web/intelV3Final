@@ -7,7 +7,7 @@ import { formatCurrency, formatPercentage } from '../../../../utils/formatters';
 
 const BleedingMarginTable = ({ onRowClick, hideTitleBar }) => {
   const columns = [
-    { header: 'SKU', key: 'sku', render: (val) => <span className="font-mono text-xs text-gray-500 dark:text-slate-400">{val}</span> },
+    { header: 'SKU', key: 'sku', render: (val) => <span className="font-sans text-xs text-gray-500 dark:text-slate-400">{val}</span> },
     { header: 'Product', key: 'title', bold: true },
     { header: 'CM2', key: 'cm2', align: 'right', render: (val) => (
       <span className="text-xs text-gray-700 dark:text-slate-300">{formatCurrency(val)}</span>

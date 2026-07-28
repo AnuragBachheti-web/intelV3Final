@@ -18,7 +18,7 @@ const AdsTables = () => (
             {campaignData.map((r, i) => (
               <TR key={i}>
                 <TD className="font-semibold text-gray-900 dark:text-slate-100 max-w-[200px] truncate">{r.campaign}</TD>
-                <TD><span className="px-1.5 py-0.5 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 rounded text-[9px] font-mono">{r.type}</span></TD>
+                <TD><span className="px-1.5 py-0.5 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 rounded text-[9px] font-sans">{r.type}</span></TD>
                 <TD className="text-gray-700 dark:text-slate-300">{r.spend}</TD>
                 <TD className="font-semibold text-gray-900 dark:text-slate-100">{r.revenue}</TD>
                 <TD className={parseFloat(r.roas) >= 8 ? 'font-bold text-green-600 dark:text-green-400' : parseFloat(r.roas) >= 4 ? 'font-bold text-amber-600 dark:text-amber-400' : 'font-bold text-red-500 dark:text-red-400'}>{r.roas}</TD>

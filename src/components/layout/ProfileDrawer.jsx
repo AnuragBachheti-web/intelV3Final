@@ -57,7 +57,7 @@ const ProfileDrawer = ({ isOpen, onClose }) => {
         {/* Header Section */}
         <div className="flex-shrink-0 px-6 py-4 border-b border-gray-200 dark:border-slate-800">
           <div className="flex items-center justify-between">
-            <h2 className="text-[18px] font-bold text-gray-900 dark:text-white font-serif">
+            <h2 className="text-[18px] font-bold text-gray-900 dark:text-white font-sans">
               Account & data
             </h2>
             <button
@@ -84,7 +84,7 @@ const ProfileDrawer = ({ isOpen, onClose }) => {
           
           {/* Explanation Mode Card */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700">
-            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 font-serif">Explanation mode</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 font-sans">Explanation mode</h3>
             <p className="text-[13px] text-gray-600 dark:text-slate-300 leading-relaxed mb-4">
               When on, every card you open shows a full provenance trace — inputs by source, the rule and its formula, the anomaly, the calculation, and the exact data sent to (and returned from) the LLM. Off by default.
             </p>
@@ -101,11 +101,11 @@ const ProfileDrawer = ({ isOpen, onClose }) => {
 
           {/* New: Data Completeness */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700">
-            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 font-serif">Data completeness</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 font-sans">Data completeness</h3>
             <p className="text-[13px] text-gray-600 dark:text-slate-300 leading-relaxed mb-4">
               Detectors light up as you upload the reports that feed them. Anything missing stays dark — nothing is ever synthesized for your account.
             </p>
-            <p className="text-[12px] font-mono text-gray-500 mb-4 tracking-tight">
+            <p className="text-[12px] font-sans text-gray-500 mb-4 tracking-tight">
               6/10 detector groups active · 1447 SKUs
             </p>
             
@@ -115,77 +115,77 @@ const ProfileDrawer = ({ isOpen, onClose }) => {
                   <i className="fa-solid fa-check text-green-600 text-xs w-3" />
                   <span className="text-[13px] text-gray-800 dark:text-slate-200">Price</span>
                 </div>
-                <span className="text-[11px] font-mono text-gray-400">1424 SKUs</span>
+                <span className="text-[11px] font-sans text-gray-400">1424 SKUs</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-gray-50 dark:border-slate-700/50">
                 <div className="flex items-center gap-2">
                   <i className="fa-solid fa-check text-green-600 text-xs w-3" />
                   <span className="text-[13px] text-gray-800 dark:text-slate-200">COGS</span>
                 </div>
-                <span className="text-[11px] font-mono text-gray-400">1388 SKUs</span>
+                <span className="text-[11px] font-sans text-gray-400">1388 SKUs</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-gray-50 dark:border-slate-700/50">
                 <div className="flex items-center gap-2">
                   <i className="fa-solid fa-check text-green-600 text-xs w-3" />
                   <span className="text-[13px] text-gray-800 dark:text-slate-200">Margin</span>
                 </div>
-                <span className="text-[11px] font-mono text-gray-400">1 SKUs</span>
+                <span className="text-[11px] font-sans text-gray-400">1 SKUs</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-gray-50 dark:border-slate-700/50">
                 <div className="flex items-center gap-2">
                   <i className="fa-solid fa-check text-green-600 text-xs w-3" />
                   <span className="text-[13px] text-gray-800 dark:text-slate-200">Buy Box %</span>
                 </div>
-                <span className="text-[11px] font-mono text-gray-400">1273 SKUs</span>
+                <span className="text-[11px] font-sans text-gray-400">1273 SKUs</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-gray-50 dark:border-slate-700/50">
                 <div className="flex items-center gap-2">
                   <i className="fa-solid fa-check text-green-600 text-xs w-3" />
                   <span className="text-[13px] text-gray-800 dark:text-slate-200">Sales velocity</span>
                 </div>
-                <span className="text-[11px] font-mono text-gray-400">395 SKUs</span>
+                <span className="text-[11px] font-sans text-gray-400">395 SKUs</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-gray-50 dark:border-slate-700/50">
                 <div className="flex items-center gap-2">
                   <i className="fa-regular fa-circle text-gray-300 dark:text-gray-600 text-xs w-3" />
                   <span className="text-[13px] text-gray-800 dark:text-slate-200">Inventory & cover</span>
                 </div>
-                <span className="text-[11px] font-mono text-gray-400">add: Inventory report</span>
+                <span className="text-[11px] font-sans text-gray-400">add: Inventory report</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-gray-50 dark:border-slate-700/50">
                 <div className="flex items-center gap-2">
                   <i className="fa-solid fa-check text-green-600 text-xs w-3" />
                   <span className="text-[13px] text-gray-800 dark:text-slate-200">Return rate</span>
                 </div>
-                <span className="text-[11px] font-mono text-gray-400">395 SKUs</span>
+                <span className="text-[11px] font-sans text-gray-400">395 SKUs</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-gray-50 dark:border-slate-700/50">
                 <div className="flex items-center gap-2">
                   <i className="fa-regular fa-circle text-gray-300 dark:text-gray-600 text-xs w-3" />
                   <span className="text-[13px] text-gray-800 dark:text-slate-200">Ad efficiency (TACoS)</span>
                 </div>
-                <span className="text-[11px] font-mono text-gray-400">add: Ads / Sales report</span>
+                <span className="text-[11px] font-sans text-gray-400">add: Ads / Sales report</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-gray-50 dark:border-slate-700/50">
                 <div className="flex items-center gap-2">
                   <i className="fa-regular fa-circle text-gray-300 dark:text-gray-600 text-xs w-3" />
                   <span className="text-[13px] text-gray-800 dark:text-slate-200">Rating & reviews</span>
                 </div>
-                <span className="text-[11px] font-mono text-gray-400">add: Listings export</span>
+                <span className="text-[11px] font-sans text-gray-400">add: Listings export</span>
               </div>
               <div className="flex items-center justify-between py-1">
                 <div className="flex items-center gap-2">
                   <i className="fa-regular fa-circle text-gray-300 dark:text-gray-600 text-xs w-3" />
                   <span className="text-[13px] text-gray-800 dark:text-slate-200">Conversion</span>
                 </div>
-                <span className="text-[11px] font-mono text-gray-400">add: Sales & Traffic</span>
+                <span className="text-[11px] font-sans text-gray-400">add: Sales & Traffic</span>
               </div>
             </div>
           </div>
 
           {/* New: Your reports & COGS */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700">
-            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 font-serif">Your reports & COGS</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 font-sans">Your reports & COGS</h3>
             <p className="text-[13px] text-gray-600 dark:text-slate-300 leading-relaxed mb-5">
               Add or replace reports anytime — each is processed and persisted as it comes in. Re-upload a report of the same type to replace it; update COGS to refresh margins.
             </p>
@@ -221,7 +221,7 @@ const ProfileDrawer = ({ isOpen, onClose }) => {
 
           {/* Sign out Card */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700">
-            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1.5 font-serif">Sign out</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1.5 font-sans">Sign out</h3>
             <p className="text-[13px] text-gray-600 dark:text-slate-300 mb-4">
               Log out of this account. Your data is kept.
             </p>
@@ -235,7 +235,7 @@ const ProfileDrawer = ({ isOpen, onClose }) => {
 
           {/* Danger Zone Card */}
           <div className="bg-[#FAF7F7] dark:bg-red-900/10 rounded-2xl p-5 shadow-sm border border-red-200 dark:border-red-900/50">
-            <h3 className="text-base font-bold text-[#A43B2A] dark:text-red-400 mb-1.5 font-serif">Danger zone</h3>
+            <h3 className="text-base font-bold text-[#A43B2A] dark:text-red-400 mb-1.5 font-sans">Danger zone</h3>
             <p className="text-[13px] text-gray-600 dark:text-slate-300 mb-4">
               Permanently deletes your account, organization, and all its data. Your email is freed for reuse. This cannot be undone.
             </p>

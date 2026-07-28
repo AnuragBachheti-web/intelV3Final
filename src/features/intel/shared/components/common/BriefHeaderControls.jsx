@@ -252,7 +252,7 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive, isKpiVi
                   <i className="fa-solid fa-check text-[9px]" />
                 )}
               </div>
-              <span className="text-[11px] font-mono font-bold tracking-wider uppercase text-gray-600 dark:text-slate-400">
+              <span className="text-[11px] font-sans font-bold tracking-wider uppercase text-gray-600 dark:text-slate-400">
                 SELECT ALL • {AVAILABLE_CHANNELS.length}
               </span>
             </div>

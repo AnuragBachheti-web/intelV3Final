@@ -15,10 +15,10 @@ const CaseReportModal = ({ isOpen, onClose }) => {
               <i className="fa-solid fa-clipboard text-lg" />
             </div>
             <div>
-              <h2 className="text-[19px] font-bold text-gray-900 dark:text-white font-serif leading-snug">
+              <h2 className="text-[19px] font-bold text-gray-900 dark:text-white font-sans leading-snug">
                 Case / report
               </h2>
-              <p className="text-[12px] font-mono text-gray-400 mt-1">
+              <p className="text-[12px] font-sans text-gray-400 mt-1">
                 draft + deep-link · logged #40
               </p>
             </div>
@@ -26,7 +26,7 @@ const CaseReportModal = ({ isOpen, onClose }) => {
         </div>
 
         <div className="px-6 py-5">
-          <p className="text-[10px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-3">
+          <p className="text-[10px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-3">
             WHAT THIS DOES & WHY
           </p>
           <p className="text-[14px] text-gray-700 dark:text-slate-300 leading-relaxed mb-6">
@@ -39,14 +39,14 @@ const CaseReportModal = ({ isOpen, onClose }) => {
             </p>
           </div>
 
-          <p className="text-[10px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-3">
+          <p className="text-[10px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-3">
             DATA USED
           </p>
           <div className="flex flex-wrap gap-2">
-            <span className="px-3 py-1 bg-white border border-[#e5e1d8] rounded text-[11px] font-mono text-gray-500">
+            <span className="px-3 py-1 bg-white border border-[#e5e1d8] rounded text-[11px] font-sans text-gray-500">
               order deposits (OWN settlement)
             </span>
-            <span className="px-3 py-1 bg-white border border-[#e5e1d8] rounded text-[11px] font-mono text-gray-500">
+            <span className="px-3 py-1 bg-white border border-[#e5e1d8] rounded text-[11px] font-sans text-gray-500">
               expected fees (OWN)
             </span>
           </div>

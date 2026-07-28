@@ -23,7 +23,7 @@ const FeeForensics = ({ data }) => {
           <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-800 transition-all hover:border-gray-200 dark:hover:border-slate-700">
             <span className="text-sm font-medium text-gray-700 dark:text-slate-300">{fee.label}</span>
             <div className="flex items-center gap-3">
-              <span className="text-sm font-bold text-gray-900 dark:text-slate-100 font-mono">{fee.value}</span>
+              <span className="text-sm font-bold text-gray-900 dark:text-slate-100 font-sans">{fee.value}</span>
               <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 ${
                 fee.isAlert 
                   ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400' 
@@ -41,7 +41,7 @@ const FeeForensics = ({ data }) => {
         <div className="flex items-center justify-between">
           <span className="text-sm font-bold text-gray-900 dark:text-slate-100">Total Fees</span>
           <div className="text-right">
-            <p className="text-sm font-bold text-gray-900 dark:text-slate-100 font-mono">{totalFees}</p>
+            <p className="text-sm font-bold text-gray-900 dark:text-slate-100 font-sans">{totalFees}</p>
             <p className="text-[10px] text-gray-500 dark:text-slate-400">{feePct}</p>
           </div>
         </div>

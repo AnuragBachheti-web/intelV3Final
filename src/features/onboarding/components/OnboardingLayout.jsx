@@ -258,7 +258,7 @@ function Step5Layout({ setStep, progress }) {
 
           <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col items-center justify-center text-center flex-shrink-0 mt-10 mb-10">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] font-mono tracking-widest text-gray-400 uppercase">* WHILE THAT UPLOADS... A DAD JOKE</span>
+              <span className="text-[10px] font-sans tracking-widest text-gray-400 uppercase">* WHILE THAT UPLOADS... A DAD JOKE</span>
             </div>
             <p className="text-sm text-gray-700 font-medium mb-6 leading-snug">
               {currentJoke.setup} {currentJoke.punchline}
@@ -324,24 +324,24 @@ function Step5Layout({ setStep, progress }) {
                                 <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                                 <span className="text-[11px] font-bold text-gray-800">Losing Buy Box on SKU-A24</span>
                               </div>
-                              <span className="text-[10px] text-gray-400 font-mono tracking-tighter">72% → 41%</span>
+                              <span className="text-[10px] text-gray-400 font-sans tracking-tighter">72% → 41%</span>
                             </div>
                             <div className="flex items-center justify-between px-3 py-2 bg-white border border-gray-100 rounded-lg shadow-sm">
                               <div className="flex items-center gap-2">
                                 <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
                                 <span className="text-[11px] font-bold text-gray-800">Margin below floor · 3 SKUs</span>
                               </div>
-                              <span className="text-[10px] text-gray-400 font-mono tracking-tighter">8.1% net</span>
+                              <span className="text-[10px] text-gray-400 font-sans tracking-tighter">8.1% net</span>
                             </div>
                             <div className="flex items-center justify-between px-3 py-2 bg-white border border-gray-100 rounded-lg shadow-sm">
                               <div className="flex items-center gap-2">
                                 <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
                                 <span className="text-[11px] font-bold text-gray-800">Stockout in ~9 days</span>
                               </div>
-                              <span className="text-[10px] text-gray-400 font-mono tracking-tighter">cover 9d</span>
+                              <span className="text-[10px] text-gray-400 font-sans tracking-tighter">cover 9d</span>
                             </div>
                           </div>
-                          <p className="text-[9px] font-mono tracking-widest text-center text-gray-400 uppercase">
+                          <p className="text-[9px] font-sans tracking-widest text-center text-gray-400 uppercase">
                             A Prioritized Feed — Most Material Issue First
                           </p>
                         </div>
@@ -355,7 +355,7 @@ function Step5Layout({ setStep, progress }) {
 
           <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col items-center justify-center text-center flex-shrink-0">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] font-mono tracking-widest text-gray-400 uppercase">* WHILE THAT UPLOADS... A DAD JOKE</span>
+              <span className="text-[10px] font-sans tracking-widest text-gray-400 uppercase">* WHILE THAT UPLOADS... A DAD JOKE</span>
             </div>
             <p className="text-sm text-gray-700 font-medium mb-6 leading-snug">
               {currentJoke.setup} {currentJoke.punchline}

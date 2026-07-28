@@ -53,10 +53,10 @@ const InsightsPanel = ({
         {/* Title row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-baseline gap-2">
-            <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-slate-100 font-serif">
+            <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-slate-100 font-sans">
               Intelligence feed
             </h3>
-            <span className="text-xs font-mono text-gray-400 dark:text-slate-500">
+            <span className="text-xs font-sans text-gray-400 dark:text-slate-500">
               • {visibleCardsCount} insights & {INSIGHTS_FEED_METRICS.totalSignals} signals
             </span>
           </div>
@@ -155,10 +155,10 @@ const InsightsPanel = ({
                 {/* Section Subheading with Count Badge & Timeline Indicator Dot (SS3, SS4, SS5) */}
                 <div className="flex items-center gap-2.5 pb-1">
                   <div className={`w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${section.dotColor} shadow-xs flex-shrink-0`} />
-                  <h4 className="text-sm sm:text-base font-bold text-gray-900 dark:text-slate-100 font-serif tracking-tight">
+                  <h4 className="text-sm sm:text-base font-bold text-gray-900 dark:text-slate-100 font-sans tracking-tight">
                     {section.title}
                   </h4>
-                  <span className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 bg-gray-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full border border-gray-200/60 dark:border-slate-700/60 font-mono">
+                  <span className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 bg-gray-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full border border-gray-200/60 dark:border-slate-700/60 font-sans">
                     {sectionCards.length}
                   </span>
                 </div>

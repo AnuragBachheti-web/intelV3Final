@@ -137,7 +137,7 @@ const SalesTables = () => {
                     const topCh = Object.entries(chMap).sort((a, b) => b[1] - a[1])[0];
                     return (
                       <TR key={i} onClick={() => navToProduct(r.name, r.sku)}>
-                        <TD className="font-mono text-gray-400 dark:text-slate-500">{r.sku}</TD>
+                        <TD className="font-sans text-gray-400 dark:text-slate-500">{r.sku}</TD>
                         <TD className="font-semibold text-gray-900 dark:text-slate-100 max-w-[130px] truncate">{r.name}</TD>
                         <TD className="text-gray-500 dark:text-slate-400 capitalize">{topCh[0]}</TD>
                         <TD className="text-gray-700 dark:text-slate-300">{topCh[1].toLocaleString()}</TD>
@@ -196,7 +196,7 @@ const SalesTables = () => {
                 <tbody>
                   {salesAovData.map((r, i) => (
                     <TR key={i} onClick={() => navToProduct(r.name, r.sku)}>
-                      <TD className="font-mono text-gray-400 dark:text-slate-500">{r.sku}</TD>
+                      <TD className="font-sans text-gray-400 dark:text-slate-500">{r.sku}</TD>
                       <TD className="font-semibold text-gray-900 dark:text-slate-100 max-w-[130px] truncate">{r.name}</TD>
                       <TD className="text-gray-600 dark:text-slate-400">{r.orders}</TD>
                       <TD className="font-bold text-gray-900 dark:text-slate-100">{r.aov}</TD>
@@ -233,7 +233,7 @@ const SalesTables = () => {
                       <span className="inline-flex w-5 h-5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full items-center justify-center text-[10px] font-bold">{i + 1}</span>
                     </TD>
                     <TD className="font-semibold text-gray-900 dark:text-slate-100">{item.name}</TD>
-                    <TD className="font-mono text-[10px] text-gray-500 dark:text-slate-400">{item.sku}</TD>
+                    <TD className="font-sans text-[10px] text-gray-500 dark:text-slate-400">{item.sku}</TD>
                     <TD className="font-semibold text-gray-900 dark:text-slate-100">{item.revenue}</TD>
                     <TD className="font-bold text-green-600 dark:text-green-400">{item.change}</TD>
                   </TR>
@@ -256,7 +256,7 @@ const SalesTables = () => {
                       <span className="inline-flex w-5 h-5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full items-center justify-center text-[10px] font-bold">{i + 1}</span>
                     </TD>
                     <TD className="font-semibold text-gray-900 dark:text-slate-100">{item.name}</TD>
-                    <TD className="font-mono text-[10px] text-gray-500 dark:text-slate-400">{item.sku}</TD>
+                    <TD className="font-sans text-[10px] text-gray-500 dark:text-slate-400">{item.sku}</TD>
                     <TD className="font-semibold text-gray-900 dark:text-slate-100">{item.revenue}</TD>
                     <TD className="font-bold text-red-500 dark:text-red-400">{item.change}</TD>
                   </TR>

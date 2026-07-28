@@ -67,8 +67,8 @@ const StatCard = ({
   // Metric Style (Redesigned matching ss3)
   if (type === 'metric') {
     const bgClass = isPositive
-      ? 'bg-gradient-to-br from-emerald-50 to-white border-emerald-100 dark:from-emerald-900/20 dark:to-slate-900/20 dark:border-emerald-900/30'
-      : 'bg-gradient-to-br from-red-50 to-white border-red-100 dark:from-red-900/20 dark:to-slate-900/20 dark:border-red-900/30';
+      ? 'bg-gradient-to-br from-emerald-50 to-white border-emerald-300 dark:from-emerald-900/20 dark:to-slate-900/20 dark:border-emerald-700/50'
+      : 'bg-gradient-to-br from-red-50 to-white border-red-300 dark:from-red-900/20 dark:to-slate-900/20 dark:border-red-700/50';
     const valueColor = isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
     const badgeBg = isPositive ? 'bg-emerald-100/50 text-emerald-600 dark:bg-emerald-900/30' : 'bg-red-100/50 text-red-600 dark:bg-red-900/30';
 

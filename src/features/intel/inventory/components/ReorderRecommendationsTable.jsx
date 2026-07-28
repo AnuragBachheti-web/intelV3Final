@@ -3,7 +3,7 @@ import DataTable from '../../../../components/common/DataTable';
 
 const ReorderRecommendationsTable = ({ onRowClick }) => {
   const columns = [
-    { header: 'SKU', key: 'sku', render: (val) => <span className="font-mono text-xs text-gray-500 dark:text-slate-400">{val}</span> },
+    { header: 'SKU', key: 'sku', render: (val) => <span className="font-sans text-xs text-gray-500 dark:text-slate-400">{val}</span> },
     { header: 'Title', key: 'title', bold: true },
     { header: 'DOC', key: 'doc', align: 'right', render: (val) => (
       <span className={`font-bold ${parseInt(val) < 14 ? 'text-red-500' : 'text-amber-500'}`}>{val}</span>
@@ -16,7 +16,7 @@ const ReorderRecommendationsTable = ({ onRowClick }) => {
       </span>
     )},
     { header: 'Rec. PO Qty', key: 'qty', align: 'right', render: (val) => (
-      <span className="font-mono font-bold text-blue-600">{val}</span>
+      <span className="font-sans font-bold text-blue-600">{val}</span>
     )},
     { header: 'Action', key: 'action', align: 'center', render: (val) => (
       <span className={`px-2 py-1 rounded-lg text-[10px] font-bold ${val === 'Reorder' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600' : 'bg-gray-100 dark:bg-slate-800 text-gray-600'}`}>

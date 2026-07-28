@@ -13,13 +13,16 @@ const InsightDetailsPanel = ({ insight, onClose }) => {
       <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-800 sticky top-0 bg-white dark:bg-slate-900 z-10 flex flex-col gap-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex flex-col gap-1">
-            <h3 className="text-[13px] font-bold text-gray-900 dark:text-white font-serif mb-1">Info</h3>
-            <span className="text-[10px] font-mono tracking-wider text-gray-500 dark:text-slate-400 uppercase">
+            <h3 className="text-[13px] font-bold text-gray-900 dark:text-white font-sans mb-1">Info</h3>
+            <span className="text-[10px] font-sans tracking-wider text-gray-500 dark:text-slate-400 uppercase">
               {insight.tagCategory} <span className="text-gray-400">•</span> {insight.skuCode}
             </span>
-            <h2 className="text-[15px] text-gray-900 dark:text-white font-serif leading-snug">
-              {insight.headline}
-            </h2>
+            <div className="text-[15px] leading-snug font-sans">
+              {/* <div className="font-bold text-gray-900 dark:text-white">{insight.headline}</div> */}
+              {insight.headlineHighlight && (
+                <div className="font-normal text-[13px] text-gray-700 dark:text-slate-300 mt-1.5">{insight.headlineHighlight}</div>
+              )}
+            </div>
           </div>
           <button
             onClick={onClose}
@@ -35,7 +38,7 @@ const InsightDetailsPanel = ({ insight, onClose }) => {
 
         {/* Revenue Status Section */}
         <div>
-          <div className="flex items-center justify-between text-[10px] font-mono text-gray-400 dark:text-slate-500 mb-2">
+          <div className="flex items-center justify-between text-[10px] font-sans text-gray-400 dark:text-slate-500 mb-2">
             <span className="uppercase tracking-wider">Monthly Revenue</span>
             <div className="flex items-center gap-3">
               <span className="font-bold text-gray-700 dark:text-slate-300">{insight.monthlyRevenue}</span>
@@ -63,40 +66,40 @@ const InsightDetailsPanel = ({ insight, onClose }) => {
         </div>
 
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-2">
+          <span className="text-[10px] font-sans uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-2">
             WHY THIS MATTERS TO YOU
           </span>
-          <div className="bg-stone-50/70 dark:bg-slate-800/40 border border-gray-200 dark:border-slate-800 rounded-xl p-4 text-xs text-gray-700 dark:text-slate-300 leading-relaxed font-serif">
+          <div className="bg-stone-50/70 dark:bg-slate-800/40 border border-gray-200 dark:border-slate-800 rounded-xl p-4 text-xs text-gray-700 dark:text-slate-300 leading-relaxed font-sans">
             {insight.whyMattersText}
           </div>
         </div>
 
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-2">
+          <span className="text-[10px] font-sans uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-2">
             THE NUMBERS
           </span>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="p-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl">
-              <span className="text-[9px] font-mono uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-1">
+              <span className="text-[9px] font-sans uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-1">
                 VELOCITY
               </span>
-              <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">
+              <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
                 {insight.metrics?.velocity || '22.5'}
               </span>
             </div>
             <div className="p-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl">
-              <span className="text-[9px] font-mono uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-1">
+              <span className="text-[9px] font-sans uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-1">
                 THRESHOLD
               </span>
-              <span className="text-base font-bold text-gray-900 dark:text-slate-100">
+              <span className="text-sm font-bold text-gray-900 dark:text-slate-100">
                 {insight.metrics?.threshold || '15'}
               </span>
             </div>
             <div className="p-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl">
-              <span className="text-[9px] font-mono uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-1">
+              <span className="text-[9px] font-sans uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-1">
                 EXPOSURE/MO
               </span>
-              <span className="text-base font-bold text-amber-700 dark:text-amber-400">
+              <span className="text-sm font-bold text-amber-700 dark:text-amber-400">
                 {insight.metrics?.exposureMo || '₹20.2L'}
               </span>
             </div>
@@ -105,10 +108,10 @@ const InsightDetailsPanel = ({ insight, onClose }) => {
 
         {/* Realify's Read - What To Do Box */}
         <div className="p-4 bg-[#eff4f9] dark:bg-slate-800/60 rounded-xl border border-blue-100 dark:border-slate-800 space-y-1">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 block">
+          <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-gray-800 dark:text-amber-400 block">
             REALIFY'S READ – WHAT TO DO
           </span>
-          <p className="text-xs text-gray-800 dark:text-slate-200 font-medium">
+          <p className="text-xs text-gray-500 dark:text-slate-200 font-medium">
             Review the pulled data and decide whether to act, watch, or source.
           </p>
         </div>
@@ -140,11 +143,11 @@ const InsightDetailsPanel = ({ insight, onClose }) => {
             {insight.id === 'insight-opp-1' ? (
               <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
                 <div className="bg-[#1e1e1e] px-4 py-2">
-                  <h4 className="text-[10px] font-mono tracking-widest text-gray-300 uppercase">
+                  <h4 className="text-[10px] font-sans tracking-widest text-gray-300 uppercase">
                     COMPETITOR SKUS IN "HOME" — RANKED BY OPPORTUNITY
                   </h4>
                 </div>
-                
+
                 <div className="divide-y divide-gray-100 dark:divide-slate-800">
                   {[
                     { rank: 1, name: 'ShieldPro Home — Custom-Fit', price: '₹2606', rev: '211 rev', score: '6.2' },
@@ -158,7 +161,7 @@ const InsightDetailsPanel = ({ insight, onClose }) => {
                         <span className="text-[#d97706] font-bold text-[13px]">#{item.rank}</span>
                         <span className="text-[13px] text-gray-700 dark:text-slate-300">{item.name}</span>
                       </div>
-                      <div className="flex items-center gap-4 text-[12px] font-mono text-gray-500">
+                      <div className="flex items-center gap-4 text-[12px] font-sans text-gray-500">
                         <span>{item.price}</span>
                         <span>{item.rev}</span>
                         <span className="text-[#16a34a] font-bold">{item.score}</span>
@@ -174,15 +177,15 @@ const InsightDetailsPanel = ({ insight, onClose }) => {
 
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
-                      <span className="px-2 py-1 bg-gray-100 text-gray-600 text-[10px] font-mono rounded-md whitespace-nowrap">fit accuracy</span>
+                      <span className="px-2 py-1 bg-gray-100 text-gray-600 text-[10px] font-sans rounded-md whitespace-nowrap">fit accuracy</span>
                       <span className="text-xs text-gray-700 dark:text-slate-300">model-specific fit is the top driver of returns — a quality wedge</span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="px-2 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-mono rounded-md whitespace-nowrap">material durability</span>
+                      <span className="px-2 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-sans rounded-md whitespace-nowrap">material durability</span>
                       <span className="text-xs text-gray-700 dark:text-slate-300">buyers reward thicker/heavier covers</span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="px-2 py-1 bg-orange-50 text-orange-700 text-[10px] font-mono rounded-md whitespace-nowrap">waterproofing claims</span>
+                      <span className="px-2 py-1 bg-orange-50 text-orange-700 text-[10px] font-sans rounded-md whitespace-nowrap">waterproofing claims</span>
                       <span className="text-xs text-gray-700 dark:text-slate-300">over-claiming triggers negative reviews</span>
                     </div>
                   </div>
@@ -190,7 +193,7 @@ const InsightDetailsPanel = ({ insight, onClose }) => {
               </div>
             ) : (
               <div className="p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-2">
+                <span className="text-[10px] font-sans uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-2">
                   MARKET SIGNAL (PROTOTYPE)
                 </span>
                 <p className="text-xs text-gray-600 dark:text-slate-400 italic">
