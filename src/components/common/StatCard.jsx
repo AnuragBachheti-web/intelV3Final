@@ -19,7 +19,8 @@ const StatCard = ({
   loading = false,
   onClick,
   showIcon = true,
-  isSelected = false
+  isSelected = false,
+  compact = false
 }) => {
   const { addAiReference } = useAIStore();
 
@@ -39,13 +40,11 @@ const StatCard = ({
   // Skeleton for metric style
   if (loading && type === 'metric') {
     return (
-      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm p-5 h-40 flex flex-col justify-between">
+      <div className={`bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between ${compact ? 'p-3 h-[68px]' : 'p-5 h-40'}`}>
         <div>
           <Skeleton variant="text" width="60%" className="mb-2" />
-          <Skeleton variant="rectangle" width="80%" height={32} className="mb-3" />
-          <Skeleton variant="text" width="40%" />
+          <Skeleton variant="rectangle" width="80%" height={compact ? 20 : 32} className="mb-3" />
         </div>
-        <Skeleton variant="rectangle" width="100%" height={24} className="opacity-30" />
       </div>
     );
   }
@@ -66,16 +65,57 @@ const StatCard = ({
 
   // Metric Style (Redesigned matching ss3)
   if (type === 'metric') {
-    const bgClass = isPositive
-      ? 'bg-gradient-to-br from-emerald-50 to-white border-emerald-300 dark:from-emerald-900/20 dark:to-slate-900/20 dark:border-emerald-700/50'
-      : 'bg-gradient-to-br from-red-50 to-white border-red-300 dark:from-red-900/20 dark:to-slate-900/20 dark:border-red-700/50';
-    const valueColor = isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
-    const badgeBg = isPositive ? 'bg-emerald-100/50 text-emerald-600 dark:bg-emerald-900/30' : 'bg-red-100/50 text-red-600 dark:bg-red-900/30';
+    const bgClass = isSelected
+      ? 'bg-gradient-to-br from-slate-900 to-slate-800 text-white border-slate-900 dark:from-slate-100 dark:to-slate-200 dark:text-gray-900 dark:border-slate-100 shadow-md ring-2 ring-slate-900 dark:ring-slate-100'
+      : isPositive
+        ? 'bg-gradient-to-br from-emerald-50/70 to-white border-emerald-200/80 dark:from-emerald-950/20 dark:to-slate-900/40 dark:border-emerald-700/40'
+        : 'bg-gradient-to-br from-red-50/70 to-white border-red-200/80 dark:from-red-950/20 dark:to-slate-900/40 dark:border-red-700/40';
+
+    const titleColor = isSelected
+      ? 'text-slate-300 dark:text-slate-700'
+      : 'text-gray-500 dark:text-slate-400';
+
+    const valueTextColor = isSelected
+      ? 'text-white dark:text-gray-900'
+      : 'text-gray-900 dark:text-slate-100';
+
+    const valueColor = isSelected
+      ? (isPositive ? 'text-emerald-400 dark:text-emerald-600' : 'text-red-400 dark:text-red-600')
+      : (isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400');
+
+    const subtextColor = isSelected
+      ? 'text-slate-300/80 dark:text-slate-600'
+      : 'text-gray-400 dark:text-slate-500';
+
+    if (compact) {
+      return (
+        <div
+          onClick={onClick}
+          className={`${bgClass} border rounded-xl p-2.5 sm:p-3 flex flex-col justify-center h-[68px] relative transition-all duration-300 group hover:shadow-md cursor-pointer overflow-hidden`}
+        >
+          <div className="flex items-center justify-between w-full">
+            <div className="flex flex-col min-w-0 pr-1">
+              <span className={`text-[11px] font-bold uppercase tracking-wider truncate ${titleColor}`}>
+                {title}
+              </span>
+              <span className={`text-[15px] font-extrabold tracking-tight leading-tight mt-0.5 ${valueTextColor}`}>
+                {value}
+              </span>
+            </div>
+            <div className="flex flex-col items-end flex-shrink-0">
+              <span className={`text-[12px] font-bold ${valueColor}`}>
+                {change}
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div
         onClick={onClick}
-        className={`${bgClass} border rounded-2xl p-4 flex flex-col justify-between h-[110px] relative transition-all group hover:shadow-sm ${(onClick || isSelected) ? 'cursor-pointer ring-1 ring-black/5 dark:ring-white/5' : ''}`}
+        className={`${bgClass} border rounded-2xl p-4 flex flex-col justify-between h-[110px] relative transition-all duration-300 group hover:shadow-md ${(onClick || isSelected) ? 'cursor-pointer ring-1 ring-black/5 dark:ring-white/5' : ''}`}
       >
         {/* AI Reference Icon */}
         <button
@@ -87,15 +127,15 @@ const StatCard = ({
         </button>
 
         <div className="flex justify-between items-end h-full w-full">
-          {/* Left Side: Title, Value, Subtext, Badge */}
+          {/* Left Side: Title, Value, Subtext */}
           <div className="flex flex-col gap-0.5">
-            <span className="text-[14px] font-semibold text-gray-500 dark:text-slate-400">
+            <span className={`text-[14px] font-semibold ${titleColor}`}>
               {title}
             </span>
-            <span className="text-[18px] font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-tight mt-1">
+            <span className={`text-[18px] font-bold tracking-tight leading-tight mt-1 ${valueTextColor}`}>
               {value}
             </span>
-            <span className="text-[12px] text-gray-400 dark:text-slate-500">
+            <span className={`text-[12px] ${subtextColor}`}>
               {subtext || "from last week"}
             </span>
           </div>

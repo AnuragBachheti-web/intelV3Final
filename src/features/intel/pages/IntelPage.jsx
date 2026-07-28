@@ -25,7 +25,16 @@ import InsightDetailsPanel from '../shared/components/InsightDetailsPanel';
 import DismissModal from '../shared/components/DismissModal';
 import RepriceModal from '../shared/components/RepriceModal';
 import CaseReportModal from '../shared/components/CaseReportModal';
+import { ProfitAdsContent } from '../../profit-ads/ProfitAdsPage';
 
+
+const MAIN_KPI_CARDS = [
+  { key: 'sales', title: 'Revenue', value: '$248.5K', change: '+14.2%', trend: 'up', isPositive: true, subtext: 'vs previous 30d' },
+  { key: 'margin', title: 'Margin', value: '$42.8K', change: '+8.4%', trend: 'up', isPositive: true, subtext: 'Net CM2 Margin' },
+  { key: 'cash', title: 'Cash', value: '$284.6K', change: '+8.2%', trend: 'up', isPositive: true, subtext: 'Working capital' },
+  { key: 'inventory', title: 'Inventory', value: '$1.82M', change: '+4.2%', trend: 'up', isPositive: true, subtext: 'Total stock cost' },
+  { key: 'ads', title: 'Ads', value: '$24.8K', change: '+18.2%', trend: 'up', isPositive: false, subtext: 'Ad spend (30d)' },
+];
 
 const KPI_FAMILY_PILLS = [
   { key: 'all', label: 'All families' },
@@ -52,9 +61,11 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
   const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3, 4]);
 
-  // KPI Pill State (Revenue, Margin, etc.)
-  const [activeKpiTab, setActiveKpiTab] = useState('sales');
-  const [isKpiVisible, setIsKpiVisible] = useState(false);
+  // Main KPI Card state (Revenue, Margin, Cash, Inventory, Ads)
+  // null = all main cards full size, sub-KPIs hidden
+  // selected = main cards shrink in height/width, sub-KPIs open below
+  const [selectedMainKpi, setSelectedMainKpi] = useState(null);
+  const [activeFeedTab, setActiveFeedTab] = useState('intelligence'); // 'intelligence' | 'profit-ads'
 
   // Insights section 1
   const [activeInsightTab, setActiveInsightTab] = useState('Overall');
@@ -225,7 +236,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     fetchIntel();
   }, []);
 
-  const activeStats = STATS_BY_TAB[activeKpiTab] || STATS_BY_TAB.sales;
+  const activeStats = STATS_BY_TAB[selectedMainKpi || 'sales'] || STATS_BY_TAB.sales;
 
   const handleStepClick = (stepId) => {
     navigate(`/intel/insight/sales/${stepId}`);
@@ -343,8 +354,8 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
 
   return (
     <DashboardLayout
-      title="Intelligence"
-      subtitle="Real-time sales analytics"
+      title="Workspace"
+      subtitle="Real-time analytics"
       showSearch={false}
       showTabs={false}
       showAIPrompt={true}
@@ -402,7 +413,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         {/* MOBILE-only: page heading + Filters trigger (ss1 layout) */}
         <div className="sm:hidden flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 className="font-bold text-gray-900 dark:text-slate-100 text-[17px] leading-tight tracking-tight">Intelligence</h2>
+            <h2 className="font-bold text-gray-900 dark:text-slate-100 text-[17px] leading-tight tracking-tight">Intelligence///</h2>
             <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-0.5">Real-time sales analytics</p>
           </div>
           <button
@@ -430,63 +441,90 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
 
         </div>
 
-        {/* KPI Pills & Filters Row.
-            Horizontal scroll lives on the pills only, so the row itself does
-            not clip the filter dropdowns that open downward over the KPI cards. */}
-        <div className="flex items-center justify-between gap-4 w-full">
-          {/* KPI Pills */}
-          <div className="flex flex-row gap-3 pb-2 px-1 overflow-x-auto min-w-0">
-            {isKpiVisible && ['sales', 'margin', 'cash', 'inventory', 'ads'].map(tabKey => {
-              const labelMap = { sales: 'Revenue', margin: 'Margin', cash: 'Cash', inventory: 'Inventory', ads: 'Ads' };
-              const isActive = activeKpiTab === tabKey;
+        {/* Single Unified Container Box for KPI Cards + Feed */}
+        <div className="bg-white dark:bg-[#030712] border border-gray-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm space-y-6">
 
-              // Dummy notification badges based on ss2
-              const notifications = { sales: 1, cash: 2 };
-              const notifCount = notifications[tabKey];
-
-              return (
-                <div key={tabKey} className="relative mt-2">
-                  <button
-                    onClick={() => setActiveKpiTab(tabKey)}
-                    className={`flex items-center justify-center gap-1.5 px-4 py-2 text-[14px] font-bold rounded-xl border transition-colors shadow-sm whitespace-nowrap ${isActive
-                      ? 'bg-[#1C1C1E] dark:bg-slate-100 text-white dark:text-gray-900 border-[#1C1C1E] dark:border-slate-100'
-                      : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'
-                      }`}
-                  >
-                    <span>{labelMap[tabKey]}</span>
-                  </button>
+          {/* Section 1: KPI Cards / Converted Pills Row */}
+          <div ref={kpiSectionRef} className="w-full space-y-3">
+            {selectedMainKpi === null ? (
+              <>
+                {/* Header Controls at top right when no main card is selected */}
+                <div className="flex items-center justify-end gap-3 w-full">
+                  <BriefHeaderControls
+                    isDashboardViewActive={false}
+                    onDashboardToggle={() =>
+                      navigate(`/detailed-view/${activeIntelTab}`, {
+                        state: { from: '/intel' },
+                      })
+                    }
+                  />
                 </div>
-              );
-            })}
-          </div>
 
-          <div className="flex items-center justify-end gap-3 flex-shrink-0">
-            {/* Channel & Date Filters, KPI Toggle & Dashboard Toggle */}
-            <BriefHeaderControls
-              isDashboardViewActive={false}
-              onDashboardToggle={() =>
-                navigate(`/detailed-view/${activeIntelTab}`, {
-                  state: { from: '/intel' },
-                })
-              }
-              isKpiVisible={isKpiVisible}
-              onKpiToggle={() => setIsKpiVisible(prev => !prev)}
-            />
-          </div>
-        </div>
+                {/* 5 Main KPI Cards in standard StatCard size */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3 transition-all duration-300">
+                  {MAIN_KPI_CARDS.map(kpi => (
+                    <StatCard
+                      key={kpi.key}
+                      title={kpi.title}
+                      value={kpi.value}
+                      change={kpi.change}
+                      isPositive={kpi.isPositive}
+                      subtext={kpi.subtext}
+                      onClick={() => setSelectedMainKpi(kpi.key)}
+                    />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Converted Pills + Controls in ONE SINGLE ROW when a main card is selected */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 w-full border-b border-gray-100 dark:border-slate-800/80 pb-3">
+                  {/* Converted Pills: NAME ONLY */}
+                  <div className="flex items-center gap-2 overflow-x-auto min-w-0 py-1 scrollbar-hide">
+                    {MAIN_KPI_CARDS.map(kpi => {
+                      const isSelected = selectedMainKpi === kpi.key;
+                      return (
+                        <button
+                          key={kpi.key}
+                          onClick={() => setSelectedMainKpi(prev => (prev === kpi.key ? null : kpi.key))}
+                          className={`flex items-center justify-center px-4 py-2 text-[14px] font-bold rounded-xl border transition-all shadow-xs whitespace-nowrap ${isSelected
+                            ? 'bg-[#1C1C1E] dark:bg-slate-100 text-white dark:text-gray-900 border-[#1C1C1E] dark:border-slate-100'
+                            : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'
+                            }`}
+                        >
+                          <span>{kpi.title}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
 
-        {/* Conditionally render KPI Pills and Cards */}
-        {isKpiVisible && (
-          <>
-            {/* KPI Pills Row */}
-            <div className="flex flex-row gap-3  overflow-x-auto px-1">
-              <div ref={kpiSectionRef} className="space-y-3 w-full">
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4 items-start">
-                  {selectedKpiIndices.map(idx => {
-                    const stat = activeStats[idx] || activeStats[0];
-                    return (
-                      <div key={idx} className="flex flex-col gap-2">
+                  {/* Right side controls in the EXACT SAME ROW */}
+                  <div className="flex items-center justify-end gap-3 flex-shrink-0">
+                    <BriefHeaderControls
+                      isDashboardViewActive={false}
+                      onDashboardToggle={() =>
+                        navigate(`/detailed-view/${selectedMainKpi || activeIntelTab}`, {
+                          state: { from: '/intel' },
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+
+                {/* Sub KPI Cards for selected Main KPI in full size */}
+                <div className="space-y-2.5 pt-1 animate-in fade-in duration-300">
+                  <div className="flex items-center justify-between px-1">
+                    <span className="text-xs font-bold text-gray-700 dark:text-slate-300 flex items-center gap-2">
+                      {/* Sub KPIs — {MAIN_KPI_CARDS.find(m => m.key === selectedMainKpi)?.title} */}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
+                    {selectedKpiIndices.map(idx => {
+                      const currentSubStats = STATS_BY_TAB[selectedMainKpi] || STATS_BY_TAB.sales;
+                      const stat = currentSubStats[idx] || currentSubStats[0];
+                      return (
                         <StatCard
+                          key={idx}
                           title={stat.title}
                           value={stat.value}
                           change={stat.change}
@@ -495,60 +533,95 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                           loading={loading}
                           showIcon={false}
                         />
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Insights section 1 with 70/30 split logic for expandedInsight.
-            When a detail panel is open, the row becomes a bounded-height flex
-            box so both columns share the exact same height (top + bottom edges
-            aligned) and each scrolls its own content independently. */}
-        <div className={`relative flex flex-col lg:flex-row lg:items-stretch w-full gap-4 transition-all duration-300 ${expandedInsight ? 'lg:sticky lg:top-14 lg:h-[calc(100vh-10rem)]' : ''}`}>
-          <div className={`flex flex-col min-h-0 transition-all duration-300 ${expandedInsight ? 'lg:w-[70%] lg:h-full' : 'w-full'}`}>
-            <InsightsPanel
-              activeInsightTab={activeInsightTab}
-              setActiveInsightTab={setActiveInsightTab}
-              itemViewMode={itemViewMode}
-              setItemViewMode={setItemViewMode}
-              stepOffset={stepOffset}
-              setStepOffset={setStepOffset}
-              onProductClick={openProductModal}
-              onStepClick={handleStepClick}
-              showDetailedView={true}
-              onDetailedView={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel' } })}
-              intelTab={activeIntelTab}
-              selectedCategory={category}
-              noSidePanel={fullWidthInsights}
-              initialItemSubTab={restoreItemSubTab}
-              sourceRoute={location.pathname}
-              onOpenSimulateModal={(insight) => {
-                setSimulateInsight(insight);
-                setIsSimulateModalOpen(true);
-              }}
-              onToggleInsightPanel={(insight) => {
-                setExpandedInsight(prev => (prev?.id === insight?.id ? null : insight));
-              }}
-              expandedInsightId={expandedInsight?.id}
-              onOpenDismissModal={() => setIsDismissModalOpen(true)}
-              onOpenRepriceModal={() => setIsRepriceModalOpen(true)}
-              onOpenPlanCaptureModal={() => setIsCaseReportModalOpen(true)}
-            />
+              </>
+            )}
           </div>
 
-          {/* Insight Details Side Panel (30%) */}
-          {expandedInsight && (
-            <div className="lg:w-[30%] w-full lg:h-full flex flex-col min-h-0 animate-in slide-in-from-right duration-300">
-              <InsightDetailsPanel
-                insight={expandedInsight}
-                onClose={() => setExpandedInsight(null)}
-              />
+          {/* Section 2: Feed Section with Top Tabs */}
+          <div className="border-t border-gray-100 dark:border-slate-800/80 pt-4 space-y-4">
+            {/* Feed Tabs: Intelligence Feed & Profit & Ads */}
+            <div className="flex items-center gap-2 border-b border-gray-100 dark:border-slate-800 pb-3">
+              <button
+                onClick={() => setActiveFeedTab('intelligence')}
+                className={`flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeFeedTab === 'intelligence'
+                  ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 shadow-sm'
+                  : 'text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800/60'
+                  }`}
+              >
+                <i className="fa-solid fa-rss text-xs" />
+                Actions
+              </button>
+              <button
+                onClick={() => setActiveFeedTab('profit-ads')}
+                className={`flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeFeedTab === 'profit-ads'
+                  ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 shadow-sm'
+                  : 'text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800/60'
+                  }`}
+              >
+                <i className="fa-solid fa-chart-pie text-xs" />
+                Profit & Ads
+              </button>
             </div>
-          )}
+
+            {/* Tab Content 1: Intelligence Feed */}
+            {activeFeedTab === 'intelligence' && (
+              <div className={`relative flex flex-col lg:flex-row lg:items-stretch w-full gap-4 transition-all duration-300 ${expandedInsight ? 'lg:sticky lg:top-14 lg:h-[calc(100vh-10rem)]' : ''}`}>
+                <div className={`flex flex-col min-h-0 transition-all duration-300 ${expandedInsight ? 'lg:w-[70%] lg:h-full' : 'w-full'}`}>
+                  <InsightsPanel
+                    borderless={true}
+                    activeInsightTab={activeInsightTab}
+                    setActiveInsightTab={setActiveInsightTab}
+                    itemViewMode={itemViewMode}
+                    setItemViewMode={setItemViewMode}
+                    stepOffset={stepOffset}
+                    setStepOffset={setStepOffset}
+                    onProductClick={openProductModal}
+                    onStepClick={handleStepClick}
+                    showDetailedView={true}
+                    onDetailedView={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel' } })}
+                    intelTab={activeIntelTab}
+                    selectedCategory={category}
+                    noSidePanel={fullWidthInsights}
+                    initialItemSubTab={restoreItemSubTab}
+                    sourceRoute={location.pathname}
+                    onOpenSimulateModal={(insight) => {
+                      setSimulateInsight(insight);
+                      setIsSimulateModalOpen(true);
+                    }}
+                    onToggleInsightPanel={(insight) => {
+                      setExpandedInsight(prev => (prev?.id === insight?.id ? null : insight));
+                    }}
+                    expandedInsightId={expandedInsight?.id}
+                    onOpenDismissModal={() => setIsDismissModalOpen(true)}
+                    onOpenRepriceModal={() => setIsRepriceModalOpen(true)}
+                    onOpenPlanCaptureModal={() => setIsCaseReportModalOpen(true)}
+                  />
+                </div>
+
+                {/* Insight Details Side Panel (30%) */}
+                {expandedInsight && (
+                  <div className="lg:w-[30%] w-full lg:h-full flex flex-col min-h-0 animate-in slide-in-from-right duration-300">
+                    <InsightDetailsPanel
+                      insight={expandedInsight}
+                      onClose={() => setExpandedInsight(null)}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Tab Content 2: Profit & Ads */}
+            {activeFeedTab === 'profit-ads' && (
+              <div className="pt-2 animate-in fade-in duration-300">
+                <ProfitAdsContent />
+              </div>
+            )}
+          </div>
+
         </div>
 
         {/* Insights section 2 — carousel mode (commented out) */}

@@ -91,12 +91,12 @@ const CalendarPicker = ({ selectedDate, onSelectDate, onClose, alignRight = fals
                 }
               }}
               className={`h-7 w-7 mx-auto flex items-center justify-center rounded-lg font-medium transition-all ${!item.currentMonth
-                  ? 'text-gray-300 dark:text-slate-600 cursor-not-allowed'
-                  : isSelected
-                    ? 'bg-blue-600 text-white font-bold shadow-xs'
-                    : isToday
-                      ? 'border border-blue-500 text-blue-600 dark:text-blue-400 font-bold'
-                      : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800'
+                ? 'text-gray-300 dark:text-slate-600 cursor-not-allowed'
+                : isSelected
+                  ? 'bg-blue-600 text-white font-bold shadow-xs'
+                  : isToday
+                    ? 'border border-blue-500 text-blue-600 dark:text-blue-400 font-bold'
+                    : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800'
                 }`}
             >
               {item.day}
@@ -245,8 +245,8 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive, isKpiVi
               className="flex items-center gap-2 cursor-pointer select-none"
             >
               <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${pendingSelected.length === AVAILABLE_CHANNELS.length
-                  ? 'bg-blue-600 border-blue-600 text-white'
-                  : 'border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900'
+                ? 'bg-blue-600 border-blue-600 text-white'
+                : 'border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900'
                 }`}>
                 {pendingSelected.length === AVAILABLE_CHANNELS.length && (
                   <i className="fa-solid fa-check text-[9px]" />
@@ -270,8 +270,8 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive, isKpiVi
                     className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors"
                   >
                     <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isChecked
-                        ? 'bg-blue-600 border-blue-600 text-white'
-                        : 'border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900'
+                      ? 'bg-blue-600 border-blue-600 text-white'
+                      : 'border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900'
                       }`}>
                       {isChecked && <i className="fa-solid fa-check text-[9px]" />}
                     </div>
@@ -327,8 +327,8 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive, isKpiVi
                       setActiveCalTarget(null);
                     }}
                     className={`py-1.5 rounded-xl text-xs font-bold transition-colors ${selectedPreset === preset
-                        ? 'bg-blue-600 text-white shadow-xs'
-                        : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700'
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700'
                       }`}
                   >
                     {preset}
@@ -411,29 +411,6 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive, isKpiVi
         )}
       </div>
 
-      {/* ── KPI Toggle ── */}
-      {onKpiToggle && (
-        <>
-          <div className="h-4 w-px bg-gray-200 dark:bg-slate-700 hidden md:block mx-1"></div>
-          <div className="hidden md:flex items-center gap-2">
-            <span className="text-[14px] font-semibold text-gray-900 dark:text-slate-100 whitespace-nowrap">
-              KPIs
-            </span>
-            <button
-              onClick={onKpiToggle}
-              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors ${isKpiVisible
-                  ? 'bg-gray-900 dark:bg-slate-100 hover:opacity-80'
-                  : 'bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500'
-                }`}
-            >
-              <span
-                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white dark:bg-gray-900 transition-transform ${isKpiVisible ? 'translate-x-4' : 'translate-x-1'
-                  }`}
-              />
-            </button>
-          </div>
-        </>
-      )}
 
       {/* ── Dashboard View Toggle ── */}
       {onDashboardToggle && (
@@ -441,13 +418,13 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive, isKpiVi
           <div className="h-4 w-px bg-gray-200 dark:bg-slate-700 hidden md:block mx-1"></div>
           <div className="hidden md:flex items-center gap-2">
             <span className="text-[14px] font-semibold text-gray-900 dark:text-slate-100 whitespace-nowrap">
-              Dashboard View
+              Dashboard
             </span>
             <button
               onClick={onDashboardToggle}
               className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors ${isDashboardViewActive
-                  ? 'bg-gray-900 dark:bg-slate-100 hover:opacity-80'
-                  : 'bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500'
+                ? 'bg-gray-900 dark:bg-slate-100 hover:opacity-80'
+                : 'bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500'
                 }`}
             >
               <span

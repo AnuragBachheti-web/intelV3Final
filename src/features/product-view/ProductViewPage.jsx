@@ -9,29 +9,29 @@ import { salesWatchlistItems } from '../intel/sales/salesData';
 import { ITEM_SKU_DATA } from '../intel/shared/data/intelData';
 
 const PERF_STATS = [
-  { key: 'revenue',    label: 'Revenue',         icon: 'fa-arrow-trend-up',  value: '$14,250', change: '+12.4%', isPositive: true,  sub: 'vs previous 7 days', color: '#6366f1' },
-  { key: 'units',      label: 'Units Sold',       icon: 'fa-cart-shopping',   value: '215',     change: '+8.7%',  isPositive: true,  sub: 'vs previous 7 days', color: '#3b82f6' },
-  { key: 'conversion', label: 'Conversion Rate',  icon: 'fa-percent',         value: '3.2%',    change: '+0.6pp', isPositive: true,  sub: 'vs previous 7 days', color: '#10b981' },
-  { key: 'buybox',     label: 'Buy Box %',        icon: 'fa-trophy',          value: '87.4%',   change: '-2.1%',  isPositive: false, sub: 'vs previous 7 days', color: '#f59e0b' },
+  { key: 'revenue', label: 'Revenue', icon: 'fa-arrow-trend-up', value: '$14,250', change: '+12.4%', isPositive: true, sub: 'vs previous 7 days', color: '#6366f1' },
+  { key: 'units', label: 'Units Sold', icon: 'fa-cart-shopping', value: '215', change: '+8.7%', isPositive: true, sub: 'vs previous 7 days', color: '#3b82f6' },
+  { key: 'conversion', label: 'Conversion Rate', icon: 'fa-percent', value: '3.2%', change: '+0.6pp', isPositive: true, sub: 'vs previous 7 days', color: '#10b981' },
+  { key: 'buybox', label: 'Buy Box %', icon: 'fa-trophy', value: '87.4%', change: '-2.1%', isPositive: false, sub: 'vs previous 7 days', color: '#f59e0b' },
 ];
 
 const TREND_DATA = {
-  revenue:    [9800, 11200, 12400, 15200, 13600, 13100, 14250].map((v, i) => ({ date: `May ${14+i}`, value: v })),
-  units:      [168, 192, 198, 245, 227, 219, 215].map((v, i) => ({ date: `May ${14+i}`, value: v })),
-  conversion: [2.6, 2.9, 3.1, 3.5, 3.2, 3.1, 3.2].map((v, i) => ({ date: `May ${14+i}`, value: v })),
-  buybox:     [92, 91, 89, 88, 87, 88, 87.4].map((v, i) => ({ date: `May ${14+i}`, value: v })),
+  revenue: [9800, 11200, 12400, 15200, 13600, 13100, 14250].map((v, i) => ({ date: `May ${14 + i}`, value: v })),
+  units: [168, 192, 198, 245, 227, 219, 215].map((v, i) => ({ date: `May ${14 + i}`, value: v })),
+  conversion: [2.6, 2.9, 3.1, 3.5, 3.2, 3.1, 3.2].map((v, i) => ({ date: `May ${14 + i}`, value: v })),
+  buybox: [92, 91, 89, 88, 87, 88, 87.4].map((v, i) => ({ date: `May ${14 + i}`, value: v })),
 };
 
 const ACTION_BADGE = {
-  'CRITICAL':    'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300',
-  'HIGH':        'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300',
+  'CRITICAL': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300',
+  'HIGH': 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300',
   'OPPORTUNITY': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300',
-  'INSIGHT':     'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
-  'MARKET':      'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300',
+  'INSIGHT': 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
+  'MARKET': 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300',
 };
 
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const WEEKDAYS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
 const defaultDescription = (name) =>
   `${name} is one of your top-performing products, consistently driving strong revenue across channels. It maintains competitive pricing and healthy margin contribution relative to your catalog average. Recent demand signals indicate sustained buyer interest, with particular strength in repeat purchase behaviour. Monitor inventory velocity closely to avoid stockout risk during high-demand periods.`;
@@ -78,14 +78,14 @@ const CompactWatchlistCard = ({ title, sku, stock, velocity, image, status }) =>
 // ─── Product Filter Panel ─────────────────────────────────────────────────────
 
 const ProductFilterPanel = ({ pendingDate, setPendingDate, customRange, setCustomRange, hoverDate, setHoverDate, calViewMonth, setCalViewMonth, onClose, onUpdate }) => {
-  const today = new Date(); today.setHours(0,0,0,0);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
 
   const applyPreset = (preset) => {
     const t = new Date(today);
     let start, end;
-    if (preset === '7d')  { start = new Date(t.getTime() - 6*86400000); end = new Date(t); }
-    if (preset === '30d') { start = new Date(t.getTime() - 29*86400000); end = new Date(t); }
-    if (preset === '90d') { start = new Date(t.getTime() - 89*86400000); end = new Date(t); }
+    if (preset === '7d') { start = new Date(t.getTime() - 6 * 86400000); end = new Date(t); }
+    if (preset === '30d') { start = new Date(t.getTime() - 29 * 86400000); end = new Date(t); }
+    if (preset === '90d') { start = new Date(t.getTime() - 89 * 86400000); end = new Date(t); }
     setCustomRange({ start, end });
     setPendingDate(preset);
   };
@@ -114,19 +114,19 @@ const ProductFilterPanel = ({ pendingDate, setPendingDate, customRange, setCusto
     const cells = [];
     for (let i = 0; i < firstDay; i++) cells.push(null);
     for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(year, month, d));
-    const goPrev = () => setCalViewMonth(p => p.month === 0 ? { year: p.year-1, month: 11 } : { year: p.year, month: p.month-1 });
-    const goNext = () => setCalViewMonth(p => p.month === 11 ? { year: p.year+1, month: 0 } : { year: p.year, month: p.month+1 });
+    const goPrev = () => setCalViewMonth(p => p.month === 0 ? { year: p.year - 1, month: 11 } : { year: p.year, month: p.month - 1 });
+    const goNext = () => setCalViewMonth(p => p.month === 11 ? { year: p.year + 1, month: 0 } : { year: p.year, month: p.month + 1 });
     return (
       <div className="flex-1">
         <div className="flex items-center justify-between mb-1">
-          {isLeft ? <button onClick={goPrev} className="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-500 transition"><i className="fa-solid fa-chevron-left text-[9px]"/></button> : <span/>}
+          {isLeft ? <button onClick={goPrev} className="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-500 transition"><i className="fa-solid fa-chevron-left text-[9px]" /></button> : <span />}
           <p className="text-xs font-bold text-gray-800 dark:text-slate-100">{MONTHS[month]} {year}</p>
-          {!isLeft ? <button onClick={goNext} className="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-500 transition"><i className="fa-solid fa-chevron-right text-[9px]"/></button> : <span/>}
+          {!isLeft ? <button onClick={goNext} className="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-500 transition"><i className="fa-solid fa-chevron-right text-[9px]" /></button> : <span />}
         </div>
         <div className="grid grid-cols-7 mb-1">{WEEKDAYS.map(d => <div key={d} className="text-[8px] sm:text-[9px] text-center text-gray-400 font-semibold py-1">{d}</div>)}</div>
         <div className="grid grid-cols-7">
           {cells.map((date, i) => {
-            if (!date) return <div key={`e${i}`}/>;
+            if (!date) return <div key={`e${i}`} />;
             const isStart = isSame(date, customRange.start);
             const isEnd = isSame(date, customRange.end || (customRange.start && !customRange.end ? hoverDate : null));
             const isIn = inRange(date);
@@ -135,12 +135,11 @@ const ProductFilterPanel = ({ pendingDate, setPendingDate, customRange, setCusto
               <button key={date.getTime()} onClick={() => handleDayClick(date)}
                 onMouseEnter={() => customRange.start && !customRange.end && setHoverDate(date)}
                 onMouseLeave={() => setHoverDate(null)}
-                className={`w-6 h-6 sm:w-8 sm:h-8 mx-auto flex items-center justify-center text-[10px] sm:text-[11px] font-medium rounded-lg transition-colors ${
-                  isStart || isEnd ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 font-bold'
-                  : isIn ? 'bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200'
-                  : isToday ? 'ring-1 ring-inset ring-gray-400 text-gray-900 dark:text-slate-100'
-                  : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800'
-                }`}>{date.getDate()}</button>
+                className={`w-6 h-6 sm:w-8 sm:h-8 mx-auto flex items-center justify-center text-[10px] sm:text-[11px] font-medium rounded-lg transition-colors ${isStart || isEnd ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 font-bold'
+                    : isIn ? 'bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200'
+                      : isToday ? 'ring-1 ring-inset ring-gray-400 text-gray-900 dark:text-slate-100'
+                        : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800'
+                  }`}>{date.getDate()}</button>
             );
           })}
         </div>
@@ -149,8 +148,8 @@ const ProductFilterPanel = ({ pendingDate, setPendingDate, customRange, setCusto
   };
 
   const nextCal = calViewMonth.month === 11
-    ? { year: calViewMonth.year+1, month: 0 }
-    : { year: calViewMonth.year, month: calViewMonth.month+1 };
+    ? { year: calViewMonth.year + 1, month: 0 }
+    : { year: calViewMonth.year, month: calViewMonth.month + 1 };
 
   const getDurLabel = () => {
     if (pendingDate === '7d') return '7 days';
@@ -163,7 +162,7 @@ const ProductFilterPanel = ({ pendingDate, setPendingDate, customRange, setCusto
     return '—';
   };
 
-  const fmtD = (d) => d ? d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) : '';
+  const fmtD = (d) => d ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
   const canUpdate = pendingDate || (customRange.start && customRange.end);
 
   return (
@@ -172,7 +171,7 @@ const ProductFilterPanel = ({ pendingDate, setPendingDate, customRange, setCusto
         {/* Quick presets */}
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs font-semibold text-gray-400 dark:text-slate-500">Quick Filters</span>
-          {[['7d','Last 7 Days'],['30d','Last 30 Days'],['90d','Last 90 Days']].map(([val,lbl]) => (
+          {[['7d', 'Last 7 Days'], ['30d', 'Last 30 Days'], ['90d', 'Last 90 Days']].map(([val, lbl]) => (
             <button key={val} onClick={() => applyPreset(val)}
               className={`px-3 py-1 rounded-full border text-xs font-medium transition-all ${pendingDate === val ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 border-gray-900' : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-gray-300'}`}>
               {lbl}
@@ -182,13 +181,13 @@ const ProductFilterPanel = ({ pendingDate, setPendingDate, customRange, setCusto
         {/* Dual calendar */}
         <div className="flex gap-2 sm:gap-4 flex-1">
           {renderMonth(calViewMonth.year, calViewMonth.month, true)}
-          <div className="w-px bg-gray-100 dark:bg-slate-800 self-stretch flex-shrink-0"/>
+          <div className="w-px bg-gray-100 dark:bg-slate-800 self-stretch flex-shrink-0" />
           {renderMonth(nextCal.year, nextCal.month, false)}
         </div>
         {/* Duration display */}
         <div className="flex items-center gap-3 pt-2 border-t border-gray-100 dark:border-slate-800">
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-[11px] font-medium text-gray-700 dark:text-slate-300">
-            <span className="w-2 h-2 rounded-full bg-gray-700 dark:bg-slate-300 flex-shrink-0"/>
+            <span className="w-2 h-2 rounded-full bg-gray-700 dark:bg-slate-300 flex-shrink-0" />
             {getDurLabel()}
           </div>
           {customRange.start && (
@@ -324,14 +323,14 @@ const ProductViewPage = () => {
     });
   };
 
-  const channelTabs   = ['Amazon', 'Shopify', 'Walmart'].filter(t => activePlatforms.includes(t.toLowerCase()));
+  const channelTabs = ['Amazon', 'Shopify', 'Walmart'].filter(t => activePlatforms.includes(t.toLowerCase()));
 
   const activeDateLabel = pendingDate === '7d' ? 'Last 7 Days'
     : pendingDate === '90d' ? 'Last 90 Days'
-    : pendingDate === '30d' ? null
-    : (customRange.start && customRange.end)
-      ? `${customRange.start.toLocaleDateString('en-US', { month:'short', day:'numeric' })} – ${customRange.end.toLocaleDateString('en-US', { month:'short', day:'numeric' })}`
-    : null;
+      : pendingDate === '30d' ? null
+        : (customRange.start && customRange.end)
+          ? `${customRange.start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${customRange.end.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+          : null;
 
   return (
     <DashboardLayout
@@ -357,11 +356,10 @@ const ProductViewPage = () => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2.5 text-xs font-medium border-b-2 -mb-px transition-colors whitespace-nowrap ${
-                  activeTab === tab
+                className={`px-4 py-2.5 text-xs font-medium border-b-2 -mb-px transition-colors whitespace-nowrap ${activeTab === tab
                     ? 'text-gray-900 dark:text-slate-100 border-gray-900 dark:border-slate-200 font-semibold'
                     : 'text-gray-400 dark:text-slate-500 border-transparent hover:text-gray-700 dark:hover:text-slate-300'
-                }`}
+                  }`}
               >
                 {tab}
               </button>
@@ -378,11 +376,10 @@ const ProductViewPage = () => {
               )}
               <button
                 onClick={() => setFilterOpen(v => !v)}
-                className={`flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${
-                  filterOpen
+                className={`flex items-center gap-1.5 px-3 h-7 rounded-xl border transition-all text-xs font-medium ${filterOpen
                     ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
                     : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600'
-                }`}
+                  }`}
               >
                 <i className="fa-solid fa-sliders text-[11px]" />
                 Filter
@@ -436,7 +433,7 @@ const ProductViewPage = () => {
 
                 {isEditing ? (
                   <div className="space-y-3">
-                    <MarketplaceSyncBanner onGoToMarketplace={() => {}} />
+                    <MarketplaceSyncBanner onGoToMarketplace={() => { }} />
                     <div>
                       <label className={fieldLabelClass}>Product Name</label>
                       <input
@@ -526,11 +523,10 @@ const ProductViewPage = () => {
                   <button
                     key={stat.key}
                     onClick={() => setActivePerfStat(stat.key)}
-                    className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
-                      activePerfStat === stat.key
+                    className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${activePerfStat === stat.key
                         ? 'border-gray-900 dark:border-slate-100 bg-gray-50 dark:bg-slate-800'
                         : 'border-gray-100 dark:border-slate-800 hover:border-gray-200 dark:hover:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800/60'
-                    }`}
+                      }`}
                   >
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${activePerfStat === stat.key ? 'bg-gray-200 dark:bg-slate-700' : 'bg-gray-100 dark:bg-slate-800'}`}>
                       <i className={`fa-solid ${stat.icon} text-[10px] text-gray-600 dark:text-slate-300`} />
@@ -616,11 +612,10 @@ const ProductViewPage = () => {
                   <button
                     key={tab}
                     onClick={() => setInsightCategory(tab)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
-                      insightCategory === tab
+                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition whitespace-nowrap ${insightCategory === tab
                         ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 shadow-sm'
                         : 'bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300'
-                    }`}
+                      }`}
                   >
                     {tab === 'All' ? 'All' : tab.charAt(0) + tab.slice(1).toLowerCase()}
                   </button>

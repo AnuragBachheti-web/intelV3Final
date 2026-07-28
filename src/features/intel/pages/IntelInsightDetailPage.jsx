@@ -501,13 +501,13 @@ const IntelV2InsightDetailPage = () => {
                   //   className="text-left w-full px-2 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-800/60 transition-colors group flex items-start gap-2"
                   // >
                   <button
-  key={i}
-  onClick={() => {
-    navigate(`/intel/insight/${stateIntelTab}/${i}`, { state: { ...stateData, currentIndex: i } });
-    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }}
-  className="text-left w-full px-2 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-800/60 transition-colors group flex items-start gap-2"
->
+                    key={i}
+                    onClick={() => {
+                      navigate(`/intel/insight/${stateIntelTab}/${i}`, { state: { ...stateData, currentIndex: i } });
+                      topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }}
+                    className="text-left w-full px-2 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-800/60 transition-colors group flex items-start gap-2"
+                  >
                     <span className="flex-shrink-0 text-[10px] font-semibold text-gray-400 dark:text-slate-500 mt-0.5 w-3.5">{listIdx + 1}.</span>
                     <span className="text-[13px] font-medium text-gray-700 dark:text-slate-300 leading-snug group-hover:text-gray-900 dark:group-hover:text-slate-100 truncate">
                       {ins.heading}

@@ -33,7 +33,8 @@ const InsightsPanel = ({
   onOpenRepriceModal,
   onOpenPlanCaptureModal,
   onToggleInsightPanel,
-  expandedInsightId
+  expandedInsightId,
+  borderless = false
 }) => {
   const [activeFamilyFilter, setActiveFamilyFilter] = useState('all');
   const [newSinceYesterday, setNewSinceYesterday] = useState(false);
@@ -45,7 +46,7 @@ const InsightsPanel = ({
   ).length;
 
   return (
-    <div className="rounded-2xl bg-white dark:bg-[#030712] p-4 sm:p-5 border border-gray-200 dark:border-slate-800 space-y-5 h-full flex flex-col min-h-0">
+    <div className={`space-y-5 h-full flex flex-col min-h-0 ${borderless ? 'p-0' : 'rounded-2xl bg-white dark:bg-[#030712] p-4 sm:p-5 border border-gray-200 dark:border-slate-800'}`}>
 
       {/* Header Section (SS2, SS3, SS4) */}
       <div className="space-y-3 pb-3 border-b border-gray-100 dark:border-slate-800 shrink-0">
@@ -61,33 +62,7 @@ const InsightsPanel = ({
             </span>
           </div>
 
-          {/* List/Grid View mode toggles */}
-          <div className="flex items-center gap-1.5 self-end sm:self-auto">
-            {setItemViewMode && (
-              <>
-                <button
-                  onClick={() => setItemViewMode('list')}
-                  className={`w-7 h-7 flex items-center justify-center rounded-lg border transition-colors ${itemViewMode === 'list'
-                    ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
-                    : 'border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500 hover:border-gray-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900'
-                    }`}
-                  title="List view"
-                >
-                  <i className="fa-solid fa-list text-xs" />
-                </button>
-                <button
-                  onClick={() => setItemViewMode('grid')}
-                  className={`w-7 h-7 flex items-center justify-center rounded-lg border transition-colors ${itemViewMode === 'grid'
-                    ? 'bg-gray-900 dark:bg-slate-100 border-gray-900 dark:border-slate-100 text-white dark:text-gray-900'
-                    : 'border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500 hover:border-gray-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900'
-                    }`}
-                  title="Grid view"
-                >
-                  <i className="fa-solid fa-grip text-xs" />
-                </button>
-              </>
-            )}
-          </div>
+
         </div>
 
         {/* Filter Tabs + Toggle Switch row (SS2, SS3) */}

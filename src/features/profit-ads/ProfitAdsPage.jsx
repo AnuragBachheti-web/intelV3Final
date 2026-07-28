@@ -7,7 +7,7 @@ import ExplanationPanel from './components/ExplanationPanel';
 import { downloadProfitAdsReport } from './api/exportApi';
 import { useExplainStore } from '../../store/useExplainStore';
 
-const ProfitAdsPage = () => {
+export const ProfitAdsContent = () => {
   const briefData = REALIFY_BRIEF;
   const summary = PROFIT_ADS_SUMMARY;
   const { explainMode, setExplainMode: _setExplainMode } = useExplainStore();
@@ -36,14 +36,9 @@ const ProfitAdsPage = () => {
   };
 
   return (
-    <DashboardLayout
-      title="Profit & Ads"
-      subtitle=""
-      showTabs={false}
-      showAIPrompt={false}
-    >
+    <>
       <div className="flex flex-col h-full relative" onClick={() => setActiveDropdown(null)}>
-        <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 pt-0 pb-24">
+        <div className="flex-1 overflow-y-auto px-1 sm:px-3 pt-0 pb-12">
 
           {/* Filters Row */}
           <div className="flex items-center justify-end gap-2 mt-4 mb-6">
@@ -328,8 +323,14 @@ const ProfitAdsPage = () => {
         onClose={() => setSelectedSku(null)}
         skuData={selectedSku}
       />
-    </DashboardLayout>
+    </>
   );
 };
+
+const ProfitAdsPage = () => (
+  <DashboardLayout title="Profit & Ads" subtitle="" showTabs={false} showAIPrompt={false}>
+    <ProfitAdsContent />
+  </DashboardLayout>
+);
 
 export default ProfitAdsPage;
