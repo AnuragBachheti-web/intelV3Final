@@ -9,9 +9,11 @@ const InsightCard = ({ card, onSimulate, onReprice, onDismiss, onPlanCapture, on
   if (dismissed) return null;
 
   return (
-    <div className={`rounded-2xl border bg-white dark:bg-slate-900/90 p-5 transition-all duration-300 ${isExpanded
-        ? 'border-black dark:border-white ring-1 ring-black/10 dark:ring-white/10 shadow-lg shadow-black/5 dark:shadow-white/5'
-        : 'border-gray-200 dark:border-slate-800 shadow-xs'
+    <div 
+      onClick={onToggleExpand}
+      className={`cursor-pointer rounded-2xl border p-5 transition-all duration-300 ${isExpanded
+        ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-900/20 dark:border-blue-500 ring-1 ring-blue-500/20 shadow-md'
+        : 'bg-white dark:bg-slate-900/90 border-gray-200 dark:border-slate-800 shadow-xs hover:border-blue-300 dark:hover:border-blue-700'
       }`}>
 
       {/* Top Header: SKU / Rule Tag (left), Badges + Expand Arrow (right) */}
@@ -36,13 +38,6 @@ const InsightCard = ({ card, onSimulate, onReprice, onDismiss, onPlanCapture, on
               {card.actBadge}
             </span>
           )}
-          <button
-            onClick={onToggleExpand}
-            className={`w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-slate-200 transition-colors ml-1 ${isExpanded ? 'bg-black text-white dark:bg-white dark:text-black' : 'hover:bg-gray-100 dark:hover:bg-slate-800'}`}
-            title={isExpanded ? "Close details panel" : "Open details panel"}
-          >
-            <i className={`fa-solid fa-chevron-right text-xs transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
-          </button>
         </div>
       </div>
 
@@ -119,12 +114,6 @@ const InsightCard = ({ card, onSimulate, onReprice, onDismiss, onPlanCapture, on
               </div>
             )}
           </div>
-          <button
-            onClick={onSimulate}
-            className="px-3 py-1.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition-colors"
-          >
-            Simulate
-          </button>
 
           {(!card.actionType || card.actionType === 'reprice') && (
             <button
@@ -156,7 +145,6 @@ const InsightCard = ({ card, onSimulate, onReprice, onDismiss, onPlanCapture, on
           )}
         </div>
       </div>
-
     </div>
   );
 };

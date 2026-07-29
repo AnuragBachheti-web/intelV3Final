@@ -117,15 +117,6 @@ const StatCard = ({
         onClick={onClick}
         className={`${bgClass} border rounded-2xl p-4 flex flex-col justify-between h-[110px] relative transition-all duration-300 group hover:shadow-md ${(onClick || isSelected) ? 'cursor-pointer ring-1 ring-black/5 dark:ring-white/5' : ''}`}
       >
-        {/* AI Reference Icon */}
-        <button
-          onClick={handleRefClick}
-          className="absolute top-3 right-3 z-20 w-6 h-6 flex items-center justify-center rounded-full bg-white/50 dark:bg-slate-800/50 text-slate-400 hover:text-brand-600 dark:hover:text-blue-400 hover:bg-white shadow-sm transition-all opacity-0 group-hover:opacity-100"
-          title="Attach as reference"
-        >
-          <i className="fa-solid fa-paperclip text-[10px]"></i>
-        </button>
-
         <div className="flex justify-between items-end h-full w-full">
           {/* Left Side: Title, Value, Subtext */}
           <div className="flex flex-col gap-0.5">

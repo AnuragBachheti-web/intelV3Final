@@ -5,7 +5,7 @@ import {
   ASSUMPTION_PRESETS,
 } from '../data/simulationModalData';
 
-const SimulateModal = ({ isOpen, onClose, insight }) => {
+export const SimulateContent = ({ insight, onClose, isModal = false }) => {
   // Resolve the base inputs for whichever insight opened the modal.
   const baseInputs = useMemo(() => getSimulationInputs(insight), [insight]);
 
@@ -18,19 +18,11 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
   // Which formula panel (if any) is open. null = closed.
   const [activeFormula, setActiveFormula] = useState(null);
 
-  // Lock body scroll while open.
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
-    return () => { document.body.style.overflow = 'unset'; };
-  }, [isOpen]);
-
   // Recompute everything from the current assumptions.
   const sim = useMemo(
     () => computeSimulation({ ...baseInputs, capturePct, marginPct, rampDays }),
     [baseInputs, capturePct, marginPct, rampDays]
   );
-
-  if (!isOpen) return null;
 
   const applyPreset = (key) => {
     const preset = ASSUMPTION_PRESETS[key];
@@ -58,315 +50,136 @@ const SimulateModal = ({ isOpen, onClose, insight }) => {
   const formula = activeFormula ? sim.formulas[activeFormula] : null;
 
   return (
+    <div className={`relative w-full ${isModal ? 'max-w-[1280px] max-h-[96vh] rounded-[18px] shadow-2xl bg-white dark:bg-slate-900' : 'h-full bg-transparent overflow-y-auto custom-scrollbar'} flex flex-col p-4`} onClick={isModal ? (e) => e.stopPropagation() : undefined}>
+      
+      <div className="flex flex-col gap-3">
+        
+        {/* Header Box */}
+        <div className="bg-gray-100/80 dark:bg-slate-800/80 rounded-xl p-4">
+          <h3 className="text-[15px] font-bold text-gray-600 dark:text-slate-300 font-sans mb-1.5">Autofy Car Body Cover, Premium (12 SKUs)</h3>
+          <p className="text-[13px] text-gray-500 dark:text-slate-400 leading-relaxed font-sans pr-4">
+            Match price within 3% on the 8 highest-volume SKUs; hold price and lean on reviews for the remaining 4 lower-velocity SKUs.
+          </p>
+        </div>
+
+        {/* Impact Metrics Row */}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="bg-gray-100/80 dark:bg-slate-800/80 rounded-xl p-4">
+            <div className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-2">REVENUE IMPACT</div>
+            <div className="text-[16px] font-mono tracking-tight font-bold text-red-500">-₹4.1L</div>
+          </div>
+          <div className="bg-gray-100/80 dark:bg-slate-800/80 rounded-xl p-4">
+            <div className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-2">PROFIT IMPACT</div>
+            <div className="text-[16px] font-mono tracking-tight font-bold text-red-500">-₹90,200</div>
+          </div>
+          <div className="bg-gray-100/80 dark:bg-slate-800/80 rounded-xl p-4">
+            <div className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-2">CONFIDENCE</div>
+            <div className="text-[16px] font-mono tracking-tight font-bold text-emerald-600">Very high</div>
+          </div>
+        </div>
+
+        {/* Affected SKUs */}
+        <div className="bg-gray-100/80 dark:bg-slate-800/80 rounded-xl p-4">
+          <div className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-3">AFFECTED SKUS</div>
+          <div className="flex flex-wrap items-center gap-2">
+            {['AF-CC-2044', 'AF-CC-2045', 'AF-CC-2046', 'AF-CC-2047', 'AF-CC-2048'].map(sku => (
+              <span key={sku} className="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-md px-3 py-1.5 text-[12px] font-mono text-gray-600 dark:text-slate-300 shadow-sm">
+                {sku}
+              </span>
+            ))}
+            <span className="text-[12px] text-gray-400 dark:text-slate-500 ml-1 font-sans mt-1">+7 more</span>
+          </div>
+        </div>
+
+        {/* Adjust and Re-Run */}
+        <div className="bg-gray-100/80 dark:bg-slate-800/80 rounded-xl p-5">
+          <div className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-4">ADJUST AND RE-RUN</div>
+          
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[14px] text-gray-700 dark:text-slate-300 font-sans">Price match depth</span>
+            <span className="text-[14px] font-bold text-gray-900 dark:text-white font-mono">-6%</span>
+          </div>
+          
+          <div className="relative w-full h-1 bg-gray-300 dark:bg-slate-600 rounded-full mb-6">
+            <div className="absolute left-0 top-0 h-full bg-slate-800 dark:bg-slate-400 rounded-full" style={{width: '60%'}}></div>
+            <div className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-slate-800 dark:bg-slate-200 rounded-full cursor-pointer shadow" style={{left: '60%'}}></div>
+          </div>
+
+          <div className="flex items-center p-1 bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-700">
+            <button className="flex-1 py-2 text-[13px] font-bold text-gray-600 dark:text-slate-400 rounded-lg transition-colors hover:bg-gray-50 dark:hover:bg-slate-800 font-sans">
+              Conservative
+            </button>
+            <button className="flex-1 py-2 text-[13px] font-bold text-gray-600 dark:text-slate-400 rounded-lg transition-colors hover:bg-gray-50 dark:hover:bg-slate-800 font-sans">
+              Expected
+            </button>
+            <button className="flex-1 py-2 text-[13px] font-bold text-white bg-[#1a1f36] dark:bg-slate-700 rounded-lg transition-colors shadow-sm font-sans">
+              Optimistic
+            </button>
+          </div>
+        </div>
+
+        {/* Data Table */}
+        <div className="px-1 mt-2">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-gray-200 dark:border-slate-700">
+                <th className="py-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider w-[33%]">HORIZON</th>
+                <th className="py-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider w-[33%]">REVENUE</th>
+                <th className="py-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider w-[33%]">PROFIT</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+              <tr>
+                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">30 days</td>
+                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">-₹1,82,655</td>
+                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">-₹40,184</td>
+              </tr>
+              <tr>
+                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">60 days</td>
+                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">-₹3,65,310</td>
+                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">-₹80,368</td>
+              </tr>
+              <tr>
+                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">90 days</td>
+                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">-₹5,53,500</td>
+                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">-₹1,21,770</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div className="mt-2 pt-4 border-t border-gray-100 dark:border-slate-800">
+            <p className="text-[12px] text-gray-400 dark:text-slate-500 leading-relaxed font-sans pr-4">
+              Directional estimate, not a guarantee. Based on high-confidence signal data and current run-rate.
+            </p>
+          </div>
+        </div>
+
+      </div>
+      
+      {isModal && (
+        <div className="mt-4 pt-4 flex justify-end">
+          <button onClick={onClose} className="px-6 py-2 rounded-lg bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition">Close</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const SimulateModal = ({ isOpen, onClose, insight }) => {
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6"
       onClick={onClose}
     >
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" />
-
-      <div
-        className="relative bg-white dark:bg-slate-900 w-full max-w-[1280px] max-h-[96vh] rounded-[18px] shadow-2xl flex flex-col overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* ─── Header ─────────────────────────────────────────── */}
-        <div className="px-8 pt-7 pb-6 border-b border-gray-100 dark:border-slate-800 shrink-0">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 mb-3">
-                <i className="fa-solid fa-sparkles text-[11px]" />
-                {/* <span className="text-[11px] font-sans font-bold uppercase tracking-[0.18em]">
-                  {baseInputs.signalLabel}
-                </span> */}
-              </div>
-              <h2 className="text-[20px] leading-tight font-bold text-gray-900 dark:text-white font-sans max-w-[760px]">
-                {baseInputs.title}
-              </h2>
-            </div>
-            <div className="flex-shrink-0 flex items-center gap-3">
-              <span className="px-3.5 py-1.5 rounded-full border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 text-[12px] font-sans whitespace-nowrap">
-                {baseInputs.badge}
-              </span>
-              <button
-                onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 transition-colors"
-                aria-label="Close"
-              >
-                <i className="fa-solid fa-xmark text-sm" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* ─── Body (fits without scrolling) ──────────────────── */}
-        <div className="flex-1 overflow-hidden px-8 py-5">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-x-8 gap-y-5">
-
-            {/* ── LEFT COLUMN ── */}
-            <div className="flex flex-col gap-5">
-              {formula ? (
-                /* Formula panel (SS2) replaces the derived-number card */
-                <div className="rounded-xl border border-amber-200 dark:border-amber-900/40 overflow-hidden shadow-sm">
-                  <div className="flex items-center justify-between px-5 py-3 bg-amber-50 dark:bg-amber-900/20 border-b border-amber-100 dark:border-amber-900/40">
-                    <span className="text-[12px] font-sans font-bold uppercase tracking-[0.14em] text-blue-700 dark:text-blue-300">
-                      L1 · Deterministic: how this number is derived
-                    </span>
-                    <button
-                      onClick={() => setActiveFormula(null)}
-                      className="w-6 h-6 flex items-center justify-center rounded-full border border-amber-200 dark:border-amber-800 text-gray-500 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
-                      aria-label="Close formula"
-                    >
-                      <i className="fa-solid fa-xmark text-[11px]" />
-                    </button>
-                  </div>
-                  <div className="p-5 bg-white dark:bg-slate-800/40">
-                    <dl className="flex flex-col">
-                      <div className="flex items-start gap-6 py-2">
-                        <dt className="w-40 shrink-0 text-[13px] text-gray-500 dark:text-slate-400">Formula</dt>
-                        <dd className="flex-1 rounded-md border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-3 py-2 text-[13px] font-sans text-gray-800 dark:text-slate-200">
-                          {formula.expression}
-                        </dd>
-                      </div>
-                      {formula.rows.map((row) => (
-                        <div key={row.label} className="flex items-center gap-6 py-2 border-t border-gray-50 dark:border-slate-800/60">
-                          <dt className="w-40 shrink-0 text-[13px] text-gray-500 dark:text-slate-400">{row.label}</dt>
-                          <dd className={`flex-1 text-[15px] font-bold flex items-center gap-2 ${row.highlight ? 'text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-white'}`}>
-                            {row.badge && (
-                              <span className="px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 text-[10px] font-sans font-bold">
-                                {row.badge}
-                              </span>
-                            )}
-                            {row.value}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                    <p className="mt-4 text-[13px] italic text-amber-700 dark:text-amber-500">
-                      {formula.footnote}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                /* Contribution card (SS1) */
-                <div className="rounded-xl border border-gray-200 dark:border-slate-700 bg-[#faf9f7] dark:bg-slate-800/40 p-5">
-                  <p className="text-[11px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em] mb-3">
-                    Contribution from capturing the gap / mo
-                  </p>
-                  <div className="flex items-end justify-between gap-6">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[38px] leading-none font-bold text-gray-900 dark:text-white">
-                          {sim.contribution.value}
-                        </span>
-                        {renderInfoButton('contribution')}
-                      </div>
-                      <p className="mt-3 text-[12px] text-gray-500 dark:text-slate-400">
-                        Range: conservative {sim.contribution.range.conservative} · expected {sim.contribution.range.expected} · optimistic {sim.contribution.range.optimistic}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-8 shrink-0">
-                      <div>
-                        <div className="text-[10px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">Do-nothing D90</div>
-                        <div className="text-[17px] font-bold text-gray-800 dark:text-slate-200">{sim.contribution.doNothingD90}</div>
-                      </div>
-                      <div className="pl-8 border-l border-gray-200 dark:border-slate-700">
-                        <div className="text-[10px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">Do-this D90</div>
-                        <div className="text-[17px] font-bold text-blue-600 dark:text-blue-400">{sim.contribution.doThisD90}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Intervention + Projection — hidden while the formula panel is open */}
-              {!formula && (
-                <>
-                  {/* Intervention */}
-                  <div>
-                    <p className="text-[11px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em] mb-2">
-                      Intervention
-                    </p>
-                    <p className="text-[14px] text-gray-700 dark:text-slate-300 leading-relaxed">
-                      {sim.intervention}
-                    </p>
-                  </div>
-
-                  {/* Projection table */}
-                  <div>
-                    <p className="text-[11px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em] mb-3">
-                      30 / 60 / 90 projection: click any number for its math
-                    </p>
-                    <div className="rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-                      <table className="w-full text-left">
-                        <thead className="bg-gray-50/70 dark:bg-slate-800/60">
-                          <tr>
-                            <th className="px-4 py-2.5 text-[10px] font-sans font-bold text-gray-400 uppercase tracking-wider">Metric</th>
-                            <th className="px-4 py-2.5 text-[10px] font-sans font-bold text-gray-400 uppercase tracking-wider text-right">Now</th>
-                            <th className="px-4 py-2.5 text-[10px] font-sans font-bold text-gray-400 uppercase tracking-wider text-right">D-Nothing</th>
-                            {sim.projection.cells.map((c) => (
-                              <th key={c.key} className="px-4 py-2.5 text-[10px] font-sans font-bold text-gray-400 uppercase tracking-wider text-right">{c.label}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="border-t border-gray-100 dark:border-slate-800">
-                            <td className="px-4 py-3 text-[13px] font-medium text-gray-700 dark:text-slate-300">{sim.projection.metric}</td>
-                            <td className="px-4 py-3 text-[13px] font-medium text-gray-400 text-right">{sim.projection.now}</td>
-                            <td className="px-4 py-3 text-[13px] font-medium text-gray-400 text-right">{sim.projection.doNothing}</td>
-                            {sim.projection.cells.map((c) => (
-                              <td key={c.key} className="px-4 py-3 text-right align-bottom">
-                                <div className="flex items-center justify-end gap-1.5">
-                                  <span className="text-[13px] font-bold text-gray-900 dark:text-white">{c.value}</span>
-                                  {renderInfoButton(c.key)}
-                                </div>
-                                <div className="mt-1.5 h-1 w-full rounded-full bg-gray-100 dark:bg-slate-700 overflow-hidden">
-                                  <div className="h-full rounded-full bg-blue-500" style={{ width: `${c.pct}%` }} />
-                                </div>
-                              </td>
-                            ))}
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* ── RIGHT COLUMN ── */}
-            <div className="flex flex-col gap-6">
-              {/* What could go wrong */}
-              <div>
-                <p className="text-[11px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em] mb-3">
-                  What could go wrong
-                </p>
-                <div className="flex flex-col divide-y divide-gray-100 dark:divide-slate-800">
-                  {baseInputs.whatCouldGoWrong.map((item) => (
-                    <div key={item.title} className="flex items-start gap-3 py-3 first:pt-0">
-                      <i className="fa-solid fa-triangle-exclamation text-amber-500 text-[13px] mt-0.5 shrink-0" />
-                      <p className="text-[13px] text-gray-700 dark:text-slate-300 leading-relaxed">
-                        <span className="font-bold text-gray-900 dark:text-white">{item.title}</span>: {item.description}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Assumptions */}
-              <div className="rounded-xl border border-gray-200 dark:border-slate-700 bg-[#faf9f7] dark:bg-slate-800/40 p-5">
-                <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
-                  <p className="text-[11px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-[0.14em]">
-                    Assumptions
-                  </p>
-                  {/* <div className="flex items-center gap-2">
-                    {['conservative', 'expected', 'optimistic'].map((key) => (
-                      <button
-                        key={key}
-                        onClick={() => applyPreset(key)}
-                        className={`px-3 py-1 rounded-full border text-[11px] font-medium capitalize transition-colors ${activePreset === key
-                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
-                            : 'border-gray-300 dark:border-slate-600 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
-                          }`}
-                      >
-                        {key}
-                      </button>
-                    ))}
-                  </div> */}
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    {['conservative', 'expected', 'optimistic'].map((key) => (
-                      <button
-                        key={key}
-                        onClick={() => applyPreset(key)}
-                        className={`px-3 py-1 rounded-full border text-[11px] font-medium capitalize transition-colors ${activePreset === key
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
-                          : 'border-gray-300 dark:border-slate-600 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
-                          }`}
-                      >
-                        {key}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-3">
-                  {[
-                    { label: 'CAPTURE_PCT', value: capturePct, setter: setCapturePct },
-                    { label: 'MARGIN_PCT', value: marginPct, setter: setMarginPct },
-                    { label: 'RAMP_DAYS', value: rampDays, setter: setRampDays },
-                  ].map((field) => (
-                    <div key={field.label}>
-                      <label className="block text-[10px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">
-                        {field.label}
-                      </label>
-                      <input
-                        type="number"
-                        value={field.value}
-                        onChange={(e) => {
-                          field.setter(e.target.value === '' ? '' : Number(e.target.value));
-                          setActivePreset(null);
-                        }}
-                        className="w-full px-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg text-[15px] text-gray-900 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-between gap-3 mt-4 flex-wrap">
-                  <p className="text-[12px] text-gray-400 dark:text-slate-500">
-                    Defaults: 10% capture · 20% margin · 90-day ramp.
-                  </p>
-                  <button
-                    onClick={() => setActiveFormula(null)}
-                    className="px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-bold transition-colors shadow-sm"
-                  >
-                    Re-simulate
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* ── MONITORING PLAN (full width) ── */}
-            <div className="lg:col-span-2 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-              <div className="flex items-center gap-2 px-5 py-3 bg-gray-50/70 dark:bg-slate-800/60 border-b border-gray-100 dark:border-slate-800">
-                <i className="fa-regular fa-clock text-gray-400 text-[12px]" />
-                <span className="text-[11px] font-sans font-bold text-gray-500 dark:text-slate-400 uppercase tracking-[0.14em]">
-                  Monitoring plan: what to watch, by when, and the tripwire that means revert
-                </span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 dark:divide-slate-800">
-                {baseInputs.monitoring.days.map((day) => (
-                  <div key={day} className="p-5">
-                    <span className="inline-block px-2.5 py-1 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[10px] font-sans font-bold uppercase tracking-wider mb-3">
-                      Day {day}
-                    </span>
-                    <p className="text-[13px] text-gray-800 dark:text-slate-200 mb-2">
-                      <span className="font-bold">{baseInputs.monitoring.metric}</span>: {baseInputs.monitoring.detail}
-                    </p>
-                    <p className="text-[12px] text-red-600 dark:text-red-400 leading-relaxed">
-                      <span className="font-bold">Tripwire:</span> {baseInputs.monitoring.tripwire}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ─── Footer (dark bar) ──────────────────────────────── */}
-        <div className="shrink-0 px-6 py-4 bg-[rgb(250_249_247_/_var(--tw-bg-opacity))] flex items-center justify-between">
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-700 text-gray-800 text-[13px] font-semibold hover:bg-slate-800 transition-colors">
-            <i className="fa-solid fa-download text-[12px]" />
-            Download CSV
-          </button>
-          <button
-            onClick={onClose}
-            className="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-bold transition-colors shadow-sm"
-          >
-            Close
-          </button>
-        </div>
-      </div>
+      <SimulateContent insight={insight} onClose={onClose} isModal={true} />
     </div>
   );
 };

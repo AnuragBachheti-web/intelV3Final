@@ -15,15 +15,6 @@ const SECTION_DEFINITIONS = [
   { key: 'news_risk', title: 'News & Risk', dotColor: 'bg-red-500', textDotColor: 'text-red-500' },
 ];
 
-const matchesFilter = (sectionKey, filterKey) => {
-  if (filterKey === 'all') return true;
-  if (filterKey === 'competitive') return sectionKey === 'pricing_buybox';
-  if (filterKey === 'demand') return sectionKey === 'sales' || sectionKey === 'demand';
-  if (filterKey === 'opportunity') return sectionKey === 'opportunity';
-  if (filterKey === 'news_risk') return sectionKey === 'news_risk';
-  return true;
-};
-
 const InsightsPanel = ({
   itemViewMode,
   setItemViewMode,
@@ -36,88 +27,22 @@ const InsightsPanel = ({
   expandedInsightId,
   borderless = false
 }) => {
-  const [activeFamilyFilter, setActiveFamilyFilter] = useState('all');
-  const [newSinceYesterday, setNewSinceYesterday] = useState(false);
   const navigate = useNavigate();
 
   // Compute total visible cards count
-  const visibleCardsCount = INSIGHT_CARDS_DATA.filter(card =>
-    matchesFilter(card.sectionKey, activeFamilyFilter)
-  ).length;
+  const visibleCardsCount = INSIGHT_CARDS_DATA.length;
 
   return (
     <div className={`space-y-5 h-full flex flex-col min-h-0 ${borderless ? 'p-0' : 'rounded-2xl bg-white dark:bg-[#030712] p-4 sm:p-5 border border-gray-200 dark:border-slate-800'}`}>
-
-      {/* Header Section (SS2, SS3, SS4) */}
-      <div className="space-y-3 pb-3 border-b border-gray-100 dark:border-slate-800 shrink-0">
-
-        {/* Title row */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-baseline gap-2">
-            <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-slate-100 font-sans">
-              Intelligence feed
-            </h3>
-            <span className="text-xs font-sans text-gray-400 dark:text-slate-500">
-              • {visibleCardsCount} insights & {INSIGHTS_FEED_METRICS.totalSignals} signals
-            </span>
-          </div>
-
-
-        </div>
-
-        {/* Filter Tabs + Toggle Switch row (SS2, SS3) */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-1">
-          {/* Family Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide py-1">
-            {INSIGHT_FAMILY_FILTERS.map((filter) => {
-              const isActive = activeFamilyFilter === filter.key;
-              return (
-                <button
-                  key={filter.key}
-                  onClick={() => setActiveFamilyFilter(filter.key)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5 ${isActive
-                    ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 font-bold shadow-xs'
-                    : 'bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
-                    }`}
-                >
-                  {filter.dotColor && (
-                    <span className={`w-2 h-2 rounded-full ${filter.dotColor}`} />
-                  )}
-                  {filter.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* "New since yesterday" Toggle switch (right side) */}
-          <div className="flex items-center gap-2 flex-shrink-0 self-end md:self-auto">
-            <button
-              onClick={() => setNewSinceYesterday(o => !o)}
-              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors ${newSinceYesterday ? 'bg-indigo-600' : 'bg-gray-300 dark:bg-slate-700'
-                }`}
-            >
-              <span
-                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${newSinceYesterday ? 'translate-x-4' : 'translate-x-0.5'
-                  }`}
-              />
-            </button>
-            <span className="text-xs font-medium text-gray-500 dark:text-slate-400">
-              New since yesterday
-            </span>
-          </div>
-        </div>
-
-      </div>
 
       {/* Insight Cards Grouped by Section Headings (SS3, SS4, SS5) */}
       <div className="space-y-6 flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar">
         {visibleCardsCount === 0 ? (
           <div className="py-8 text-center text-xs text-gray-400 dark:text-slate-500">
-            No insights found for this filter.
+            No insights found.
           </div>
         ) : (
           SECTION_DEFINITIONS.map((section) => {
-            if (!matchesFilter(section.key, activeFamilyFilter)) return null;
 
             const sectionCards = INSIGHT_CARDS_DATA.filter(
               (card) => card.sectionKey === section.key
@@ -127,16 +52,7 @@ const InsightsPanel = ({
 
             return (
               <div key={section.key} className="space-y-3">
-                {/* Section Subheading with Count Badge & Timeline Indicator Dot (SS3, SS4, SS5) */}
-                <div className="flex items-center gap-2.5 pb-1">
-                  <div className={`w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${section.dotColor} shadow-xs flex-shrink-0`} />
-                  <h4 className="text-sm sm:text-base font-bold text-gray-900 dark:text-slate-100 font-sans tracking-tight">
-                    {section.title}
-                  </h4>
-                  <span className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 bg-gray-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full border border-gray-200/60 dark:border-slate-700/60 font-sans">
-                    {sectionCards.length}
-                  </span>
-                </div>
+
 
                 {/* Section Cards */}
                 <div className={itemViewMode === 'grid' ? 'grid grid-cols-1 lg:grid-cols-2 gap-4' : 'space-y-4'}>

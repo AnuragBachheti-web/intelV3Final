@@ -13,7 +13,6 @@ const InsightDetailsPanel = ({ insight, onClose }) => {
       <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-800 sticky top-0 bg-white dark:bg-slate-900 z-10 flex flex-col gap-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex flex-col gap-1">
-            <h3 className="text-[13px] font-bold text-gray-900 dark:text-white font-sans mb-1">Info</h3>
             <span className="text-[10px] font-sans tracking-wider text-gray-500 dark:text-slate-400 uppercase">
               {insight.tagCategory} <span className="text-gray-400">•</span> {insight.skuCode}
             </span>
@@ -24,12 +23,7 @@ const InsightDetailsPanel = ({ insight, onClose }) => {
               )}
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 transition-colors flex-shrink-0"
-          >
-            <i className="fa-solid fa-xmark text-sm" />
-          </button>
+
         </div>
       </div>
 

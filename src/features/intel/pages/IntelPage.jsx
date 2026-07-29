@@ -17,15 +17,59 @@ import {
   INTEL_TABS,
   STATS_BY_TAB,
 } from '../shared/data/intelData';
+import { INSIGHT_CARDS_DATA } from '../shared/data/insightsDummyData';
 import RealifyBrief from "../shared/components/common/RealifyBrief";
 import BriefHeaderControls from "../shared/components/common/BriefHeaderControls";
 import { REALIFY_BRIEF } from "../shared/data/realifyBriefData";
-import SimulateModal from '../shared/components/SimulateModal';
+import SimulateModal, { SimulateContent } from '../shared/components/SimulateModal';
 import InsightDetailsPanel from '../shared/components/InsightDetailsPanel';
 import DismissModal from '../shared/components/DismissModal';
 import RepriceModal from '../shared/components/RepriceModal';
 import CaseReportModal from '../shared/components/CaseReportModal';
-import { ProfitAdsContent } from '../../profit-ads/ProfitAdsPage';
+
+const FilterDropdown = ({ label, options, hasSearch }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const dropRef = useRef(null);
+  useClickOutside(dropRef, isOpen, () => setIsOpen(false));
+  
+  return (
+    <div className="relative shrink-0" ref={dropRef}>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="px-3 py-1.5 flex items-center gap-1.5 rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-medium text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+      >
+        {label}
+        <i className="fa-solid fa-chevron-down text-[10px] opacity-60 ml-1" />
+      </button>
+      {isOpen && (
+        <div className="absolute top-full right-0 mt-1.5 w-44 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl shadow-lg z-50 py-1.5">
+          {hasSearch && (
+            <div className="px-2 py-1 mb-1 border-b border-gray-100 dark:border-slate-800">
+              <div className="relative">
+                <i className="fa-solid fa-search absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-[10px]" />
+                <input 
+                  type="text" 
+                  placeholder="Search..." 
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-6 pr-2 py-1 bg-gray-50 dark:bg-slate-800 rounded-lg text-xs text-gray-700 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-slate-600"
+                />
+              </div>
+            </div>
+          )}
+          <div className="max-h-48 overflow-y-auto custom-scrollbar">
+            {options.map((opt, i) => (
+              <button key={i} onClick={() => setIsOpen(false)} className="w-full text-left px-3 py-1.5 text-xs text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 
 const MAIN_KPI_CARDS = [
@@ -66,6 +110,8 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   // selected = main cards shrink in height/width, sub-KPIs open below
   const [selectedMainKpi, setSelectedMainKpi] = useState(null);
   const [activeFeedTab, setActiveFeedTab] = useState('intelligence'); // 'intelligence' | 'profit-ads'
+
+  const [activeRightTab, setActiveRightTab] = useState('overview'); // 'overview' | 'simulate'
 
   // Insights section 1
   const [activeInsightTab, setActiveInsightTab] = useState('Overall');
@@ -542,35 +588,40 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           </div>
 
           {/* Section 2: Feed Section with Top Tabs */}
-          <div className="border-t border-gray-100 dark:border-slate-800/80 pt-4 space-y-4">
-            {/* Feed Tabs: Intelligence Feed & Profit & Ads */}
-            <div className="flex items-center gap-2 border-b border-gray-100 dark:border-slate-800 pb-3">
-              <button
-                onClick={() => setActiveFeedTab('intelligence')}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeFeedTab === 'intelligence'
-                  ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 shadow-sm'
-                  : 'text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800/60'
-                  }`}
-              >
-                <i className="fa-solid fa-rss text-xs" />
-                Actions
-              </button>
-              <button
-                onClick={() => setActiveFeedTab('profit-ads')}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeFeedTab === 'profit-ads'
-                  ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 shadow-sm'
-                  : 'text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800/60'
-                  }`}
-              >
-                <i className="fa-solid fa-chart-pie text-xs" />
-                Profit & Ads
-              </button>
+          <div className="border-t border-gray-100 dark:border-slate-800/80 pt-1 space-y-2">
+            {/* Feed Header and Filters */}
+            {/* Feed Header and Filters */}
+            <div className="flex flex-col border-b border-gray-100 dark:border-slate-800 pb-3 gap-3">
+              {/* Row 1: Heading + 2 Filters */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <h3 className="flex items-center gap-2 text-lg font-bold text-gray-900 dark:text-slate-100">
+                    <i className="fa-solid fa-rss text-sm text-gray-400 dark:text-slate-500" />
+                    Actions <span className="text-sm font-normal text-gray-400 dark:text-slate-500">• {INSIGHT_CARDS_DATA.length}</span>
+                  </h3>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 py-1">
+                  <FilterDropdown label="Category" options={['Electronics', 'Furniture', 'Kitchen Accessories']} />
+                  <FilterDropdown label="Sku" options={['All', 'top performers', 'bottom movers']} hasSearch={true} />
+                </div>
+              </div>
+
+              {/* Row 2: 4 Filters */}
+              <div className="flex flex-wrap items-center gap-2 py-1">
+                <FilterDropdown label="Channel" options={['Amazon', 'Shopify']} />
+                <FilterDropdown label="Status" options={['All', 'completed', 'in progress', 'Need Attention']} />
+                <FilterDropdown label="Sub-category" options={['Electronics Sub 1', 'Furniture Sub 2']} />
+                <FilterDropdown label="Date" options={['Today', 'This Week', 'This Month']} />
+              </div>
             </div>
 
             {/* Tab Content 1: Intelligence Feed */}
             {activeFeedTab === 'intelligence' && (
-              <div className={`relative flex flex-col lg:flex-row lg:items-stretch w-full gap-4 transition-all duration-300 ${expandedInsight ? 'lg:sticky lg:top-14 lg:h-[calc(100vh-10rem)]' : ''}`}>
-                <div className={`flex flex-col min-h-0 transition-all duration-300 ${expandedInsight ? 'lg:w-[70%] lg:h-full' : 'w-full'}`}>
+              <div className="flex flex-col lg:flex-row lg:items-stretch w-full gap-4 transition-all duration-300 lg:h-[calc(100vh-10rem)] min-h-[600px]">
+                
+                {/* Left Side (55% or 100%) */}
+                <div className={`w-full ${expandedInsight ? 'lg:w-[55%]' : 'lg:w-[100%]'} flex flex-col min-h-0 transition-all duration-300`}>
                   <InsightsPanel
                     borderless={true}
                     activeInsightTab={activeInsightTab}
@@ -590,10 +641,11 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                     sourceRoute={location.pathname}
                     onOpenSimulateModal={(insight) => {
                       setSimulateInsight(insight);
-                      setIsSimulateModalOpen(true);
+                      setActiveRightTab('simulate');
                     }}
                     onToggleInsightPanel={(insight) => {
                       setExpandedInsight(prev => (prev?.id === insight?.id ? null : insight));
+                      if (insight) setActiveRightTab('overview');
                     }}
                     expandedInsightId={expandedInsight?.id}
                     onOpenDismissModal={() => setIsDismissModalOpen(true)}
@@ -602,24 +654,70 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                   />
                 </div>
 
-                {/* Insight Details Side Panel (30%) */}
+                {/* Right Side (45%) Tabs */}
                 {expandedInsight && (
-                  <div className="lg:w-[30%] w-full lg:h-full flex flex-col min-h-0 animate-in slide-in-from-right duration-300">
-                    <InsightDetailsPanel
-                      insight={expandedInsight}
-                      onClose={() => setExpandedInsight(null)}
-                    />
+                  <div className="w-full lg:w-[45%] flex flex-col min-h-0 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden animate-in slide-in-from-right duration-300">
+                    
+                    {/* Right Tabs Header */}
+                    <div className="flex items-center justify-between px-5 pt-3 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-950 shrink-0">
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={() => setActiveRightTab('overview')}
+                          className={`px-3 py-2 text-sm font-bold border-b-2 transition-colors ${
+                            activeRightTab === 'overview'
+                              ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                              : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-slate-300'
+                          }`}
+                        >
+                          Overview
+                        </button>
+                        <button
+                          onClick={() => setActiveRightTab('simulate')}
+                          className={`px-3 py-2 text-sm font-bold border-b-2 transition-colors ${
+                            activeRightTab === 'simulate'
+                              ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                              : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-slate-300'
+                          }`}
+                        >
+                          Simulate
+                        </button>
+                      </div>
+                      <button
+                        onClick={() => setExpandedInsight(null)}
+                        className="w-7 h-7 flex items-center justify-center rounded hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 transition-colors mb-2"
+                        aria-label="Close panel"
+                      >
+                        <i className="fa-solid fa-xmark text-sm" />
+                      </button>
+                    </div>
+
+                  {/* Right Tabs Content */}
+                  <div className="flex-1 min-h-0 overflow-y-auto">
+                    {activeRightTab === 'overview' && (
+                      <div className="h-full">
+                        <InsightDetailsPanel
+                          insight={expandedInsight || INSIGHT_CARDS_DATA[0]}
+                          onClose={() => {}}
+                        />
+                      </div>
+                    )}
+                    {activeRightTab === 'simulate' && (
+                      <div className="h-full">
+                        <SimulateContent
+                          insight={simulateInsight || expandedInsight || INSIGHT_CARDS_DATA[0]}
+                          onClose={() => setActiveRightTab('overview')}
+                          isModal={false}
+                        />
+                      </div>
+                    )}
+                  </div>
                   </div>
                 )}
+
               </div>
             )}
 
-            {/* Tab Content 2: Profit & Ads */}
-            {activeFeedTab === 'profit-ads' && (
-              <div className="pt-2 animate-in fade-in duration-300">
-                <ProfitAdsContent />
-              </div>
-            )}
+
           </div>
 
         </div>
