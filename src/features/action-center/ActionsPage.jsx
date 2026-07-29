@@ -1,8 +1,8 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { actionStats, actionItems } from './actionsData';
 import ActionStatsCard from './components/ActionStatsCard';
-import ActionItem from './components/ActionItem';
+import ActionsTable from './components/ActionsTable';
 import ActionDetail from './components/ActionDetail';
 import SimulationModal from './components/SimulationModal';
 import CustomActionModal from './components/CustomActionModal';
@@ -18,7 +18,12 @@ const ActionsPage = () => {
   const [isCustomActionOpen, setIsCustomActionOpen] = useState(false);
   const [simulationAction, setSimulationAction] = useState(null);
 
-  const { activeTab, setActiveTab, searchQuery, setSearchQuery, filters, setFilters, filteredActions, resetFilters } = useActionFilters();
+  const {
+    activeTab, setActiveTab,
+    searchQuery, setSearchQuery,
+    filters, setFilters,
+    filteredActions, resetFilters,
+  } = useActionFilters();
 
   const handleSimulate = (action) => {
     setSimulationAction(action);
@@ -38,21 +43,6 @@ const ActionsPage = () => {
           <option value="high">High</option>
           <option value="medium">Medium</option>
           <option value="low">Low</option>
-        </SelectInput>
-      </div>
-
-      <div className="relative">
-        <SelectInput
-          value={filters.category}
-          onChange={(e) => setFilters({ ...filters, category: e.target.value })}
-          className={FILTER_SELECT_CLASS}
-        >
-          <option value="all">All Categories</option>
-          <option value="revenue">Revenue</option>
-          <option value="margin">Margin</option>
-          <option value="cash">Cash</option>
-          <option value="inventory">Inventory</option>
-          <option value="ads">Ads</option>
         </SelectInput>
       </div>
 
@@ -131,7 +121,7 @@ const ActionsPage = () => {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap tracking-tight ${activeTab === tab
+                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap tracking-tight ${activeTab.toLowerCase() === tab.toLowerCase()
                       ? 'bg-brand text-white shadow-md dark:bg-gray-600'
                       : 'text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800'
                       }`}
@@ -142,27 +132,20 @@ const ActionsPage = () => {
               </div>
             </div>
 
-            {/* List */}
-            <div className="flex-1 overflow-y-auto max-h-[750px] divide-y divide-gray-50 dark:divide-slate-800/50">
-              {filteredActions.length > 0 ? (
-                filteredActions.map((action) => (
-                  <ActionItem
-                    key={action.id}
-                    action={action}
-                    isSelected={selectedAction?.id === action.id}
-                    onClick={setSelectedAction}
-                    onSimulate={handleSimulate}
-                  />
-                ))
-              ) : (
-                <div className="py-32 text-center">
-                  <div className="w-20 h-20 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-100 dark:border-slate-800">
-                    <i className="fa-solid fa-magnifying-glass text-4xl text-gray-200"></i>
-                  </div>
-                  <p className="text-gray-500 dark:text-slate-500 font-bold tracking-tight">Zero intelligence matches found</p>
-                  <p className="text-xs text-gray-400 mt-1 tracking-widest">Adjust filters or search query</p>
-                </div>
-              )}
+            {/* Unified table — all actions across every SKU and category */}
+            <div className="flex-1 overflow-y-auto max-h-[750px]">
+              <ActionsTable
+                actions={filteredActions}
+                selectedId={selectedAction?.id}
+                onSelect={setSelectedAction}
+                onCta={handleSimulate}
+              />
+            </div>
+
+            <div className="flex-shrink-0 px-4 py-2.5 border-t border-gray-100 dark:border-slate-800">
+              <span className="text-[11px] text-gray-400 dark:text-slate-500">
+                Showing {filteredActions.length} of {actionItems.length} actions
+              </span>
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { SIGNALS_BY_TAB } from '../intel/shared/data/insightsDummyData';
+import { getImpactSign } from '../intel/shared/config/actionTypeConfig';
 
 /**
  * Action Center data — derived from the live Intel signal set (SIGNALS_BY_TAB)
@@ -8,7 +9,7 @@ import { SIGNALS_BY_TAB } from '../intel/shared/data/insightsDummyData';
  * The shape below is deliberately identical to the previous hand-written data
  * (title / priority / priorityColor / actionId / due / category / status /
  * assignee / description / impact / steps / relatedActions / timeline) so
- * ActionItem, ActionDetail, ActionStatsCard and useActionFilters keep working
+ * ActionsTable, ActionDetail, ActionStatsCard and useActionFilters keep working
  * unchanged. Signal-native fields (exposure, metrics, miniStats, …) ride along
  * for the simulation modal.
  */
@@ -78,9 +79,24 @@ const ACTION_ID_BY_SIGNAL_ID = FLAT_SIGNALS.reduce((acc, { signal, tabKey, index
   return acc;
 }, {});
 
+/* Total exposure per module — the denominator for each action's impact share. */
+const MODULE_EXPOSURE_TOTAL = Object.entries(SIGNALS_BY_TAB).reduce((acc, [tab, signals]) => {
+  acc[tab] = signals.reduce((sum, s) => sum + (s.exposure || 0), 0);
+  return acc;
+}, {});
+
 const toAction = ({ signal, tabKey, indexInTab }) => {
   const meta = MODULE_META[tabKey];
   const priority = toPriority(signal);
+
+  /* Impact value/percent are signed: negative where value is currently
+     bleeding, positive where there is upside to capture. The percent is the
+     signal's share of its module's total exposure — derived, not hand-set. */
+  const sign = getImpactSign({ signalType: signal.type });
+  const moduleTotal = MODULE_EXPOSURE_TOTAL[tabKey] || 0;
+  const impactPct = moduleTotal
+    ? Math.round(((signal.exposure || 0) / moduleTotal) * 1000) / 10
+    : 0;
 
   /* Related actions = the other signals inside the same module, capped at 2. */
   const relatedActions = SIGNALS_BY_TAB[tabKey]
@@ -113,6 +129,9 @@ const toAction = ({ signal, tabKey, indexInTab }) => {
     headlineHighlight: signal.headlineHighlight,
     exposure: signal.exposure,
     exposureFormatted: signal.exposureFormatted,
+    impactValue: sign * (signal.exposure || 0),
+    impactPct: sign * impactPct,
+    impactBasisLabel: `${meta.label} exposure share`,
     urgency: signal.urgency,
     confidenceScore: signal.confidenceScore,
     easeVal: signal.easeVal,

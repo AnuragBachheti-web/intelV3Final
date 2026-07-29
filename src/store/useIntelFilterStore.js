@@ -18,6 +18,18 @@ export const useIntelFilterStore = create((set) => ({
   subCategory: 'all',
   isMoreFiltersOpen: false,
 
+  // Executed Actions tracking
+  executedSignalIds: [],
+  markSignalExecuted: (id) => set((state) => ({
+    executedSignalIds: state.executedSignalIds.includes(id)
+      ? state.executedSignalIds
+      : [...state.executedSignalIds, id],
+  })),
+
+  // Status Filter ('all' | 'executed' | 'not_executed')
+  statusFilter: 'all',
+  setStatusFilter: (statusFilter) => set({ statusFilter }),
+
   // Setters
   setTimeRange: (timeRange) => set({ timeRange }),
   setMarketplace: (marketplace) => set({ marketplace }),

@@ -477,7 +477,7 @@ const IntelV2Page = ({ defaultTab = 'sales' }) => {
         </div>
 
         {/* Single Unified Container Box for KPI Cards + Feed */}
-        <div className="bg-white dark:bg-[#030712] border border-gray-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-sm space-y-3.5">
+        <div className="bg-white dark:bg-[#030712] border border-gray-200 dark:border-slate-800 rounded-2xl p-2 sm:p-2.5 shadow-sm space-y-3">
 
           {/* Section 1: KPI Cards / Converted Pills Row */}
           <div ref={kpiSectionRef} className="w-full space-y-3">

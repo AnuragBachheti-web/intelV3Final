@@ -20,53 +20,68 @@ const TabContent = ({
   const sortedSignals = [...rawSignals].sort((a, b) => (b.score || 0) - (a.score || 0));
   const top1Signal = sortedSignals[0] || null;
 
-  // Auto-select #1 signal if none selected or if active tab changes
+  // Reset selection if active tab changes and selected insight is from a different tab
   useEffect(() => {
-    if (!expandedInsight || expandedInsight.tabKey !== tabKey) {
-      if (top1Signal && onSelectInsight) {
-        onSelectInsight(top1Signal);
-      }
-      setPanelTab('overview');
+    if (expandedInsight && expandedInsight.tabKey !== tabKey) {
+      if (onSelectInsight) onSelectInsight(null);
     }
   }, [tabKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const activeInsight = expandedInsight && expandedInsight.tabKey === tabKey
     ? expandedInsight
-    : top1Signal;
+    : null;
+
+  const handleSelectInsight = (signal) => {
+    if (!onSelectInsight) return;
+    if (activeInsight && activeInsight.id === signal?.id) {
+      // Toggle off if clicking the currently selected insight
+      onSelectInsight(null);
+    } else {
+      onSelectInsight(signal);
+      setPanelTab('overview');
+    }
+  };
 
   const handleSimulateClick = (signal) => {
     if (onSelectInsight) onSelectInsight(signal);
     setPanelTab('simulate');
   };
 
-  const handleTakeActionClick = (signal) => {
-    if (onSelectInsight) onSelectInsight(signal);
+  const handleTakeActionClick = (_signal) => {
+    // Direct action execution from list button does NOT open or collapse the right inspector view
   };
 
+  const isExpanded = Boolean(activeInsight);
+
   return (
-    <div className="ws-tab-enter grid grid-cols-1 lg:grid-cols-[1.18fr_1fr] gap-4 lg:gap-5 items-stretch min-h-[520px] lg:h-[620px]">
-      {/* Left: AI Signals Stream (~60% width) */}
-      <div className="h-[520px] lg:h-full overflow-hidden">
+    <div className={`ws-tab-enter grid transition-all duration-300 gap-4 lg:gap-5 items-stretch min-h-[520px] lg:h-[620px] ${
+      isExpanded 
+        ? 'grid-cols-1 lg:grid-cols-[1.25fr_1fr]' 
+        : 'grid-cols-1'
+    }`}>
+      {/* Left: AI Signals Stream (100% width by default, ~56% width when action selected) */}
+      <div className="h-[520px] lg:h-full overflow-hidden transition-all duration-300">
         <InsightsPanel
           intelTab={activeTab}
-          onSelectInsight={(sig) => {
-            if (onSelectInsight) onSelectInsight(sig);
-            setPanelTab('overview');
-          }}
+          onSelectInsight={handleSelectInsight}
           expandedInsightId={activeInsight?.id}
           onOpenSimulateModal={handleSimulateClick}
           onOpenTakeActionModal={handleTakeActionClick}
+          isCollapsed={isExpanded}
         />
       </div>
 
-      {/* Right: Detail Panel Inspector (~40% width, in-panel tabs, ZERO overlay modals) */}
-      <div className="h-[520px] lg:h-full overflow-hidden">
-        <InsightDetailsPanel
-          insight={activeInsight}
-          activePanelTab={panelTab}
-          onTabChange={setPanelTab}
-        />
-      </div>
+      {/* Right: Detail Panel Inspector (Opens when an action is clicked, closes back to full width) */}
+      {isExpanded && (
+        <div className="h-[520px] lg:h-full overflow-hidden animate-in fade-in slide-in-from-right-4 duration-300">
+          <InsightDetailsPanel
+            insight={activeInsight}
+            activePanelTab={panelTab}
+            onTabChange={setPanelTab}
+            onClose={() => onSelectInsight && onSelectInsight(null)}
+          />
+        </div>
+      )}
     </div>
   );
 };

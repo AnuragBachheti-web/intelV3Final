@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useIntelFilterStore } from '../../../../store/useIntelFilterStore';
 
 /**
  * Level 2: SKU / Signal Detail Panel Inspector (Master Prompt v4)
@@ -14,6 +15,7 @@ const InsightDetailsPanel = ({
   insight,
   activePanelTab = 'overview', // 'overview' | 'simulate'
   onTabChange,
+  onClose,
 }) => {
   const navigate = useNavigate();
   const [internalTab, setInternalTab] = useState('overview');
@@ -67,8 +69,11 @@ const InsightDetailsPanel = ({
     impact: insight.urgency || insight.priority || 'HIGH',
   };
 
+  const markSignalExecuted = useIntelFilterStore((state) => state.markSignalExecuted);
+
   const handleConfirmInlineAction = () => {
     setIsApplyingAction(true);
+    if (insight?.id) markSignalExecuted(insight.id);
     setTimeout(() => {
       setIsApplyingAction(false);
       setActionSuccess(true);
@@ -122,9 +127,20 @@ const InsightDetailsPanel = ({
           </button>
         </div>
 
-        <span className="text-[10px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase">
-          {skuCode}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase">
+            {skuCode}
+          </span>
+          {onClose && (
+            <button
+              onClick={onClose}
+              title="Close panel"
+              className="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 transition-colors"
+            >
+              <i className="fa-solid fa-xmark text-xs" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* ── SCROLLABLE PANEL BODY (STRICT DOM UNMOUNTING OF INACTIVE TAB) ── */}

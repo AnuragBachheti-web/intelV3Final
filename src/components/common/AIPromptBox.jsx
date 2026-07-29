@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { useUIStore } from "../../store/useUIStore";
 import { useAIStore } from "../../store/useAIStore";
 import { motion, AnimatePresence } from "framer-motion";
@@ -34,11 +34,11 @@ const AIPromptBox = ({ placeholder = "Ask Realify...", sidebarActive = true, ful
     <motion.div
       initial={false}
       animate={{
-        left: isMobile || !sidebarActive ? 16 : (isSidebarCollapsed ? 126 : 270),
-        right: isMobile ? 16 : 70,
+        left: isMobile || !sidebarActive ? 16 : (isSidebarCollapsed ? 104 : 260),
+        right: isMobile ? 16 : 24,
       }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className="fixed bottom-0 right-4 sm:right-[49px] z-50 pb-4 pointer-events-none"
+      className="fixed bottom-0 z-50 pb-4 pointer-events-none"
     >
       <div className="pointer-events-auto">
         {/* Outer Container */}
