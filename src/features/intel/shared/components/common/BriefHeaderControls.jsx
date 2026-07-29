@@ -201,9 +201,6 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive, isKpiVi
     if (count === total || count === 0) {
       return (
         <div className="flex items-center gap-2">
-          <div className="w-5.5 h-5.5 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs">
-            <i className="fa-solid fa-house text-[11px]" />
-          </div>
           <span className="text-[14px] font-bold text-gray-900 dark:text-slate-100">Channels ({total})</span>
           <i className="fa-solid fa-chevron-down text-[9px] text-gray-400" />
         </div>
@@ -213,9 +210,6 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive, isKpiVi
     // Case 2: Multiple channels selected (> 1 and < total)
     return (
       <div className="flex items-center gap-2">
-        <div className="w-5.5 h-5.5 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs">
-          <i className="fa-solid fa-house text-[11px]" />
-        </div>
         <span className="text-[14px] font-bold text-gray-900 dark:text-slate-100">{count} stores selected</span>
         <i className="fa-solid fa-chevron-down text-[9px] text-gray-400" />
       </div>

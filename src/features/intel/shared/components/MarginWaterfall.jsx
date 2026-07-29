@@ -24,7 +24,7 @@ const MarginWaterfall = () => {
       {/* Header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800/60 hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center justify-between transition-colors text-xs font-mono"
+        className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800/60 hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center justify-between transition-colors text-xs font-sans"
       >
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -58,15 +58,15 @@ const MarginWaterfall = () => {
                     : 'border-ws-hair dark:border-slate-800 bg-white dark:bg-slate-800/40'
                 }`}
               >
-                <span className="text-[9.5px] font-mono text-gray-400 dark:text-slate-400 block truncate">
+                <span className="text-[9.5px] font-sans text-gray-400 dark:text-slate-400 block truncate">
                   {step.label}
                 </span>
-                <strong className={`text-[13.5px] font-mono font-bold block mt-1 ${
+                <strong className={`text-[13.5px] font-sans font-bold block mt-1 ${
                   step.isPositive ? 'text-gray-900 dark:text-white' : 'text-red-600 dark:text-red-400'
                 }`}>
                   {step.value}
                 </strong>
-                <span className="text-[10px] font-mono text-gray-500 dark:text-slate-400 block mt-0.5">
+                <span className="text-[10px] font-sans text-gray-500 dark:text-slate-400 block mt-0.5">
                   ({step.pct})
                 </span>
               </div>

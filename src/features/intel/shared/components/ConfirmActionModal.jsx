@@ -40,7 +40,7 @@ const ConfirmActionModal = ({ isOpen, onClose, signal, onConfirm }) => {
         {/* Header */}
         <div className="flex items-start justify-between gap-3 border-b border-gray-100 dark:border-slate-800 pb-3">
           <div>
-            <span className="text-[10px] font-mono font-bold tracking-wider text-blue-600 dark:text-blue-400 uppercase bg-blue-50 dark:bg-blue-900/40 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-sans font-bold tracking-wider text-blue-600 dark:text-blue-400 uppercase bg-blue-50 dark:bg-blue-900/40 px-2 py-0.5 rounded">
               CONFIRM &amp; APPLY ACTION
             </span>
             <h3 className="text-[15px] font-bold text-gray-900 dark:text-white mt-1">
@@ -72,7 +72,7 @@ const ConfirmActionModal = ({ isOpen, onClose, signal, onConfirm }) => {
               <p className="text-[12.5px] font-medium text-gray-800 dark:text-slate-200">
                 {headline}
               </p>
-              <div className="flex items-center justify-between text-[11px] font-mono pt-1 text-gray-500 dark:text-slate-400 border-t border-gray-200/50 dark:border-slate-700/50">
+              <div className="flex items-center justify-between text-[11px] font-sans pt-1 text-gray-500 dark:text-slate-400 border-t border-gray-200/50 dark:border-slate-700/50">
                 <span>Revenue Impact at Risk:</span>
                 <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{formattedExposure}</strong>
               </div>

@@ -34,7 +34,7 @@ const MoreFiltersModal = ({ isOpen, onClose }) => {
 
         <div className="grid grid-cols-2 gap-4 text-xs">
           <div>
-            <label className="text-[10px] font-mono text-gray-500 uppercase block mb-1">Priority</label>
+            <label className="text-[10px] font-sans text-gray-500 uppercase block mb-1">Priority</label>
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value)}
@@ -48,7 +48,7 @@ const MoreFiltersModal = ({ isOpen, onClose }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-mono text-gray-500 uppercase block mb-1">Price Band</label>
+            <label className="text-[10px] font-sans text-gray-500 uppercase block mb-1">Price Band</label>
             <select
               value={priceBand}
               onChange={(e) => setPriceBand(e.target.value)}
@@ -61,7 +61,7 @@ const MoreFiltersModal = ({ isOpen, onClose }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-mono text-gray-500 uppercase block mb-1">Brand</label>
+            <label className="text-[10px] font-sans text-gray-500 uppercase block mb-1">Brand</label>
             <select
               value={brand}
               onChange={(e) => setBrand(e.target.value)}
@@ -74,7 +74,7 @@ const MoreFiltersModal = ({ isOpen, onClose }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-mono text-gray-500 uppercase block mb-1">Performance Tier</label>
+            <label className="text-[10px] font-sans text-gray-500 uppercase block mb-1">Performance Tier</label>
             <select
               value={performanceTier}
               onChange={(e) => setPerformanceTier(e.target.value)}

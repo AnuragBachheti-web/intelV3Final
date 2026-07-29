@@ -3,50 +3,50 @@ import { RecommendationItem } from './RecommendationSection';
 import ScrollableTabs from './ScrollableTabs';
 
 const CATEGORY_META = {
-  'Critical':     { icon: 'fa-solid fa-triangle-exclamation', bg: 'bg-red-100 dark:bg-red-900/30',    color: 'text-red-600' },
-  'High Impact':  { icon: 'fa-solid fa-bolt',                 bg: 'bg-amber-100 dark:bg-amber-900/30', color: 'text-amber-600' },
-  'Urgent':       { icon: 'fa-solid fa-circle-exclamation',   bg: 'bg-orange-100 dark:bg-orange-900/30', color: 'text-orange-600' },
-  'Growth':       { icon: 'fa-solid fa-arrow-trend-up',       bg: 'bg-green-100 dark:bg-green-900/30', color: 'text-green-600' },
-  'Retention':    { icon: 'fa-solid fa-rotate',               bg: 'bg-blue-100 dark:bg-blue-900/30',   color: 'text-blue-600' },
-  'High':         { icon: 'fa-solid fa-chevron-up',           bg: 'bg-orange-100 dark:bg-orange-900/30', color: 'text-orange-500' },
-  'Medium':       { icon: 'fa-solid fa-minus',                bg: 'bg-yellow-100 dark:bg-yellow-900/30', color: 'text-yellow-600' },
-  'Positive':     { icon: 'fa-solid fa-check',                bg: 'bg-green-100 dark:bg-green-900/30', color: 'text-green-600' },
+  'Critical': { icon: 'fa-solid fa-triangle-exclamation', bg: 'bg-red-100 dark:bg-red-900/30', color: 'text-red-600' },
+  'High Impact': { icon: 'fa-solid fa-bolt', bg: 'bg-amber-100 dark:bg-amber-900/30', color: 'text-amber-600' },
+  'Urgent': { icon: 'fa-solid fa-circle-exclamation', bg: 'bg-orange-100 dark:bg-orange-900/30', color: 'text-orange-600' },
+  'Growth': { icon: 'fa-solid fa-arrow-trend-up', bg: 'bg-green-100 dark:bg-green-900/30', color: 'text-green-600' },
+  'Retention': { icon: 'fa-solid fa-rotate', bg: 'bg-blue-100 dark:bg-blue-900/30', color: 'text-blue-600' },
+  'High': { icon: 'fa-solid fa-chevron-up', bg: 'bg-orange-100 dark:bg-orange-900/30', color: 'text-orange-500' },
+  'Medium': { icon: 'fa-solid fa-minus', bg: 'bg-yellow-100 dark:bg-yellow-900/30', color: 'text-yellow-600' },
+  'Positive': { icon: 'fa-solid fa-check', bg: 'bg-green-100 dark:bg-green-900/30', color: 'text-green-600' },
 };
 
 const CATEGORY_TO_TAB = {
   'High Impact': 'HIGH',
-  'High':        'HIGH',
-  'Urgent':      'INFO',
-  'Growth':      'INFO',
-  'Critical':    'INFO',
-  'Retention':   'INFO',
-  'Info':        'INFO',
-  'Positive':    'INFO',
-  'Medium':      'MEDIUM',
-  'Low':         'LOW',
+  'High': 'HIGH',
+  'Urgent': 'INFO',
+  'Growth': 'INFO',
+  'Critical': 'INFO',
+  'Retention': 'INFO',
+  'Info': 'INFO',
+  'Positive': 'INFO',
+  'Medium': 'MEDIUM',
+  'Low': 'LOW',
 };
 
 const BADGE_COLORS = {
-  'HIGH':   'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  'HIGH': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
   'MEDIUM': 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
-  'LOW':    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-500',
-  'INFO':   'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  'LOW': 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-500',
+  'INFO': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
 };
 
 const TAB_ICON_COLORS = {
-  'HIGH':   { bg: 'bg-red-100 dark:bg-red-900/30',    color: 'text-red-600 dark:text-red-400' },
+  'HIGH': { bg: 'bg-red-100 dark:bg-red-900/30', color: 'text-red-600 dark:text-red-400' },
   'MEDIUM': { bg: 'bg-orange-100 dark:bg-orange-900/30', color: 'text-orange-600 dark:text-orange-400' },
-  'LOW':    { bg: 'bg-yellow-100 dark:bg-yellow-900/30', color: 'text-yellow-600 dark:text-yellow-400' },
-  'INFO':   { bg: 'bg-green-100 dark:bg-green-900/30',  color: 'text-green-600 dark:text-green-400' },
+  'LOW': { bg: 'bg-yellow-100 dark:bg-yellow-900/30', color: 'text-yellow-600 dark:text-yellow-400' },
+  'INFO': { bg: 'bg-green-100 dark:bg-green-900/30', color: 'text-green-600 dark:text-green-400' },
 };
 
 const FIXED_TABS = ['All', 'Info', 'High', 'Medium', 'Low'];
 
 const TAB_MATCHER = {
-  'High':   cat => cat === 'High Impact' || cat === 'High',
+  'High': cat => cat === 'High Impact' || cat === 'High',
   'Medium': cat => cat === 'Medium',
-  'Info':   cat => ['Info', 'Urgent', 'Growth', 'Critical', 'Retention'].includes(cat),
-  'Low':    cat => cat === 'Low',
+  'Info': cat => ['Info', 'Urgent', 'Growth', 'Critical', 'Retention'].includes(cat),
+  'Low': cat => cat === 'Low',
 };
 
 const ActionsPanel = ({
@@ -67,7 +67,7 @@ const ActionsPanel = ({
 
   const filteredItems = filterByTab(activeTab, items);
   const filteredAnomalies = filterByTab(activeTab, anomalies);
-  const handleSelect = onItemSelect || (() => {});
+  const handleSelect = onItemSelect || (() => { });
 
   return (
     <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">

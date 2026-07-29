@@ -53,7 +53,7 @@ const SignalsTable = ({
               <th
                 key={col.key}
                 scope="col"
-                className={`px-2 sm:px-2.5 py-2 text-[9.5px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider whitespace-nowrap ${alignClass(col.align)} ${col.className || ''}`}
+                className={`px-2 sm:px-2.5 py-2 text-[9.5px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider whitespace-nowrap ${alignClass(col.align)} ${col.className || ''}`}
               >
                 {col.header}
               </th>

@@ -37,7 +37,7 @@ const BriefCard = ({ data, isLoading = false }) => {
 
       {/* ── Header Title ("THE REALIFY BRIEF") ── */}
       <div>
-        <span className="text-[10.5px] font-mono font-bold tracking-widest text-gray-500 dark:text-slate-400 uppercase">
+        <span className="text-[10.5px] font-sans font-bold tracking-widest text-gray-500 dark:text-slate-400 uppercase">
           THE BRIEF
         </span>
       </div>
@@ -51,7 +51,7 @@ const BriefCard = ({ data, isLoading = false }) => {
             <i className="fa-solid fa-arrow-trend-up text-[11px]" />
           </div>
           <div>
-            <span className="text-[9px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider block">
+            <span className="text-[9px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider block">
               OPPORTUNITY PROJECTED
             </span>
             <strong className="text-lg font-bold text-emerald-600 dark:text-emerald-400 block leading-tight mt-0.5">
@@ -66,7 +66,7 @@ const BriefCard = ({ data, isLoading = false }) => {
             <i className="fa-solid fa-clock text-[11px]" />
           </div>
           <div>
-            <span className="text-[9px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider block">
+            <span className="text-[9px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider block">
               NO. OF AFFECTED SKUS
             </span>
             <strong className="text-lg font-bold text-gray-900 dark:text-white block leading-tight mt-0.5">
@@ -81,7 +81,7 @@ const BriefCard = ({ data, isLoading = false }) => {
             <i className="fa-solid fa-triangle-exclamation text-[11px]" />
           </div>
           <div>
-            <span className="text-[9px] font-mono font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider block">
+            <span className="text-[9px] font-sans font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider block">
               BUSINESS AT RISK
             </span>
             <strong className="text-lg font-bold text-red-600 dark:text-red-400 block leading-tight mt-0.5">

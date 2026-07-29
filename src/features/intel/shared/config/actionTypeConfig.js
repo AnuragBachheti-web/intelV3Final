@@ -10,11 +10,11 @@
 export const CTA_BY_ACTION_TYPE = {
   /* Revenue */
   'BUY BOX DROP':         { label: 'Reprice',            icon: 'fa-tags' },
-  'VIRAL SURGE':          { label: 'Restock',            icon: 'fa-truck-fast' },
-  'SEARCH RANK DROP':     { label: 'Optimize Listing',   icon: 'fa-magnifying-glass-chart' },
-  'BUNDLE OPP':           { label: 'Create Bundle',      icon: 'fa-layer-group' },
-  'SEASONAL TAIL':        { label: 'Reallocate Budget',  icon: 'fa-arrows-turn-right' },
-  'CONVERSION DROP':      { label: 'Update Creative',    icon: 'fa-image' },
+  'VIRAL SURGE':          { label: 'Diversify',          icon: 'fa-truck-fast' },
+  'SEARCH RANK DROP':     { label: 'Conflict',           icon: 'fa-magnifying-glass-chart' },
+  'BUNDLE OPP':           { label: 'Reprice',            icon: 'fa-layer-group' },
+  'SEASONAL TAIL':        { label: 'Diversify',          icon: 'fa-arrows-turn-right' },
+  'CONVERSION DROP':      { label: 'Conflict',           icon: 'fa-image' },
 
   /* Margin */
   'PROFIT LEAKAGE':       { label: 'Raise Audit',        icon: 'fa-file-invoice' },

@@ -23,8 +23,8 @@ const ScreenerActionDetailPage = () => {
   const filteredActions = activeFilter === 'All'
     ? screenerActionDetails
     : screenerActionDetails.filter(a =>
-        a.priorityLabel.toLowerCase().replace(' ', '-') === activeFilter.toLowerCase().replace(' ', '-')
-      );
+      a.priorityLabel.toLowerCase().replace(' ', '-') === activeFilter.toLowerCase().replace(' ', '-')
+    );
 
   return (
     <DashboardLayout
@@ -140,11 +140,10 @@ const ScreenerActionDetailPage = () => {
                 <button
                   key={f}
                   onClick={() => setActiveFilter(f)}
-                  className={`px-2.5 py-1 text-xs font-bold rounded-lg transition ${
-                    activeFilter === f
+                  className={`px-2.5 py-1 text-xs font-bold rounded-lg transition ${activeFilter === f
                       ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900'
                       : 'text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800'
-                  }`}
+                    }`}
                 >
                   {f}
                 </button>
@@ -160,18 +159,16 @@ const ScreenerActionDetailPage = () => {
                   <button
                     key={a.id}
                     onClick={() => navigate(`/screener/actions/${a.id}`)}
-                    className={`w-full text-left px-4 py-3.5 border-l-[3px] transition hover:bg-gray-50 dark:hover:bg-slate-800/50 ${
-                      isSelected
+                    className={`w-full text-left px-4 py-3.5 border-l-[3px] transition hover:bg-gray-50 dark:hover:bg-slate-800/50 ${isSelected
                         ? 'border-blue-500 bg-blue-50/40 dark:bg-blue-900/10'
                         : 'border-transparent'
-                    }`}
+                      }`}
                   >
                     <span className={`text-[9px] font-bold tracking-widest uppercase ${aCfg.labelText}`}>
                       {a.priorityLabel}
                     </span>
-                    <p className={`text-sm font-semibold mt-0.5 leading-snug ${
-                      isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-gray-800 dark:text-slate-200'
-                    }`}>
+                    <p className={`text-sm font-semibold mt-0.5 leading-snug ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-gray-800 dark:text-slate-200'
+                      }`}>
                       {a.title}
                     </p>
                     <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{a.time}</p>

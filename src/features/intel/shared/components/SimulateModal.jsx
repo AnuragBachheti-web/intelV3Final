@@ -66,15 +66,15 @@ export const SimulateContent = ({ insight, onClose, isModal = false }) => {
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-gray-100/80 dark:bg-slate-800/80 rounded-xl p-4">
             <div className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-2">REVENUE IMPACT</div>
-            <div className="text-[16px] font-mono tracking-tight font-bold text-red-500">-₹4.1L</div>
+            <div className="text-[16px] font-sans tracking-tight font-bold text-red-500">-₹4.1L</div>
           </div>
           <div className="bg-gray-100/80 dark:bg-slate-800/80 rounded-xl p-4">
             <div className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-2">PROFIT IMPACT</div>
-            <div className="text-[16px] font-mono tracking-tight font-bold text-red-500">-₹90,200</div>
+            <div className="text-[16px] font-sans tracking-tight font-bold text-red-500">-₹90,200</div>
           </div>
           <div className="bg-gray-100/80 dark:bg-slate-800/80 rounded-xl p-4">
             <div className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-2">CONFIDENCE</div>
-            <div className="text-[16px] font-mono tracking-tight font-bold text-emerald-600">Very high</div>
+            <div className="text-[16px] font-sans tracking-tight font-bold text-emerald-600">Very high</div>
           </div>
         </div>
 
@@ -83,7 +83,7 @@ export const SimulateContent = ({ insight, onClose, isModal = false }) => {
           <div className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-3">AFFECTED SKUS</div>
           <div className="flex flex-wrap items-center gap-2">
             {['AF-CC-2044', 'AF-CC-2045', 'AF-CC-2046', 'AF-CC-2047', 'AF-CC-2048'].map(sku => (
-              <span key={sku} className="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-md px-3 py-1.5 text-[12px] font-mono text-gray-600 dark:text-slate-300 shadow-sm">
+              <span key={sku} className="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-md px-3 py-1.5 text-[12px] font-sans text-gray-600 dark:text-slate-300 shadow-sm">
                 {sku}
               </span>
             ))}
@@ -97,7 +97,7 @@ export const SimulateContent = ({ insight, onClose, isModal = false }) => {
           
           <div className="flex items-center justify-between mb-3">
             <span className="text-[14px] text-gray-700 dark:text-slate-300 font-sans">Price match depth</span>
-            <span className="text-[14px] font-bold text-gray-900 dark:text-white font-mono">-6%</span>
+            <span className="text-[14px] font-bold text-gray-900 dark:text-white font-sans">-6%</span>
           </div>
           
           <div className="relative w-full h-1 bg-gray-300 dark:bg-slate-600 rounded-full mb-6">
@@ -130,19 +130,19 @@ export const SimulateContent = ({ insight, onClose, isModal = false }) => {
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
               <tr>
-                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">30 days</td>
-                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">-₹1,82,655</td>
-                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">-₹40,184</td>
+                <td className="py-3.5 text-[14px] font-sans text-gray-700 dark:text-slate-300">30 days</td>
+                <td className="py-3.5 text-[14px] font-sans text-gray-700 dark:text-slate-300">-₹1,82,655</td>
+                <td className="py-3.5 text-[14px] font-sans text-gray-700 dark:text-slate-300">-₹40,184</td>
               </tr>
               <tr>
-                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">60 days</td>
-                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">-₹3,65,310</td>
-                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">-₹80,368</td>
+                <td className="py-3.5 text-[14px] font-sans text-gray-700 dark:text-slate-300">60 days</td>
+                <td className="py-3.5 text-[14px] font-sans text-gray-700 dark:text-slate-300">-₹3,65,310</td>
+                <td className="py-3.5 text-[14px] font-sans text-gray-700 dark:text-slate-300">-₹80,368</td>
               </tr>
               <tr>
-                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">90 days</td>
-                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">-₹5,53,500</td>
-                <td className="py-3.5 text-[14px] font-mono text-gray-700 dark:text-slate-300">-₹1,21,770</td>
+                <td className="py-3.5 text-[14px] font-sans text-gray-700 dark:text-slate-300">90 days</td>
+                <td className="py-3.5 text-[14px] font-sans text-gray-700 dark:text-slate-300">-₹5,53,500</td>
+                <td className="py-3.5 text-[14px] font-sans text-gray-700 dark:text-slate-300">-₹1,21,770</td>
               </tr>
             </tbody>
           </table>

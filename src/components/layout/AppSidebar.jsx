@@ -366,9 +366,7 @@ const AppSidebar = ({ darkMode, _setDarkMode, inline = false, mobileOpen = false
   const navItems = [
     { name: 'New', icon: 'fa-plus', href: ROUTES.NEW_ANALYSIS, active: isNewAnalysisActive },
     { name: 'Workspace', icon: 'fa-chart-line', href: intelHref, permissionKey: intelPermissionKey, active: isIntelFullActive },
-    { name: 'Profit & Ads', icon: 'fa-chart-pie', href: '/profit-ads', permissionKey: '/profit-ads', active: isProfitAdsActive },
-    { name: 'Agents', icon: 'fa-robot', href: ROUTES.AGENTS || '/agents', permissionKey: ROUTES.AGENTS || '/agents', active: isAgentsActive },
-    { name: 'Research', icon: 'fa-chart-column', href: ROUTES.SCREENER, active: isScreenerActive },
+    { name: 'Agents', icon: 'fa-user-tie', href: ROUTES.AGENTS || '/agents', permissionKey: ROUTES.AGENTS || '/agents', active: isAgentsActive },
     { name: 'Integrations', icon: 'fa-plug', href: ROUTES.INTEGRATIONS || '/integrations', permissionKey: ROUTES.INTEGRATIONS || '/integrations', active: isIntegrationsActive },
   ];
   const role = localStorage.getItem("userRole") || "admin";
@@ -414,11 +412,10 @@ const AppSidebar = ({ darkMode, _setDarkMode, inline = false, mobileOpen = false
                   key={item.id}
                   to={`${ROUTES.SETTINGS}?tab=${item.id}`}
                   onClick={onMobileClose}
-                  className={`flex items-center gap-3 px-2 py-2 rounded-lg transition-colors ${
-                    activeSettingsTab === item.id
+                  className={`flex items-center gap-3 px-2 py-2 rounded-lg transition-colors ${activeSettingsTab === item.id
                       ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900'
                       : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800/30'
-                  }`}
+                    }`}
                 >
                   <i className={`fa-solid ${item.icon} w-5 text-center text-[13px] ${activeSettingsTab === item.id ? '' : 'text-gray-400 dark:text-slate-500'}`} />
                   <span className="text-xs font-medium">{item.name}</span>
@@ -430,11 +427,10 @@ const AppSidebar = ({ darkMode, _setDarkMode, inline = false, mobileOpen = false
                   key={item.id}
                   to={`${ROUTES.SETTINGS}?tab=${item.id}`}
                   onClick={onMobileClose}
-                  className={`flex items-center gap-3 px-2 py-2 rounded-lg transition-colors ${
-                    activeSettingsTab === item.id
+                  className={`flex items-center gap-3 px-2 py-2 rounded-lg transition-colors ${activeSettingsTab === item.id
                       ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900'
                       : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800/30'
-                  }`}
+                    }`}
                 >
                   <i className={`fa-solid ${item.icon} w-5 text-center text-[13px] ${activeSettingsTab === item.id ? '' : 'text-gray-400 dark:text-slate-500'}`} />
                   <span className="text-xs font-medium">{item.name}</span>
@@ -479,11 +475,10 @@ const AppSidebar = ({ darkMode, _setDarkMode, inline = false, mobileOpen = false
               <SidebarItem item={actionsItem} isCollapsed={false} small={true} />
               <button
                 onClick={() => setSettingsSubOpen(true)}
-                className={`flex items-center group relative w-full rounded-lg transition-colors justify-start px-2 py-1.5 ${
-                  isSettingsActive
+                className={`flex items-center group relative w-full rounded-lg transition-colors justify-start px-2 py-1.5 ${isSettingsActive
                     ? 'text-gray-900 dark:text-slate-100 bg-gray-100 dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700/50 shadow-sm'
                     : 'text-gray-900 dark:text-slate-200 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-800/30'
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-center flex-shrink-0 rounded-md w-7 h-7">
                   <i className="fa-solid fa-gear" style={{ fontSize: 15 }} />
@@ -516,14 +511,14 @@ const AppSidebar = ({ darkMode, _setDarkMode, inline = false, mobileOpen = false
 
                 <div
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${dashboardView
-                      ? "bg-blue-500"
-                      : "bg-gray-300 dark:bg-slate-600"
+                    ? "bg-blue-500"
+                    : "bg-gray-300 dark:bg-slate-600"
                     }`}
                 >
                   <span
                     className={`inline-block h-4 w-4 rounded-full bg-white transition-transform ${dashboardView
-                        ? "translate-x-4"
-                        : "translate-x-0.5"
+                      ? "translate-x-4"
+                      : "translate-x-0.5"
                       }`}
                   />
                 </div>

@@ -43,7 +43,7 @@ const KpiMetricColumn = ({ label, valueText, deltaText, isPositive, rawValue, is
         </strong>
 
         {deltaText && (
-          <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded font-mono tabular text-[10.5px] font-semibold whitespace-nowrap ${
+          <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded font-sans tabular text-[10.5px] font-semibold whitespace-nowrap ${
             isPositive
               ? 'bg-emerald-100/80 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
               : 'bg-amber-100/80 text-[#99401F] dark:bg-amber-950/60 dark:text-amber-300'

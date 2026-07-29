@@ -65,7 +65,7 @@ const renderChannelBadge = (signal, isCollapsed) => {
 export const getSignalColumns = (isCollapsed = false) => [
   {
     key: 'action',
-    header: 'Action',
+    header: 'Description',
     className: 'min-w-0',
     render: (signal) => (
       <div className="min-w-0 pr-2">
@@ -78,17 +78,17 @@ export const getSignalColumns = (isCollapsed = false) => [
   {
     key: 'channel',
     header: 'Channel',
-    className: isCollapsed ? 'w-[36px] whitespace-nowrap align-middle text-center' : 'w-[110px] whitespace-nowrap align-middle',
+    className: isCollapsed ? 'w-[70px] px-2 whitespace-nowrap align-middle text-center' : 'w-[110px] whitespace-nowrap align-middle',
     render: (signal) => renderChannelBadge(signal, isCollapsed),
   },
   {
     key: 'sku',
     header: 'SKUs',
-    className: isCollapsed ? 'w-[58px] whitespace-nowrap align-middle text-center' : 'w-[75px] whitespace-nowrap align-middle text-center',
+    className: isCollapsed ? 'w-[70px] whitespace-nowrap align-middle text-center' : 'w-[75px] whitespace-nowrap align-middle text-center',
     render: (signal) => {
       const count = signal.skuCount || signal.affectedSkusCount || 1;
       return (
-        <span className="text-[10px] font-mono bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 px-1.5 py-0.5 rounded font-medium inline-block text-center">
+        <span className="text-[10px] font-sans bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 px-1.5 py-0.5 rounded font-medium inline-block text-center">
           {count} {count === 1 ? 'SKU' : 'SKUs'}
         </span>
       );
@@ -110,7 +110,7 @@ export const getSignalColumns = (isCollapsed = false) => [
     align: 'right',
     className: isCollapsed ? 'w-[62px] whitespace-nowrap align-middle text-right pr-1' : 'w-[80px] whitespace-nowrap align-middle text-right pr-2',
     render: (signal) => (
-      <span className="font-mono tabular text-[12px] font-bold text-gray-900 dark:text-white">
+      <span className="font-sans tabular text-[12px] font-bold text-gray-900 dark:text-white">
         {exposureText(signal)}
       </span>
     ),
