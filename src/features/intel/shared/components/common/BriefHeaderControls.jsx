@@ -204,7 +204,7 @@ const BriefHeaderControls = ({ onDashboardToggle, isDashboardViewActive, isKpiVi
           <div className="w-5.5 h-5.5 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs">
             <i className="fa-solid fa-house text-[11px]" />
           </div>
-          <span className="text-[14px] font-bold text-gray-900 dark:text-slate-100">All stores ({total})</span>
+          <span className="text-[14px] font-bold text-gray-900 dark:text-slate-100">Channels ({total})</span>
           <i className="fa-solid fa-chevron-down text-[9px] text-gray-400" />
         </div>
       );

@@ -17,7 +17,8 @@ const ActionDetail = ({ action, onClose }) => {
   const priorityColors = {
     'red': { bg: 'bg-red-600', light: 'bg-red-50 dark:bg-red-900/10', text: 'text-red-700 dark:text-red-400', border: 'border-red-200 dark:border-red-900/30' },
     'orange': { bg: 'bg-orange-600', light: 'bg-orange-50 dark:bg-orange-900/10', text: 'text-orange-700 dark:text-orange-400', border: 'border-orange-200 dark:border-orange-900/30' },
-    'yellow': { bg: 'bg-yellow-600', light: 'bg-yellow-50 dark:bg-yellow-900/10', text: 'text-yellow-700 dark:text-yellow-400', border: 'border-yellow-200 dark:border-yellow-900/30' }
+    'yellow': { bg: 'bg-yellow-600', light: 'bg-yellow-50 dark:bg-yellow-900/10', text: 'text-yellow-700 dark:text-yellow-400', border: 'border-yellow-200 dark:border-yellow-900/30' },
+    'blue': { bg: 'bg-blue-600', light: 'bg-blue-50 dark:bg-blue-900/10', text: 'text-blue-700 dark:text-blue-400', border: 'border-blue-200 dark:border-blue-900/30' }
   };
 
   const colors = priorityColors[action.priorityColor] || priorityColors.yellow;

@@ -642,12 +642,6 @@ const GlobalAppHeader = ({
           <div className="flex items-center gap-3 shrink-0">
             {!isScrolled && !isCompressed && (
               <div className="header-greeting-block hidden md:flex flex-col items-end text-right px-1 transition-opacity duration-200">
-                <p className="text-[15px] font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-none">
-                  {getGreeting()}, <span className="font-semibold">{username}</span>
-                </p>
-                <p className="text-[10px] font-medium text-gray-400 dark:text-slate-500 leading-tight mt-0.5">
-                  {activeShop}
-                </p>
                 <div className="flex items-center gap-1.5 text-[8px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">
                   <span>{currentDateFormatted}</span>
                   <span>•</span>
@@ -734,12 +728,6 @@ const GlobalAppHeader = ({
         <div className="flex items-center gap-2 shrink-0 ml-auto">
           {!isScrolled && !isCompressed && (
             <div className="header-greeting-block hidden md:flex flex-col items-end text-right px-1 transition-opacity duration-200">
-              <p className="text-xs font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-none">
-                {getGreeting()}, <span className="font-semibold">{username}</span>
-              </p>
-              <p className="text-[10px] font-medium text-gray-400 dark:text-slate-500 leading-tight mt-0.5">
-                {activeShop}
-              </p>
               <div className="flex items-center gap-1.5 text-[8px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">
                 <span>{currentDateFormatted}</span>
                 <span>•</span>

@@ -124,7 +124,7 @@ const DashboardLayout = ({
         )}
 
         {/* Content area with light background */}
-        <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white dark:bg-slate-900 px-4 sm:px-6 pt-6 pb-4 gap-3">
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white dark:bg-slate-900 px-3 sm:px-5 pt-2 sm:pt-3 pb-3 gap-2.5">
 
           {/* White card: tabs + content */}
           <div className="flex-1 flex flex-col min-h-0 bg-[#f0f1f2] dark:bg-[#030712] rounded-2xl border border-gray-200/70 dark:border-slate-800 shadow-sm overflow-hidden">
@@ -150,7 +150,7 @@ const DashboardLayout = ({
             <main
               ref={scrollRef}
               style={!showNoStores && showAIPrompt ? { paddingBottom: '9rem' } : undefined}
-              className={`dashboard-main-content flex-1 overflow-y-auto overscroll-y-contain min-h-0 custom-scrollbar ${noPadding && !showNoStores ? '' : 'p-4 sm:p-6'
+              className={`dashboard-main-content flex-1 overflow-y-auto overscroll-y-contain min-h-0 custom-scrollbar ${noPadding && !showNoStores ? '' : 'p-3 sm:p-4'
                 } ${contentClassName || ''}`}
             >
               {showNoStores ? <NoStoresConnected /> : children}

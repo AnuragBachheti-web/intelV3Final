@@ -10,6 +10,7 @@ import {
   CASH_INSIGHTS_DATA,
 } from '../shared/data/intelData';
 import SimulateModal from '../shared/components/SimulateModal';
+import { getInsightActionButtons } from '../shared/utils/insightActionMapper';
 
 const INSIGHTS_BY_INTEL_TAB = {
   sales: INSIGHTS_DATA,
@@ -397,9 +398,18 @@ const IntelV2InsightDetailPage = () => {
               </>
             ) : (
               <>
-                <button className="w-full py-3 bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 rounded-xl font-bold text-sm hover:opacity-90 transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow">
-                  <i className="fa-solid fa-bolt text-[11px]" /> Execute
-                </button>
+                {getInsightActionButtons(selectedStep || insight).map((btn, i) => (
+                  <button
+                    key={i}
+                    className={`w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow ${
+                      btn.primary
+                        ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 hover:opacity-90'
+                        : 'bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    <i className="fa-solid fa-bolt text-[11px]" /> {btn.label}
+                  </button>
+                ))}
                 <button
                   onClick={() => {
                     setSimulateSku(insight.sku || 'AFWCLEANER0004');
@@ -469,9 +479,18 @@ const IntelV2InsightDetailPage = () => {
             </>
           ) : (
             <>
-              <button className="w-full py-3 bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 rounded-xl font-bold text-sm hover:opacity-90 transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow">
-                <i className="fa-solid fa-bolt text-[11px]" /> Execute
-              </button>
+              {getInsightActionButtons(selectedStep || insight).map((btn, i) => (
+                <button
+                  key={i}
+                  className={`w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow ${
+                    btn.primary
+                      ? 'bg-gray-900 dark:bg-slate-100 text-white dark:text-gray-900 hover:opacity-90'
+                      : 'bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <i className="fa-solid fa-bolt text-[11px]" /> {btn.label}
+                </button>
+              ))}
               <button
                 onClick={() => {
                   setSimulateSku(insight.sku || 'AFWCLEANER0004');

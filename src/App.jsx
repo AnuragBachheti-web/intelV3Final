@@ -70,7 +70,7 @@ function App() {
             <Route path="/research/actions/:id"       element={<ScreenerActionDetailPage />} />
             <Route path={`${ROUTES.SCREENER}/*`}      element={<Screener />} />
             <Route path={ROUTES.CONNECT_MARKETPLACES} element={<MarketplaceConnectionPage />} />
-            <Route path="/actions"                    element={<ActionsPage />} />
+            <Route path={ROUTES.ACTIONS}              element={<ActionsPage />} />
             <Route path={ROUTES.NEW_ANALYSIS}         element={<NewAnalysisPage />} />
             <Route path={ROUTES.SETTINGS}             element={<SettingsPage />} />
             {/* <Route path="/hubs"                       element={<HubsPage />} /> */}

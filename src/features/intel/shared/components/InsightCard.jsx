@@ -1,152 +1,107 @@
-import React, { useState } from 'react';
-import { useAIStore } from '../../../../store/useAIStore';
+import React from 'react';
 
-const InsightCard = ({ card, onSimulate, onReprice, onDismiss, onPlanCapture, onToggleExpand, isExpanded }) => {
-  const [showResearch, setShowResearch] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
-  const { addAiReference } = useAIStore();
+/**
+ * Universal Signal Card (Master Prompt v5)
+ * 
+ * Strict Color Discipline:
+ * - Red is reserved ONLY for priority dot of genuinely HIGH-urgency signals.
+ * - Type pills stay in ONE consistent neutral-blue design (no rainbow color-coding).
+ * 
+ * Line 1: [● priority dot] [TYPE PILL] · [SKU/Category] ................ ₹[Exposure]
+ * Line 2: [1-line description with action already implied]
+ * Line 3:                                           [Simulate]  [Take Action]
+ */
+const InsightCard = ({
+  card,
+  isSelected,
+  onSelect,
+  onSimulate,
+  onTakeAction,
+}) => {
+  if (!card) return null;
 
-  if (dismissed) return null;
+  // Format Exposure
+  const formattedExposure = typeof card.exposure === 'number'
+    ? `₹${(card.exposure / 100000).toFixed(1)}L`
+    : (card.exposureFormatted || card.monthlyRevenue || '₹45,000');
+
+  // Priority Dot Color — Red is strictly reserved for HIGH urgency
+  const priorityDotColor =
+    card.urgency === 'HIGH' || card.priority === 'HIGH'
+      ? 'bg-red-500'
+      : card.urgency === 'MED' || card.priority === 'MED'
+      ? 'bg-amber-500'
+      : 'bg-blue-500';
+
+  const typeLabel = (card.tagCategory || card.type || 'AI SIGNAL').toUpperCase();
+  const skuOrCat = card.skuCode || card.category || 'GENERAL';
+  const description = card.headlineHighlight || card.headline || card.description || '';
 
   return (
-    <div 
-      onClick={onToggleExpand}
-      className={`cursor-pointer rounded-2xl border p-5 transition-all duration-300 ${isExpanded
-        ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-900/20 dark:border-blue-500 ring-1 ring-blue-500/20 shadow-md'
-        : 'bg-white dark:bg-slate-900/90 border-gray-200 dark:border-slate-800 shadow-xs hover:border-blue-300 dark:hover:border-blue-700'
-      }`}>
-
-      {/* Top Header: SKU / Rule Tag (left), Badges + Expand Arrow (right) */}
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-[10px] font-sans tracking-wider text-gray-500 dark:text-slate-400 uppercase">
-            {card.tagCategory} <span className="text-gray-400">•</span> {card.skuCode}
+    <div
+      onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect?.(); }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-pressed={isSelected}
+      aria-label={`Select signal: ${typeLabel} - ${skuOrCat}`}
+      className={`focus-ring group relative rounded-xl border p-3 sm:p-3.5 transition-all duration-150 cursor-pointer overflow-hidden flex flex-col justify-between gap-2.5 ${
+        isSelected
+          ? 'border-blue-500 dark:border-blue-500 border-l-[3.5px] border-l-blue-600 bg-blue-50/60 dark:bg-blue-950/40 shadow-sm ring-1 ring-blue-500/20'
+          : 'border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-gray-300 dark:hover:border-slate-700 hover:bg-gray-50/60 dark:hover:bg-slate-800/40 hover:shadow-card'
+      }`}
+    >
+      {/* ── Line 1: Header Row ── */}
+      <div className="flex items-center justify-between gap-2 min-w-0">
+        <div className="flex items-center gap-2 truncate min-w-0">
+          {/* Priority Dot paired with accessibility label */}
+          <span className={`w-2 h-2 rounded-full ${priorityDotColor} flex-shrink-0 animate-pulse`} title={`Priority: ${card.priority || 'NORMAL'}`} />
+          
+          {/* Uniform Neutral Blue Type Pill across ALL signal types */}
+          <span className="text-[9.5px] font-mono font-bold tracking-wider text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 px-2 py-0.5 rounded border border-blue-200/60 dark:border-blue-800/40 uppercase flex-shrink-0">
+            {typeLabel}
           </span>
-          <span className="px-1.5 py-0.5 text-[9px] font-sans text-gray-500 dark:text-slate-400 border border-gray-200 dark:border-slate-700 rounded bg-stone-50 dark:bg-slate-800">
-            {card.ruleId}
+
+          <span className="text-[10.5px] font-mono text-gray-500 dark:text-slate-400 truncate">
+            · {skuOrCat}
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
-          {card.isActionable && (
-            <span className="px-2 py-0.5 text-[9px] font-bold tracking-wider text-amber-800 dark:text-amber-300 bg-amber-200/70 dark:bg-amber-900/40 rounded">
-              ACTIONABLE
-            </span>
-          )}
-          {card.actBadge && (
-            <span className="px-2 py-0.5 text-[9px] font-bold tracking-wider text-amber-900 dark:text-amber-200 bg-amber-100 dark:bg-amber-900/20 rounded">
-              {card.actBadge}
-            </span>
-          )}
-        </div>
+        <span className="font-mono tabular text-[13px] font-bold text-gray-900 dark:text-white flex-shrink-0">
+          {formattedExposure}
+        </span>
       </div>
 
-      {/* Main Headline */}
-      <div className="mt-3 text-[14px] leading-snug font-sans">
-        <div className="font-bold text-gray-900 dark:text-slate-100">{card.headline}</div>
-        {card.headlineHighlight && (
-          <div className="font-normal text-gray-700 dark:text-slate-300 mt-1">{card.headlineHighlight}</div>
-        )}
-      </div>
+      {/* ── Line 2: Implied Action Description ── */}
+      <p className="text-[12.5px] text-gray-700 dark:text-slate-300 line-clamp-2 font-sans leading-snug">
+        {description}
+      </p>
 
-      {/* Bottom Action Section */}
-      <div className="pt-3 border-t border-gray-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        {/* Source tags */}
-        <div className="flex items-center gap-1.5 text-[9px] font-sans text-gray-400 dark:text-slate-500">
-          <span>source</span>
-          <span className="px-1.5 py-0.5 rounded border border-gray-200 dark:border-slate-700 bg-stone-50 dark:bg-slate-800 text-gray-600 dark:text-slate-300 font-bold uppercase">
-            {card.sourceOwn}
-          </span>
-          <span className="px-1.5 py-0.5 rounded border border-gray-200 dark:border-slate-700 bg-stone-50 dark:bg-slate-800 text-gray-600 dark:text-slate-300 font-bold uppercase">
-            {card.sourceRule}
-          </span>
-        </div>
-
-        {/* Action buttons */}
-        <div className="flex items-center gap-2 flex-wrap self-end sm:self-auto">
-          <div className="flex items-center gap-1 flex-shrink-0">
-            {card.sectionKey === 'pricing_buybox' ? (
-              <>
-                <div className="relative group flex-shrink-0">
-                  <a
-                    href={card.amazonUrl || "https://amazon.in"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center w-[30px] h-[30px] text-gray-400 dark:text-slate-500 hover:text-gray-800 dark:hover:text-slate-300 transition-colors"
-                  >
-                    <i className="fa-brands fa-amazon text-[18px] text-orange-500"></i>
-                  </a>
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-gray-800 dark:bg-slate-100 text-white dark:text-gray-900 text-[10px] font-bold rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-50">
-                    View on Amazon
-                  </div>
-                </div>
-                <div className="relative group flex-shrink-0">
-                  <a
-                    href={card.shopifyUrl || "https://shopify.com"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center w-[30px] h-[30px] text-gray-400 dark:text-slate-500 hover:text-gray-800 dark:hover:text-slate-300 transition-colors"
-                  >
-                    <i className="fa-brands fa-shopify text-[18px] text-[#95bf47]"></i>
-                  </a>
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-gray-800 dark:bg-slate-100 text-white dark:text-gray-900 text-[10px] font-bold rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-50">
-                    View on Shopify
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="relative group flex-shrink-0">
-                <a
-                  href={card.amazonUrl || "https://amazon.in"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center w-[30px] h-[30px] text-gray-400 dark:text-slate-500 hover:text-gray-800 dark:hover:text-slate-300 transition-colors"
-                >
-                  {(card.platform === 'shopify' || card.id % 3 === 0) ? (
-                    <i className="fa-brands fa-shopify text-[18px] text-[#95bf47]"></i>
-                  ) : (
-                    <i className="fa-brands fa-amazon text-[18px] text-orange-500"></i>
-                  )}
-                </a>
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-gray-800 dark:bg-slate-100 text-white dark:text-gray-900 text-[10px] font-bold rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-50">
-                  View on {(card.platform === 'shopify' || card.id % 3 === 0) ? 'Shopify' : 'Amazon'}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {(!card.actionType || card.actionType === 'reprice') && (
-            <button
-              onClick={onReprice}
-              className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors shadow-xs"
-            >
-              {card.actionLabel || 'Reprice / check eligibility'}
-            </button>
-          )}
-
-          {card.actionType === 'investigate' && (
-            <button
-              onClick={() => {
-                addAiReference({ title: card.skuCode, value: card.headline });
-              }}
-              className="px-4 py-1.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-colors shadow-xs"
-            >
-              {card.actionLabel}
-            </button>
-          )}
-
-          {card.actionType === 'plan_capture' && (
-            <button
-              onClick={onPlanCapture}
-              className="px-4 py-1.5 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-xs font-bold transition-colors shadow-xs"
-            >
-              {card.actionLabel}
-            </button>
-          )}
-        </div>
+      {/* ── Line 3: Buttons Row (Always bottom-right, same order) ── */}
+      <div className="flex items-center justify-end gap-2 pt-0.5">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onSimulate) onSimulate(card);
+          }}
+          className="px-3 py-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 rounded-lg text-[11px] font-semibold transition-colors shadow-2xs"
+        >
+          Simulate
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onTakeAction) onTakeAction(card);
+          }}
+          className="px-3.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[11px] font-bold transition-colors shadow-2xs"
+        >
+          Take Action
+        </button>
       </div>
     </div>
   );
 };
 
-export default InsightCard;
+export default React.memo(InsightCard);

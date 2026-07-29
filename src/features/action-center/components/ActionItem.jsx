@@ -1,5 +1,14 @@
 ﻿import React from 'react';
 
+// Module icons — categories come from the Intel modules (Revenue/Margin/Cash/…)
+const CATEGORY_ICONS = {
+  Revenue: 'fa-dollar-sign',
+  Margin: 'fa-chart-line',
+  Cash: 'fa-money-bill-wave',
+  Inventory: 'fa-boxes-stacked',
+  Ads: 'fa-bullhorn',
+};
+
 // Pure lookup — no props/state dependency, safe at module level
 const getPriorityConfig = (priority) => {
   switch (priority) {
@@ -23,7 +32,7 @@ const ActionItem = React.memo(({ action, isSelected, onClick, onSimulate }) => {
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-4 flex-1">
           <div className={`w-10 h-10 ${config.iconBg} dark:bg-opacity-20 rounded-xl flex items-center justify-center flex-shrink-0`}>
-            <i className={`fa-solid ${action.category === 'Payments' ? 'fa-file-invoice-dollar' : action.category === 'Collections' ? 'fa-phone' : 'fa-wallet'} ${config.icon}`}></i>
+            <i className={`fa-solid ${CATEGORY_ICONS[action.category] || 'fa-wallet'} ${config.icon}`}></i>
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2 flex-wrap">

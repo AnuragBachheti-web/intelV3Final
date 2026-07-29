@@ -15,7 +15,7 @@ export const ROUTES = {
   SCREENER:             "/research",
   SCREENER_ACTIONS:     "/research/actions/:id",
   CONNECT_MARKETPLACES: "/connect-marketplaces",
-  // ACTIONS:              "/actions",
+  ACTIONS:              "/actions",
   NEW_ANALYSIS:         "/new-analysis",
   SETTINGS:             "/settings",
   // HUBS:                 "/hubs",

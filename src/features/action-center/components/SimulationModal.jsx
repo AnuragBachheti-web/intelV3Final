@@ -2,7 +2,18 @@ import { motion } from 'framer-motion';
 import React from 'react';
 import BaseModal from '../../../components/common/BaseModal';
 
-const SimulationModal = ({ isOpen, onClose, action }) => (
+const RISK_TEXT = { HIGH: 'text-red-600', MED: 'text-amber-600', LOW: 'text-green-600' };
+
+const SimulationModal = ({ isOpen, onClose, action }) => {
+  const stats = action?.miniStats || [];
+  const metrics = action?.metrics || {};
+  const [headStat, badgeStat, riskStat] = stats;
+  const confidence = action?.confidenceScore ?? 0;
+  const ease = action?.easeVal ?? 0;
+  const complexity = action?.complexityVal ?? 0;
+  const pct = (value, max) => `${Math.min(100, Math.round((value / max) * 100))}%`;
+
+  return (
   <BaseModal isOpen={isOpen} onClose={onClose}>
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -31,7 +42,7 @@ const SimulationModal = ({ isOpen, onClose, action }) => (
         {/* Selected Action */}
         <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-200 dark:border-blue-800">
           <h4 className="font-bold text-gray-900 dark:text-slate-100 mb-2">Selected Action</h4>
-          <p className="text-gray-700 dark:text-slate-300">{action?.title || 'Transfer Funds to Operating Account'}</p>
+          <p className="text-gray-700 dark:text-slate-300">{action?.title || 'Select an action to simulate'}</p>
         </div>
 
         {/* States Grid */}
@@ -43,16 +54,16 @@ const SimulationModal = ({ isOpen, onClose, action }) => (
             </h5>
             <div className="space-y-3">
               <div>
-                <p className="text-sm text-gray-600 dark:text-slate-400">Operating Balance</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">$42,800</p>
+                <p className="text-sm text-gray-600 dark:text-slate-400">{headStat?.label || 'Exposure'}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">{headStat?.value || action?.exposureFormatted || '—'}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 dark:text-slate-400">Status</p>
-                <span className="px-2 py-1 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg text-xs font-medium">Below Threshold</span>
+                <p className="text-sm text-gray-600 dark:text-slate-400">{badgeStat?.label || 'Status'}</p>
+                <span className="px-2 py-1 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg text-xs font-medium">{badgeStat?.value || action?.tagCategory || '—'}</span>
               </div>
               <div>
-                <p className="text-sm text-gray-600 dark:text-slate-400">Risk Level</p>
-                <p className="text-lg font-bold text-red-600">High</p>
+                <p className="text-sm text-gray-600 dark:text-slate-400">{riskStat?.label || 'Risk Level'}</p>
+                <p className={`text-lg font-bold ${RISK_TEXT[action?.urgency] || 'text-red-600'}`}>{riskStat?.value || action?.urgency || '—'}</p>
               </div>
             </div>
           </div>
@@ -64,13 +75,15 @@ const SimulationModal = ({ isOpen, onClose, action }) => (
             </h5>
             <div className="space-y-3">
               <div>
-                <p className="text-sm text-gray-600 dark:text-slate-400">Operating Balance</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">$52,800</p>
-                <p className="text-xs text-green-600 font-medium">+$10,000</p>
+                <p className="text-sm text-gray-600 dark:text-slate-400">Recoverable Exposure</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">{action?.exposureFormatted || '—'}</p>
+                {metrics.exposureMo && (
+                  <p className="text-xs text-green-600 font-medium">+{metrics.exposureMo} / month</p>
+                )}
               </div>
               <div>
                 <p className="text-sm text-gray-600 dark:text-slate-400">Status</p>
-                <span className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-lg text-xs font-medium">Above Threshold</span>
+                <span className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-lg text-xs font-medium">Signal Cleared</span>
               </div>
               <div>
                 <p className="text-sm text-gray-600 dark:text-slate-400">Risk Level</p>
@@ -86,31 +99,31 @@ const SimulationModal = ({ isOpen, onClose, action }) => (
           <div className="space-y-3">
             <div className="p-4 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-slate-300">Cash Flow Health</span>
-                <span className="text-sm font-bold text-green-600">+24%</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-slate-300">Signal Confidence</span>
+                <span className="text-sm font-bold text-green-600">{confidence}%</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
-                <div className="bg-green-600 h-2 rounded-full" style={{ width: '76%' }}></div>
+                <div className="bg-green-600 h-2 rounded-full" style={{ width: pct(confidence, 100) }}></div>
               </div>
             </div>
 
             <div className="p-4 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-slate-300">Overdraft Risk</span>
-                <span className="text-sm font-bold text-green-600">-85%</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-slate-300">Implementation Complexity</span>
+                <span className="text-sm font-bold text-green-600">{complexity}/5</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
-                <div className="bg-red-600 h-2 rounded-full" style={{ width: '15%' }}></div>
+                <div className="bg-red-600 h-2 rounded-full" style={{ width: pct(complexity, 5) }}></div>
               </div>
             </div>
 
             <div className="p-4 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-slate-300">Liquidity Score</span>
-                <span className="text-sm font-bold text-green-600">+18 points</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-slate-300">Execution Ease</span>
+                <span className="text-sm font-bold text-green-600">{ease}/5</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
-                <div className="bg-blue-600 h-2 rounded-full" style={{ width: '82%' }}></div>
+                <div className="bg-blue-600 h-2 rounded-full" style={{ width: pct(ease, 5) }}></div>
               </div>
             </div>
           </div>
@@ -125,15 +138,17 @@ const SimulationModal = ({ isOpen, onClose, action }) => (
           <ul className="space-y-2 text-sm text-gray-700 dark:text-slate-300">
             <li className="flex items-start gap-2">
               <i className="fa-solid fa-circle text-yellow-600 text-[6px] mt-2 flex-shrink-0"></i>
-              <span>Savings account balance will decrease to $176,000</span>
+              <span>Applies to {action?.skuCode || 'the selected SKU'} in the {action?.category || 'selected'} module.</span>
             </li>
+            {metrics.velocity && metrics.threshold && (
+              <li className="flex items-start gap-2">
+                <i className="fa-solid fa-circle text-yellow-600 text-[6px] mt-2 flex-shrink-0"></i>
+                <span>Currently {metrics.velocity} against a {metrics.threshold} threshold.</span>
+              </li>
+            )}
             <li className="flex items-start gap-2">
               <i className="fa-solid fa-circle text-yellow-600 text-[6px] mt-2 flex-shrink-0"></i>
-              <span>Transfer will take 2-4 hours to complete</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <i className="fa-solid fa-circle text-yellow-600 text-[6px] mt-2 flex-shrink-0"></i>
-              <span>Interest earnings on savings will reduce by ~$15/month</span>
+              <span>Owner {action?.assignee || '—'} · due {action?.due || '—'} · {action?.timeline || '—'}.</span>
             </li>
           </ul>
         </div>
@@ -153,6 +168,7 @@ const SimulationModal = ({ isOpen, onClose, action }) => (
       </div>
     </motion.div>
   </BaseModal>
-);
+  );
+};
 
 export default SimulationModal;

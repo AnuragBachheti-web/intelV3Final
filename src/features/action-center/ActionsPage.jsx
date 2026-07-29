@@ -48,10 +48,11 @@ const ActionsPage = () => {
           className={FILTER_SELECT_CLASS}
         >
           <option value="all">All Categories</option>
-          <option value="cash-management">Cash Management</option>
-          <option value="payments">Payments</option>
-          <option value="collections">Collections</option>
-          <option value="forecasting">Forecasting</option>
+          <option value="revenue">Revenue</option>
+          <option value="margin">Margin</option>
+          <option value="cash">Cash</option>
+          <option value="inventory">Inventory</option>
+          <option value="ads">Ads</option>
         </SelectInput>
       </div>
 
@@ -126,7 +127,7 @@ const ActionsPage = () => {
           <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden flex flex-col h-full min-h-[600px]">
             <div className="border-b border-gray-100 dark:border-slate-800 p-3 bg-gray-50/30 dark:bg-slate-900/50">
               <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                {['All', 'Critical', 'High', 'Medium'].map((tab) => (
+                {['All', 'Critical', 'High', 'Medium', 'Low'].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}

@@ -17,29 +17,38 @@ import {
   INTEL_TABS,
   STATS_BY_TAB,
 } from '../shared/data/intelData';
-import { INSIGHT_CARDS_DATA } from '../shared/data/insightsDummyData';
-import RealifyBrief from "../shared/components/common/RealifyBrief";
-import BriefHeaderControls from "../shared/components/common/BriefHeaderControls";
-import { REALIFY_BRIEF } from "../shared/data/realifyBriefData";
+import TabContent from '../shared/components/common/TabContent';
+import RealifyBrief from '../shared/components/common/RealifyBrief';
+import BriefHeaderControls from '../shared/components/common/BriefHeaderControls';
+import { useUniversalBrief } from '../hooks/useUniversalBrief';
+import ConfirmActionModal from '../shared/components/ConfirmActionModal';
 import SimulateModal, { SimulateContent } from '../shared/components/SimulateModal';
 import InsightDetailsPanel from '../shared/components/InsightDetailsPanel';
 import DismissModal from '../shared/components/DismissModal';
 import RepriceModal from '../shared/components/RepriceModal';
 import CaseReportModal from '../shared/components/CaseReportModal';
 
-const FilterDropdown = ({ label, options, hasSearch }) => {
+const FilterDropdown = ({ label, options, hasSearch, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const dropRef = useRef(null);
   useClickOutside(dropRef, isOpen, () => setIsOpen(false));
-  
+
+  const displayLabel = value && value !== 'All' ? `${label}: ${value}` : label;
+  const filteredOptions = hasSearch
+    ? options.filter(opt => opt.toLowerCase().includes(search.toLowerCase()))
+    : options;
+
   return (
     <div className="relative shrink-0" ref={dropRef}>
-      <button 
+      <button
         onClick={() => setIsOpen(!isOpen)}
-        className="px-3 py-1.5 flex items-center gap-1.5 rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-medium text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+        className={`px-3 py-1.5 flex items-center gap-1.5 rounded-xl border text-xs font-medium transition-colors ${value && value !== 'All'
+            ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300'
+            : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+          }`}
       >
-        {label}
+        {displayLabel}
         <i className="fa-solid fa-chevron-down text-[10px] opacity-60 ml-1" />
       </button>
       {isOpen && (
@@ -48,9 +57,9 @@ const FilterDropdown = ({ label, options, hasSearch }) => {
             <div className="px-2 py-1 mb-1 border-b border-gray-100 dark:border-slate-800">
               <div className="relative">
                 <i className="fa-solid fa-search absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-[10px]" />
-                <input 
-                  type="text" 
-                  placeholder="Search..." 
+                <input
+                  type="text"
+                  placeholder="Search..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="w-full pl-6 pr-2 py-1 bg-gray-50 dark:bg-slate-800 rounded-lg text-xs text-gray-700 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-slate-600"
@@ -59,8 +68,18 @@ const FilterDropdown = ({ label, options, hasSearch }) => {
             </div>
           )}
           <div className="max-h-48 overflow-y-auto custom-scrollbar">
-            {options.map((opt, i) => (
-              <button key={i} onClick={() => setIsOpen(false)} className="w-full text-left px-3 py-1.5 text-xs text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+            {filteredOptions.map((opt, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  if (onChange) onChange(opt);
+                  setIsOpen(false);
+                }}
+                className={`w-full text-left px-3 py-1.5 text-xs transition-colors ${value === opt
+                    ? 'font-bold bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100'
+                    : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+                  }`}
+              >
                 {opt}
               </button>
             ))}
@@ -89,7 +108,7 @@ const KPI_FAMILY_PILLS = [
   { key: 'risk', label: 'Risk' },
 ];
 
-const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
+const IntelV2Page = ({ defaultTab = 'sales' }) => {
   const location = useLocation();
   const activeIntelTab = ROUTE_TO_TAB[location.pathname] || defaultTab;
 
@@ -109,27 +128,11 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   // null = all main cards full size, sub-KPIs hidden
   // selected = main cards shrink in height/width, sub-KPIs open below
   const [selectedMainKpi, setSelectedMainKpi] = useState(null);
-  const [activeFeedTab, setActiveFeedTab] = useState('intelligence'); // 'intelligence' | 'profit-ads'
 
-  const [activeRightTab, setActiveRightTab] = useState('overview'); // 'overview' | 'simulate'
-
-  // Insights section 1
-  const [activeInsightTab, setActiveInsightTab] = useState('Overall');
-  const [itemViewMode, setItemViewMode] = useState('list');
-  const [stepOffset, setStepOffset] = useState(0);
-  const [restoreItemSubTab, setRestoreItemSubTab] = useState(null);
-
-  const [isSimulateModalOpen, setIsSimulateModalOpen] = useState(false);
-  const [simulateInsight, setSimulateInsight] = useState(null);
   const [expandedInsight, setExpandedInsight] = useState(null);
   const [isDismissModalOpen, setIsDismissModalOpen] = useState(false);
   const [isRepriceModalOpen, setIsRepriceModalOpen] = useState(false);
   const [isCaseReportModalOpen, setIsCaseReportModalOpen] = useState(false);
-
-  // Insights section 2
-  const [activeInsightTab2, setActiveInsightTab2] = useState('Overall');
-  const [itemViewMode2, setItemViewMode2] = useState('list');
-  const [stepOffset2, setStepOffset2] = useState(0);
 
   // Scroll-aware header + sticky KPI state
   const [isScrolled, setIsScrolled] = useState(false);
@@ -171,19 +174,6 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const { setDateRange, category, setCategory, setChannel, setProducts, searchQuery: _searchQuery, setSearchQuery: _setSearchQuery } = useFilterStore();
   const navigate = useNavigate();
   const { goToProduct, findWatchlistItem, buildFallbackWatchlistItem, buildAnalyticsKpiGroups } = useProductNavigation();
-
-  useEffect(() => {
-    if (category !== 'all') {
-      setActiveInsightTab('Category');
-    }
-  }, [category]);
-
-  useEffect(() => {
-    if (location.state?.restoreInsightTab) {
-      setActiveInsightTab(location.state.restoreInsightTab);
-    }
-    setRestoreItemSubTab(location.state?.restoreItemSubTab || null);
-  }, [location.key, location.state?.restoreInsightTab, location.state?.restoreItemSubTab]);
 
   const activePlatforms = JSON.parse(localStorage.getItem('active_platforms') || '["shopify","amazon","tiktok"]');
   const channelOptions = [
@@ -395,13 +385,12 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
     setChannel(next.length === 1 ? next[0] : 'all');
   };
 
-  const briefData =
-    REALIFY_BRIEF[activeIntelTab] || REALIFY_BRIEF.sales;
+  const briefData = useUniversalBrief();
 
   return (
     <DashboardLayout
       title="Workspace"
-      subtitle="Real-time analytics"
+      // subtitle="Real-time analytics"
       showSearch={false}
       showTabs={false}
       showAIPrompt={true}
@@ -454,7 +443,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3.5">
 
         {/* MOBILE-only: page heading + Filters trigger (ss1 layout) */}
         <div className="sm:hidden flex items-start justify-between gap-3">
@@ -488,7 +477,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         </div>
 
         {/* Single Unified Container Box for KPI Cards + Feed */}
-        <div className="bg-white dark:bg-[#030712] border border-gray-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm space-y-6">
+        <div className="bg-white dark:bg-[#030712] border border-gray-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-sm space-y-3.5">
 
           {/* Section 1: KPI Cards / Converted Pills Row */}
           <div ref={kpiSectionRef} className="w-full space-y-3">
@@ -587,157 +576,17 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
             )}
           </div>
 
-          {/* Section 2: Feed Section with Top Tabs */}
-          <div className="border-t border-gray-100 dark:border-slate-800/80 pt-1 space-y-2">
-            {/* Feed Header and Filters */}
-            {/* Feed Header and Filters */}
-            <div className="flex flex-col border-b border-gray-100 dark:border-slate-800 pb-3 gap-3">
-              {/* Row 1: Heading + 2 Filters */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <h3 className="flex items-center gap-2 text-lg font-bold text-gray-900 dark:text-slate-100">
-                    <i className="fa-solid fa-rss text-sm text-gray-400 dark:text-slate-500" />
-                    Actions <span className="text-sm font-normal text-gray-400 dark:text-slate-500">• {INSIGHT_CARDS_DATA.length}</span>
-                  </h3>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2 py-1">
-                  <FilterDropdown label="Category" options={['Electronics', 'Furniture', 'Kitchen Accessories']} />
-                  <FilterDropdown label="Sku" options={['All', 'top performers', 'bottom movers']} hasSearch={true} />
-                </div>
-              </div>
-
-              {/* Row 2: 4 Filters */}
-              <div className="flex flex-wrap items-center gap-2 py-1">
-                <FilterDropdown label="Channel" options={['Amazon', 'Shopify']} />
-                <FilterDropdown label="Status" options={['All', 'completed', 'in progress', 'Need Attention']} />
-                <FilterDropdown label="Sub-category" options={['Electronics Sub 1', 'Furniture Sub 2']} />
-                <FilterDropdown label="Date" options={['Today', 'This Week', 'This Month']} />
-              </div>
-            </div>
-
-            {/* Tab Content 1: Intelligence Feed */}
-            {activeFeedTab === 'intelligence' && (
-              <div className="flex flex-col lg:flex-row lg:items-stretch w-full gap-4 transition-all duration-300 lg:h-[calc(100vh-10rem)] min-h-[600px]">
-                
-                {/* Left Side (55% or 100%) */}
-                <div className={`w-full ${expandedInsight ? 'lg:w-[55%]' : 'lg:w-[100%]'} flex flex-col min-h-0 transition-all duration-300`}>
-                  <InsightsPanel
-                    borderless={true}
-                    activeInsightTab={activeInsightTab}
-                    setActiveInsightTab={setActiveInsightTab}
-                    itemViewMode={itemViewMode}
-                    setItemViewMode={setItemViewMode}
-                    stepOffset={stepOffset}
-                    setStepOffset={setStepOffset}
-                    onProductClick={openProductModal}
-                    onStepClick={handleStepClick}
-                    showDetailedView={true}
-                    onDetailedView={() => navigate(`/detailed-view/${activeIntelTab}`, { state: { selectedKpiIndices, from: '/intel' } })}
-                    intelTab={activeIntelTab}
-                    selectedCategory={category}
-                    noSidePanel={fullWidthInsights}
-                    initialItemSubTab={restoreItemSubTab}
-                    sourceRoute={location.pathname}
-                    onOpenSimulateModal={(insight) => {
-                      setSimulateInsight(insight);
-                      setActiveRightTab('simulate');
-                    }}
-                    onToggleInsightPanel={(insight) => {
-                      setExpandedInsight(prev => (prev?.id === insight?.id ? null : insight));
-                      if (insight) setActiveRightTab('overview');
-                    }}
-                    expandedInsightId={expandedInsight?.id}
-                    onOpenDismissModal={() => setIsDismissModalOpen(true)}
-                    onOpenRepriceModal={() => setIsRepriceModalOpen(true)}
-                    onOpenPlanCaptureModal={() => setIsCaseReportModalOpen(true)}
-                  />
-                </div>
-
-                {/* Right Side (45%) Tabs */}
-                {expandedInsight && (
-                  <div className="w-full lg:w-[45%] flex flex-col min-h-0 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden animate-in slide-in-from-right duration-300">
-                    
-                    {/* Right Tabs Header */}
-                    <div className="flex items-center justify-between px-5 pt-3 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-950 shrink-0">
-                      <div className="flex items-center gap-4">
-                        <button
-                          onClick={() => setActiveRightTab('overview')}
-                          className={`px-3 py-2 text-sm font-bold border-b-2 transition-colors ${
-                            activeRightTab === 'overview'
-                              ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                              : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-slate-300'
-                          }`}
-                        >
-                          Overview
-                        </button>
-                        <button
-                          onClick={() => setActiveRightTab('simulate')}
-                          className={`px-3 py-2 text-sm font-bold border-b-2 transition-colors ${
-                            activeRightTab === 'simulate'
-                              ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                              : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-slate-300'
-                          }`}
-                        >
-                          Simulate
-                        </button>
-                      </div>
-                      <button
-                        onClick={() => setExpandedInsight(null)}
-                        className="w-7 h-7 flex items-center justify-center rounded hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 transition-colors mb-2"
-                        aria-label="Close panel"
-                      >
-                        <i className="fa-solid fa-xmark text-sm" />
-                      </button>
-                    </div>
-
-                  {/* Right Tabs Content */}
-                  <div className="flex-1 min-h-0 overflow-y-auto">
-                    {activeRightTab === 'overview' && (
-                      <div className="h-full">
-                        <InsightDetailsPanel
-                          insight={expandedInsight || INSIGHT_CARDS_DATA[0]}
-                          onClose={() => {}}
-                        />
-                      </div>
-                    )}
-                    {activeRightTab === 'simulate' && (
-                      <div className="h-full">
-                        <SimulateContent
-                          insight={simulateInsight || expandedInsight || INSIGHT_CARDS_DATA[0]}
-                          onClose={() => setActiveRightTab('overview')}
-                          isModal={false}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  </div>
-                )}
-
-              </div>
-            )}
-
-
+          {/* Section 2: AI SIGNALS STREAM CONTAINER */}
+          <div id="ai-insights">
+            <TabContent
+              key={activeIntelTab}
+              activeTab={activeIntelTab}
+              expandedInsight={expandedInsight}
+              onSelectInsight={setExpandedInsight}
+            />
           </div>
 
         </div>
-
-        {/* Insights section 2 — carousel mode (commented out) */}
-        {false && ( // eslint-disable-line no-constant-binary-expression
-          <InsightsPanel
-            activeInsightTab={activeInsightTab2}
-            setActiveInsightTab={setActiveInsightTab2}
-            itemViewMode={itemViewMode2}
-            setItemViewMode={setItemViewMode2}
-            stepOffset={stepOffset2}
-            setStepOffset={setStepOffset2}
-            isCarouselMode={true}
-            onProductClick={openProductModal}
-            onStepClick={handleStepClick}
-            intelTab={activeIntelTab}
-          />
-        )}
-
       </div>
 
       <KPISelectorModal
@@ -746,12 +595,6 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         allKpis={activeStats}
         selectedIndices={selectedKpiIndices}
         onSave={(indices) => { setSelectedKpiIndices(indices); }}
-      />
-      <SimulateModal
-        key={simulateInsight?.id || 'default'}
-        isOpen={isSimulateModalOpen}
-        onClose={() => setIsSimulateModalOpen(false)}
-        insight={simulateInsight}
       />
       <DismissModal
         isOpen={isDismissModalOpen}
