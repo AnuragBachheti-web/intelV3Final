@@ -23,7 +23,8 @@ import BriefHeaderControls from "../shared/components/common/BriefHeaderControls
 import { REALIFY_BRIEF } from "../shared/data/realifyBriefData";
 import SimulateModal, { SimulateContent } from '../shared/components/SimulateModal';
 import InsightDetailsPanel from '../shared/components/InsightDetailsPanel';
-import ProductActionsTable from '../shared/components/ProductActionsTable';
+import AdsActionsTable, { ADS_ACTIONS_DATA } from '../shared/components/AdsActionsTable';
+import AdsDetailsPanel from '../shared/components/AdsDetailsPanel';
 import DismissModal from '../shared/components/DismissModal';
 import RepriceModal from '../shared/components/RepriceModal';
 import CaseReportModal from '../shared/components/CaseReportModal';
@@ -164,7 +165,6 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [activeFeedTab, setActiveFeedTab] = useState('intelligence'); // 'intelligence' | 'profit-ads'
 
   const [activeRightTab, setActiveRightTab] = useState('overview'); // 'overview' | 'simulate'
-  const [actionTab, setActionTab] = useState('strategic'); // 'strategic' | 'product'
 
   // Insights section 1
   const [activeInsightTab, setActiveInsightTab] = useState('Overall');
@@ -175,6 +175,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [isSimulateModalOpen, setIsSimulateModalOpen] = useState(false);
   const [simulateInsight, setSimulateInsight] = useState(null);
   const [expandedInsight, setExpandedInsight] = useState(null);
+  const [expandedAdsItem, setExpandedAdsItem] = useState(null);
   const [isDismissModalOpen, setIsDismissModalOpen] = useState(false);
   const [isRepriceModalOpen, setIsRepriceModalOpen] = useState(false);
   const [isCaseReportModalOpen, setIsCaseReportModalOpen] = useState(false);
@@ -669,34 +670,19 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           {/* Section 2: Feed Section with Top Tabs */}
           <div className="border-t border-gray-100 dark:border-slate-800/80 pt-1 space-y-2">
             {/* Feed Header and Filters */}
-            <div className="flex flex-col border-b border-gray-100 dark:border-slate-800 pb-3 gap-3">
-              {/* Row 1: Heading */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <h3 className="flex items-center gap-2 text-lg font-bold text-gray-900 dark:text-slate-100">
-                    <i className="fa-solid fa-rss text-sm text-gray-400 dark:text-slate-500" />
-                    Actions <span className="text-sm font-normal text-gray-400 dark:text-slate-500">• {INSIGHT_CARDS_DATA.length}</span>
-                  </h3>
+            {selectedMainKpi !== 'ads' && (
+              <div className="flex flex-col border-b border-gray-100 dark:border-slate-800 pb-3 gap-3">
+                {/* Row 1: Heading */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <h3 className="flex items-center gap-2 text-lg font-bold text-gray-900 dark:text-slate-100">
+                      <i className="fa-solid fa-rss text-sm text-gray-400 dark:text-slate-500" />
+                      Actions <span className="text-sm font-normal text-gray-400 dark:text-slate-500">• {INSIGHT_CARDS_DATA.length}</span>
+                    </h3>
+                  </div>
                 </div>
-                
-                <div className="flex items-center bg-gray-100 dark:bg-slate-800 p-1 rounded-xl">
-                  <button 
-                    onClick={() => setActionTab('product')}
-                    className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-colors ${actionTab === 'product' ? 'bg-white dark:bg-slate-900 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700'}`}
-                  >
-                    Product Actions
-                  </button>
-                  <button 
-                    onClick={() => setActionTab('strategic')}
-                    className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-colors ${actionTab === 'strategic' ? 'bg-white dark:bg-slate-900 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700'}`}
-                  >
-                    Strategic Actions
-                  </button>
-                </div>
-              </div>
 
-              {/* Row 2: All Filters (Only show for Strategic Actions) */}
-              {actionTab === 'strategic' && (
+                {/* Row 2: All Filters */}
                 <div className="flex flex-wrap items-center justify-between gap-2 py-1 w-full">
                   <div className="flex flex-wrap items-center gap-2">
                     <FilterDropdown label="Status" options={['All', 'completed', 'in progress', 'Need Attention']} />
@@ -707,13 +693,21 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                   </div>
                   <DateFilterDropdown />
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Feed Content */}
-            {actionTab === 'strategic' ? (
-              <div className="w-full flex flex-col lg:flex-row gap-4 relative">
-                <div className={`w-full ${expandedInsight ? 'lg:w-[55%]' : 'lg:w-[100%]'} flex flex-col min-h-0 transition-all duration-300`}>
+            <div className="w-full flex flex-col lg:flex-row gap-4 relative">
+              <div className={`w-full ${expandedInsight || expandedAdsItem ? 'lg:w-[55%]' : 'lg:w-[100%]'} flex flex-col min-h-0 transition-all duration-300`}>
+                {selectedMainKpi === 'ads' ? (
+                  <AdsActionsTable 
+                    onRowClick={(item) => {
+                      setExpandedAdsItem(prev => (prev?.id === item.id ? null : item));
+                      if (item) setActiveRightTab('overview');
+                    }}
+                    expandedId={expandedAdsItem?.id}
+                  />
+                ) : (
                   <InsightsPanel
                     borderless={true}
                     activeInsightTab={activeInsightTab}
@@ -744,11 +738,12 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                     onOpenRepriceModal={() => setIsRepriceModalOpen(true)}
                     onOpenPlanCaptureModal={() => setIsCaseReportModalOpen(true)}
                   />
-                </div>
+                )}
+              </div>
 
-                {/* Right Side (45%) Tabs */}
-                {expandedInsight && (
-                  <div className="w-full lg:w-[45%] flex flex-col min-h-0 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden animate-in slide-in-from-right duration-300">
+              {/* Right Side (45%) Tabs */}
+              {(expandedInsight || expandedAdsItem) && (
+                <div className="w-full lg:w-[45%] flex flex-col min-h-0 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden animate-in slide-in-from-right duration-300">
                     
                     {/* Right Tabs Header */}
                     <div className="flex items-center justify-between px-5 pt-3 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-950 shrink-0">
@@ -763,19 +758,24 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                         >
                           Overview
                         </button>
-                        <button
-                          onClick={() => setActiveRightTab('simulate')}
-                          className={`px-3 py-2 text-sm font-bold border-b-2 transition-colors ${
-                            activeRightTab === 'simulate'
-                              ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                              : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-slate-300'
-                          }`}
-                        >
-                          Simulate
-                        </button>
+                        {selectedMainKpi !== 'ads' && (
+                          <button
+                            onClick={() => setActiveRightTab('simulate')}
+                            className={`px-3 py-2 text-sm font-bold border-b-2 transition-colors ${
+                              activeRightTab === 'simulate'
+                                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                                : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-slate-300'
+                            }`}
+                          >
+                            Simulate
+                          </button>
+                        )}
                       </div>
                       <button
-                        onClick={() => setExpandedInsight(null)}
+                        onClick={() => {
+                          if (selectedMainKpi === 'ads') setExpandedAdsItem(null);
+                          else setExpandedInsight(null);
+                        }}
                         className="w-7 h-7 flex items-center justify-center rounded hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 transition-colors mb-2"
                         aria-label="Close panel"
                       >
@@ -787,13 +787,20 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                   <div className="flex-1 min-h-0 overflow-y-auto">
                     {activeRightTab === 'overview' && (
                       <div className="h-full">
-                        <InsightDetailsPanel
-                          insight={expandedInsight || INSIGHT_CARDS_DATA[0]}
-                          onClose={() => {}}
-                        />
+                        {selectedMainKpi === 'ads' ? (
+                          <AdsDetailsPanel
+                            item={expandedAdsItem || ADS_ACTIONS_DATA[0]}
+                            onClose={() => {}}
+                          />
+                        ) : (
+                          <InsightDetailsPanel
+                            insight={expandedInsight || INSIGHT_CARDS_DATA[0]}
+                            onClose={() => {}}
+                          />
+                        )}
                       </div>
                     )}
-                    {activeRightTab === 'simulate' && (
+                    {activeRightTab === 'simulate' && selectedMainKpi !== 'ads' && (
                       <div className="h-full">
                         <SimulateContent
                           insight={simulateInsight || expandedInsight || INSIGHT_CARDS_DATA[0]}
@@ -803,12 +810,9 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                       </div>
                     )}
                   </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <ProductActionsTable />
-            )}
+                </div>
+              )}
+            </div>
 
 
           </div>
