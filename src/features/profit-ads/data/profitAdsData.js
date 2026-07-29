@@ -26,7 +26,7 @@ export const PROFIT_ADS_SUMMARY = {
       },
       {
         parts: [
-          { text: '22 cannibalization risk · 1 lifecycle-guarded' }
+          { text: '22 Conflict risk · 1 lifecycle-guarded' }
         ]
       }
     ]

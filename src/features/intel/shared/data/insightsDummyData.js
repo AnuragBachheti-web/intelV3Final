@@ -35,14 +35,27 @@ export const INSIGHT_CARDS_DATA = [
     ruleId: 'SALES-08',
     isActionable: true,
     actBadge: 'ACT TODAY',
-    headline: 'Autofy Storm 3 [4-in-1] Powerful & Fully Wireless Car Vacuum Cleaner Air Blower - 18000PA 3.5X More Suction Power - BLDC',
-    headlineHighlight: 'is moving 22.5 units/day, above your 15 watch line — about ₹20.2L/mo at stake.',
+    headline: 'Autofy Storm 3 Wireless Vacuum',
+    headlineHighlight: 'Velocity 22.5/day (above 15 limit). ₹20.2L/mo at stake.',
     monthlyRevenue: '₹20.2L',
     confidenceLabel: 'MEDIUM',
     confidenceLevel: 3,
     progressPct: 82,
     sourceOwn: 'OWN',
     sourceRule: 'RULE',
+    overview: {
+      header: 'Amazon + Walmart • Automotive',
+      title: 'Autofy Car Body Cover, Premium (12 SKUs)',
+      problem: 'Buy Box win-rate fell below 80% on 12 car-cover SKUs on Amazon & Walmart after a competitor undercut price by 6%.',
+      rootCause: 'A competing seller dropped price 6% below yours on the same ASIN cluster two days ago, taking the Buy Box on 12 of 14 tracked offers.',
+      aiRecommendation: 'Match price within 3% on the 8 highest-volume SKUs; hold price and lean on reviews for the remaining 4 lower-velocity SKUs.',
+      riskIfIgnored: 'Buy Box loss compounds: organic rank drifts down and paid ads keep spending against a listing that can\'t convert.',
+      supportingInsights: [
+        'Buy Box win-rate: 92% → 61% in 48 hours',
+        'Competitor offer count on cluster: +1 new entrant',
+        'Ad spend on affected SKUs unchanged, ROAS down 34%'
+      ]
+    },
     whyMattersText: "Velocity is sitting at 22.5/day — well above your 15/day line. That puts a material ₹20.2L/mo of revenue in play on this SKU. Sales velocity drives rank, Buy Box eligibility and cash flow, so a dip here compounds across the account if left alone.",
     metrics: {
       velocity: '22.5',
@@ -74,6 +87,19 @@ export const INSIGHT_CARDS_DATA = [
     progressPct: 65,
     sourceOwn: 'COMPETITOR',
     sourceRule: 'PRICE-RULE',
+    overview: {
+      header: 'Amazon • Smart Home',
+      title: 'Smart Home Security Camera (SKU-001)',
+      problem: 'Buy Box share dropped from 94% to 71% in the last 6 hours.',
+      rootCause: 'A new competitor entered the listing and aggressively dropped the price to $74.99.',
+      aiRecommendation: 'Reprice to $84.99 to recover Buy Box without sacrificing all margins.',
+      riskIfIgnored: 'Lost sales velocity will hurt organic ranking and increase inventory holding costs.',
+      supportingInsights: [
+        'Competitor price: $74.99',
+        'Current margin at $84.99: 56.8%',
+        'Estimated daily sales at risk: 43 units'
+      ]
+    },
     whyMattersText: 'Buy Box share drop directly impacts daily sales volume. Matching the competitor price at $84.99 preserves a 56.8% gross margin floor while restoring Buy Box win rates above 90%.',
     metrics: {
       velocity: '43/day',
@@ -105,6 +131,19 @@ export const INSIGHT_CARDS_DATA = [
     progressPct: 92,
     sourceOwn: 'FBA',
     sourceRule: 'STOCK-RULE',
+    overview: {
+      header: 'Shopify • Home & Garden',
+      title: 'Ergonomic Executive Desk Chair (SKU-042)',
+      problem: 'Days of Cover has dropped to just 8 days.',
+      rootCause: 'Recent influencer campaign caused a 3.2x unexpected demand spike.',
+      aiRecommendation: 'Transfer 150 units from regional warehouse to FBA fulfillment center.',
+      riskIfIgnored: 'Stockout penalty will lead to loss of organic rank and pausing of profitable ads.',
+      supportingInsights: [
+        'Current velocity: 18/day (up from 5/day)',
+        'FBA Inventory: 144 units',
+        'Lead time for transfer: 4 days'
+      ]
+    },
     whyMattersText: 'Velocity has increased significantly due to a seasonal promo. Transfer 150 units from regional warehouse to FBA fulfillment center to avoid stockout penalty and loss of organic rank.',
     metrics: {
       velocity: '18/day',

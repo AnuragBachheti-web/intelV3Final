@@ -20,7 +20,8 @@ const StatCard = ({
   onClick,
   showIcon = true,
   isSelected = false,
-  compact = false
+  compact = false,
+  isPlainWhite = false
 }) => {
   const { addAiReference } = useAIStore();
 
@@ -67,9 +68,11 @@ const StatCard = ({
   if (type === 'metric') {
     const bgClass = isSelected
       ? 'bg-gradient-to-br from-slate-900 to-slate-800 text-white border-slate-900 dark:from-slate-100 dark:to-slate-200 dark:text-gray-900 dark:border-slate-100 shadow-md ring-2 ring-slate-900 dark:ring-slate-100'
-      : isPositive
-        ? 'bg-gradient-to-br from-emerald-50/70 to-white border-emerald-200/80 dark:from-emerald-950/20 dark:to-slate-900/40 dark:border-emerald-700/40'
-        : 'bg-gradient-to-br from-red-50/70 to-white border-red-200/80 dark:from-red-950/20 dark:to-slate-900/40 dark:border-red-700/40';
+      : isPlainWhite
+        ? 'bg-white border-gray-200/80 dark:bg-slate-900/40 dark:border-slate-800'
+        : isPositive
+          ? 'bg-gradient-to-br from-emerald-50/70 to-white border-emerald-200/80 dark:from-emerald-950/20 dark:to-slate-900/40 dark:border-emerald-700/40'
+          : 'bg-gradient-to-br from-red-50/70 to-white border-red-200/80 dark:from-red-950/20 dark:to-slate-900/40 dark:border-red-700/40';
 
     const titleColor = isSelected
       ? 'text-slate-300 dark:text-slate-700'

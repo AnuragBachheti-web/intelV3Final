@@ -10,6 +10,7 @@ export const INSIGHT_TABS = ['Overall', 'Channel', 'Category', 'Item'];
 
 export const STATS_BY_TAB = {
   sales: [
+    { title: 'Revenue', value: '$248.5K', change: '+14.2%', trend: 'up', isPositive: true },
     { title: 'Net Revenue', value: '51K', change: '12.4%', trend: 'up', isPositive: true },
     { title: 'Orders', value: '500', change: '8.4%', trend: 'up', isPositive: true },
     { title: 'Units Sold', value: '1000', change: '6.8%', trend: 'up', isPositive: true },
@@ -20,6 +21,7 @@ export const STATS_BY_TAB = {
     { title: 'New Customers', value: '287', change: '+12.3%', trend: 'up', isPositive: true },
   ],
   margin: [
+    { title: 'Margin', value: '$42.8K', change: '+8.4%', trend: 'up', isPositive: true },
     { title: 'CM1', value: '$42.8K', change: '8.4%', trend: 'up', isPositive: true },
     { title: 'Gross Margin %', value: '34.2%', change: '-0.8%', trend: 'down', isPositive: false },
     { title: 'CM2', value: '$38.2K', change: '6.1%', trend: 'up', isPositive: true },
@@ -30,6 +32,7 @@ export const STATS_BY_TAB = {
     { title: 'Net Profit', value: '$24.6K', change: '18.1%', trend: 'up', isPositive: true },
   ],
   inventory: [
+    { title: 'Inventory', value: '$1.82M', change: '+4.2%', trend: 'up', isPositive: true },
     { title: 'Days of Cover', value: '$1.82M', change: '4.2%', trend: 'up', isPositive: true },
     { title: 'Out of Stock Risk', value: '42 days', change: '-3d', trend: 'down', isPositive: false },
     { title: 'Out of Stock SKUs', value: '8', change: '+2', trend: 'up', isPositive: false },
@@ -40,6 +43,7 @@ export const STATS_BY_TAB = {
     { title: 'Reorder Alerts', value: '3', change: '-1', trend: 'down', isPositive: true },
   ],
   ads: [
+    { title: 'Ads', value: '$24.8K', change: '+18.2%', trend: 'up', isPositive: false },
     { title: 'Total Ad Spend', value: '$24.8K', change: '18.2%', trend: 'up', isPositive: false },
     { title: 'ROAS', value: '4.2x', change: '+0.3x', trend: 'up', isPositive: true },
     { title: 'Margin-Adj ROAS', value: '2.8x', change: '+0.1x', trend: 'up', isPositive: true },
@@ -50,6 +54,7 @@ export const STATS_BY_TAB = {
     { title: 'Conv. Rate', value: '12.4%', change: '+0.8%', trend: 'up', isPositive: true },
   ],
   cash: [
+    { title: 'Cash', value: '$284.6K', change: '+8.2%', trend: 'up', isPositive: true },
     { title: 'Cash Balance', value: '$284.6K', change: '8.2%', trend: 'up', isPositive: true },
     { title: 'Cash Inflow', value: '$142.4K', change: '12.4%', trend: 'up', isPositive: true },
     { title: 'Cash Outflow', value: '$118.2K', change: '6.8%', trend: 'up', isPositive: false },

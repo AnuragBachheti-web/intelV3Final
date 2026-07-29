@@ -27,18 +27,7 @@ const InsightCard = ({ card, onSimulate, onReprice, onDismiss, onPlanCapture, on
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
-          {card.isActionable && (
-            <span className="px-2 py-0.5 text-[9px] font-bold tracking-wider text-amber-800 dark:text-amber-300 bg-amber-200/70 dark:bg-amber-900/40 rounded">
-              ACTIONABLE
-            </span>
-          )}
-          {card.actBadge && (
-            <span className="px-2 py-0.5 text-[9px] font-bold tracking-wider text-amber-900 dark:text-amber-200 bg-amber-100 dark:bg-amber-900/20 rounded">
-              {card.actBadge}
-            </span>
-          )}
-        </div>
+
       </div>
 
       {/* Main Headline */}

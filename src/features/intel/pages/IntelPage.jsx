@@ -23,6 +23,7 @@ import BriefHeaderControls from "../shared/components/common/BriefHeaderControls
 import { REALIFY_BRIEF } from "../shared/data/realifyBriefData";
 import SimulateModal, { SimulateContent } from '../shared/components/SimulateModal';
 import InsightDetailsPanel from '../shared/components/InsightDetailsPanel';
+import ProductActionsTable from '../shared/components/ProductActionsTable';
 import DismissModal from '../shared/components/DismissModal';
 import RepriceModal from '../shared/components/RepriceModal';
 import CaseReportModal from '../shared/components/CaseReportModal';
@@ -43,7 +44,7 @@ const FilterDropdown = ({ label, options, hasSearch }) => {
         <i className="fa-solid fa-chevron-down text-[10px] opacity-60 ml-1" />
       </button>
       {isOpen && (
-        <div className="absolute top-full right-0 mt-1.5 w-44 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl shadow-lg z-50 py-1.5">
+        <div className="absolute top-full left-0 mt-1.5 w-44 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl shadow-lg z-50 py-1.5">
           {hasSearch && (
             <div className="px-2 py-1 mb-1 border-b border-gray-100 dark:border-slate-800">
               <div className="relative">
@@ -64,6 +65,57 @@ const FilterDropdown = ({ label, options, hasSearch }) => {
                 {opt}
               </button>
             ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const DateFilterDropdown = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState('30 days');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const dropRef = useRef(null);
+  useClickOutside(dropRef, isOpen, () => setIsOpen(false));
+
+  const options = ['Last week', '30 days', '60 days'];
+
+  return (
+    <div className="relative shrink-0 ml-auto" ref={dropRef}>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="px-3 py-1.5 flex items-center justify-center rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+        title="Date Filter"
+      >
+        <i className="fa-regular fa-calendar text-[13px]" />
+      </button>
+      {isOpen && (
+        <div className="absolute top-full right-0 mt-1.5 w-60 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl shadow-lg z-50 p-2">
+          <div className="flex flex-col gap-1 mb-3">
+            {options.map((opt) => (
+              <button 
+                key={opt}
+                onClick={() => { setSelected(opt); setIsOpen(false); }} 
+                className={`w-full text-left px-3 py-1.5 text-xs rounded-lg transition-colors ${selected === opt ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold' : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+          <div className="pt-2 border-t border-gray-100 dark:border-slate-800">
+            <span className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider px-2 mb-2 block">Custom</span>
+            <div className="flex flex-col gap-2 px-2">
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] text-gray-500 dark:text-slate-400">Start Date</label>
+                <input type="date" value={startDate} onChange={(e) => { setStartDate(e.target.value); setSelected('Custom'); }} className="w-full px-2 py-1 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-md text-xs text-gray-700 dark:text-slate-300" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] text-gray-500 dark:text-slate-400">End Date</label>
+                <input type="date" value={endDate} onChange={(e) => { setEndDate(e.target.value); setSelected('Custom'); }} className="w-full px-2 py-1 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-md text-xs text-gray-700 dark:text-slate-300" />
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -103,7 +155,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
 
   const [loading, setLoading] = useState(true);
   const [isKpiSelectorOpen, setIsKpiSelectorOpen] = useState(false);
-  const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3, 4]);
+  const [selectedKpiIndices, setSelectedKpiIndices] = useState([0, 1, 2, 3, 4, 5]);
 
   // Main KPI Card state (Revenue, Margin, Cash, Inventory, Ads)
   // null = all main cards full size, sub-KPIs hidden
@@ -112,6 +164,7 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
   const [activeFeedTab, setActiveFeedTab] = useState('intelligence'); // 'intelligence' | 'profit-ads'
 
   const [activeRightTab, setActiveRightTab] = useState('overview'); // 'overview' | 'simulate'
+  const [actionTab, setActionTab] = useState('strategic'); // 'strategic' | 'product'
 
   // Insights section 1
   const [activeInsightTab, setActiveInsightTab] = useState('Overall');
@@ -422,9 +475,9 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
         }}
       >
         <div className="flex items-center gap-2 py-3 min-w-0">
-          <div className="flex-1 grid grid-cols-5 gap-2">
-            {selectedKpiIndices.map(idx => {
-              const stat = activeStats[idx] || activeStats[0];
+          <div className="flex-1 grid grid-cols-6 gap-2">
+            {selectedKpiIndices.map((idx, index) => {
+              const stat = activeStats[index] || activeStats[0];
               return (
                 <div
                   key={idx}
@@ -564,23 +617,49 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                       {/* Sub KPIs — {MAIN_KPI_CARDS.find(m => m.key === selectedMainKpi)?.title} */}
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
-                    {selectedKpiIndices.map(idx => {
-                      const currentSubStats = STATS_BY_TAB[selectedMainKpi] || STATS_BY_TAB.sales;
-                      const stat = currentSubStats[idx] || currentSubStats[0];
-                      return (
-                        <StatCard
-                          key={idx}
-                          title={stat.title}
-                          value={stat.value}
-                          change={stat.change}
-                          trend={stat.trend}
-                          isPositive={stat.isPositive}
-                          loading={loading}
-                          showIcon={false}
-                        />
-                      );
-                    })}
+                  <div className="flex flex-col lg:flex-row gap-4">
+                    {/* First Card - Separated */}
+                    <div className="lg:w-44 xl:w-48 shrink-0">
+                      {(() => {
+                        const currentSubStats = STATS_BY_TAB[selectedMainKpi] || STATS_BY_TAB.sales;
+                        const stat = currentSubStats[0];
+                        return (
+                          <StatCard
+                            title={stat.title}
+                            value={stat.value}
+                            change={stat.change}
+                            trend={stat.trend}
+                            isPositive={stat.isPositive}
+                            loading={loading}
+                            showIcon={false}
+                            isPlainWhite={true}
+                          />
+                        );
+                      })()}
+                    </div>
+                    
+                    {/* Separator Line */}
+                    <div className="hidden lg:block w-px bg-gray-200 dark:bg-slate-700 self-stretch my-2" />
+                    
+                    {/* Remaining 5 Cards */}
+                    <div className="flex-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
+                      {selectedKpiIndices.slice(1).map((idx, index) => {
+                        const currentSubStats = STATS_BY_TAB[selectedMainKpi] || STATS_BY_TAB.sales;
+                        const stat = currentSubStats[index + 1] || currentSubStats[0];
+                        return (
+                          <StatCard
+                            key={idx}
+                            title={stat.title}
+                            value={stat.value}
+                            change={stat.change}
+                            trend={stat.trend}
+                            isPositive={stat.isPositive}
+                            loading={loading}
+                            showIcon={false}
+                          />
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </>
@@ -590,9 +669,8 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
           {/* Section 2: Feed Section with Top Tabs */}
           <div className="border-t border-gray-100 dark:border-slate-800/80 pt-1 space-y-2">
             {/* Feed Header and Filters */}
-            {/* Feed Header and Filters */}
             <div className="flex flex-col border-b border-gray-100 dark:border-slate-800 pb-3 gap-3">
-              {/* Row 1: Heading + 2 Filters */}
+              {/* Row 1: Heading */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <h3 className="flex items-center gap-2 text-lg font-bold text-gray-900 dark:text-slate-100">
@@ -600,27 +678,41 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                     Actions <span className="text-sm font-normal text-gray-400 dark:text-slate-500">• {INSIGHT_CARDS_DATA.length}</span>
                   </h3>
                 </div>
-
-                <div className="flex flex-wrap items-center gap-2 py-1">
-                  <FilterDropdown label="Category" options={['Electronics', 'Furniture', 'Kitchen Accessories']} />
-                  <FilterDropdown label="Sku" options={['All', 'top performers', 'bottom movers']} hasSearch={true} />
+                
+                <div className="flex items-center bg-gray-100 dark:bg-slate-800 p-1 rounded-xl">
+                  <button 
+                    onClick={() => setActionTab('product')}
+                    className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-colors ${actionTab === 'product' ? 'bg-white dark:bg-slate-900 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700'}`}
+                  >
+                    Product Actions
+                  </button>
+                  <button 
+                    onClick={() => setActionTab('strategic')}
+                    className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-colors ${actionTab === 'strategic' ? 'bg-white dark:bg-slate-900 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700'}`}
+                  >
+                    Strategic Actions
+                  </button>
                 </div>
               </div>
 
-              {/* Row 2: 4 Filters */}
-              <div className="flex flex-wrap items-center gap-2 py-1">
-                <FilterDropdown label="Channel" options={['Amazon', 'Shopify']} />
-                <FilterDropdown label="Status" options={['All', 'completed', 'in progress', 'Need Attention']} />
-                <FilterDropdown label="Sub-category" options={['Electronics Sub 1', 'Furniture Sub 2']} />
-                <FilterDropdown label="Date" options={['Today', 'This Week', 'This Month']} />
-              </div>
+              {/* Row 2: All Filters (Only show for Strategic Actions) */}
+              {actionTab === 'strategic' && (
+                <div className="flex flex-wrap items-center justify-between gap-2 py-1 w-full">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <FilterDropdown label="Status" options={['All', 'completed', 'in progress', 'Need Attention']} />
+                    <FilterDropdown label="Channel" options={['Amazon', 'Shopify']} />
+                    <FilterDropdown label="Category" options={['Electronics', 'Furniture', 'Kitchen Accessories']} />
+                    <FilterDropdown label="Sku" options={['All', 'top performers', 'bottom movers']} hasSearch={true} />
+                    <FilterDropdown label="Signals" options={['Reprice', 'Diversify', 'Conflict', 'Opportunity']} />
+                  </div>
+                  <DateFilterDropdown />
+                </div>
+              )}
             </div>
 
-            {/* Tab Content 1: Intelligence Feed */}
-            {activeFeedTab === 'intelligence' && (
-              <div className="flex flex-col lg:flex-row lg:items-stretch w-full gap-4 transition-all duration-300 lg:h-[calc(100vh-10rem)] min-h-[600px]">
-                
-                {/* Left Side (55% or 100%) */}
+            {/* Feed Content */}
+            {actionTab === 'strategic' ? (
+              <div className="w-full flex flex-col lg:flex-row gap-4 relative">
                 <div className={`w-full ${expandedInsight ? 'lg:w-[55%]' : 'lg:w-[100%]'} flex flex-col min-h-0 transition-all duration-300`}>
                   <InsightsPanel
                     borderless={true}
@@ -713,8 +805,9 @@ const IntelV2Page = ({ defaultTab = 'sales', fullWidthInsights = false }) => {
                   </div>
                   </div>
                 )}
-
               </div>
+            ) : (
+              <ProductActionsTable />
             )}
 
 
